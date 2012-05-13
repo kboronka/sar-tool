@@ -1,57 +1,74 @@
 @echo off
-set SOLUTION=sar.sln
-set CONFIG=Release
-set MSBUILD="%WinDir%\Microsoft.NET\Framework\v2.0.50727\msbuild.exe"
-set MAKENSIS="%PROGRAMFILES(X86)%\NSIS\makensis.exe" /V3
-set REPLACE="release\sar.exe"
-set ZIP="%PROGRAMFILES%\7-Zip\7zG.exe" a -tzip
 pushd "%~dp0"
+set SOLUTION=sar.sln
+set BASEURL=http://svn.wp-plugins.org/countdown-timer
+set CONFIG=Release
 
-echo "VERSION.MAJOR.MINOR.BUILD".
-set /p VERSION="> "
+:: Paths
+	set BITS=x86
+	if "%PROCESSOR_ARCHITECTURE%" == "AMD64" set BITS=x64
+	if "%PROCESSOR_ARCHITEW6432%" == "AMD64" set BITS=x64
 
-%REPLACE% AssemblyInfo.cs "0.0.0.0" "%VERSION%"
-%REPLACE% %SOLUTION% "Format Version 10.00" "Format Version 9.00"
-%REPLACE% %SOLUTION% "Visual Studio 2008" "Visual Studio 2005"
+	IF %BITS% == x86 (
+		echo OS is 32bit
+		set MAKENSIS="%PROGRAMFILES%\NSIS\makensis.exe" /V3
+		set MSBUILD="%WinDir%\Microsoft.NET\Framework\v2.0.50727\msbuild.exe"
+		set REPLACE="lib\sar\sar.exe"
+		set ZIP="%PROGRAMFILES%\7-Zip\7zG.exe" a -tzip
+	) ELSE (
+		echo OS is 64bit
+		set MAKENSIS="%PROGRAMFILES(X86)%\NSIS\makensis.exe" /V3
+		set MSBUILD="%WinDir%\Microsoft.NET\Framework\v2.0.50727\msbuild.exe"
+		set REPLACE="lib\sar\sar.exe"
+		set ZIP="%PROGRAMFILES%\7-Zip\7zG.exe" a -tzip
+	)
 
-echo building binaries
-%MSBUILD% %SOLUTION% /p:Configuration=%CONFIG% /p:Platform="x86"
-if errorlevel 1 goto BuildFailed
+:: Build Soultion
+	echo "VERSION.MAJOR.MINOR.BUILD".
+	set /p VERSION="> "
 
-rem -----------------------------------------------------------------------
-rem Build Complete
-rem -----------------------------------------------------------------------
+	svn update
+	%REPLACE% AssemblyInfo.cs "0.0.0.0" "%VERSION%"
+	%REPLACE% %SOLUTION% "Format Version 10.00" "Format Version 9.00"
+	%REPLACE% %SOLUTION% "Visual Studio 2008" "Visual Studio 2005"
 
-copy sar\bin\%CONFIG%\*.exe release\*.exe
-copy license.txt release\license.txt
+	echo building binaries
+	%MSBUILD% %SOLUTION% /p:Configuration=%CONFIG% /p:Platform="x86"
+	if errorlevel 1 goto BuildFailed
 
-copy sar\bin\%CONFIG%\sar.exe sar.exe
-%ZIP% "sar %VERSION%.zip" sar.exe readme.txt license.txt
-del sar.exe
+:: Build Complete
+	copy sar\bin\%CONFIG%\*.exe release\*.exe
+	copy license.txt release\license.txt
 
-%REPLACE% AssemblyInfo.cs "%VERSION%" "0.0.0.0"
-%REPLACE% %SOLUTION% "Format Version 9.00" "Format Version 10.00"
-%REPLACE% %SOLUTION% "Visual Studio 2005" "Visual Studio 2008"
+	copy sar\bin\%CONFIG%\sar.exe sar.exe
+	%ZIP% "sar %VERSION%.zip" sar.exe readme.txt license.txt
+	del sar.exe
 
-echo.
-echo build completed
+	%REPLACE% AssemblyInfo.cs "%VERSION%" "0.0.0.0"
+	%REPLACE% %SOLUTION% "Format Version 9.00" "Format Version 10.00"
+	%REPLACE% %SOLUTION% "Visual Studio 2005" "Visual Studio 2008"
+	
+	svn commit -m "version %VERSION%"
+	svn copy %BASEURL%/trunk %BASEURL%/tags/%VERSION% -m "Tagging the %VERSION% version release of the project"
+	
+	echo
+	echo
+	echo build completed, trunk has been tagged
 
-popd
-exit /b 0
+	popd
+	exit /b 0
 
-rem -----------------------------------------------------------------------
-rem Build Failed
-rem -----------------------------------------------------------------------
 
-:BuildFailed
+:: Build Failed
+	:BuildFailed
+	%REPLACE% AssemblyInfo.cs "%VERSION%" "0.0.0.0"
+	%REPLACE% %SOLUTION% "Format Version 9.00" "Format Version 10.00"
+	%REPLACE% %SOLUTION% "Visual Studio 2005" "Visual Studio 2008"
 
-%REPLACE% AssemblyInfo.cs "%VERSION%" "0.0.0.0"
-%REPLACE% %SOLUTION% "Format Version 9.00" "Format Version 10.00"
-%REPLACE% %SOLUTION% "Visual Studio 2005" "Visual Studio 2008"
+	echo
+	echo
+	echo build failed
+	pause
 
-echo.
-echo build failed
-pause
-
-popd
-exit /b 1
+	popd
+	exit /b 1
