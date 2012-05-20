@@ -49,6 +49,7 @@ set CONFIG=Release
 	%REPLACE% %SOLUTION% "Visual Studio 2005" "Visual Studio 2008"
 	
 	svn commit -m "version %VERSION%"
+	echo svn copy %BASEURL%/trunk %BASEURL%/tags/%VERSION% -m "Tagging the %VERSION% version release of the project"
 	svn copy %BASEURL%/trunk %BASEURL%/tags/%VERSION% -m "Tagging the %VERSION% version release of the project"
 	
 	echo
