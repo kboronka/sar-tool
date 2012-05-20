@@ -1,7 +1,7 @@
 @echo off
 pushd "%~dp0"
 set SOLUTION=sar.sln
-set BASEURL=http://svn.wp-plugins.org/countdown-timer
+set BASEURL=https://sar-tool.googlecode.com/svn
 set CONFIG=Release
 
 :: Paths
