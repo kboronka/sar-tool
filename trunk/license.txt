@@ -1,7 +1,7 @@
 sar Copyright (C) 2012 Kevin Boronka
 
 sar.exe is distributed under the BSD license
-sar.exe is free to use on any computer, including a computer in a commercial organization.
+sar.exe is free to use on any computer
 
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
