@@ -1,3 +1,14 @@
+:: Development Enviorment
+::
+:: Microsoft.NET v2.0.50727					http://www.microsoft.com/download/en/details.aspx?id=19
+:: SharpDevelop v3.2.1.6466					http://sourceforge.net/projects/sharpdevelop/files/SharpDevelop%203.x/3.2/SharpDevelop_3.2.1.6466_Setup.msi/download
+:: TortoiseSVN 1.7.4(+command line tools)	https://sourceforge.net/projects/tortoisesvn/files/1.7.4/Application/
+:: 7zip										http://www.7-zip.org/download.html
+
+
+:: GoogleCode://code.google.com/p/sar-tool/downloads/list
+:: SourceForge: http://sourceforge.net/projects/sartool/files/
+
 @echo off
 pushd "%~dp0"
 set SOLUTION=sar.sln
