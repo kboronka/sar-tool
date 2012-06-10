@@ -39,9 +39,9 @@ set CONFIG=Release
 	set /p VERSION="> "
 
 	svn update
-	%REPLACE% AssemblyInfo.cs "0.0.0.0" "%VERSION%"
-	%REPLACE% %SOLUTION% "Format Version 10.00" "Format Version 9.00"
-	%REPLACE% %SOLUTION% "Visual Studio 2008" "Visual Studio 2005"
+	%REPLACE% -replace AssemblyInfo.cs "0.0.0.0" "%VERSION%"
+	%REPLACE% -replace %SOLUTION% "Format Version 10.00" "Format Version 9.00"
+	%REPLACE% -replace %SOLUTION% "Visual Studio 2008" "Visual Studio 2005"
 
 	echo building binaries
 	%MSBUILD% %SOLUTION% /p:Configuration=%CONFIG% /p:Platform="x86"
@@ -55,9 +55,9 @@ set CONFIG=Release
 	%ZIP% "sar %VERSION%.zip" sar.exe readme.txt license.txt
 	del sar.exe
 
-	%REPLACE% AssemblyInfo.cs "%VERSION%" "0.0.0.0"
-	%REPLACE% %SOLUTION% "Format Version 9.00" "Format Version 10.00"
-	%REPLACE% %SOLUTION% "Visual Studio 2005" "Visual Studio 2008"
+	%REPLACE% -replace AssemblyInfo.cs "%VERSION%" "0.0.0.0"
+	%REPLACE% -replace %SOLUTION% "Format Version 9.00" "Format Version 10.00"
+	%REPLACE% -replace %SOLUTION% "Visual Studio 2005" "Visual Studio 2008"
 	
 	svn commit -m "version %VERSION%"
 	echo svn copy %BASEURL%/trunk %BASEURL%/tags/%VERSION% -m "Tagging the %VERSION% version release of the project"
@@ -73,9 +73,9 @@ set CONFIG=Release
 
 :: Build Failed
 	:BuildFailed
-	%REPLACE% AssemblyInfo.cs "%VERSION%" "0.0.0.0"
-	%REPLACE% %SOLUTION% "Format Version 9.00" "Format Version 10.00"
-	%REPLACE% %SOLUTION% "Visual Studio 2005" "Visual Studio 2008"
+	%REPLACE% -replace AssemblyInfo.cs "%VERSION%" "0.0.0.0"
+	%REPLACE% -replace %SOLUTION% "Format Version 9.00" "Format Version 10.00"
+	%REPLACE% -replace %SOLUTION% "Visual Studio 2005" "Visual Studio 2008"
 
 	echo
 	echo
