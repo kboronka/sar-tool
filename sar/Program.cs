@@ -85,15 +85,15 @@ namespace SkylaLib.sar
 			Console.WriteLine("\t sar -lv_ver \"*.lvproj_file\" \"1.0.2.1\"");
 			
 			#if DEBUG
-			string content = "<Property Name=\"TgtF_fileVersion.build\" Type=\"Int\">9</Property>";
-			string search = "<Property Name=\"TgtF_fileVersion.build\" Type=\"Int\">*</Property>";
+			string content = "<Property Name=\"TgtF_fileVersion.build\" Type=\"Int\">9</Property><Property Name=\"TgtF_fileVersion.build\" Type=\"Int\">99</Property>";
+			string search = "<Property Name=\"TgtF_fileVersion.build\" Type=\"Int\">[0-9]?[0-9]?[0-9]</Property>";
 			string replace = "<Property Name=\"TgtF_fileVersion.build\" Type=\"Int\">1</Property>";
-			string newcontent = Regex.Replace(content, IO.WildcardToRegex(search), replace);
+			string newcontent = Regex.Replace(content, search, replace);
 			Console.WriteLine("content = " + content);
 			Console.WriteLine("search = " + search);
 			Console.WriteLine("replace " + replace);
 			Console.WriteLine("Result: ");
-			Console.WriteLine("\t" + Regex.Replace(content, IO.WildcardToRegex(search), replace));
+			Console.WriteLine("\t" + Regex.Replace(content, search, replace));
 			
 			Console.ReadKey();
 			#endif
@@ -158,10 +158,10 @@ namespace SkylaLib.sar
 			 */
 			
 			List<string> changedFiles = new List<string>();
-			changedFiles.AddRange(IO.SearchAndReplaceInFiles(root, filePattern, "<Property Name=\"TgtF_fileVersion.major\" Type=\"Int\">*</Property>", "<Property Name=\"TgtF_fileVersion.major\" Type=\"Int\">" + version[0] + "</Property>"));
-			changedFiles.AddRange(IO.SearchAndReplaceInFiles(root, filePattern, "<Property Name=\"TgtF_fileVersion.minor\" Type=\"Int\">*</Property>", "<Property Name=\"TgtF_fileVersion.minor\" Type=\"Int\">" + version[1] + "</Property>"));
-			changedFiles.AddRange(IO.SearchAndReplaceInFiles(root, filePattern, "<Property Name=\"TgtF_fileVersion.patch\" Type=\"Int\">*</Property>", "<Property Name=\"TgtF_fileVersion.patch\" Type=\"Int\">" + version[2] + "</Property>"));
-			changedFiles.AddRange(IO.SearchAndReplaceInFiles(root, filePattern, "<Property Name=\"TgtF_fileVersion.build\" Type=\"Int\">*</Property>", "<Property Name=\"TgtF_fileVersion.build\" Type=\"Int\">" + version[3] + "</Property>"));
+			changedFiles.AddRange(IO.SearchAndReplaceInFiles(root, filePattern, "<Property Name=\"TgtF_fileVersion.major\" Type=\"Int\">[0-9]?[0-9]?[0-9]</Property>", "<Property Name=\"TgtF_fileVersion.major\" Type=\"Int\">" + version[0] + "</Property>"));
+			changedFiles.AddRange(IO.SearchAndReplaceInFiles(root, filePattern, "<Property Name=\"TgtF_fileVersion.minor\" Type=\"Int\">[0-9]?[0-9]?[0-9]</Property>", "<Property Name=\"TgtF_fileVersion.minor\" Type=\"Int\">" + version[1] + "</Property>"));
+			changedFiles.AddRange(IO.SearchAndReplaceInFiles(root, filePattern, "<Property Name=\"TgtF_fileVersion.patch\" Type=\"Int\">[0-9]?[0-9]?[0-9]</Property>", "<Property Name=\"TgtF_fileVersion.patch\" Type=\"Int\">" + version[2] + "</Property>"));
+			changedFiles.AddRange(IO.SearchAndReplaceInFiles(root, filePattern, "<Property Name=\"TgtF_fileVersion.build\" Type=\"Int\">[0-9]?[0-9]?[0-9]</Property>", "<Property Name=\"TgtF_fileVersion.build\" Type=\"Int\">" + version[3] + "</Property>"));
 			
 			// remove duplicates
 			changedFiles.Sort();
