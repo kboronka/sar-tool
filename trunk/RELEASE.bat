@@ -14,6 +14,7 @@ pushd "%~dp0"
 set SOLUTION=sar.sln
 set BASEURL=https://sar-tool.googlecode.com/svn
 set CONFIG=Release
+set BASEPATH=%~dp0
 
 :: Paths
 	set BITS=x86
