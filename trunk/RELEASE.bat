@@ -1,6 +1,7 @@
 :: Development Enviorment
 ::
 :: Microsoft.NET v2.0.50727					http://www.microsoft.com/download/en/details.aspx?id=19
+:: Microsoft.NET v4.0.30319					http://www.microsoft.com/en-us/download/confirmation.aspx?id=17718
 :: SharpDevelop v3.2.1.6466					http://sourceforge.net/projects/sharpdevelop/files/SharpDevelop%203.x/3.2/SharpDevelop_3.2.1.6466_Setup.msi/download
 :: TortoiseSVN 1.7.4(+command line tools)	https://sourceforge.net/projects/tortoisesvn/files/1.7.4/Application/
 :: 7zip										http://www.7-zip.org/download.html
@@ -24,13 +25,15 @@ set BASEPATH=%~dp0
 	IF %BITS% == x86 (
 		echo OS is 32bit
 		set MAKENSIS="%PROGRAMFILES%\NSIS\makensis.exe" /V3
-		set MSBUILD="%WinDir%\Microsoft.NET\Framework\v2.0.50727\msbuild.exe"
+		set MSBUILD2="%WinDir%\Microsoft.NET\Framework\v2.0.50727\msbuild.exe"
+		set MSBUILD4="%WinDir%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe"
 		set REPLACE="lib\sar\sar.exe"
 		set ZIP="%PROGRAMFILES%\7-Zip\7zG.exe" a -tzip
 	) ELSE (
 		echo OS is 64bit
 		set MAKENSIS="%PROGRAMFILES(X86)%\NSIS\makensis.exe" /V3
-		set MSBUILD="%WinDir%\Microsoft.NET\Framework\v2.0.50727\msbuild.exe"
+		set MSBUILD2="%WinDir%\Microsoft.NET\Framework\v2.0.50727\msbuild.exe"
+		set MSBUILD4="%WinDir%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe"
 		set REPLACE="lib\sar\sar.exe"
 		set ZIP="%PROGRAMFILES%\7-Zip\7zG.exe" a -tzip
 	)
@@ -45,7 +48,7 @@ set BASEPATH=%~dp0
 	%REPLACE% -replace %SOLUTION% "Visual Studio 2008" "Visual Studio 2005"
 
 	echo building binaries
-	%MSBUILD% %SOLUTION% /p:Configuration=%CONFIG% /p:Platform="x86"
+	%MSBUILD2% %SOLUTION% /p:Configuration=%CONFIG% /p:Platform="x86"
 	if errorlevel 1 goto BuildFailed
 
 :: Build Complete
