@@ -7,9 +7,9 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using SkylaLib.Tools;
+using skylib.Tools;
 
-namespace SkylaLib.sar
+namespace skylib.sar
 {
 	class Program
 	{
@@ -28,7 +28,7 @@ namespace SkylaLib.sar
 				
 				string command = args[0].ToLower();
 
-				if (command[0] != '-')
+				if (command[0] != '-' && command[0] != '/' )
 				{
 					Usage();
 					return;
@@ -56,7 +56,12 @@ namespace SkylaLib.sar
 						LabVIEW_Version(args);
 						break;
 					case "help":
+					case "h":
+					case "?":
 						Usage();
+						break;
+					case "test":
+						Test();				
 						break;
 					default:
 						Console.WriteLine("Unknown command");
@@ -73,6 +78,12 @@ namespace SkylaLib.sar
 			#if DEBUG
 			Console.ReadKey();
 			#endif
+		}
+		
+		public static void Test()
+		{
+			Console.Out.Write("thistest");
+//			Console.WriteLine("test");
 		}
 		
 		public static void Usage()
@@ -158,10 +169,10 @@ namespace SkylaLib.sar
 			 */
 			
 			List<string> changedFiles = new List<string>();
-			changedFiles.AddRange(IO.SearchAndReplaceInFiles(root, filePattern, "<Property Name=\"TgtF_fileVersion.major\" Type=\"Int\">[0-9]?[0-9]?[0-9]</Property>", "<Property Name=\"TgtF_fileVersion.major\" Type=\"Int\">" + version[0] + "</Property>"));
-			changedFiles.AddRange(IO.SearchAndReplaceInFiles(root, filePattern, "<Property Name=\"TgtF_fileVersion.minor\" Type=\"Int\">[0-9]?[0-9]?[0-9]</Property>", "<Property Name=\"TgtF_fileVersion.minor\" Type=\"Int\">" + version[1] + "</Property>"));
-			changedFiles.AddRange(IO.SearchAndReplaceInFiles(root, filePattern, "<Property Name=\"TgtF_fileVersion.patch\" Type=\"Int\">[0-9]?[0-9]?[0-9]</Property>", "<Property Name=\"TgtF_fileVersion.patch\" Type=\"Int\">" + version[2] + "</Property>"));
-			changedFiles.AddRange(IO.SearchAndReplaceInFiles(root, filePattern, "<Property Name=\"TgtF_fileVersion.build\" Type=\"Int\">[0-9]?[0-9]?[0-9]</Property>", "<Property Name=\"TgtF_fileVersion.build\" Type=\"Int\">" + version[3] + "</Property>"));
+			changedFiles.AddRange(IO.SearchAndReplaceInFiles(root, filePattern, "<Property Name=\"TgtF_fileVersion.major\" Type=\"Int\">\\d{1,}</Property>", "<Property Name=\"TgtF_fileVersion.major\" Type=\"Int\">" + version[0] + "</Property>"));
+			changedFiles.AddRange(IO.SearchAndReplaceInFiles(root, filePattern, "<Property Name=\"TgtF_fileVersion.minor\" Type=\"Int\">\\d{1,}</Property>", "<Property Name=\"TgtF_fileVersion.minor\" Type=\"Int\">" + version[1] + "</Property>"));
+			changedFiles.AddRange(IO.SearchAndReplaceInFiles(root, filePattern, "<Property Name=\"TgtF_fileVersion.patch\" Type=\"Int\">\\d{1,}</Property>", "<Property Name=\"TgtF_fileVersion.patch\" Type=\"Int\">" + version[2] + "</Property>"));
+			changedFiles.AddRange(IO.SearchAndReplaceInFiles(root, filePattern, "<Property Name=\"TgtF_fileVersion.build\" Type=\"Int\">\\d{1,}</Property>", "<Property Name=\"TgtF_fileVersion.build\" Type=\"Int\">" + version[3] + "</Property>"));
 			
 			// remove duplicates
 			changedFiles.Sort();
