@@ -43,7 +43,7 @@ set BASEPATH=%~dp0
 	set /p VERSION="> "
 
 	svn update
-	%REPLACE% -replace AssemblyInfo.cs "0.0.0.0" "%VERSION%"
+	%REPLACE% -r AssemblyInfo.* ((Version)\(\"\d+\.\d+\.\d+\.\d+\"\)) "Version(\"%VERSION%\")"
 	%REPLACE% -replace %SOLUTION% "Format Version 10.00" "Format Version 9.00"
 	%REPLACE% -replace %SOLUTION% "Visual Studio 2008" "Visual Studio 2005"
 
@@ -59,12 +59,10 @@ set BASEPATH=%~dp0
 	%ZIP% "sar %VERSION%.zip" sar.exe readme.txt license.txt
 	del sar.exe
 
-	%REPLACE% -replace AssemblyInfo.cs "%VERSION%" "0.0.0.0"
 	%REPLACE% -replace %SOLUTION% "Format Version 9.00" "Format Version 10.00"
 	%REPLACE% -replace %SOLUTION% "Visual Studio 2005" "Visual Studio 2008"
 	
 	svn commit -m "version %VERSION%"
-	echo svn copy %BASEURL%/trunk %BASEURL%/tags/%VERSION% -m "Tagging the %VERSION% version release of the project"
 	svn copy %BASEURL%/trunk %BASEURL%/tags/%VERSION% -m "Tagging the %VERSION% version release of the project"
 	
 	echo
@@ -77,7 +75,6 @@ set BASEPATH=%~dp0
 
 :: Build Failed
 	:BuildFailed
-	%REPLACE% -replace AssemblyInfo.cs "%VERSION%" "0.0.0.0"
 	%REPLACE% -replace %SOLUTION% "Format Version 9.00" "Format Version 10.00"
 	%REPLACE% -replace %SOLUTION% "Visual Studio 2005" "Visual Studio 2008"
 
