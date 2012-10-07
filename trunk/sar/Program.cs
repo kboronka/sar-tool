@@ -92,7 +92,9 @@ namespace skylib.sar
 			Console.WriteLine("\t -replace <file_search_pattern> <search_text> <replace_text>");
 			Console.WriteLine("\t -lv_ver <lvproj_file> <version>");
 			Console.WriteLine("Examples:");
-			Console.WriteLine("\t sar -replace \"AssemblyInfo.cs\" \"0.0.0.0\" \"1.0.0.0\"");
+			Console.WriteLine("\t sar -r \"AssemblyInfo.cs\" \"0.0.0.0\" \"1.0.0.0\"");
+			Console.WriteLine("\t sar -r \"AssemblyInfo.cs\" \"[0-9]+.[0-9]+.[0-9]+.[0-9]+\" \"1.0.0.0\"");
+			Console.WriteLine("\t sar -r AssemblyInfo.* ((Version)\\(\\\"\\d+\\.\\d+\\.\\d+\\.\\d+\\\"\\)) \"Version(\\\"%VERSION%\\\")\"");
 			Console.WriteLine("\t sar -lv_ver \"*.lvproj_file\" \"1.0.2.1\"");
 			
 			#if DEBUG
