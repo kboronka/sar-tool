@@ -331,7 +331,9 @@ namespace skylib.sar
 			if (compiler.ExitCode != 0)
 			{
 				Console.WriteLine("Build Failed");
+				Console.ForegroundColor = ConsoleColor.DarkCyan;
 				Console.WriteLine(output);
+				Console.ResetColor();
 				Console.WriteLine("exit code: " + compiler.ExitCode.ToString());
 				return compiler.ExitCode;
 			}
