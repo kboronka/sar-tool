@@ -21,10 +21,8 @@ namespace skylib.sar
 		{
 			try
 			{
-				Console.BackgroundColor = ConsoleColor.Black;
 				Console.ForegroundColor = ConsoleColor.Yellow;
 				Console.WriteLine(AssemblyInfo.Name + "  v" + AssemblyInfo.Version + "  " + AssemblyInfo.Copyright);
-				Console.WriteLine();
 				Console.ResetColor();
 				
 				if (args.Length == 0)
@@ -159,18 +157,19 @@ namespace skylib.sar
 			string root = Directory.GetCurrentDirectory();
 			List<string> changedFiles = IO.SearchAndReplaceInFiles(root, filePattern, searchString, replaceString);
 			
+			#if DEBUG
 			if (changedFiles.Count > 0)
 			{
-				Console.WriteLine("Replacments made in the following file" + ((changedFiles.Count > 1) ? "s" : ""));
 				foreach (string file in changedFiles)
 				{
 					Console.WriteLine(file.Replace(root, ""));
 				}
 			}
-			else
-			{
-				Console.WriteLine("search string was not found");
-			}
+			#endif
+
+			Console.ForegroundColor = ConsoleColor.DarkYellow;
+			Console.WriteLine("Replacments made in " + changedFiles.Count.ToString() + " file" + ((changedFiles.Count != 1) ? "s" : ""));
+			Console.ResetColor();
 		}
 		
 		public static void LabVIEW_Version(string[] args)
@@ -238,7 +237,7 @@ namespace skylib.sar
 			if (args.Length != 2)
 			{
 				Usage();
-				throw new ArgumentException("wrong number of arguments");				
+				throw new ArgumentException("wrong number of arguments");
 				return;
 			}
 			
@@ -250,13 +249,17 @@ namespace skylib.sar
 
 				foreach (Process process in foundProcess)
 				{
+					Console.ForegroundColor = ConsoleColor.DarkYellow;
 					Console.WriteLine(process.ProcessName + " killed");
+					Console.ResetColor();
 					process.Kill();
 				}
 			}
 			else
 			{
+				Console.ForegroundColor = ConsoleColor.DarkYellow;
 				Console.WriteLine(processName + " not running");
+				Console.ResetColor();
 			}
 		}
 		
@@ -330,7 +333,10 @@ namespace skylib.sar
 			
 			if (compiler.ExitCode != 0)
 			{
+				Console.ForegroundColor = ConsoleColor.DarkYellow;
 				Console.WriteLine("Build Failed");
+				Console.ResetColor();
+				
 				Console.ForegroundColor = ConsoleColor.DarkCyan;
 				Console.WriteLine(output);
 				Console.ResetColor();
@@ -339,7 +345,9 @@ namespace skylib.sar
 			}
 			else
 			{
+				Console.ForegroundColor = ConsoleColor.DarkYellow;
 				Console.WriteLine("Build Successfully Completed");
+				Console.ResetColor();
 				return EXIT_OK;
 			}
 		}
@@ -403,7 +411,9 @@ namespace skylib.sar
 			
 			if (compiler.ExitCode != 0)
 			{
+				Console.ForegroundColor = ConsoleColor.DarkYellow;
 				Console.WriteLine("Build Failed");
+				Console.ResetColor();
 				Console.ForegroundColor = ConsoleColor.DarkCyan;
 				Console.WriteLine(output);
 				Console.ResetColor();
@@ -412,7 +422,9 @@ namespace skylib.sar
 			}
 			else
 			{
+				Console.ForegroundColor = ConsoleColor.DarkYellow;
 				Console.WriteLine("Build Successfully Completed");
+				Console.ResetColor();
 				return EXIT_OK;
 			}
 		}
