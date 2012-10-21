@@ -8,6 +8,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Threading;
 using skylib.Tools;
 
 namespace skylib.sar
@@ -16,14 +17,25 @@ namespace skylib.sar
 	{
 		private const int EXIT_OK = 0;
 		private const int EXIT_ERROR = 1;
-
+		
 		public static int Main(string[] args)
 		{
+			Progress progressBar = new Progress();
+			Thread backgroundThread = new Thread(new ThreadStart(progressBar.DoWork));
+			
 			try
 			{
 				Console.ForegroundColor = ConsoleColor.Yellow;
 				Console.WriteLine(AssemblyInfo.Name + "  v" + AssemblyInfo.Version + "  " + AssemblyInfo.Copyright);
 				Console.ResetColor();
+
+				backgroundThread.Name = "RunningIndicator";
+				backgroundThread.IsBackground = true;
+				backgroundThread.Start();
+				
+				#if DEBUG
+				System.Threading.Thread.Sleep(2000);
+				#endif
 				
 				if (args.Length == 0)
 				{
@@ -96,6 +108,8 @@ namespace skylib.sar
 			}
 			catch (Exception ex)
 			{
+				backgroundThread.Abort();
+
 				Console.ForegroundColor = ConsoleColor.Red;
 				Console.WriteLine("Error: " + ex.Message);
 				Console.ResetColor();
