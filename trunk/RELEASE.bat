@@ -20,17 +20,6 @@ set BASEPATH=%~dp0
 	set SAR="lib\sar\sar.exe"
 	set ZIP="%PROGRAMFILES%\7-Zip\7zG.exe" a -tzip
 
-	set BITS=x86
-	if "%PROCESSOR_ARCHITECTURE%" == "AMD64" set BITS=x64
-	if "%PROCESSOR_ARCHITEW6432%" == "AMD64" set BITS=x64
-	IF %BITS% == x86 (
-		echo OS is 32bit
-		set MAKENSIS="%PROGRAMFILES%\NSIS\makensis.exe" /V3
-	) ELSE (
-		echo OS is 64bit
-		set MAKENSIS="%PROGRAMFILES(X86)%\NSIS\makensis.exe" /V3
-	)
-
 :: Build Soultion
 	echo "VERSION.MAJOR.MINOR.BUILD".
 	set /p VERSION="> "
