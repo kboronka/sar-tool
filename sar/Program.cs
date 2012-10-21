@@ -69,6 +69,10 @@ namespace skylib.sar
 					case "b.nsis":
 						exitCode = Build_NSIS(args);
 						break;
+					case "build.chm":
+					case "b.chm":
+						exitCode = Build_CHM(args);
+						break;
 					case "kill":
 					case "k":
 					case "shutdown":
@@ -364,8 +368,7 @@ namespace skylib.sar
 			
 			string nsiFile = args[1];
 			
-			// get list of msbuild versions availble
-			
+			// get list of makensis.exe file locations availble
 			List<String> files = IO.GetAllFiles(IO.ProgramFilesx86(), "makensis.exe");
 			if (files.Count == 0)
 			{
@@ -375,8 +378,7 @@ namespace skylib.sar
 			// sanity - nsis not installed
 			if (files.Count == 0)
 			{
-				Console.WriteLine("sar unable to locate makensis.exe");
-				return EXIT_ERROR;
+				throw new FileNotFoundException("sar unable to locate makensis.exe");
 			}
 			
 			string nsisPath = files[0];
@@ -428,5 +430,81 @@ namespace skylib.sar
 				return EXIT_OK;
 			}
 		}
+
+		public static int Build_CHM(string[] args)
+		{
+			// sanity check
+			if (args.Length < 2)
+			{
+				Usage();
+				throw new ArgumentException("too few arguments");
+				return EXIT_ERROR;
+			}
+			
+			string hhpFile = args[1];
+			
+			// get list of hhc.exe file locations availble
+			List<String> files = IO.GetAllFiles(IO.ProgramFilesx86(), "hhc.exe");
+			if (files.Count == 0)
+			{
+				files = IO.GetAllFiles(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFiles), "hhc.exe");
+			}
+			
+			// sanity - hhc.exe not installed
+			if (files.Count == 0)
+			{
+				throw new FileNotFoundException("sar unable to locate hhc.exe");
+			}
+			
+			string hhcPath = files[0];
+			
+			// sanity - solution file exists
+			if (!File.Exists(hhpFile))
+			{
+				throw new FileNotFoundException(hhpFile + " hhp file not found");
+			}
+			
+
+			string arguments = hhpFile;
+			
+			for (int i = 2; i < args.Length; i++)
+			{
+				arguments += " " + args[i];
+			}
+			
+			#if DEBUG
+			Console.WriteLine(hhpFile + " " + arguments);
+			#endif
+
+			
+			Process compiler = new Process();
+			compiler.StartInfo.FileName = hhcPath;
+			compiler.StartInfo.Arguments = arguments;
+			compiler.StartInfo.UseShellExecute = false;
+			compiler.StartInfo.RedirectStandardOutput = true;
+			compiler.Start();
+			string output = compiler.StandardOutput.ReadToEnd();
+			compiler.WaitForExit();
+			
+			if (compiler.ExitCode != 0)
+			{
+				Console.ForegroundColor = ConsoleColor.DarkYellow;
+				Console.WriteLine("Build Failed");
+				Console.ResetColor();
+				Console.ForegroundColor = ConsoleColor.DarkCyan;
+				Console.WriteLine(output);
+				Console.ResetColor();
+				Console.WriteLine("exit code: " + compiler.ExitCode.ToString());
+				return compiler.ExitCode;
+			}
+			else
+			{
+				Console.ForegroundColor = ConsoleColor.DarkYellow;
+				Console.WriteLine("Build Successfully Completed");
+				Console.ResetColor();
+				return EXIT_OK;
+			}
+		}
+		
 	}
 }
