@@ -14,17 +14,23 @@ namespace skylib.sar
 {
 	class Program
 	{
-		public static void Main(string[] args)
+		private const int EXIT_OK = 0;
+		private const int EXIT_ERROR = 1;
+
+		public static int Main(string[] args)
 		{
 			try
 			{
+				Console.BackgroundColor = ConsoleColor.Black;
+				Console.ForegroundColor = ConsoleColor.Yellow;
 				Console.WriteLine(AssemblyInfo.Name + "  v" + AssemblyInfo.Version + "  " + AssemblyInfo.Copyright);
 				Console.WriteLine();
+				Console.ResetColor();
 				
 				if (args.Length == 0)
 				{
 					Usage();
-					return;
+					return EXIT_ERROR;
 				}
 				
 				string command = args[0].ToLower();
@@ -32,7 +38,7 @@ namespace skylib.sar
 				if (command[0] != '-' && command[0] != '/' )
 				{
 					Usage();
-					return;
+					return EXIT_ERROR;
 				}
 				
 				command = command.Substring(1);
@@ -46,6 +52,7 @@ namespace skylib.sar
 
 				Console.WriteLine("Command = " + command);
 				#endif
+				int exitCode = EXIT_OK;
 				
 				switch (command)
 				{
@@ -56,10 +63,10 @@ namespace skylib.sar
 					case "lv_ver":
 						LabVIEW_Version(args);
 						break;
-						/* case "build.net":
+					case "build.net":
 					case "b.net":
-						Build_DotNet(args);
-						break; */
+						exitCode = Build_DotNet(args);
+						break;
 					case "kill":
 					case "k":
 					case "shutdown":
@@ -77,18 +84,26 @@ namespace skylib.sar
 					default:
 						Console.WriteLine("Unknown command");
 						Console.WriteLine("");
+						exitCode = EXIT_ERROR;
 						Usage();
 						break;
 				}
+				
+				#if DEBUG
+				Console.ReadKey();
+				#endif
+				return exitCode;
 			}
 			catch (Exception ex)
 			{
+				Console.ForegroundColor = ConsoleColor.Red;				
 				Console.WriteLine(ex.Message);
+				Console.ResetColor();
+				#if DEBUG
+				Console.ReadKey();
+				#endif
+				return EXIT_ERROR;
 			}
-			
-			#if DEBUG
-			Console.ReadKey();
-			#endif
 		}
 		
 		public static void Test()
@@ -240,8 +255,9 @@ namespace skylib.sar
 			}
 		}
 		
-		/* public static void Build_DotNet(string[] args)
+		public static int Build_DotNet(string[] args)
 		{
+			// http://stackoverflow.com/questions/536539/how-to-call-msbuild-from-c-sharp
 			//:: Microsoft.NET v2.0.50727					http://www.microsoft.com/download/en/details.aspx?id=19
 			//:: Microsoft.NET v4.0.30319					http://www.microsoft.com/en-us/download/confirmation.aspx?id=17718
 			// %MSBUILD2% %SOLUTION% /p:Configuration=%CONFIG% /p:Platform="x86"
@@ -253,12 +269,82 @@ namespace skylib.sar
 			// other
 			
 			// sanity check
-			if (args.Length <= 3)
+			if (args.Length <= 2)
 			{
 				Usage();
-				return;
+				return EXIT_ERROR;
 			}
 			
-		} */
+			string netVersion = args[1];
+			string netSoultion = args[2];
+			
+			// get list of msbuild versions availble
+
+			string msbuildFolder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.System) + @"\..\Microsoft.NET\Framework";
+			Dictionary<string, string> msBuildFolders = new Dictionary<string, string>();
+			
+			foreach (string path in Directory.GetDirectories(msbuildFolder))
+			{
+				string version = path.Remove(0,path.LastIndexOf('\\')+1).Substring(1,3);
+				string msBuildPath = path + "\\MSBuild.exe";
+				if (File.Exists(msBuildPath))
+				{
+					msBuildFolders.Add(version, msBuildPath);
+					#if DEBUG
+					Console.WriteLine(version + " = " + msBuildPath);
+					#endif
+				}
+			}
+			
+			// sanity - .net version installed
+			if (!msBuildFolders.ContainsKey(netVersion))
+			{
+				throw new ArgumentOutOfRangeException(".net version");
+			}
+			
+			// sanity - solution file exists
+			if (!File.Exists(netSoultion))
+			{
+				throw new FileNotFoundException(netSoultion + " solution file not found");
+			}
+			
+			string msbuildPath = msBuildFolders[netVersion];
+			
+			
+
+			string arguments = netSoultion;
+			
+			for (int i = 3; i < args.Length; i++)
+			{
+				arguments += " " + args[i];
+			}
+			
+			#if DEBUG
+			Console.WriteLine(msbuildPath + " " + arguments);
+			#endif
+
+			
+			Process compiler = new Process();
+			compiler.StartInfo.FileName = msbuildPath;
+			compiler.StartInfo.Arguments = arguments;
+			compiler.StartInfo.UseShellExecute = false;
+			compiler.StartInfo.RedirectStandardOutput = true;
+			compiler.Start();
+			string output = compiler.StandardOutput.ReadToEnd();
+			compiler.WaitForExit();
+			
+			if (compiler.ExitCode != 0)
+			{
+				Console.WriteLine("Build Failed");
+				Console.WriteLine(output);
+				Console.WriteLine("exit code: " + compiler.ExitCode.ToString());
+				return compiler.ExitCode;
+			}
+			else
+			{
+				Console.WriteLine("Build Successfully Completed");
+				return EXIT_OK;
+			}
+		}
 	}
 }
