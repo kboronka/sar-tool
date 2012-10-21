@@ -27,16 +27,14 @@ namespace skylib.sar
 				
 				if (args.Length == 0)
 				{
-					Usage();
-					return EXIT_ERROR;
+					throw new ArgumentException("too few arguments");
 				}
 				
 				string command = args[0].ToLower();
 
 				if (command[0] != '-' && command[0] != '/' )
 				{
-					Usage();
-					return EXIT_ERROR;
+					throw new ArgumentException("first argument must start with a \"-\" \"/\" ");
 				}
 				
 				command = command.Substring(1);
@@ -88,11 +86,7 @@ namespace skylib.sar
 						Test();
 						break;
 					default:
-						Console.WriteLine("Unknown command");
-						Console.WriteLine("");
-						exitCode = EXIT_ERROR;
-						Usage();
-						break;
+						throw new ArgumentException("Unknown command");
 				}
 				
 				#if DEBUG
@@ -149,8 +143,7 @@ namespace skylib.sar
 			// sanity check
 			if (args.Length != 4)
 			{
-				Usage();
-				return;
+				throw new ArgumentException("incorrect number of arguments");
 			}
 			
 			string filePattern = args[1];
@@ -181,8 +174,7 @@ namespace skylib.sar
 			// sanity check
 			if (args.Length != 3)
 			{
-				Usage();
-				return;
+				throw new ArgumentException("incorrect number of arguments");
 			}
 			
 			string filePattern = args[1];
@@ -190,8 +182,7 @@ namespace skylib.sar
 			
 			if (version.Length != 4)
 			{
-				Usage();
-				return;
+				throw new ArgumentException("incorrect number of arguments");
 			}
 			
 			string root = Directory.GetCurrentDirectory();
@@ -240,9 +231,7 @@ namespace skylib.sar
 			// sanity check
 			if (args.Length != 2)
 			{
-				Usage();
 				throw new ArgumentException("wrong number of arguments");
-				return;
 			}
 			
 			string processName = args[1];
@@ -272,9 +261,7 @@ namespace skylib.sar
 			// sanity check
 			if (args.Length < 3)
 			{
-				Usage();
 				throw new ArgumentException("too few arguments");
-				return EXIT_ERROR;
 			}
 			
 			string netVersion = args[1];
@@ -361,9 +348,7 @@ namespace skylib.sar
 			// sanity check
 			if (args.Length < 2)
 			{
-				Usage();
 				throw new ArgumentException("too few arguments");
-				return EXIT_ERROR;
 			}
 			
 			string nsiFile = args[1];
@@ -436,9 +421,7 @@ namespace skylib.sar
 			// sanity check
 			if (args.Length < 2)
 			{
-				Usage();
 				throw new ArgumentException("too few arguments");
-				return EXIT_ERROR;
 			}
 			
 			string hhpFile = args[1];
