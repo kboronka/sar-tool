@@ -67,6 +67,10 @@ namespace skylib.sar
 					case "b.net":
 						exitCode = Build_DotNet(args);
 						break;
+					case "build.nsis":
+					case "b.nsis":
+						exitCode = Build_NSIS(args);
+						break;
 					case "kill":
 					case "k":
 					case "shutdown":
@@ -96,8 +100,8 @@ namespace skylib.sar
 			}
 			catch (Exception ex)
 			{
-				Console.ForegroundColor = ConsoleColor.Red;				
-				Console.WriteLine(ex.Message);
+				Console.ForegroundColor = ConsoleColor.Red;
+				Console.WriteLine("Error: " + ex.Message);
 				Console.ResetColor();
 				#if DEBUG
 				Console.ReadKey();
@@ -134,7 +138,7 @@ namespace skylib.sar
 			Console.WriteLine("Result: ");
 			Console.WriteLine("\t" + Regex.Replace(content, search, replace));
 			
-			Console.ReadKey();
+			//Console.ReadKey();
 			#endif
 		}
 		
@@ -234,6 +238,7 @@ namespace skylib.sar
 			if (args.Length != 2)
 			{
 				Usage();
+				throw new ArgumentException("wrong number of arguments");				
 				return;
 			}
 			
@@ -257,21 +262,11 @@ namespace skylib.sar
 		
 		public static int Build_DotNet(string[] args)
 		{
-			// http://stackoverflow.com/questions/536539/how-to-call-msbuild-from-c-sharp
-			//:: Microsoft.NET v2.0.50727					http://www.microsoft.com/download/en/details.aspx?id=19
-			//:: Microsoft.NET v4.0.30319					http://www.microsoft.com/en-us/download/confirmation.aspx?id=17718
-			// %MSBUILD2% %SOLUTION% /p:Configuration=%CONFIG% /p:Platform="x86"
-			// set MSBUILD2="%WinDir%\Microsoft.NET\Framework\v2.0.50727\msbuild.exe"
-			// set MSBUILD4="%WinDir%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe"
-			
-			// version
-			// solution
-			// other
-			
 			// sanity check
-			if (args.Length <= 2)
+			if (args.Length < 3)
 			{
 				Usage();
+				throw new ArgumentException("too few arguments");
 				return EXIT_ERROR;
 			}
 			
@@ -337,6 +332,79 @@ namespace skylib.sar
 			{
 				Console.WriteLine("Build Failed");
 				Console.WriteLine(output);
+				Console.WriteLine("exit code: " + compiler.ExitCode.ToString());
+				return compiler.ExitCode;
+			}
+			else
+			{
+				Console.WriteLine("Build Successfully Completed");
+				return EXIT_OK;
+			}
+		}
+		
+		public static int Build_NSIS(string[] args)
+		{
+			// sanity check
+			if (args.Length < 2)
+			{
+				Usage();
+				throw new ArgumentException("too few arguments");
+				return EXIT_ERROR;
+			}
+			
+			string nsiFile = args[1];
+			
+			// get list of msbuild versions availble
+			
+			List<String> files = IO.GetAllFiles(IO.ProgramFilesx86(), "makensis.exe");
+			if (files.Count == 0)
+			{
+				files = IO.GetAllFiles(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFiles), "makensis.exe");
+			}
+			
+			// sanity - nsis not installed
+			if (files.Count == 0)
+			{
+				Console.WriteLine("sar unable to locate makensis.exe");
+				return EXIT_ERROR;
+			}
+			
+			string nsisPath = files[0];
+			
+			// sanity - solution file exists
+			if (!File.Exists(nsiFile))
+			{
+				throw new FileNotFoundException(nsiFile + " nsis file not found");
+			}
+			
+
+			string arguments = nsiFile;
+			
+			for (int i = 2; i < args.Length; i++)
+			{
+				arguments += " " + args[i];
+			}
+			
+			#if DEBUG
+			Console.WriteLine(nsisPath + " " + arguments);
+			#endif
+
+			
+			Process compiler = new Process();
+			compiler.StartInfo.FileName = nsisPath;
+			compiler.StartInfo.Arguments = arguments;
+			compiler.StartInfo.UseShellExecute = false;
+			compiler.StartInfo.RedirectStandardOutput = true;
+			compiler.Start();
+			string output = compiler.StandardOutput.ReadToEnd();
+			compiler.WaitForExit();
+			
+			if (compiler.ExitCode != 0)
+			{
+				Console.WriteLine("Build Failed");
+				Console.ForegroundColor = ConsoleColor.DarkCyan;
+				Console.WriteLine(output);
+				Console.ResetColor();
 				Console.WriteLine("exit code: " + compiler.ExitCode.ToString());
 				return compiler.ExitCode;
 			}
