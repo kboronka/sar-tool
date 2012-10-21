@@ -469,7 +469,7 @@ namespace skylib.sar
 			string output = compiler.StandardOutput.ReadToEnd();
 			compiler.WaitForExit();
 			
-			if (compiler.ExitCode != 0)
+			if (compiler.ExitCode != 1)
 			{
 				Console.ForegroundColor = ConsoleColor.DarkYellow;
 				Console.WriteLine("Build Failed");
@@ -478,7 +478,7 @@ namespace skylib.sar
 				Console.WriteLine(output);
 				Console.ResetColor();
 				Console.WriteLine("exit code: " + compiler.ExitCode.ToString());
-				return compiler.ExitCode;
+				return EXIT_ERROR;
 			}
 			else
 			{
@@ -488,6 +488,5 @@ namespace skylib.sar
 				return EXIT_OK;
 			}
 		}
-		
 	}
 }
