@@ -16,15 +16,16 @@ set REPO=https://sar-tool.googlecode.com/svn
 set CONFIG=Release
 set BASEPATH=%~dp0
 
-:: Paths
+:Paths
 	set SAR="lib\sar\sar.exe"
 	set ZIP="%PROGRAMFILES%\7-Zip\7zG.exe" a -tzip
 
-:: Build Soultion
+:Build
 	echo "VERSION.MAJOR.MINOR.BUILD".
 	set /p VERSION="> "
 
 	svn update
+	
 	%SAR% -r AssemblyInfo.* ((Version)\(\"\d+\.\d+\.\d+\.\d+\"\)) "Version(\"%VERSION%\")"
 	%SAR% -r %SOLUTION% "Format Version 10.00" "Format Version 9.00"
 	%SAR% -r %SOLUTION% "Visual Studio 2008" "Visual Studio 2005"
@@ -33,7 +34,9 @@ set BASEPATH=%~dp0
 	%SAR% -b.net 2.0 %SOLUTION% /p:Configuration=%CONFIG% /p:Platform=\"x86\"
 	if errorlevel 1 goto BuildFailed
 
-:: Build Complete
+:BuildComplete
+	echo build completed
+	
 	copy sar\bin\%CONFIG%\*.exe release\*.exe
 	copy license.txt release\license.txt
 
@@ -46,24 +49,14 @@ set BASEPATH=%~dp0
 	
 	svn commit -m "version %VERSION%"
 	svn copy %REPO%/trunk %REPO%/tags/%VERSION% -m "Tagging the %VERSION% version release of the project"
-	
-	echo
-	echo
-	echo build completed, trunk has been tagged
-
 	popd
 	exit /b 0
 
 
-:: Build Failed
-	:BuildFailed
-	%SAR% -r %SOLUTION% "Format Version 9.00" "Format Version 10.00"
-	%SAR% -r %SOLUTION% "Visual Studio 2005" "Visual Studio 2008"
-
-	echo
-	echo
+:BuildFailed
 	echo build failed
 	pause
-
+	%SAR% -r %SOLUTION% "Format Version 9.00" "Format Version 10.00"
+	%SAR% -r %SOLUTION% "Visual Studio 2005" "Visual Studio 2008"
 	popd
-	exit /b 1
+	exit /b 1	
