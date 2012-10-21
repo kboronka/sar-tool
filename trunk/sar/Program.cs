@@ -6,6 +6,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using skylib.Tools;
 
@@ -55,13 +56,23 @@ namespace skylib.sar
 					case "lv_ver":
 						LabVIEW_Version(args);
 						break;
+						/* case "build.net":
+					case "b.net":
+						Build_DotNet(args);
+						break; */
+					case "kill":
+					case "k":
+					case "shutdown":
+					case "s":
+						Kill(args);
+						break;
 					case "help":
 					case "h":
 					case "?":
 						Usage();
 						break;
 					case "test":
-						Test();				
+						Test();
 						break;
 					default:
 						Console.WriteLine("Unknown command");
@@ -83,7 +94,6 @@ namespace skylib.sar
 		public static void Test()
 		{
 			Console.Out.Write("thistest");
-//			Console.WriteLine("test");
 		}
 		
 		public static void Usage()
@@ -91,10 +101,12 @@ namespace skylib.sar
 			Console.WriteLine("Usage:");
 			Console.WriteLine("\t -replace <file_search_pattern> <search_text> <replace_text>");
 			Console.WriteLine("\t -lv_ver <lvproj_file> <version>");
+			Console.WriteLine("\t -kill <process>");
 			Console.WriteLine("Examples:");
 			Console.WriteLine("\t sar -r \"AssemblyInfo.cs\" \"0.0.0.0\" \"1.0.0.0\"");
-			Console.WriteLine("\t sar -r AssemblyInfo.* ((Version)\\(\\\"\\d+\\.\\d+\\.\\d+\\.\\d+\\\"\\)) \"Version(\\\"%VERSION%\\\")\"");
+			//Console.WriteLine("\t sar -r AssemblyInfo.* ((Version)\\(\\\"\\d+\\.\\d+\\.\\d+\\.\\d+\\\"\\)) \"Version(\\\"%VERSION%\\\")\"");
 			Console.WriteLine("\t sar -lv_ver \"*.lvproj_file\" \"1.0.2.1\"");
+			Console.WriteLine("\t sar -kill notepad.exe");
 			
 			#if DEBUG
 			string content = "<Property Name=\"TgtF_fileVersion.build\" Type=\"Int\">9</Property><Property Name=\"TgtF_fileVersion.build\" Type=\"Int\">99</Property>";
@@ -200,5 +212,53 @@ namespace skylib.sar
 				Console.WriteLine("search string was not found");
 			}
 		}
+
+		public static void Kill(string[] args)
+		{
+			// sanity check
+			if (args.Length != 2)
+			{
+				Usage();
+				return;
+			}
+			
+			string processName = args[1];
+			
+			Process[] foundProcess = Process.GetProcessesByName(processName);
+			if (foundProcess.Length != 0)
+			{
+
+				foreach (Process process in foundProcess)
+				{
+					Console.WriteLine(process.ProcessName + " killed");
+					process.Kill();
+				}
+			}
+			else
+			{
+				Console.WriteLine(processName + " not running");
+			}
+		}
+		
+		/* public static void Build_DotNet(string[] args)
+		{
+			//:: Microsoft.NET v2.0.50727					http://www.microsoft.com/download/en/details.aspx?id=19
+			//:: Microsoft.NET v4.0.30319					http://www.microsoft.com/en-us/download/confirmation.aspx?id=17718
+			// %MSBUILD2% %SOLUTION% /p:Configuration=%CONFIG% /p:Platform="x86"
+			// set MSBUILD2="%WinDir%\Microsoft.NET\Framework\v2.0.50727\msbuild.exe"
+			// set MSBUILD4="%WinDir%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe"
+			
+			// version
+			// solution
+			// other
+			
+			// sanity check
+			if (args.Length <= 3)
+			{
+				Usage();
+				return;
+			}
+			
+		} */
 	}
 }
