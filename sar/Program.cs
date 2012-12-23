@@ -25,10 +25,6 @@ namespace skylib.sar
 			
 			try
 			{
-				Console.ForegroundColor = ConsoleColor.Yellow;
-				Console.WriteLine(AssemblyInfo.Name + "  v" + AssemblyInfo.Version + "  " + AssemblyInfo.Copyright);
-				Console.ResetColor();
-
 				backgroundThread.Name = "RunningIndicator";
 				backgroundThread.IsBackground = true;
 				backgroundThread.Start();
@@ -120,13 +116,17 @@ namespace skylib.sar
 			}
 		}
 		
-		public static void Test()
+		private static void Test()
 		{
 			Console.Out.Write("thistest");
 		}
 		
-		public static void Usage()
+		private static void Usage()
 		{
+			Console.ForegroundColor = ConsoleColor.Yellow;
+			Console.WriteLine(AssemblyInfo.Name + "  v" + AssemblyInfo.Version + "  " + AssemblyInfo.Copyright);
+			Console.ResetColor();
+			
 			Console.WriteLine("Usage:");
 			Console.WriteLine("\t -replace <file_search_pattern> <search_text> <replace_text>");
 			Console.WriteLine("\t -lv_ver <lvproj_file> <version>");
@@ -147,12 +147,10 @@ namespace skylib.sar
 			Console.WriteLine("replace " + replace);
 			Console.WriteLine("Result: ");
 			Console.WriteLine("\t" + Regex.Replace(content, search, replace));
-			
-			//Console.ReadKey();
 			#endif
 		}
 		
-		public static void SearchReplace(string[] args)
+		private static void SearchReplace(string[] args)
 		{
 			// sanity check
 			if (args.Length != 4)
@@ -183,7 +181,7 @@ namespace skylib.sar
 			Console.ResetColor();
 		}
 		
-		public static void LabVIEW_Version(string[] args)
+		private static void LabVIEW_Version(string[] args)
 		{
 			// sanity check
 			if (args.Length != 3)
@@ -240,7 +238,7 @@ namespace skylib.sar
 			}
 		}
 
-		public static void Kill(string[] args)
+		private static void Kill(string[] args)
 		{
 			// sanity check
 			if (args.Length != 2)
@@ -270,7 +268,7 @@ namespace skylib.sar
 			}
 		}
 		
-		public static int Build_DotNet(string[] args)
+		private static int Build_DotNet(string[] args)
 		{
 			// sanity check
 			if (args.Length < 3)
@@ -357,7 +355,7 @@ namespace skylib.sar
 			}
 		}
 		
-		public static int Build_NSIS(string[] args)
+		private static int Build_NSIS(string[] args)
 		{
 			// sanity check
 			if (args.Length < 2)
@@ -389,12 +387,14 @@ namespace skylib.sar
 			}
 			
 
-			string arguments = nsiFile;
+			string arguments = "";
 			
 			for (int i = 2; i < args.Length; i++)
 			{
 				arguments += " " + args[i];
 			}
+			
+			arguments += " " + nsiFile;
 			
 			#if DEBUG
 			Console.WriteLine(nsisPath + " " + arguments);
@@ -430,7 +430,7 @@ namespace skylib.sar
 			}
 		}
 
-		public static int Build_CHM(string[] args)
+		private static int Build_CHM(string[] args)
 		{
 			// sanity check
 			if (args.Length < 2)
