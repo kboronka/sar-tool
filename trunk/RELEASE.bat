@@ -49,6 +49,7 @@ set BASEPATH=%~dp0
 	
 	svn commit -m "version %VERSION%"
 	svn copy %REPO%/trunk %REPO%/tags/%VERSION% -m "Tagging the %VERSION% version release of the project"
+	svn update
 	popd
 	exit /b 0
 
