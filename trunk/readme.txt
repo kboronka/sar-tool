@@ -1,8 +1,11 @@
-sar - search and release command line tool
-sar Copyright (C) 2012 Kevin Boronka
+sar - search and release command line tool - a handy free tool to simplify build batch files.
+sar /? for usage information
 
+source code: https://sar-tool.googlecode.com/svn/trunk
 
-:: setting up the build enviorment:
+----------------------------------------------------------------------------------------------------------------------------
+
+setting up the build enviorment:
 	- Microsoft.NET v2.0.50727:
 		http://www.microsoft.com/download/en/details.aspx?id=19
 
