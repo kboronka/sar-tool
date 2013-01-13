@@ -366,7 +366,7 @@ namespace skylib.sar
 			string nsiFile = args[1];
 			
 			// get list of makensis.exe file locations availble
-			List<String> files = IO.GetAllFiles(IO.ProgramFilesx86(), "makensis.exe");
+			List<String> files = IO.GetAllFiles(IO.ProgramFilesx86, "makensis.exe");
 			if (files.Count == 0)
 			{
 				files = IO.GetAllFiles(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFiles), "makensis.exe");
@@ -441,7 +441,7 @@ namespace skylib.sar
 			string hhpFile = args[1];
 			
 			// get list of hhc.exe file locations availble
-			List<String> files = IO.GetAllFiles(IO.ProgramFilesx86(), "hhc.exe");
+			List<String> files = IO.GetAllFiles(IO.ProgramFilesx86, "hhc.exe");
 			if (files.Count == 0)
 			{
 				files = IO.GetAllFiles(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFiles), "hhc.exe");
