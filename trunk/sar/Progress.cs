@@ -13,7 +13,7 @@ namespace skylib.sar
 	{
 		public Progress()
 		{
-			
+
 		}
 		
 		public void DoWork()
@@ -29,7 +29,7 @@ namespace skylib.sar
 					Console.ResetColor();
 					Thread.Sleep(100);
 				}
-			}			
+			}
 		}
 	}
 }
