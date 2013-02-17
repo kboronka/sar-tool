@@ -31,6 +31,7 @@ namespace skylib.sar
 				
 				#if DEBUG
 				System.Threading.Thread.Sleep(2000);
+				TimestampFile(new string[] {"", @"c:\test.aaa.zip", "yyyy----MM-----dd HH--mm-ss"});
 				#endif
 				
 				if (args.Length == 0)
@@ -78,6 +79,10 @@ namespace skylib.sar
 					case "build.chm":
 					case "b.chm":
 						exitCode = Build_CHM(args);
+						break;
+					case "timestamp":
+					case "t":
+						exitCode = TimestampFile(args);
 						break;
 					case "kill":
 					case "k":
@@ -501,6 +506,53 @@ namespace skylib.sar
 				Console.ResetColor();
 				return EXIT_OK;
 			}
+		}
+		
+		private static int TimestampFile(string[] args)
+		{
+			// sanity check
+			if (args.Length < 2)
+			{
+				throw new ArgumentException("incorrect number of arguments");
+			}
+			
+			string timestampFormat = "yyyy-MM-dd HH-mm-ss";
+			if (args.Length >= 3)
+			{
+				timestampFormat = args[2];
+			}
+			
+			string filepath = args[1];
+			
+			// original file must exits
+			if (!File.Exists(filepath))
+			{
+				#if !DEBUG
+				throw new FileNotFoundException("file not found. \"" + filepath + "\"");
+				#endif
+			}
+			
+			string datetimestamp = DateTime.Now.ToString(timestampFormat);
+			string fileExtension = filepath.Substring(filepath.LastIndexOf('.') + 1);
+			string filepathNew = filepath.Substring(0, filepath.Length - fileExtension.Length - 1) + "." + datetimestamp + "." + fileExtension;
+			
+			#if DEBUG
+			Console.WriteLine("filepath: " + filepath);
+			Console.WriteLine("datetimestamp: " + datetimestamp);
+			Console.WriteLine("fileExtension: " + fileExtension);
+			Console.WriteLine("filepathNew: " + filepathNew);
+			#endif
+			
+			if (File.Exists(filepathNew))
+			{
+				throw new FileLoadException("file already exists. \"" + filepathNew + "\"");
+			}
+			
+			#if !DEBUG
+			File.Move(filepath, filepathNew);
+			#endif
+			
+			return EXIT_OK;
 		}
 	}
 }
