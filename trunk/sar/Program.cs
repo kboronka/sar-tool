@@ -29,19 +29,17 @@ namespace skylib.sar
 				backgroundThread.IsBackground = true;
 				backgroundThread.Start();
 				
-				#if DEBUG
-				System.Threading.Thread.Sleep(2000);
-				TimestampFile(new string[] {"", @"c:\test.aaa.zip", "yyyy----MM-----dd HH--mm-ss"});
-				#endif
-				
 				if (args.Length == 0)
 				{
+					#if DEBUG
+					System.Threading.Thread.Sleep(2000);
+					#endif
 					throw new ArgumentException("too few arguments");
 				}
 				
 				string command = args[0].ToLower();
 
-				if (command[0] != '-' && command[0] != '/' )
+				if (command[0] != '-' && command[0] != '/')
 				{
 					throw new ArgumentException("first argument must start with a \"-\" \"/\" ");
 				}
@@ -84,6 +82,10 @@ namespace skylib.sar
 					case "t":
 						exitCode = TimestampFile(args);
 						break;
+					case "backup":
+					case "bk":
+						exitCode = BackupFile(args);
+						break;
 					case "kill":
 					case "k":
 					case "shutdown":
@@ -98,24 +100,34 @@ namespace skylib.sar
 					case "test":
 						Test();
 						break;
+					case "allvars":
+						IO.AllVariables(EnvironmentVariableTarget.Process);
+						break;
 					default:
 						throw new ArgumentException("Unknown command");
 				}
 				
+				backgroundThread.Abort();
 				#if DEBUG
+				Console.ForegroundColor = ConsoleColor.Yellow;
+				Console.WriteLine("Press anykey to continue");
 				Console.ReadKey();
+				Console.ResetColor();
 				#endif
 				return exitCode;
 			}
 			catch (Exception ex)
 			{
 				backgroundThread.Abort();
-
+				
 				Console.ForegroundColor = ConsoleColor.Red;
 				Console.WriteLine("Error: " + ex.Message);
 				Console.ResetColor();
 				#if DEBUG
+				Console.ForegroundColor = ConsoleColor.Yellow;
+				Console.WriteLine("Press anykey to continue");
 				Console.ReadKey();
+				Console.ResetColor();
 				#endif
 				return EXIT_ERROR;
 			}
@@ -542,6 +554,7 @@ namespace skylib.sar
 			Console.WriteLine("fileExtension: " + fileExtension);
 			Console.WriteLine("filepathNew: " + filepathNew);
 			#endif
+
 			
 			if (File.Exists(filepathNew))
 			{
@@ -551,6 +564,96 @@ namespace skylib.sar
 			#if !DEBUG
 			File.Move(filepath, filepathNew);
 			#endif
+			
+			#if DEBUG
+			File.Copy(filepath, filepathNew);
+			#endif
+			
+			return EXIT_OK;
+		}
+		
+		private static int BackupFile(string[] args)
+		{
+			// sanity check
+			if (args.Length != 3)
+			{
+				throw new ArgumentException("incorrect number of arguments");
+			}
+			
+			
+			string filepattern = args[1];
+			string archiveroot = args[2];
+			if (archiveroot.Substring(archiveroot.Length - 1) != "\\") archiveroot = archiveroot + '\\';
+			
+			#if DEBUG
+			Console.WriteLine("filepattern: " + filepattern);
+			Console.WriteLine("archiveroot: " + archiveroot);
+			#endif
+			
+			
+			List<string> filelist = IO.GetAllFiles(filepattern);
+			
+			if (!Directory.Exists(archiveroot))
+			{
+				throw new DirectoryNotFoundException("unable to find storage folder " + archiveroot);
+			}
+			
+			if (filelist.Count == 0)
+			{
+				throw new FileNotFoundException("unable to find a file that matches pattern " + filepattern);
+			}
+			
+			string filepath = filelist[0];
+			
+			string filepathNew = archiveroot + filepath.Substring(filepath.LastIndexOf('\\') + 1);
+			
+			// original file must exits
+			if (!File.Exists(filepath))
+			{
+				throw new FileNotFoundException("file not found. \"" + filepath + "\"");
+			}
+			
+			
+			#if DEBUG
+			Console.WriteLine("filepath: " + filepath);
+			Console.WriteLine("filepathNew: " + filepathNew);
+			#endif
+			
+			FileInfo originalFile = new FileInfo(filepath);
+			FileInfo oldestFile = IO.GetOldestFile(archiveroot);
+			
+			
+			#if DEBUG
+			Console.WriteLine("originalFile.Length: " + originalFile.Length.ToString());
+			if (oldestFile != null)
+			{
+				Console.WriteLine("oldestFile.Length: " + oldestFile.Length.ToString());
+			}
+			#endif
+			
+			if (oldestFile != null)
+			{
+				if (oldestFile.Length == originalFile.Length)
+				{
+					Console.ForegroundColor = ConsoleColor.DarkYellow;
+					Console.WriteLine("Backup Not Required");
+					Console.ResetColor();
+					
+					return EXIT_OK;
+				}
+			}
+			
+			#if !DEBUG
+			File.Move(filepath, filepathNew);
+			#endif
+			
+			#if DEBUG
+			File.Copy(filepath, filepathNew);
+			#endif
+			
+			Console.ForegroundColor = ConsoleColor.DarkYellow;
+			Console.WriteLine("Backup Successfully Completed");
+			Console.ResetColor();
 			
 			return EXIT_OK;
 		}
