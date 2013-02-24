@@ -620,7 +620,7 @@ namespace skylib.sar
 			#endif
 			
 			FileInfo originalFile = new FileInfo(filepath);
-			FileInfo oldestFile = IO.GetOldestFile(archiveroot);
+			FileInfo oldestFile = IO.GetNewestFile(archiveroot);
 			
 			
 			#if DEBUG
