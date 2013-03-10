@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("sar")]
-[assembly: AssemblyCopyright("Copyright (c) 2012 Kevin Boronka")]
+[assembly: AssemblyCopyright("Copyright (c) 2013 Kevin Boronka")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
