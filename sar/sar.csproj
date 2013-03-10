@@ -52,6 +52,7 @@
     <Compile Include="Commands\BuildSLN.cs" />
     <Compile Include="Commands\BuildNSIS.cs" />
     <Compile Include="Commands\Help.cs" />
+    <Compile Include="Commands\NetLogin.cs" />
     <Compile Include="Commands\Kill.cs" />
     <Compile Include="Commands\LabviewVersion.cs" />
     <Compile Include="Commands\SearchAndReplace.cs" />
