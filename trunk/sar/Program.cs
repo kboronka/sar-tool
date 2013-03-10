@@ -39,6 +39,7 @@ namespace skylib.sar
 				allCommands.Add(new LabviewVersion());
 				allCommands.Add(new SearchAndReplace());
 				allCommands.Add(new TimestampFilename());
+				allCommands.Add(new NetLogin());
 				
 
 				backgroundThread.Name = "RunningIndicator";

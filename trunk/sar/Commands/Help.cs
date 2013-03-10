@@ -10,7 +10,7 @@ namespace skylib.sar
 {
 	public class Help : BaseCommand
 	{
-		public Help() : base("Help", new List<string> { "help", "?" }, "-help [command]", new List<string>())
+		public Help() : base("Help", new List<string> { "help", "?" }, "-help [command]", new List<string>() { @"-help bk" })
 		{
 			
 		}
@@ -36,7 +36,8 @@ namespace skylib.sar
 					if (command.Examples.Count > 0)
 					{
 						Console.ForegroundColor = ConsoleColor.White;
-						Console.WriteLine("\nCommands:");
+						if (command.Examples.Count > 1) Console.WriteLine("\nExamples:");
+						if (command.Examples.Count == 1) Console.WriteLine("\nExample:");
 						Console.ResetColor();
 						
 						foreach (string example in command.Examples)
@@ -59,17 +60,26 @@ namespace skylib.sar
 				Console.WriteLine("\nCommands:");
 				Console.ResetColor();
 				
+				BaseCommand lastCommand = null;
 				foreach (BaseCommand command in CommandHub.commands.Values)
 				{
-					Console.Write("\t");
-					string seperator = "";
-					foreach (string commandString in command.Commands)
+					if (command != lastCommand)
 					{
-						Console.Write(seperator + commandString);
-						seperator = " | ";
+						lastCommand = command;
+						Console.ForegroundColor = ConsoleColor.Red;
+						Console.Write("\t" + command.Name + ": ");
+						Console.ResetColor();
+						
+						string seperator = "";
+						foreach (string commandString in command.Commands)
+						{
+							Console.Write(seperator);
+							Console.Write(commandString);
+							seperator = ", ";
+						}
+						
+						Console.WriteLine();
 					}
-					
-					Console.WriteLine();
 				}
 			}
 			
