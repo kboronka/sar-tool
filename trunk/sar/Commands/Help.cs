@@ -15,11 +15,17 @@ namespace skylib.sar
 			
 		}
 		
-		public override int Execute(string[] args)
+		public static void WriteTitle()
 		{
 			Console.ForegroundColor = ConsoleColor.Yellow;
-			Console.WriteLine(AssemblyInfo.Name + "  v" + AssemblyInfo.Version + "  " + AssemblyInfo.Copyright);
-			Console.ResetColor();
+			Console.Write(AssemblyInfo.Product + " v" + AssemblyInfo.Version);
+			Console.ResetColor();			
+			Console.WriteLine("  " + AssemblyInfo.Copyright);
+		}
+		
+		public override int Execute(string[] args)
+		{
+			Help.WriteTitle();
 
 			if (args.Length == 2)
 			{
