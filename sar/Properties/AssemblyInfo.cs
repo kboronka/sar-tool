@@ -9,11 +9,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("sar")]
+[assembly: AssemblyTitle("Search And Replace")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("sar")]
+[assembly: AssemblyProduct("Search And Replace")]
 [assembly: AssemblyCopyright("Copyright (c) 2013 Kevin Boronka")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
