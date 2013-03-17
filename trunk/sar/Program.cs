@@ -23,55 +23,98 @@ namespace skylib.sar
 
 		public static int Main(string[] args)
 		{
+			//FIXME: no error handling here
 			Progress progressBar = new Progress();
 			Thread backgroundThread = new Thread(new ThreadStart(progressBar.DoWork));
 			
 			try
 			{
-				List<BaseCommand> allCommands = new List<BaseCommand>();
-
-				allCommands.Add(new Backup());
-				allCommands.Add(new BuildCHM());
-				allCommands.Add(new BuildNSIS());
-				allCommands.Add(new BuildSLN());
-				allCommands.Add(new Help());
-				allCommands.Add(new Kill());
-				allCommands.Add(new LabviewVersion());
-				allCommands.Add(new SearchAndReplace());
-				allCommands.Add(new TimestampFilename());
-				allCommands.Add(new NetLogin());
+				// load all command modules
+				List<BaseCommand> allCommands = new List<BaseCommand>() {
+					new Backup(),
+					new BuildCHM(),
+					new BuildNSIS(),
+					new BuildSLN(),
+					new Help(),
+					new Kill(),
+					new LabviewVersion(),
+					new SearchAndReplace(),
+					new TimestampFilename(),
+					new NetLogin(),
+					new VboxManage(),
+					new FileFind(),
+					new FileDestory()
+				};
 				
-
-				backgroundThread.Name = "RunningIndicator";
-				backgroundThread.IsBackground = true;
-				backgroundThread.Start();
+				// process command line arguments
+				bool commandlineActive = false;
+				int exitCode = EXIT_OK;
 				
-				if (args.Length == 0)
+				while (!commandlineActive)
 				{
-					#if DEBUG
-					System.Threading.Thread.Sleep(2000);
-					#endif
-					throw new ArgumentException("too few arguments");
+					try
+					{
+						
+						if (args.Length == 0)
+						{
+							commandlineActive = false;
+							args = new string[1];
+						
+							Help.WriteTitle();
+							Console.ForegroundColor = ConsoleColor.White;
+							Console.Write("> ");
+							Console.ResetColor();
+							args = StringHelper.ParseString(Console.ReadLine(), " ");
+							
+							if (args.Length == 0)
+							{
+								throw new ArgumentException("too few arguments");
+							}
+						}
+						else
+						{
+							commandlineActive = true;
+						}
+						
+						
+						string command = args[0].ToLower();
+						if (command[0] == '-' || command[0] == '/')
+						{
+							command = command.Substring(1);
+						}
+						
+						// Execute Command
+						if (command != "exit")
+						{
+
+							backgroundThread = new Thread(new ThreadStart(progressBar.DoWork));
+							backgroundThread.Name = "RunningIndicator";
+							backgroundThread.IsBackground = true;
+							backgroundThread.Start();
+							exitCode = CommandHub.Execute(command, args);
+							args = new string[0];
+							backgroundThread.Abort();
+
+						}
+					}
+					catch (Exception ex)
+					{
+						args = new string[0];
+						backgroundThread.Abort();
+						
+						Console.ForegroundColor = ConsoleColor.Red;
+						Console.WriteLine("Error: " + ex.Message);
+						Console.ResetColor();
+						#if DEBUG
+						if (commandlineActive)
+						{
+							Thread.Sleep(2000);
+						}
+						#endif
+						exitCode = EXIT_ERROR;
+					}
 				}
 				
-				string command = args[0].ToLower();
-
-				if (command[0] != '-' && command[0] != '/')
-				{
-					throw new ArgumentException("first argument must begin with prefix \"-\" or \"/\" ");
-				}
-				
-				command = command.Substring(1);			
-				int exitCode = CommandHub.Execute(command, args);
-				
-				
-				backgroundThread.Abort();
-				#if DEBUG
-				Console.ForegroundColor = ConsoleColor.Yellow;
-				Console.WriteLine("Press anykey to continue");
-				Console.ReadKey();
-				Console.ResetColor();
-				#endif
 				return exitCode;
 			}
 			catch (Exception ex)
