@@ -10,6 +10,8 @@ namespace skylib.sar
 {
 	public class Help : BaseCommand
 	{
+		private static bool titleDisplayed = false;
+		
 		public Help() : base("Help", new List<string> { "help", "?" }, "-help [command]", new List<string>() { @"-help bk" })
 		{
 			
@@ -17,10 +19,14 @@ namespace skylib.sar
 		
 		public static void WriteTitle()
 		{
-			Console.ForegroundColor = ConsoleColor.Yellow;
-			Console.Write(AssemblyInfo.Product + " v" + AssemblyInfo.Version);
-			Console.ResetColor();			
-			Console.WriteLine("  " + AssemblyInfo.Copyright);
+			if (!Help.titleDisplayed)
+			{
+				Console.ForegroundColor = ConsoleColor.Yellow;
+				Console.Write(AssemblyInfo.Product + " v" + AssemblyInfo.Version);
+				Console.ResetColor();
+				Console.WriteLine("  " + AssemblyInfo.Copyright);
+				titleDisplayed = true;
+			}
 		}
 		
 		public override int Execute(string[] args)
