@@ -32,8 +32,8 @@ namespace skylib.sar
 			if (archiveroot.Substring(archiveroot.Length - 1) != "\\") archiveroot = archiveroot + '\\';
 			
 			#if DEBUG
-			Console.WriteLine("filepattern: " + filepattern);
-			Console.WriteLine("archiveroot: " + archiveroot);
+			ConsoleHelper.WriteLine("filepattern: " + filepattern);
+			ConsoleHelper.WriteLine("archiveroot: " + archiveroot);
 			#endif
 			
 			
@@ -61,8 +61,8 @@ namespace skylib.sar
 			
 			
 			#if DEBUG
-			Console.WriteLine("filepath: " + filepath);
-			Console.WriteLine("filepathNew: " + filepathNew);
+			ConsoleHelper.WriteLine("filepath: " + filepath);
+			ConsoleHelper.WriteLine("filepathNew: " + filepathNew);
 			#endif
 			
 			FileInfo originalFile = new FileInfo(filepath);
@@ -70,10 +70,10 @@ namespace skylib.sar
 			
 			
 			#if DEBUG
-			Console.WriteLine("originalFile.Length: " + originalFile.Length.ToString());
+			ConsoleHelper.WriteLine("originalFile.Length: " + originalFile.Length.ToString());
 			if (oldestFile != null)
 			{
-				Console.WriteLine("oldestFile.Length: " + oldestFile.Length.ToString());
+				ConsoleHelper.WriteLine("oldestFile.Length: " + oldestFile.Length.ToString());
 			}
 			#endif
 			
@@ -81,9 +81,7 @@ namespace skylib.sar
 			{
 				if (oldestFile.Length == originalFile.Length)
 				{
-					Console.ForegroundColor = ConsoleColor.DarkYellow;
-					Console.WriteLine("Backup Not Required");
-					Console.ResetColor();
+					ConsoleHelper.WriteLine("Backup Not Required", ConsoleColor.DarkYellow);
 					
 					return Program.EXIT_OK;
 				}
@@ -97,9 +95,7 @@ namespace skylib.sar
 			File.Copy(filepath, filepathNew);
 			#endif
 			
-			Console.ForegroundColor = ConsoleColor.DarkYellow;
-			Console.WriteLine("Backup Successfully Completed");
-			Console.ResetColor();
+			ConsoleHelper.WriteLine("Backup Successfully Completed", ConsoleColor.DarkYellow);
 			
 			return Program.EXIT_OK;
 		}

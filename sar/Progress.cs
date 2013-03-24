@@ -5,31 +5,45 @@
  * Time: 12:06 PM
  */
 using System;
-using System.Threading;
+using System.Timers;
+using skylib.Tools;
 
 namespace skylib.sar
 {
 	public class Progress
 	{
+		public static Timer timer;
+		private static int i = 0;
+		
 		public Progress()
 		{
-
+			timer = new Timer();
+			timer.Elapsed += new ElapsedEventHandler(Update);
+			Progress.i = 0;
+		}
+		
+		static void Update(object sender, ElapsedEventArgs e)
+		{
+			
+			if (++Progress.i >= 6) Progress.i = 0;
+			
+			ConsoleHelper.Write("running" + new String('.', i) + new String(' ', 6 - i) + "\r", ConsoleColor.Cyan);
 		}
 		
 		public void DoWork()
 		{
-			char[] sequence = {'-', '\\', '|', '/'};
+			timer.Enabled = true;
+			
+			/*
 			while(true)
 			{
 				for (int i = 0; i < 6; i++)
 				{
-					Console.ForegroundColor = ConsoleColor.Cyan;
-					//Console.Write(sequence[i] + "\r");
-					Console.Write("running" + new String('.', i) + new String(' ', 6 - i) + "\r");
-					Console.ResetColor();
+					ConsoleHelper.Write("running" + new String('.', i) + new String(' ', 6 - i) + "\r", ConsoleColor.Cyan);
 					Thread.Sleep(100);
 				}
 			}
+			*/
 		}
 	}
 }

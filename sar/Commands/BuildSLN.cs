@@ -44,7 +44,7 @@ namespace skylib.sar
 				{
 					msBuildFolders.Add(version, msBuildPath);
 					#if DEBUG
-					Console.WriteLine(version + " = " + msBuildPath);
+					ConsoleHelper.WriteLine(version + " = " + msBuildPath);
 					#endif
 				}
 			}
@@ -73,7 +73,7 @@ namespace skylib.sar
 			}
 			
 			#if DEBUG
-			Console.WriteLine(msbuildPath + " " + arguments);
+			ConsoleHelper.WriteLine(msbuildPath + " " + arguments);
 			#endif
 
 			
@@ -88,21 +88,14 @@ namespace skylib.sar
 			
 			if (compiler.ExitCode != 0)
 			{
-				Console.ForegroundColor = ConsoleColor.DarkYellow;
-				Console.WriteLine("Build Failed");
-				Console.ResetColor();
-				
-				Console.ForegroundColor = ConsoleColor.DarkCyan;
-				Console.WriteLine(output);
-				Console.ResetColor();
-				Console.WriteLine("exit code: " + compiler.ExitCode.ToString());
+				ConsoleHelper.WriteLine("Build Failed", ConsoleColor.DarkYellow);
+				ConsoleHelper.WriteLine(output, ConsoleColor.DarkCyan);
+				ConsoleHelper.WriteLine("exit code: " + compiler.ExitCode.ToString());
 				return compiler.ExitCode;
 			}
 			else
 			{
-				Console.ForegroundColor = ConsoleColor.DarkYellow;
-				Console.WriteLine("Build Successfully Completed");
-				Console.ResetColor();
+				ConsoleHelper.WriteLine("Build Successfully Completed", ConsoleColor.DarkYellow);
 				return Program.EXIT_OK;
 			}
 		}

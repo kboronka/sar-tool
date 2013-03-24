@@ -11,12 +11,12 @@ namespace skylib.sar
 {
 	public class SearchAndReplace : BaseCommand
 	{
-		public SearchAndReplace() : base("Search And Replace", 
-		                                new List<string> { "replace", "r" },
-		                                "-replace <file_search_pattern> <search_text> <replace_text>",
-		                               new List<string> { 
-		                                	"-r \"AssemblyInfo.cs\" \"0.0.0.0\" \"1.0.0.0\"",
-		                                	"-r AssemblyInfo.* ((Version)\\(\\\"\\d+\\.\\d+\\.\\d+\\.\\d+\\\"\\)) \"Version(\\\"%VERSION%\\\")\"" })
+		public SearchAndReplace() : base("Search And Replace",
+		                                 new List<string> { "replace", "r" },
+		                                 "-replace <file_search_pattern> <search_text> <replace_text>",
+		                                 new List<string> {
+		                                 	"-r \"AssemblyInfo.cs\" \"0.0.0.0\" \"1.0.0.0\"",
+		                                 	"-r AssemblyInfo.* ((Version)\\(\\\"\\d+\\.\\d+\\.\\d+\\.\\d+\\\"\\)) \"Version(\\\"%VERSION%\\\")\"" })
 		{
 			
 		}
@@ -32,14 +32,11 @@ namespace skylib.sar
 			string filePattern = args[1];
 			string searchString = args[2];
 			string replaceString = args[3];
-			
-			
 			string root = Directory.GetCurrentDirectory();
+			IO.CheckRootAndPattern(ref root, ref filePattern);
+			
 			List<string> changedFiles = IO.SearchAndReplaceInFiles(root, filePattern, searchString, replaceString);
-
-			Console.ForegroundColor = ConsoleColor.DarkYellow;
-			Console.WriteLine("Replacments made in " + changedFiles.Count.ToString() + " file" + ((changedFiles.Count != 1) ? "s" : ""));
-			Console.ResetColor();
+			ConsoleHelper.WriteLine("Replacments made in " + changedFiles.Count.ToString() + " file" + ((changedFiles.Count != 1) ? "s" : ""), ConsoleColor.DarkYellow);
 			
 			return Program.EXIT_OK;
 		}

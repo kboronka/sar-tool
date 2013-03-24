@@ -62,7 +62,7 @@ namespace skylib.sar
 			arguments += " " + nsiFile;
 			
 			#if DEBUG
-			Console.WriteLine(nsisPath + " " + arguments);
+			ConsoleHelper.WriteLine(nsisPath + " " + arguments);
 			#endif
 
 			
@@ -77,20 +77,13 @@ namespace skylib.sar
 			
 			if (compiler.ExitCode != 0)
 			{
-				Console.ForegroundColor = ConsoleColor.DarkYellow;
-				Console.WriteLine("Build Failed");
-				Console.ResetColor();
-				Console.ForegroundColor = ConsoleColor.DarkCyan;
-				Console.WriteLine(output);
-				Console.ResetColor();
-				Console.WriteLine("exit code: " + compiler.ExitCode.ToString());
+				ConsoleHelper.WriteLine("Build Failed", ConsoleColor.DarkYellow);
+				ConsoleHelper.WriteLine(output, ConsoleColor.DarkCyan);
 				return compiler.ExitCode;
 			}
 			else
 			{
-				Console.ForegroundColor = ConsoleColor.DarkYellow;
-				Console.WriteLine("Build Successfully Completed");
-				Console.ResetColor();
+				ConsoleHelper.WriteLine("Build Successfully Completed", ConsoleColor.DarkYellow);
 				return Program.EXIT_OK;
 			}
 		}

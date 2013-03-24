@@ -36,17 +36,13 @@ namespace skylib.sar
 
 				foreach (Process process in foundProcess)
 				{
-					Console.ForegroundColor = ConsoleColor.DarkYellow;
-					Console.WriteLine(process.ProcessName + " killed");
-					Console.ResetColor();
 					process.Kill();
+					ConsoleHelper.WriteLine(process.ProcessName + " killed", ConsoleColor.DarkYellow);
 				}
 			}
 			else
 			{
-				Console.ForegroundColor = ConsoleColor.DarkYellow;
-				Console.WriteLine(processName + " not running");
-				Console.ResetColor();
+				ConsoleHelper.WriteLine(processName + " not running", ConsoleColor.DarkYellow);
 			}
 			
 			return Program.EXIT_OK;

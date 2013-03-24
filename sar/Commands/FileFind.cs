@@ -29,22 +29,17 @@ namespace skylib.sar
 			}
 			
 			string filePattern = args[1];
-			
 			string root = Directory.GetCurrentDirectory();
+			IO.CheckRootAndPattern(ref root, ref filePattern);
 			List<string> files = IO.GetAllFiles(root, filePattern);
 			
 			foreach (string file in files)
 			{
-				Console.ForegroundColor = ConsoleColor.Cyan;
-				Console.Write("found: ");
-				Console.ForegroundColor = ConsoleColor.Yellow;
-				Console.ResetColor();
-				Console.WriteLine(file.Substring(root.Length + 1));
+				ConsoleHelper.Write("found: ", ConsoleColor.Cyan);
+				ConsoleHelper.WriteLine(file.Substring(root.Length));
 			}
 
-			Console.ForegroundColor = ConsoleColor.DarkYellow;
-			Console.WriteLine("Files Found " + files.Count.ToString() + " file" + ((files.Count != 1) ? "s" : ""));
-			Console.ResetColor();
+			ConsoleHelper.WriteLine("Files Found " + files.Count.ToString() + " file" + ((files.Count != 1) ? "s" : ""), ConsoleColor.DarkYellow);
 			
 			return Program.EXIT_OK;
 		}

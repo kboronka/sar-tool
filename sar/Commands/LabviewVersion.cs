@@ -63,15 +63,15 @@ namespace skylib.sar
 
 			if (changedFiles.Count > 0)
 			{
-				Console.WriteLine("Replacments made in the following file" + ((changedFiles.Count > 1) ? "s" : ""));
+				ConsoleHelper.WriteLine("Replacments made in the following file" + ((changedFiles.Count > 1) ? "s" : ""));
 				foreach (string file in changedFiles)
 				{
-					Console.WriteLine(file.Replace(root, ""));
+					ConsoleHelper.WriteLine(file.Replace(root, ""));
 				}
 			}
 			else
 			{
-				Console.WriteLine("search string was not found");
+				ConsoleHelper.WriteLine("search string was not found");
 			}
 			
 			return Program.EXIT_OK;

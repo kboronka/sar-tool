@@ -21,10 +21,8 @@ namespace skylib.sar
 		{
 			if (!Help.titleDisplayed)
 			{
-				Console.ForegroundColor = ConsoleColor.Yellow;
-				Console.Write(AssemblyInfo.Product + " v" + AssemblyInfo.Version);
-				Console.ResetColor();
-				Console.WriteLine("  " + AssemblyInfo.Copyright);
+				ConsoleHelper.Write(AssemblyInfo.Product + " v" + AssemblyInfo.Version, ConsoleColor.Yellow);
+				ConsoleHelper.WriteLine("  " + AssemblyInfo.Copyright);
 				titleDisplayed = true;
 			}
 		}
@@ -40,37 +38,26 @@ namespace skylib.sar
 				{
 					BaseCommand command = CommandHub.commands[commandString];
 					
-					Console.ForegroundColor = ConsoleColor.White;
-					Console.WriteLine("\nUsage:");
-					Console.ResetColor();
-					Console.WriteLine("\t" + command.Usage);
+					ConsoleHelper.WriteLine("\nUsage:", ConsoleColor.White);
+					ConsoleHelper.WriteLine("\t" + command.Usage);
 					
 					if (command.Examples.Count > 0)
 					{
-						Console.ForegroundColor = ConsoleColor.White;
-						if (command.Examples.Count > 1) Console.WriteLine("\nExamples:");
-						if (command.Examples.Count == 1) Console.WriteLine("\nExample:");
-						Console.ResetColor();
+						if (command.Examples.Count > 1) ConsoleHelper.WriteLine("\nExamples:", ConsoleColor.White);
+						if (command.Examples.Count == 1) ConsoleHelper.WriteLine("\nExample:", ConsoleColor.White);
 						
 						foreach (string example in command.Examples)
 						{
-							Console.WriteLine("\t" + example);
+							ConsoleHelper.WriteLine("\t" + example);
 						}
-
-						
 					}
 				}
 			}
 			else
 			{
-				Console.ForegroundColor = ConsoleColor.White;
-				Console.WriteLine("\nUsage:");
-				Console.ResetColor();
-				
-				Console.ForegroundColor = ConsoleColor.White;
-				Console.WriteLine("\t -help [command]");
-				Console.WriteLine("\nCommands:");
-				Console.ResetColor();
+				ConsoleHelper.WriteLine("\nUsage:", ConsoleColor.White);
+				ConsoleHelper.WriteLine("\t -help [command]", ConsoleColor.White);
+				ConsoleHelper.WriteLine("\nCommands:");
 				
 				BaseCommand lastCommand = null;
 				foreach (BaseCommand command in CommandHub.commands.Values)
@@ -78,19 +65,17 @@ namespace skylib.sar
 					if (command != lastCommand)
 					{
 						lastCommand = command;
-						Console.ForegroundColor = ConsoleColor.Red;
-						Console.Write("\t" + command.Name + ": ");
-						Console.ResetColor();
+						ConsoleHelper.Write("\t" + command.Name + ": ", ConsoleColor.Red);
 						
 						string seperator = "";
 						foreach (string commandString in command.Commands)
 						{
-							Console.Write(seperator);
-							Console.Write(commandString);
+							ConsoleHelper.Write(seperator);
+							ConsoleHelper.Write(commandString);
 							seperator = ", ";
 						}
 						
-						Console.WriteLine();
+						ConsoleHelper.WriteLine("");
 					}
 				}
 			}
