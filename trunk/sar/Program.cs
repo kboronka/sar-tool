@@ -64,7 +64,8 @@ namespace skylib.sar
 					new FileFind(),
 					new FileDestory(),
 					new WindowsRearm(),
-					new FileBsdStamp()
+					new FileBsdStamp(),
+					new Delay()
 				};
 				
 				// process command line arguments

@@ -60,6 +60,7 @@
     <Compile Include="Commands\BuildCHM.cs" />
     <Compile Include="Commands\BuildSLN.cs" />
     <Compile Include="Commands\BuildNSIS.cs" />
+    <Compile Include="Commands\Delay.cs" />
     <Compile Include="Commands\FileBsdStamp.cs" />
     <Compile Include="Commands\FileDestory.cs" />
     <Compile Include="Commands\FileFind.cs" />
