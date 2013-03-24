@@ -5,7 +5,6 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Threading;
 using skylib.Tools;
@@ -32,7 +31,7 @@ namespace skylib.sar
 			
 			//FIXME: no error handling here
 			Progress progressBar = new Progress();
-			Thread backgroundThread = new Thread(new ThreadStart(progressBar.DoWork));
+			Thread backgroundThread = new Thread(new ThreadStart(progressBar.Enable));
 			
 			try
 			{
@@ -50,7 +49,8 @@ namespace skylib.sar
 					new NetLogin(),
 					new VboxManage(),
 					new FileFind(),
-					new FileDestory()
+					new FileDestory(),
+					new WindowsRearm()
 				};
 				
 				// process command line arguments
@@ -91,7 +91,7 @@ namespace skylib.sar
 						if (command != "exit")
 						{
 
-							backgroundThread = new Thread(new ThreadStart(progressBar.DoWork));
+							backgroundThread = new Thread(new ThreadStart(progressBar.Enable));
 							backgroundThread.Name = "RunningIndicator";
 							backgroundThread.IsBackground = true;
 							backgroundThread.Start();

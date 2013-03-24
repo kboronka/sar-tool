@@ -6,16 +6,15 @@ using System;
 using skylib.Tools;
 using System.Collections.Generic;
 using System.IO;
-using System.Diagnostics;
 
 namespace skylib.sar
 {
 	public class BuildSLN : BaseCommand
 	{
 		public BuildSLN() : base("Build .NET soultion",
-		                            new List<string> { "build.net", "b.net" },
-		                            "-b.net <.net version> <solution_path> <msbuild arguments>",
-		                            new List<string> { "-b.net 3.5 sar.sln /p:Configuration=Release /p:Platform=\"x86\"" })
+		                         new List<string> { "build.net", "b.net" },
+		                         "-b.net <.net version> <solution_path> <msbuild arguments>",
+		                         new List<string> { "-b.net 3.5 sar.sln /p:Configuration=Release /p:Platform=\"x86\"" })
 		{
 			
 		}
@@ -72,26 +71,15 @@ namespace skylib.sar
 				arguments += " " + args[i];
 			}
 			
-			#if DEBUG
-			ConsoleHelper.WriteLine(msbuildPath + " " + arguments);
-			#endif
-
+			string output;
+			int exitcode = ConsoleHelper.Shell(msbuildPath + " " + arguments, out output);
 			
-			Process compiler = new Process();
-			compiler.StartInfo.FileName = msbuildPath;
-			compiler.StartInfo.Arguments = arguments;
-			compiler.StartInfo.UseShellExecute = false;
-			compiler.StartInfo.RedirectStandardOutput = true;
-			compiler.Start();
-			string output = compiler.StandardOutput.ReadToEnd();
-			compiler.WaitForExit();
-			
-			if (compiler.ExitCode != 0)
+			if (exitcode != 0)
 			{
 				ConsoleHelper.WriteLine("Build Failed", ConsoleColor.DarkYellow);
 				ConsoleHelper.WriteLine(output, ConsoleColor.DarkCyan);
-				ConsoleHelper.WriteLine("exit code: " + compiler.ExitCode.ToString());
-				return compiler.ExitCode;
+				ConsoleHelper.WriteLine("exit code: " + exitcode.ToString());
+				return exitcode;
 			}
 			else
 			{

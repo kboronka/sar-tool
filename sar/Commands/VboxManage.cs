@@ -6,7 +6,6 @@ using System;
 using skylib.Tools;
 using System.Collections.Generic;
 using System.IO;
-using System.Diagnostics;
 
 namespace skylib.sar
 {
@@ -62,22 +61,15 @@ namespace skylib.sar
 			ConsoleHelper.WriteLine(vboxManagePath + " " + arguments);
 			#endif
 
-			
-			Process compiler = new Process();
-			compiler.StartInfo.FileName = vboxManagePath;
-			compiler.StartInfo.Arguments = arguments;
-			compiler.StartInfo.UseShellExecute = false;
-			compiler.StartInfo.RedirectStandardOutput = true;
-			compiler.Start();
-			string output = compiler.StandardOutput.ReadToEnd();
-			compiler.WaitForExit();
-			
-			if (compiler.ExitCode != 0)
+			string output;
+			int exitcode = ConsoleHelper.Shell(vboxManagePath + " " + arguments, out output);
+				
+			if (exitcode != 0)
 			{
 				ConsoleHelper.WriteLine("Command Failed", ConsoleColor.DarkYellow);
 				ConsoleHelper.WriteLine(output, ConsoleColor.DarkCyan);
-				ConsoleHelper.WriteLine("exit code: " + compiler.ExitCode.ToString());
-				return compiler.ExitCode;
+				ConsoleHelper.WriteLine("exit code: " + exitcode.ToString());
+				return exitcode;
 			}
 			else
 			{

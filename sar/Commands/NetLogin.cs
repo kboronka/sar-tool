@@ -6,7 +6,6 @@ using System;
 using skylib.Tools;
 using System.Collections.Generic;
 using System.IO;
-using System.Diagnostics;
 
 namespace skylib.sar
 {
@@ -31,23 +30,15 @@ namespace skylib.sar
 			string userName = args[2];
 			string password = args[3];
 			
+			string output;
+			int exitcode = ConsoleHelper.Shell("net" + " " + @"use " + uncPath + @" /USER:" + userName + " " + password, out output);
 			
-			Process compiler = new Process();
-			compiler.StartInfo.FileName = "net";
-			compiler.StartInfo.Arguments =  @"use " + uncPath + @" /USER:" + userName + " " + password;
-			compiler.StartInfo.UseShellExecute = false;
-			compiler.StartInfo.RedirectStandardOutput = true;
-			compiler.Start();
-			string output = compiler.StandardOutput.ReadToEnd();
-			compiler.WaitForExit();
-			
-			
-			if (compiler.ExitCode != 0)
+			if (exitcode != 0)
 			{
 				ConsoleHelper.WriteLine("Connection Failed", ConsoleColor.DarkYellow);
 				ConsoleHelper.WriteLine(output, ConsoleColor.DarkCyan);
 				ConsoleHelper.WriteLine("output: " + output);
-				ConsoleHelper.WriteLine("exit code: " + compiler.ExitCode.ToString());
+				ConsoleHelper.WriteLine("exit code: " + exitcode.ToString());
 				return Program.EXIT_ERROR;
 			}
 			else

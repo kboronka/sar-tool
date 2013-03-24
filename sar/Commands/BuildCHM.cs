@@ -6,7 +6,6 @@ using System;
 using skylib.Tools;
 using System.Collections.Generic;
 using System.IO;
-using System.Diagnostics;
 
 namespace skylib.sar
 {
@@ -62,17 +61,10 @@ namespace skylib.sar
 			ConsoleHelper.WriteLine(hhpFile + " " + arguments);
 			#endif
 
+			string output;
+			int exitcode = ConsoleHelper.Shell(hhcPath + " " + arguments, out output);
 			
-			Process compiler = new Process();
-			compiler.StartInfo.FileName = hhcPath;
-			compiler.StartInfo.Arguments = arguments;
-			compiler.StartInfo.UseShellExecute = false;
-			compiler.StartInfo.RedirectStandardOutput = true;
-			compiler.Start();
-			string output = compiler.StandardOutput.ReadToEnd();
-			compiler.WaitForExit();
-			
-			if (compiler.ExitCode != 1)
+			if (exitcode != 1)
 			{
 				ConsoleHelper.WriteLine("Build Failed", ConsoleColor.DarkYellow);
 				ConsoleHelper.WriteLine(output, ConsoleColor.DarkCyan);
