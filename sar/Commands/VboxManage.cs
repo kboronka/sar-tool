@@ -75,7 +75,7 @@ namespace skylib.sar
 			#endif
 
 			string output;
-			int exitcode = ConsoleHelper.Shell(vboxManagePath + " " + arguments, out output);
+			int exitcode = ConsoleHelper.Shell(vboxManagePath, arguments, out output);
 				
 			if (exitcode != 0)
 			{

@@ -85,7 +85,7 @@ namespace skylib.sar
 			}
 			
 			string output;
-			int exitcode = ConsoleHelper.Shell(msbuildPath + " " + arguments, out output);
+			int exitcode = ConsoleHelper.Shell(msbuildPath, arguments, out output);
 			
 			if (exitcode != 0)
 			{
