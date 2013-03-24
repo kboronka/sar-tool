@@ -76,11 +76,12 @@ namespace skylib.sar
 				
 				if (!code.StartsWith(copyright))
 				{
-					if (code.IndexOf("using System;") != -1)
+					if (code.IndexOf("namespace ") != -1)
 					{
 						int top = code.IndexOf("using ");
 						
 						if (code.IndexOf("#region") != -1) top = Math.Min(top, code.IndexOf("#region"));
+						if (code.IndexOf("namespace") != -1) top = Math.Min(top, code.IndexOf("namespace"));
 						
 						StreamWriter sw = new StreamWriter(file);
 						sw.Write(copyright + "\n" + code.Substring(top));
