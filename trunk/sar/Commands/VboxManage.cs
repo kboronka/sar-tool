@@ -59,7 +59,7 @@ namespace skylib.sar
 			}
 			
 			#if DEBUG
-			Console.WriteLine(vboxManagePath + " " + arguments);
+			ConsoleHelper.WriteLine(vboxManagePath + " " + arguments);
 			#endif
 
 			
@@ -74,20 +74,14 @@ namespace skylib.sar
 			
 			if (compiler.ExitCode != 0)
 			{
-				Console.ForegroundColor = ConsoleColor.DarkYellow;
-				Console.WriteLine("Command Failed");
-				Console.ResetColor();
-				Console.ForegroundColor = ConsoleColor.DarkCyan;
-				Console.WriteLine(output);
-				Console.ResetColor();
-				Console.WriteLine("exit code: " + compiler.ExitCode.ToString());
+				ConsoleHelper.WriteLine("Command Failed", ConsoleColor.DarkYellow);
+				ConsoleHelper.WriteLine(output, ConsoleColor.DarkCyan);
+				ConsoleHelper.WriteLine("exit code: " + compiler.ExitCode.ToString());
 				return compiler.ExitCode;
 			}
 			else
 			{
-				Console.ForegroundColor = ConsoleColor.DarkYellow;
-				Console.WriteLine("Command Successfully Completed");
-				Console.ResetColor();
+				ConsoleHelper.WriteLine("Command Successfully Completed", ConsoleColor.DarkYellow);
 				return Program.EXIT_OK;
 			}
 		}

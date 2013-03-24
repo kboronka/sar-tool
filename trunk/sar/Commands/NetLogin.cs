@@ -44,21 +44,15 @@ namespace skylib.sar
 			
 			if (compiler.ExitCode != 0)
 			{
-				Console.ForegroundColor = ConsoleColor.DarkYellow;
-				Console.WriteLine("Connection Failed");
-				Console.ResetColor();
-				Console.ForegroundColor = ConsoleColor.DarkCyan;
-				Console.WriteLine(output);
-				Console.ResetColor();
-				Console.WriteLine("output: " + output);
-				Console.WriteLine("exit code: " + compiler.ExitCode.ToString());
+				ConsoleHelper.WriteLine("Connection Failed", ConsoleColor.DarkYellow);
+				ConsoleHelper.WriteLine(output, ConsoleColor.DarkCyan);
+				ConsoleHelper.WriteLine("output: " + output);
+				ConsoleHelper.WriteLine("exit code: " + compiler.ExitCode.ToString());
 				return Program.EXIT_ERROR;
 			}
 			else
 			{
-				Console.ForegroundColor = ConsoleColor.DarkYellow;
-				Console.WriteLine("Connection Successful");
-				Console.ResetColor();
+				ConsoleHelper.WriteLine("Connection Successful", ConsoleColor.DarkYellow);
 				return Program.EXIT_OK;
 			}
 		}

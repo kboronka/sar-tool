@@ -20,9 +20,16 @@ namespace skylib.sar
 	{
 		public const int EXIT_OK = 0;
 		public const int EXIT_ERROR = 1;
+		
+		public static bool NoWarning = false;
+		public static bool Debug = false;
 
 		public static int Main(string[] args)
 		{
+			#if DEBUG
+			Program.Debug = true;
+			#endif
+			
 			//FIXME: no error handling here
 			Progress progressBar = new Progress();
 			Thread backgroundThread = new Thread(new ThreadStart(progressBar.DoWork));
@@ -54,17 +61,14 @@ namespace skylib.sar
 				{
 					try
 					{
-						
 						if (args.Length == 0)
 						{
 							commandlineActive = false;
 							args = new string[1];
-						
+							
 							Help.WriteTitle();
-							Console.ForegroundColor = ConsoleColor.White;
-							Console.Write("> ");
-							Console.ResetColor();
-							args = StringHelper.ParseString(Console.ReadLine(), " ");
+							ConsoleHelper.Write("> ", ConsoleColor.White);
+							args = StringHelper.ParseString(ConsoleHelper.ReadLine(), " ");
 							
 							if (args.Length == 0)
 							{
@@ -102,15 +106,13 @@ namespace skylib.sar
 						args = new string[0];
 						backgroundThread.Abort();
 						
-						Console.ForegroundColor = ConsoleColor.Red;
-						Console.WriteLine("Error: " + ex.Message);
-						Console.ResetColor();
-						#if DEBUG
-						if (commandlineActive)
+						ConsoleHelper.WriteException(ex);
+
+						if (Program.Debug && commandlineActive)
 						{
 							Thread.Sleep(2000);
 						}
-						#endif
+						
 						exitCode = EXIT_ERROR;
 					}
 				}
@@ -120,16 +122,14 @@ namespace skylib.sar
 			catch (Exception ex)
 			{
 				backgroundThread.Abort();
+				ConsoleHelper.WriteException(ex);
 				
-				Console.ForegroundColor = ConsoleColor.Red;
-				Console.WriteLine("Error: " + ex.Message);
-				Console.ResetColor();
-				#if DEBUG
-				Console.ForegroundColor = ConsoleColor.Yellow;
-				Console.WriteLine("Press anykey to continue");
-				Console.ReadKey();
-				Console.ResetColor();
-				#endif
+				if (Program.Debug)
+				{
+					ConsoleHelper.WriteLine("Press anykey to continue", ConsoleColor.Yellow);
+					ConsoleHelper.ReadKey();
+				}
+				
 				return EXIT_ERROR;
 			}
 		}
