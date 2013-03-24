@@ -1,4 +1,4 @@
-﻿/* Copyright (C) 2013 Kevin Boronka
+/* Copyright (C) 2013 Kevin Boronka
  * 
  * software is distributed under the BSD license
  * 
@@ -14,7 +14,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 using System;
 using skylib.Tools;
 using System.Collections.Generic;
