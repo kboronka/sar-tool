@@ -29,7 +29,9 @@ namespace skylib.sar
 		                                 "-replace <file_search_pattern> <search_text> <replace_text>",
 		                                 new List<string> {
 		                                 	"-r \"AssemblyInfo.cs\" \"0.0.0.0\" \"1.0.0.0\"",
-		                                 	"-r AssemblyInfo.* ((Version)\\(\\\"\\d+\\.\\d+\\.\\d+\\.\\d+\\\"\\)) \"Version(\\\"%VERSION%\\\")\"" })
+		                                 	"-r AssemblyInfo.* ((Version)\\(\\\"\\d+\\.\\d+\\.\\d+\\.\\d+\\\"\\)) \"Version(\\\"%VERSION%\\\")\"",
+		                                 	"-r \\sar\\\"AssemblyInfo.cs\" \"0.0.0.0\" \"1.0.0.0\"",
+		                                 })
 		{
 			
 		}
