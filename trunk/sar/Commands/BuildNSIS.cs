@@ -40,45 +40,23 @@ namespace skylib.sar
 				throw new ArgumentException("too few arguments");
 			}
 			
-			string nsiFile = args[1];
-			
-			// get list of makensis.exe file locations availble
-			List<String> files = IO.GetAllFiles(IO.ProgramFilesx86, "makensis.exe");
-			if (files.Count == 0)
-			{
-				files = IO.GetAllFiles(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFiles), "makensis.exe");
-			}
-			
-			// sanity - nsis not installed
-			if (files.Count == 0)
-			{
-				throw new FileNotFoundException("sar unable to locate makensis.exe");
-			}
-			
-			string nsisPath = files[0];
-			
-			// sanity - solution file exists
-			if (!File.Exists(nsiFile))
-			{
-				throw new FileNotFoundException(nsiFile + " nsis file not found");
-			}
-			
-
+			string scriptFile =  "\"" + IO.FindFile(args[1]) + "\"";
+			string exePath = IO.FindApplication("makensis.exe");
+					
 			string arguments = "";
-			
 			for (int i = 2; i < args.Length; i++)
 			{
 				arguments += " " + args[i];
 			}
 			
-			arguments += " " + nsiFile;
+			arguments += " " + scriptFile;
 			
 			#if DEBUG
-			ConsoleHelper.WriteLine(nsisPath + " " + arguments);
+			ConsoleHelper.WriteLine(exePath + " " + arguments);
 			#endif
 
 			string output;
-			int exitcode = ConsoleHelper.Shell(nsisPath + " " + arguments, out output);
+			int exitcode = ConsoleHelper.Shell(exePath, arguments, out output);
 			
 			if (exitcode != 0)
 			{

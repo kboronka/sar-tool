@@ -38,32 +38,11 @@ namespace skylib.sar
 			{
 				throw new ArgumentException("too few arguments");
 			}
+					
+			string scriptFile =  "\"" + IO.FindFile(args[1]) + "\"";
+			string exePath = IO.FindApplication("hhc.exe");
 			
-			string hhpFile = args[1];
-			
-			// get list of hhc.exe file locations availble
-			List<String> files = IO.GetAllFiles(IO.ProgramFilesx86, "hhc.exe");
-			if (files.Count == 0)
-			{
-				files = IO.GetAllFiles(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFiles), "hhc.exe");
-			}
-			
-			// sanity - hhc.exe not installed
-			if (files.Count == 0)
-			{
-				throw new FileNotFoundException("sar unable to locate hhc.exe");
-			}
-			
-			string hhcPath = files[0];
-			
-			// sanity - solution file exists
-			if (!File.Exists(hhpFile))
-			{
-				throw new FileNotFoundException(hhpFile + " hhp file not found");
-			}
-			
-
-			string arguments = hhpFile;
+			string arguments = scriptFile;
 			
 			for (int i = 2; i < args.Length; i++)
 			{
@@ -71,11 +50,11 @@ namespace skylib.sar
 			}
 			
 			#if DEBUG
-			ConsoleHelper.WriteLine(hhpFile + " " + arguments);
+			ConsoleHelper.WriteLine(exePath + " " + arguments);
 			#endif
 
 			string output;
-			int exitcode = ConsoleHelper.Shell(hhcPath + " " + arguments, out output);
+			int exitcode = ConsoleHelper.Shell(exePath, arguments, out output);
 			
 			if (exitcode != 1)
 			{

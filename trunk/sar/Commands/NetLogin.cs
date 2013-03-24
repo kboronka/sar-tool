@@ -44,7 +44,7 @@ namespace skylib.sar
 			string password = args[3];
 			
 			string output;
-			int exitcode = ConsoleHelper.Shell("net" + " " + @"use " + uncPath + @" /USER:" + userName + " " + password, out output);
+			int exitcode = ConsoleHelper.Shell("net", @"use " + uncPath + @" /USER:" + userName + " " + password, out output);
 			
 			if (exitcode != 0)
 			{
