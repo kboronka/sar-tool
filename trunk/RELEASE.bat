@@ -28,6 +28,7 @@
 	set /p VERSION="> "
 
 	svn update	
+	%SAR% -f.bsd *.cs "Kevin Boronka"
 	%SAR% -r AssemblyInfo.* ((Version)\(\"\d+\.\d+\.\d+\.\d+\"\)) "Version(\"%VERSION%\")"
 
 	echo building binaries

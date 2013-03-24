@@ -1,4 +1,4 @@
-﻿/* Copyright (C) 2013 Kevin Boronka
+/* Copyright (C) 2013 Kevin Boronka
  * 
  * software is distributed under the BSD license
  * 
