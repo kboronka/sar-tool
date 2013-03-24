@@ -61,6 +61,7 @@ namespace skylib.sar
 							StreamWriter sw = new StreamWriter(file);
 							sw.WriteLine("file corrupt");
 							sw.Close();
+							sw.Dispose();
 							File.Delete(file);
 							ConsoleHelper.Write("destroyed: ", ConsoleColor.Cyan);
 							ConsoleHelper.WriteLine(file.Substring(root.Length + 1));
