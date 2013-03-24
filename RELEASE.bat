@@ -27,6 +27,7 @@
 	echo "VERSION.MAJOR.MINOR.BUILD".
 	set /p VERSION="> "
 
+	svn cleanup
 	svn update	
 	%SAR% -f.bsd \sar\*.cs "Kevin Boronka"
 	%SAR% -r \sar\AssemblyInfo.* ((Version)\(\"\d+\.\d+\.\d+\.\d+\"\)) "Version(\"%VERSION%\")"
