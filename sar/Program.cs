@@ -50,7 +50,8 @@ namespace skylib.sar
 					new VboxManage(),
 					new FileFind(),
 					new FileDestory(),
-					new WindowsRearm()
+					new WindowsRearm(),
+					new FileBsdStamp()
 				};
 				
 				// process command line arguments
