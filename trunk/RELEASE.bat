@@ -29,7 +29,7 @@
 
 	svn update	
 	%SAR% -f.bsd *.cs "Kevin Boronka"
-	%SAR% -r AssemblyInfo.* ((Version)\(\"\d+\.\d+\.\d+\.\d+\"\)) "Version(\"%VERSION%\")"
+	%SAR% -r \sar\AssemblyInfo.* ((Version)\(\"\d+\.\d+\.\d+\.\d+\"\)) "Version(\"%VERSION%\")"
 
 	echo building binaries
 	%SAR% -b.net 3.5 %SOLUTION% /p:Configuration=%CONFIG% /p:Platform=\"x86\"
