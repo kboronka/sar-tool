@@ -1,0 +1,72 @@
+﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{74862D71-2342-4EAE-8C29-D25F2A195677}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>skylib</RootNamespace>
+    <AssemblyName>sar</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SourceAnalysisOverrideSettingsFile>C:\Users\Boronka\AppData\Roaming\ICSharpCode/SharpDevelop3.0\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <NoStdLib>False</NoStdLib>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <StartupObject>skylib.sar.Program</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <BaseAddress>4194304</BaseAddress>
+    <FileAlignment>4096</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <Optimize>False</Optimize>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+    <Optimize>True</Optimize>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CommandHub.cs" />
+    <Compile Include="Commands\Backup.cs" />
+    <Compile Include="Commands\BaseCommand.cs" />
+    <Compile Include="Commands\BuildCHM.cs" />
+    <Compile Include="Commands\BuildSLN.cs" />
+    <Compile Include="Commands\BuildNSIS.cs" />
+    <Compile Include="Commands\FileDestory.cs" />
+    <Compile Include="Commands\FileFind.cs" />
+    <Compile Include="Commands\Help.cs" />
+    <Compile Include="Commands\NetLogin.cs" />
+    <Compile Include="Commands\Kill.cs" />
+    <Compile Include="Commands\LabviewVersion.cs" />
+    <Compile Include="Commands\SearchAndReplace.cs" />
+    <Compile Include="Commands\TimestampFilename.cs" />
+    <Compile Include="Commands\VboxManage.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Progress.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\lib\skylib-source\AssemblyInfo.cs" />
+    <Compile Include="..\lib\skylib-source\IO.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Commands" />
+  </ItemGroup>
+</Project>
