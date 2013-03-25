@@ -59,11 +59,12 @@ namespace skylib.sar
 					new LabviewVersion(),
 					new SearchAndReplace(),
 					new TimestampFilename(),
-					new NetLogin(),
+					new WindowsLogin(),
 					new VboxManage(),
 					new FileFind(),
 					new FileDestory(),
 					new WindowsRearm(),
+					new WindowsRestart(),
 					new FileBsdStamp(),
 					new Delay()
 				};

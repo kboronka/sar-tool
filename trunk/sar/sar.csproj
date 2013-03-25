@@ -65,13 +65,14 @@
     <Compile Include="Commands\FileDestory.cs" />
     <Compile Include="Commands\FileFind.cs" />
     <Compile Include="Commands\Help.cs" />
-    <Compile Include="Commands\NetLogin.cs" />
+    <Compile Include="Commands\WindowsLogin.cs" />
     <Compile Include="Commands\Kill.cs" />
     <Compile Include="Commands\LabviewVersion.cs" />
     <Compile Include="Commands\SearchAndReplace.cs" />
     <Compile Include="Commands\TimestampFilename.cs" />
     <Compile Include="Commands\VboxManage.cs" />
     <Compile Include="Commands\WindowsRearm.cs" />
+    <Compile Include="Commands\WindowsRestart.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\lib\skylib-source\AssemblyInfo.cs" />
