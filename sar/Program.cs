@@ -68,7 +68,7 @@ namespace skylib.sar
 					new FileBsdStamp(),
 					new Delay()
 				};
-				
+
 				// process command line arguments
 				bool commandlineActive = false;
 				int exitCode = EXIT_OK;
