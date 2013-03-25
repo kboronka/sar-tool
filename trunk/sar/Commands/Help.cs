@@ -69,8 +69,8 @@ namespace skylib.sar
 			else
 			{
 				ConsoleHelper.WriteLine("\nUsage:", ConsoleColor.White);
-				ConsoleHelper.WriteLine("\t -help [command]", ConsoleColor.White);
-				ConsoleHelper.WriteLine("\nCommands:");
+				ConsoleHelper.WriteLine("\t -help [command]");
+				ConsoleHelper.WriteLine("\nCommands:", ConsoleColor.White);
 				
 				BaseCommand lastCommand = null;
 				foreach (BaseCommand command in CommandHub.commands.Values)

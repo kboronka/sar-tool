@@ -29,8 +29,8 @@ namespace skylib.sar
 	{
 		public WindowsRestart() : base("Windows Restart",
 		                               new List<string> { "windows.restart", "win.restart" },
-		                               @"-windows.restart <ip | computername> <domain/username> <password>",
-		                               new List<string> { "-windows.restart 192.168.0.244 admin-username mypassword" })
+		                               @"-windows.restart [ip | computername] [domain/username] [password] <timeout (ms)>",
+		                               new List<string> { "-windows.restart 192.168.0.244 admin-username mypassword 35000" })
 		{
 		}
 		
@@ -42,7 +42,10 @@ namespace skylib.sar
 				throw new ArgumentException("incorrect number of arguments");
 			}
 			
-			string uncPath = args[1];
+			string serverAddres = args[1];
+			Progress.Message = "Rebooting " + serverAddres;
+			
+			string uncPath = serverAddres;
 			if (uncPath.Substring(0,2) != @"\\") uncPath = @"\\" + uncPath;
 			
 			string userName = args[2];
@@ -69,49 +72,51 @@ namespace skylib.sar
 				ConsoleHelper.WriteLine(StringHelper.TrimStart(uncPath, 2) + " failed to restart", ConsoleColor.DarkYellow);
 				return Program.EXIT_ERROR;
 			}
-
-			ConsoleHelper.WriteLine(StringHelper.TrimStart(uncPath, 2) + " is restarting", ConsoleColor.DarkYellow);
 			
-			Stopwatch timer = new Stopwatch();
-			timer.Start();
-			Thread.Sleep(100);
-			
-			exitcode = 0;
-			while (exitcode == 0)
+			if (timeout != 0)
 			{
+				Stopwatch timer = new Stopwatch();
+				timer.Start();
+				Thread.Sleep(100);
 				
-				if (timer.ElapsedMilliseconds > timeout)
+				exitcode = 0;
+				while (exitcode == 0)
 				{
-					timer.Stop();
-					ConsoleHelper.WriteLine(StringHelper.TrimStart(uncPath, 2) + " failed to restart", ConsoleColor.DarkYellow);
-					return Program.EXIT_ERROR;
+					
+					if (timer.ElapsedMilliseconds > timeout)
+					{
+						timer.Stop();
+						ConsoleHelper.WriteLine(StringHelper.TrimStart(uncPath, 2) + " failed to restart", ConsoleColor.DarkYellow);
+						return Program.EXIT_ERROR;
+					}
+					
+					Thread.Sleep(1000);
+					exitcode = ConsoleHelper.Shell("net", @"use " + uncPath + @" /DELETE");
+					exitcode = ConsoleHelper.Shell("net", @"use " + uncPath + @" /USER:" + userName + " " + password + "aaa" + " /PERSISTENT:NO");
+					exitcode = ConsoleHelper.Shell("net", @"use " + uncPath + @" /USER:" + userName + " " + password + " /PERSISTENT:NO");
 				}
 				
-				Thread.Sleep(1000);
-				exitcode = ConsoleHelper.Shell("net", @"use " + uncPath + @" /DELETE");
-				exitcode = ConsoleHelper.Shell("net", @"use " + uncPath + @" /USER:" + userName + " " + password + "aaa" + " /PERSISTENT:NO");
-				exitcode = ConsoleHelper.Shell("net", @"use " + uncPath + @" /USER:" + userName + " " + password + " /PERSISTENT:NO");
-			}
-			
-			exitcode = 1;
-			while (exitcode != 0)
-			{
-				if (timer.ElapsedMilliseconds > timeout)
+				exitcode = 1;
+				while (exitcode != 0)
 				{
-					timer.Stop();
-					ConsoleHelper.WriteLine(StringHelper.TrimStart(uncPath, 2) + " failed to restart", ConsoleColor.DarkYellow);
-					return Program.EXIT_ERROR;
+					if (timer.ElapsedMilliseconds > timeout)
+					{
+						timer.Stop();
+						ConsoleHelper.WriteLine(StringHelper.TrimStart(uncPath, 2) + " failed to restart", ConsoleColor.DarkYellow);
+						return Program.EXIT_ERROR;
+					}
+					
+					Thread.Sleep(1000);
+					ConsoleHelper.Shell("net", @"use " + uncPath + @" /DELETE");
+					exitcode = ConsoleHelper.Shell("net", @"use " + uncPath + @" /DELETE");
+					exitcode = ConsoleHelper.Shell("net", @"use " + uncPath + @" /USER:" + userName + " " + password + "aaa" + " /PERSISTENT:NO");
+					exitcode = ConsoleHelper.Shell("net", @"use " + uncPath + @" /USER:" + userName + " " + password + " /PERSISTENT:NO");
 				}
 				
-				Thread.Sleep(1000);
-				ConsoleHelper.Shell("net", @"use " + uncPath + @" /DELETE");
-				exitcode = ConsoleHelper.Shell("net", @"use " + uncPath + @" /DELETE");
-				exitcode = ConsoleHelper.Shell("net", @"use " + uncPath + @" /USER:" + userName + " " + password + "aaa" + " /PERSISTENT:NO");
-				exitcode = ConsoleHelper.Shell("net", @"use " + uncPath + @" /USER:" + userName + " " + password + " /PERSISTENT:NO");
+				timer.Stop();
+				ConsoleHelper.WriteLine(serverAddres + " reboot complete", ConsoleColor.DarkYellow);
 			}
 			
-			timer.Stop();
-			ConsoleHelper.WriteLine(StringHelper.TrimStart(uncPath, 2) + " is ready", ConsoleColor.DarkYellow);
 			return Program.EXIT_OK;
 		}
 	}
