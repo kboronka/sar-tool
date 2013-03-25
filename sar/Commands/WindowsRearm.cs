@@ -20,13 +20,14 @@ using skylib.Tools;
 using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
+using System.Threading;
 
 namespace skylib.sar
 {
 	public class WindowsRearm : BaseCommand
 	{
 		public WindowsRearm() : base("Windows Activation Trial Rearm",
-		                             new List<string> { "windows.rearm", "win.rearm", "w.r" },
+		                             new List<string> { "windows.rearm", "win.rearm", "w.rarm" },
 		                             @"-windows.rearm",
 		                             new List<string> { "-windows.rearm" })
 		{
@@ -64,17 +65,72 @@ namespace skylib.sar
 					throw new FileNotFoundException("Files not found");
 				}
 				
+				#if DEBUG
 				foreach (string file in files)
 				{
-					ConsoleHelper.WriteLine(file.Substring(file.LastIndexOf('\\')));
+					ConsoleHelper.WriteLine(file.Substring(file.LastIndexOf('\\') + 1), ConsoleColor.Green);
+				}
+				#endif
+				
+				try
+				{
+					if (ConsoleHelper.Shell("net stop sppsvc") != Program.EXIT_OK) throw new Exception("failed to stop sppsvc");
+				}
+				catch (Exception ex)
+				{
+					ConsoleHelper.WriteLine(ex.Message, ConsoleColor.Red);
 				}
 				
-				if (ConsoleHelper.Shell("net stop sppsvc") != Program.EXIT_OK) throw new Exception("failed to stop sppsvc");
-				for (int i = 0; i < files.Count; i++) { File.Move(files[i], tempfiles[i]); }				
-				if (ConsoleHelper.Shell("net start sppsvc") != Program.EXIT_OK) throw new Exception("failed to stop sppsvc");
+				Thread.Sleep(1000);
+				
+				for (int i = 0; i < files.Count; i++)
+				{
+					try
+					{
+						ConsoleHelper.WriteLine(files[i], ConsoleColor.Yellow);
+						File.Copy(files[i], tempfiles[i]);
+						File.Delete(files[i]);
+					}
+					catch (Exception ex)
+					{
+						ConsoleHelper.WriteLine(ex.Message, ConsoleColor.Red);
+					}
+				}
+				
+				try
+				{
+					if (ConsoleHelper.Shell("net start sppsvc") != Program.EXIT_OK) throw new Exception("failed to stop sppsvc");
+				}
+				catch (Exception ex)
+				{
+					ConsoleHelper.WriteLine(ex.Message, ConsoleColor.Red);
+				}
+				
+				
 				if (ConsoleHelper.Shell("slmgr /dlv") != Program.EXIT_OK) throw new Exception("failed to slmgr /dlv");
-				if (ConsoleHelper.Shell("net stop sppsvc") != Program.EXIT_OK) throw new Exception("failed to stop sppsvc");
-				for (int i = 0; i < files.Count; i++) { File.Move(tempfiles[i], files[i]); }
+				
+				try
+				{
+					if (ConsoleHelper.Shell("net stop sppsvc") != Program.EXIT_OK) throw new Exception("failed to stop sppsvc");
+				}
+				catch (Exception ex)
+				{
+					ConsoleHelper.WriteLine(ex.Message, ConsoleColor.Red);
+				}
+				
+				for (int i = 0; i < files.Count; i++)
+				{
+					try
+					{
+						File.Move(tempfiles[i], files[i]);
+					}
+					catch (Exception ex)
+					{
+						ConsoleHelper.WriteLine(ex.Message, ConsoleColor.Red);
+					}
+				}
+
+				
 				ConsoleHelper.Shell("slmgr /ipk D4F6K-QK3RD-TMVMJ-BBMRX-3MBMV");
 				
 				ConsoleHelper.WriteLine("Rearmed - Reboot Required", ConsoleColor.DarkYellow);
