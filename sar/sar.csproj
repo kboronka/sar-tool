@@ -62,7 +62,9 @@
     <Compile Include="Commands\BuildSLN.cs" />
     <Compile Include="Commands\BuildNSIS.cs" />
     <Compile Include="Commands\Delay.cs" />
+    <Compile Include="Commands\DirectoryTimestamp.cs" />
     <Compile Include="Commands\FileBsdStamp.cs" />
+    <Compile Include="Commands\FileCopy.cs" />
     <Compile Include="Commands\FileDestory.cs" />
     <Compile Include="Commands\FileFind.cs" />
     <Compile Include="Commands\FileMirror.cs" />
@@ -71,7 +73,7 @@
     <Compile Include="Commands\Kill.cs" />
     <Compile Include="Commands\LabviewVersion.cs" />
     <Compile Include="Commands\SearchAndReplace.cs" />
-    <Compile Include="Commands\FileNameTimestamp.cs" />
+    <Compile Include="Commands\FileTimestamp.cs" />
     <Compile Include="Commands\VboxManage.cs" />
     <Compile Include="Commands\WindowsRearm.cs" />
     <Compile Include="Commands\WindowsRestart.cs" />

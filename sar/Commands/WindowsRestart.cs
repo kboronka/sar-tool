@@ -73,6 +73,8 @@ namespace skylib.sar
 				return Program.EXIT_ERROR;
 			}
 			
+			ConsoleHelper.WriteLine(serverAddres + " is rebooting", ConsoleColor.DarkYellow);
+			
 			if (timeout != 0)
 			{
 				Stopwatch timer = new Stopwatch();
@@ -116,6 +118,7 @@ namespace skylib.sar
 				timer.Stop();
 				ConsoleHelper.WriteLine(serverAddres + " reboot complete", ConsoleColor.DarkYellow);
 			}
+			
 			
 			return Program.EXIT_OK;
 		}

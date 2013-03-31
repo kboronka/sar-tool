@@ -22,9 +22,9 @@ using System.IO;
 
 namespace skylib.sar
 {
-	public class FileNameTimestamp : BaseCommand
+	public class FileTimestamp : BaseCommand
 	{
-		public FileNameTimestamp() : base("Timestamp Filename", 
+		public FileTimestamp() : base("Timestamp Filename", 
 		                                new List<string> { "file.timestamp", "f.t", "timestamp", "t" },
 		                                @"-timestamp <FilePath> [date/time format]",
 		                               new List<string> { "-timestamp backup.zip \"yyyy.MM.dd-HH.mm\"" })
@@ -34,7 +34,7 @@ namespace skylib.sar
 		public override int Execute(string[] args)
 		{
 			// sanity check
-			if (args.Length < 2 ||args.Length > 3)
+			if (args.Length < 2 || args.Length > 3)
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
@@ -64,6 +64,7 @@ namespace skylib.sar
 			
 			File.Move(filepath, filepathNew);
 			
+			ConsoleHelper.WriteLine("file renamed to " + filepathNew, ConsoleColor.DarkYellow);
 			return Program.EXIT_OK;
 		}		
 	}
