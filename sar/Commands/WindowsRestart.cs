@@ -69,7 +69,7 @@ namespace skylib.sar
 
 			if (exitcode != 0)
 			{
-				ConsoleHelper.WriteLine(StringHelper.TrimStart(uncPath, 2) + " failed to restart", ConsoleColor.DarkYellow);
+				ConsoleHelper.WriteLine(serverAddres + " failed to restart", ConsoleColor.DarkYellow);
 				return Program.EXIT_ERROR;
 			}
 			
@@ -86,7 +86,7 @@ namespace skylib.sar
 					if (timer.ElapsedMilliseconds > timeout)
 					{
 						timer.Stop();
-						ConsoleHelper.WriteLine(StringHelper.TrimStart(uncPath, 2) + " failed to restart", ConsoleColor.DarkYellow);
+						ConsoleHelper.WriteLine(serverAddres + " did not reboot", ConsoleColor.DarkYellow);
 						return Program.EXIT_ERROR;
 					}
 					
@@ -102,7 +102,7 @@ namespace skylib.sar
 					if (timer.ElapsedMilliseconds > timeout)
 					{
 						timer.Stop();
-						ConsoleHelper.WriteLine(StringHelper.TrimStart(uncPath, 2) + " failed to restart", ConsoleColor.DarkYellow);
+						ConsoleHelper.WriteLine(serverAddres + " did not powerup", ConsoleColor.DarkYellow);
 						return Program.EXIT_ERROR;
 					}
 					

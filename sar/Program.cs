@@ -58,7 +58,7 @@ namespace skylib.sar
 					new Kill(),
 					new LabviewVersion(),
 					new SearchAndReplace(),
-					new TimestampFilename(),
+					new FileNameTimestamp(),
 					new VboxManage(),
 					new FileFind(),
 					new FileDestory(),

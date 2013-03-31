@@ -24,7 +24,7 @@ namespace skylib.sar
 {
 	public class WindowsLogin : BaseCommand
 	{
-		public WindowsLogin() : base("Login", new List<string> { "windows.login", "win.login", "net.login", "n.login" },
+		public WindowsLogin() : base("Windows Login", new List<string> { "windows.login", "win.login", "net.login", "n.login" },
 		                         "-windows.login <ip> <domain/username> <password>",
 		                         new List<string>() { @"-windows.login \\192.168.0.244\temp test testpw" })
 		{
@@ -43,6 +43,7 @@ namespace skylib.sar
 			Progress.Message = "Logging into " + serverAddres;
 			
 			string uncPath = serverAddres;
+			if (uncPath.Substring(0,2) != @"\\") uncPath = @"\\" + uncPath;
 			
 			string userName = args[2];
 			string password = args[3];
@@ -55,11 +56,11 @@ namespace skylib.sar
 			
 			if (exitcode != 0)
 			{
-				ConsoleHelper.WriteLine("Login to " + uncPath + " has failed", ConsoleColor.DarkYellow);
+				ConsoleHelper.WriteLine("Login to " + serverAddres + " has failed", ConsoleColor.DarkYellow);
 				return Program.EXIT_ERROR;
 			}
 
-			ConsoleHelper.WriteLine("Login to " + uncPath + " was successful", ConsoleColor.DarkYellow);
+			ConsoleHelper.WriteLine("Login to " + serverAddres + " was successful", ConsoleColor.DarkYellow);
 			return Program.EXIT_OK;
 		}
 	}
