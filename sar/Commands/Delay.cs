@@ -18,6 +18,7 @@
 using System;
 using skylib.Tools;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
@@ -26,9 +27,9 @@ namespace skylib.sar
 	public class Delay : BaseCommand
 	{
 		public Delay() : base("Delay",
-		                       new List<string> { "delay" },
-		                       @"-delay <milliseconds>",
-		                       new List<string> { "-delay 5000" })
+		                      new List<string> { "delay" },
+		                      @"-delay <milliseconds>",
+		                      new List<string> { "-delay 5000" })
 		{
 		}
 		
@@ -40,13 +41,22 @@ namespace skylib.sar
 				throw new ArgumentException("incorrect number of arguments");
 			}
 			
-			int delay;
-			if (!Int32.TryParse(args[1], out delay) || delay < 0 || delay > Int32.MaxValue)
+			long delay;
+			if (!long.TryParse(args[1], out delay) || delay < 0 || delay > long.MaxValue)
 			{
 				throw new ArgumentException("invalid delay value");
 			}
 			
-			Thread.Sleep(delay);
+			
+			Stopwatch timer = new Stopwatch();
+			timer.Start();
+			
+			while (timer.ElapsedMilliseconds < delay)
+			{
+				Thread.Sleep(50);
+				long timeremaining = (delay - timer.ElapsedMilliseconds);
+				Progress.Message = timeremaining.ToString() + "ms ";
+			}
 			
 			return Program.EXIT_OK;
 		}
