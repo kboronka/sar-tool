@@ -64,6 +64,7 @@
     <Compile Include="Commands\FileBsdStamp.cs" />
     <Compile Include="Commands\FileDestory.cs" />
     <Compile Include="Commands\FileFind.cs" />
+    <Compile Include="Commands\FileMirror.cs" />
     <Compile Include="Commands\Help.cs" />
     <Compile Include="Commands\WindowsLogin.cs" />
     <Compile Include="Commands\Kill.cs" />

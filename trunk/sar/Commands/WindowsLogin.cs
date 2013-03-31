@@ -39,8 +39,10 @@ namespace skylib.sar
 				throw new ArgumentException("incorrect number of arguments");
 			}
 			
-			string uncPath = args[1];
-			if (uncPath.Substring(0,2) != @"\\") uncPath = @"\\" + uncPath;
+			string serverAddres = args[1];
+			Progress.Message = "Logging into " + serverAddres;
+			
+			string uncPath = serverAddres;
 			
 			string userName = args[2];
 			string password = args[3];
