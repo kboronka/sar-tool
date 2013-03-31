@@ -42,7 +42,7 @@ namespace skylib.sar
 				string sourceFile = files[i];
 				string destinationFile = destinationPath + filename;
 				
-				long len = IO.FileLength(files[i]);
+				long len = IO.FileSize(files[i]);
 				ConsoleHelper.WriteLine(filename + ": " + len.ToString());
 				//if (!Directory.Exists(StringHelper.TrimEnd(destinationPath))) Directory.CreateDirectory(StringHelper.TrimEnd(destinationPath));
 				//if (!File.Exists(destinationFile)) File.Copy(sourceFile, destinationFile);
