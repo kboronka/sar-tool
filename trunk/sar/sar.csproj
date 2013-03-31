@@ -14,6 +14,7 @@
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <StartupObject>skylib.sar.Program</StartupObject>
+    <ApplicationIcon>art\sar.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -70,7 +71,7 @@
     <Compile Include="Commands\Kill.cs" />
     <Compile Include="Commands\LabviewVersion.cs" />
     <Compile Include="Commands\SearchAndReplace.cs" />
-    <Compile Include="Commands\TimestampFilename.cs" />
+    <Compile Include="Commands\FileNameTimestamp.cs" />
     <Compile Include="Commands\VboxManage.cs" />
     <Compile Include="Commands\WindowsRearm.cs" />
     <Compile Include="Commands\WindowsRestart.cs" />

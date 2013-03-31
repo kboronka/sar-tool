@@ -22,9 +22,9 @@ using System.IO;
 
 namespace skylib.sar
 {
-	public class TimestampFilename : BaseCommand
+	public class FileNameTimestamp : BaseCommand
 	{
-		public TimestampFilename() : base("Timestamp Filename", 
+		public FileNameTimestamp() : base("Timestamp Filename", 
 		                                new List<string> { "file.timestamp", "f.t", "timestamp", "t" },
 		                                @"-timestamp <FilePath> [date/time format]",
 		                               new List<string> { "-timestamp backup.zip \"yyyy.MM.dd-HH.mm\"" })
