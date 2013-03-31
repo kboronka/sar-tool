@@ -55,7 +55,7 @@ namespace skylib.sar
 			{
 				Thread.Sleep(50);
 				long timeremaining = (delay - timer.ElapsedMilliseconds);
-				Progress.Message = timeremaining.ToString() + "ms ";
+				Progress.Message = StringHelper.MillisecondsToString(timeremaining) + " ";
 			}
 			
 			return Program.EXIT_OK;
