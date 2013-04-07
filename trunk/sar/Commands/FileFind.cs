@@ -26,12 +26,11 @@ namespace skylib.sar
 	{
 		public FileFind() : base("Find Files",
 		                         new List<string> { "file.find", "f.f" },
-		                         "-f.f <filepattern>",
+		                         "-file.find [filepattern]",
 		                         new List<string> { "-file.find \"*.vmdk\"" })
 		{
 		}
-		
-		
+			
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -40,6 +39,7 @@ namespace skylib.sar
 				throw new ArgumentException("incorrect number of arguments");
 			}
 			
+			Progress.Message = "Searching";
 			string filePattern = args[1];
 			string root = Directory.GetCurrentDirectory();
 			IO.CheckRootAndPattern(ref root, ref filePattern);

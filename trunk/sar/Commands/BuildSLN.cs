@@ -40,11 +40,13 @@ namespace skylib.sar
 				throw new ArgumentException("too few arguments");
 			}
 			
+			Progress.Message = "Searching";
 			string netVersion = args[1];
-			string netSoultion = args[2];
+			string filepath = IO.FindFile(args[2]);
+			string filename = IO.GetFilename(filepath);
 			
 			// get list of msbuild versions availble
-
+			Progress.Message = "Locating Installed .NET versions";
 			string msbuildFolder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.System) + @"\..\Microsoft.NET\Framework";
 			Dictionary<string, string> msBuildFolders = new Dictionary<string, string>();
 			
@@ -55,38 +57,28 @@ namespace skylib.sar
 				if (File.Exists(msBuildPath))
 				{
 					msBuildFolders.Add(version, msBuildPath);
-					#if DEBUG
 					ConsoleHelper.DebugWriteLine(version + " = " + msBuildPath);
-					#endif
 				}
 			}
 			
 			// sanity - .net version installed
-			if (!msBuildFolders.ContainsKey(netVersion))
-			{
-				throw new ArgumentOutOfRangeException(".net version");
-			}
+			if (!msBuildFolders.ContainsKey(netVersion)) throw new ArgumentOutOfRangeException(".net version");
 			
 			// sanity - solution file exists
-			if (!File.Exists(netSoultion))
-			{
-				throw new FileNotFoundException(netSoultion + " solution file not found");
-			}
+			if (!File.Exists(filepath)) throw new FileNotFoundException(filepath + " solution file not found");
 			
 			string msbuildPath = msBuildFolders[netVersion];
-			
-			
-
-			string arguments = netSoultion;
+			string arguments = "\"" + filepath + "\"";
 			
 			for (int i = 3; i < args.Length; i++)
 			{
 				arguments += " " + args[i];
 			}
 			
+			Progress.Message = "Building .NET Solution " + filename;
+			
 			string output;
 			int exitcode = ConsoleHelper.Shell(msbuildPath, arguments, out output);
-			
 			if (exitcode != 0)
 			{
 				ConsoleHelper.WriteLine("Build Failed", ConsoleColor.DarkYellow);

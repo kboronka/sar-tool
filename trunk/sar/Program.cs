@@ -60,6 +60,7 @@ namespace skylib.sar
 					new SearchAndReplace(),
 					new FileTimestamp(),
 					new VboxManage(),
+					new FileEncode(),
 					new FileFind(),
 					new FileDestory(),
 					new FileBsdStamp(),
