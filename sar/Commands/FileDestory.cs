@@ -37,17 +37,23 @@ namespace skylib.sar
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-				
+			
 			Progress.Message = "Searching";
-			string filePattern = args[1];						
+			string filePattern = args[1];
 			string root = Directory.GetCurrentDirectory();
 			IO.CheckRootAndPattern(ref root, ref filePattern);
 			List<string> files = IO.GetAllFiles(root, filePattern);
-						
+			
+			
+			foreach (string file in files)
+			{
+				ConsoleHelper.Write("found: ", ConsoleColor.Cyan);
+				ConsoleHelper.WriteLine(file.Substring(root.Length));
+			}
+			
 			ConsoleHelper.WriteLine(files.Count.ToString() + " file" + ((files.Count != 1) ? "s" : "") + " found");
 			
 			int count = 0;
-			
 			if (files.Count > 0)
 			{
 				if (Program.NoWarning || ConsoleHelper.Confirm("Destroy files? (y/n)"))
