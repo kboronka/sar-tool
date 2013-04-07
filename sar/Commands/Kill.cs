@@ -27,7 +27,7 @@ namespace skylib.sar
 	{
 		public Kill() : base("Kill Process",
 		                     new List<string> { "kill", "k" },
-		                     @"-kill <FilePath> <backup_location>",
+		                     @"-kill [FilePath] [backup_location]",
 		                     new List<string> { "-backup backup.zip \"c:\\backups\\\"" })
 		{
 		}
@@ -43,6 +43,7 @@ namespace skylib.sar
 			
 			string processName = args[1];
 			
+			Progress.Message = "Locating Process " + processName;
 			Process[] foundProcess = Process.GetProcessesByName(processName);
 			if (foundProcess.Length != 0)
 			{
@@ -50,7 +51,7 @@ namespace skylib.sar
 				foreach (Process process in foundProcess)
 				{
 					process.Kill();
-					ConsoleHelper.WriteLine(process.ProcessName + " killed", ConsoleColor.DarkYellow);
+					ConsoleHelper.WriteLine(process.ProcessName + " has been shutdown", ConsoleColor.DarkYellow);
 				}
 			}
 			else

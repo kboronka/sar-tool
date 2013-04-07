@@ -66,6 +66,7 @@
     <Compile Include="Commands\FileBsdStamp.cs" />
     <Compile Include="Commands\FileCopy.cs" />
     <Compile Include="Commands\FileDestory.cs" />
+    <Compile Include="Commands\FileEncode.cs" />
     <Compile Include="Commands\FileFind.cs" />
     <Compile Include="Commands\FileMirror.cs" />
     <Compile Include="Commands\Help.cs" />

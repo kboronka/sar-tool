@@ -46,8 +46,9 @@ namespace skylib.sar
 				throw new Exception("Windows 7 not detected");
 			}
 			
-			if (Program.NoWarning || ConsoleHelper.Confirm("Rearm Activation? (y/n) "))
+			if (Program.NoWarning || ConsoleHelper.Confirm("Caution: Rearm Activation? (y/n) "))
 			{
+				/*
 				string token = IO.Windows + @"\ServiceProfiles\NetworkService\AppData\Roaming\Microsoft\SoftwareProtectionPlatform\tokens.dat";
 				List<string> files = new List<string>();
 				List<string> tempfiles = new List<string>();
@@ -68,7 +69,7 @@ namespace skylib.sar
 				#if DEBUG
 				foreach (string file in files)
 				{
-					ConsoleHelper.WriteLine(file.Substring(file.LastIndexOf('\\') + 1), ConsoleColor.Green);
+					ConsoleHelper.DebugWriteLine(file.Substring(file.LastIndexOf('\\') + 1));
 				}
 				#endif
 				
@@ -132,7 +133,10 @@ namespace skylib.sar
 
 				
 				ConsoleHelper.Shell("slmgr /ipk D4F6K-QK3RD-TMVMJ-BBMRX-3MBMV");
+				*/
 				
+				Progress.Message = "Rearming Windows Activation";
+				ConsoleHelper.Shell("slmgr /rearm");
 				ConsoleHelper.WriteLine("Rearmed - Reboot Required", ConsoleColor.DarkYellow);
 				return Program.EXIT_OK;
 			}

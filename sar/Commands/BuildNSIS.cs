@@ -19,6 +19,7 @@ using System;
 using skylib.Tools;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace skylib.sar
 {
@@ -26,7 +27,7 @@ namespace skylib.sar
 	{
 		public BuildNSIS() : base("Build NSIS installer",
 		                          new List<string> { "build.nsis", "b.nsis" },
-		                          "-b.nsis <nsis_filepath>",
+		                          "-b.nsis [nsis_filepath]",
 		                          new List<string> { @"-b.nsis src\Installer\chesscup.nsi" })
 		{
 			
@@ -40,21 +41,26 @@ namespace skylib.sar
 				throw new ArgumentException("too few arguments");
 			}
 			
-			string scriptFile =  "\"" + IO.FindFile(args[1]) + "\"";
+			Progress.Message = "Searching";
+			string filepath = IO.FindFile(args[1]);
+			string filename = IO.GetFilename(filepath);
 			string exePath = IO.FindApplication("makensis.exe");
-					
+			Encoding originalEncoding = IO.ReadEncoding(filepath);
+			IO.Encode(filepath, Encoding.ASCII);
+			
 			string arguments = "";
 			for (int i = 2; i < args.Length; i++)
 			{
 				arguments += " " + args[i];
 			}
 			
-			arguments += " " + scriptFile;
+			arguments += " " + "\"" + filepath + "\"";
 			
-			ConsoleHelper.DebugWriteLine(exePath + " " + arguments);
-
+			Progress.Message = "Building NSIS Installer " + filename;
+			
 			string output;
 			int exitcode = ConsoleHelper.Shell(exePath, arguments, out output);
+			IO.Encode(filepath, originalEncoding);
 			
 			if (exitcode != 0)
 			{

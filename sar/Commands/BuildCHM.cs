@@ -38,20 +38,23 @@ namespace skylib.sar
 			{
 				throw new ArgumentException("too few arguments");
 			}
-					
-			string scriptFile =  "\"" + IO.FindFile(args[1]) + "\"";
+			
+			Progress.Message = "Searching";
+			string filepath = IO.FindFile(args[1]);
+			string filename = IO.GetFilename(filepath);
 			string exePath = IO.FindApplication("hhc.exe");
 			
-			string arguments = scriptFile;
+			string arguments = "\"" + filepath + "\"";
 			
 			for (int i = 2; i < args.Length; i++)
 			{
 				arguments += " " + args[i];
 			}
 			
+			Progress.Message = "Building Online Help " + filename;
+			
 			string output;
 			int exitcode = ConsoleHelper.Shell(exePath, arguments, out output);
-			
 			if (exitcode != 1)
 			{
 				ConsoleHelper.WriteLine("Build Failed", ConsoleColor.DarkYellow);

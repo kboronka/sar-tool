@@ -26,7 +26,7 @@ namespace skylib.sar
 	{
 		public Backup() : base("Backup File",
 		                       new List<string> { "backup", "bk" },
-		                       @"-backup <FilePath> <backup_location>",
+		                       @"-backup [FilePath] [backup_location]",
 		                       new List<string> { "-backup backup.zip \"c:\\backups\\\"" })
 		{
 		}
