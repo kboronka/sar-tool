@@ -52,6 +52,7 @@ namespace skylib.sar
 					new BuildCHM(),
 					new BuildNSIS(),
 					new BuildSLN(),
+					new AssemblyInfoVersion(),
 					new Kill(),
 					new LabviewVersion(),
 					new VboxManage(),

@@ -1,4 +1,5 @@
-﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{74862D71-2342-4EAE-8C29-D25F2A195677}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -77,6 +78,7 @@
     <Compile Include="Commands\FileMirror.cs" />
     <Compile Include="Commands\Help.cs" />
     <Compile Include="Commands\NetListAddaptors.cs" />
+    <Compile Include="Commands\AssemblyInfoVersion.cs" />
     <Compile Include="Commands\WindowsLogin.cs" />
     <Compile Include="Commands\Kill.cs" />
     <Compile Include="Commands\LabviewVersion.cs" />
