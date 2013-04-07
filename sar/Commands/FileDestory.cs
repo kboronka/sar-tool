@@ -24,7 +24,7 @@ namespace skylib.sar
 {
 	public class FileDestory : BaseCommand
 	{
-		public FileDestory() : base("Destory Files",
+		public FileDestory() : base("File - Destroy",
 		                            new List<string> { "file.destroy", "f.d" },
 		                            "-f.d <filepattern>",
 		                            new List<string> { "-f.d \"*.vmdk\"" })

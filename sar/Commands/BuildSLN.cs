@@ -24,9 +24,9 @@ namespace skylib.sar
 {
 	public class BuildSLN : BaseCommand
 	{
-		public BuildSLN() : base("Build .NET soultion",
+		public BuildSLN() : base("Build - .NET soultion",
 		                         new List<string> { "build.net", "b.net" },
-		                         "-b.net <.net version> <solution_path> <msbuild arguments>",
+		                         "-b.net [.net version] [solution_path] [msbuild arguments]",
 		                         new List<string> { "-b.net 3.5 sar.sln /p:Configuration=Release /p:Platform=\"x86\"" })
 		{
 			

@@ -24,8 +24,8 @@ namespace skylib.sar
 {
 	public class WindowsLogin : BaseCommand
 	{
-		public WindowsLogin() : base("Windows Login", new List<string> { "windows.login", "win.login", "net.login", "n.login" },
-		                         "-windows.login <ip> <domain/username> <password>",
+		public WindowsLogin() : base("Windows - Login", new List<string> { "windows.login", "win.login", "net.login", "n.login" },
+		                         "-windows.login [ip] [domain/username] [password]",
 		                         new List<string>() { @"-windows.login \\192.168.0.244\temp test testpw" })
 		{
 			
@@ -48,11 +48,10 @@ namespace skylib.sar
 			string userName = args[2];
 			string password = args[3];
 			
-			string output;
 			int exitcode;
 			
-			exitcode = ConsoleHelper.Shell("net", @"use " + uncPath + @" /DELETE", out output);
-			exitcode = ConsoleHelper.Shell("net", @"use " + uncPath + @" /USER:" + userName + " " + password + " /PERSISTENT:NO", out output);
+			exitcode = ConsoleHelper.Shell("net", @"use " + uncPath + @" /DELETE");
+			exitcode = ConsoleHelper.Shell("net", @"use " + uncPath + @" /USER:" + userName + " " + password + " /PERSISTENT:NO");
 			
 			if (exitcode != 0)
 			{
