@@ -24,7 +24,7 @@ namespace skylib.sar
 	{
 		public LabviewVersion() : base("Set LabVIEW project version number",
 		                               new List<string> { "lv_ver" },
-		                               "-lv_ver <lvproj_file> <version>",
+		                               "-lv_ver [lvproj_file] [version]",
 		                               new List<string> { "-lv_ver \"*.lvproj_file\" \"1.0.2.1\"" })
 		{
 			
