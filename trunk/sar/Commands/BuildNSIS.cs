@@ -25,7 +25,7 @@ namespace skylib.sar
 {
 	public class BuildNSIS : BaseCommand
 	{
-		public BuildNSIS() : base("Build NSIS installer",
+		public BuildNSIS() : base("Build - NSIS installer",
 		                          new List<string> { "build.nsis", "b.nsis" },
 		                          "-b.nsis [nsis_filepath]",
 		                          new List<string> { @"-b.nsis src\Installer\chesscup.nsi" })

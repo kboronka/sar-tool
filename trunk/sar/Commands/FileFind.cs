@@ -24,7 +24,7 @@ namespace skylib.sar
 {
 	public class FileFind : BaseCommand
 	{
-		public FileFind() : base("Find Files",
+		public FileFind() : base("File - Find",
 		                         new List<string> { "file.find", "f.f" },
 		                         "-file.find [filepattern]",
 		                         new List<string> { "-file.find \"*.vmdk\"" })

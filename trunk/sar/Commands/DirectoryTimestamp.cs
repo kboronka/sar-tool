@@ -24,7 +24,7 @@ namespace skylib.sar
 {
 	public class DirectoryTimestamp : BaseCommand
 	{
-		public DirectoryTimestamp() : base("Timestamp Directory", 
+		public DirectoryTimestamp() : base("Directory - Timestamp Name", 
 		                                new List<string> { "dir.timestamp", "d.t" },
 		                                @"-dir.timestamp [FilePath] [date/time format]",
 		                               new List<string> { "-dir.timestamp backup.zip \"yyyy.MM.dd-HH.mm\"" })

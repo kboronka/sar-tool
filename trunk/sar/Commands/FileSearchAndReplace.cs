@@ -22,9 +22,9 @@ using System.IO;
 
 namespace skylib.sar
 {
-	public class SearchAndReplace : BaseCommand
+	public class FileSearchAndReplace : BaseCommand
 	{
-		public SearchAndReplace() : base("Search And Replace",
+		public FileSearchAndReplace() : base("File - Search And Replace",
 		                                 new List<string> { "replace", "r" },
 		                                 "-replace <file_search_pattern> <search_text> <replace_text>",
 		                                 new List<string> {

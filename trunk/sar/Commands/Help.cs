@@ -52,7 +52,9 @@ namespace skylib.sar
 				copyright += "CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)\n";
 				copyright += "ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n";
 				copyright += "POSSIBILITY OF SUCH DAMAGE.\n";
+				
 				ConsoleHelper.WriteLine(copyright, ConsoleColor.DarkGreen);
+				ConsoleHelper.DebugWriteLine("warning: this is a debug version\n");
 			}
 		}
 		
@@ -94,14 +96,15 @@ namespace skylib.sar
 					if (command != lastCommand)
 					{
 						lastCommand = command;
-						ConsoleHelper.Write("\t" + command.Name + ": ", ConsoleColor.Red);
+						ConsoleHelper.Write("\t" + command.Name, ConsoleColor.Yellow);
+						ConsoleHelper.Write(": ");
 						
 						string seperator = "";
 						foreach (string commandString in command.Commands)
 						{
 							ConsoleHelper.Write(seperator);
-							ConsoleHelper.Write(commandString);
-							seperator = ", ";
+							ConsoleHelper.Write(commandString, ConsoleColor.Gray);
+							seperator = " | ";
 						}
 						
 						ConsoleHelper.WriteLine("");

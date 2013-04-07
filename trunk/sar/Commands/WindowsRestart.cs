@@ -27,7 +27,7 @@ namespace skylib.sar
 {
 	public class WindowsRestart : BaseCommand
 	{
-		public WindowsRestart() : base("Windows Restart",
+		public WindowsRestart() : base("Windows - Restart",
 		                               new List<string> { "windows.restart", "win.restart" },
 		                               @"-windows.restart [ip | computername] [domain/username] [password] <timeout (ms)>",
 		                               new List<string> { "-windows.restart 192.168.0.244 admin-username mypassword 35000" })

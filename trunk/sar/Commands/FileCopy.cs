@@ -24,7 +24,7 @@ namespace skylib.sar
 {
 	public class FileCopy : BaseCommand
 	{
-		public FileCopy() : base("File Copy",
+		public FileCopy() : base("File - Copy",
 		                           new List<string> { "file.copy", "f.c" },
 		                           @"-file.copy [root\filepattern] [destination] <speedlimt>",
 		                           new List<string> { "-file.copy \"*.*\" \"\\\\10.242.211.57\transfer\\x\\\"" })

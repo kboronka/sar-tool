@@ -50,26 +50,29 @@ namespace skylib.sar
 			{
 				// load all command modules
 				List<BaseCommand> allCommands = new List<BaseCommand>() {
-					new Backup(),
+					new Help(),
 					new BuildCHM(),
 					new BuildNSIS(),
 					new BuildSLN(),
-					new Help(),
 					new Kill(),
 					new LabviewVersion(),
-					new SearchAndReplace(),
-					new FileTimestamp(),
 					new VboxManage(),
+					new FileBackup(),
+					new FileSearchAndReplace(),
+					new FileTimestamp(),
 					new FileEncode(),
 					new FileFind(),
 					new FileDestory(),
 					new FileBsdStamp(),
 					new FileMirror(),
 					new FileCopy(),
+					new FileLock(),
 					new DirectoryTimestamp(),
 					new WindowsLogin(),
+					new WindowsMapDrive(),
 					new WindowsRearm(),
 					new WindowsRestart(),
+					new NetListAddaptors(),
 					new Delay()
 				};
 

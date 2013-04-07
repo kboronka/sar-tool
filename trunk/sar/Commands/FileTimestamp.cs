@@ -24,7 +24,7 @@ namespace skylib.sar
 {
 	public class FileTimestamp : BaseCommand
 	{
-		public FileTimestamp() : base("Timestamp Filename", 
+		public FileTimestamp() : base("File - Timestamp Name", 
 		                                new List<string> { "file.timestamp", "f.t", "timestamp", "t" },
 		                                @"-timestamp <FilePath> [date/time format]",
 		                               new List<string> { "-timestamp backup.zip \"yyyy.MM.dd-HH.mm\"" })

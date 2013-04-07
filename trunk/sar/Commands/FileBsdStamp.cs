@@ -24,7 +24,7 @@ namespace skylib.sar
 {
 	public class FileBsdStamp : BaseCommand
 	{
-		public FileBsdStamp(): base("File: BSD Stamp C# Files",
+		public FileBsdStamp(): base("File - BSD Stamp C# Files",
 		                            new List<string> { "file.bsd", "f.bsd" },
 		                            "-file.bsd <file_search_pattern>",
 		                            new List<string> { "-file.bsd *.cs" })
@@ -45,8 +45,6 @@ namespace skylib.sar
 			
 			string copyright = "";
 			copyright += "/* Copyright (C) " + DateTime.Now.Year.ToString() + " " + copywriter + "\n";
-			copyright += " * \n";
-			copyright += " * software is distributed under the BSD license\n";
 			copyright += " * \n";
 			copyright += " * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"\n";
 			copyright += " * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\n";

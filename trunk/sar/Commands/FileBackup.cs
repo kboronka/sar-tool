@@ -22,12 +22,12 @@ using System.IO;
 
 namespace skylib.sar
 {
-	public class Backup : BaseCommand
+	public class FileBackup : BaseCommand
 	{
-		public Backup() : base("Backup File",
-		                       new List<string> { "backup", "bk" },
-		                       @"-backup [FilePath] [backup_location]",
-		                       new List<string> { "-backup backup.zip \"c:\\backups\\\"" })
+		public FileBackup() : base("File - Backup",
+		                       new List<string> { "file.backup", "f.bk" },
+		                       @"-file.backup [FilePath] [backup_location]",
+		                       new List<string> { "-file.backup backup.zip \"c:\\backups\\\"" })
 		{
 		}
 		

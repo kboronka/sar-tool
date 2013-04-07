@@ -24,7 +24,7 @@ namespace skylib.sar
 {
 	public class FileMirror : BaseCommand
 	{
-		public FileMirror() : base("Mirror Files",
+		public FileMirror() : base("File - Mirror",
 		                           new List<string> { "file.mirror", "f.m" },
 		                           @"-f.m [root\filepattern] [destination]",
 		                           new List<string> { "-file.mirror \"*.*\" \"\\\\10.242.211.57\transfer\\x\\\"" })

@@ -26,7 +26,7 @@ namespace skylib.sar
 {
 	public class WindowsRearm : BaseCommand
 	{
-		public WindowsRearm() : base("Windows Activation Trial Rearm",
+		public WindowsRearm() : base("Windows - Activation Trial Rearm",
 		                             new List<string> { "windows.rearm", "win.rearm", "w.rarm" },
 		                             @"-windows.rearm",
 		                             new List<string> { "-windows.rearm" })

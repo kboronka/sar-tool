@@ -24,9 +24,9 @@ namespace skylib.sar
 {
 	public class BuildCHM : BaseCommand
 	{
-		public BuildCHM() : base("Build CHM help file",
+		public BuildCHM() : base("Build - CHM help file",
 		                         new List<string> { "build.chm", "b.chm" },
-		                         "-b.chm <hhp_filepath>",
+		                         "-b.chm [hhp_filepath]",
 		                         new List<string> { @"-b.chm help\help.hhp" })
 		{
 		}
