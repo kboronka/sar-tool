@@ -64,7 +64,7 @@ namespace skylib.sar
 				ConsoleHelper.WriteLine("Login Failed", ConsoleColor.DarkYellow);
 				return Program.EXIT_ERROR;
 			}
-
+			
 			exitcode = ConsoleHelper.Shell("shutdown", @"/r /m " + uncPath + @" /t 0 /f");
 
 			if (exitcode != 0)
@@ -73,53 +73,33 @@ namespace skylib.sar
 				return Program.EXIT_ERROR;
 			}
 			
-			ConsoleHelper.WriteLine(serverAddres + " is rebooting", ConsoleColor.DarkYellow);
-			
 			if (timeout != 0)
 			{
-				Stopwatch timer = new Stopwatch();
-				timer.Start();
-				Thread.Sleep(100);
-				
-				exitcode = 0;
-				while (exitcode == 0)
+				Progress.Message = "Shutting Down " + serverAddres;
+				if (!NetHelper.WaitForPing(serverAddres, timeout, false))
 				{
-					
-					if (timer.ElapsedMilliseconds > timeout)
-					{
-						timer.Stop();
-						ConsoleHelper.WriteLine(serverAddres + " did not reboot", ConsoleColor.DarkYellow);
-						return Program.EXIT_ERROR;
-					}
-					
-					Thread.Sleep(1000);
-					exitcode = ConsoleHelper.Shell("net", @"use " + uncPath + @" /DELETE");
-					exitcode = ConsoleHelper.Shell("net", @"use " + uncPath + @" /USER:" + userName + " " + password + "aaa" + " /PERSISTENT:NO");
-					exitcode = ConsoleHelper.Shell("net", @"use " + uncPath + @" /USER:" + userName + " " + password + " /PERSISTENT:NO");
+					ConsoleHelper.WriteLine(serverAddres + " did not shutdown", ConsoleColor.DarkYellow);
+					return Program.EXIT_ERROR;
+				}
+				else
+				{
+					ConsoleHelper.WriteLine(serverAddres + " has shutdown", ConsoleColor.DarkYellow);
 				}
 				
-				exitcode = 1;
-				while (exitcode != 0)
-				{
-					if (timer.ElapsedMilliseconds > timeout)
-					{
-						timer.Stop();
-						ConsoleHelper.WriteLine(serverAddres + " did not powerup", ConsoleColor.DarkYellow);
-						return Program.EXIT_ERROR;
-					}
-					
-					Thread.Sleep(1000);
-					ConsoleHelper.Shell("net", @"use " + uncPath + @" /DELETE");
-					exitcode = ConsoleHelper.Shell("net", @"use " + uncPath + @" /DELETE");
-					exitcode = ConsoleHelper.Shell("net", @"use " + uncPath + @" /USER:" + userName + " " + password + "aaa" + " /PERSISTENT:NO");
-					exitcode = ConsoleHelper.Shell("net", @"use " + uncPath + @" /USER:" + userName + " " + password + " /PERSISTENT:NO");
-				}
+				Progress.Message = "Restarting " + serverAddres;
 				
-				timer.Stop();
-				ConsoleHelper.WriteLine(serverAddres + " reboot complete", ConsoleColor.DarkYellow);
+				if (!NetHelper.WaitForPing(serverAddres, timeout, true))
+				{
+					ConsoleHelper.WriteLine(serverAddres + " did not restart", ConsoleColor.DarkYellow);
+					return Program.EXIT_ERROR;
+				}
+				else
+				{
+					ConsoleHelper.WriteLine(serverAddres + " has restarted", ConsoleColor.DarkYellow);
+				}
 			}
 			
-			
+			ConsoleHelper.WriteLine(serverAddres + " reboot complete", ConsoleColor.DarkYellow);
 			return Program.EXIT_OK;
 		}
 	}
