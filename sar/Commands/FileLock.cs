@@ -50,33 +50,16 @@ namespace skylib.sar
 			string root = Directory.GetCurrentDirectory();
 			IO.CheckRootAndPattern(ref root, ref filePattern);
 			List<string> files = new List<string>();
-			bool error = false;
-			Stopwatch timer = new Stopwatch();
-			timer.Start();
+
 			
-			do
+			if (!IO.WaitForFileSystem(root, timeout, true))
 			{
-				try
-				{
-					files = IO.GetAllFiles(root, filePattern);
-					error = false;
-				}
-				catch
-				{
-					Thread.Sleep(200);
-					error = true;
-				}
-			} while (error && !(timer.ElapsedMilliseconds > timeout));
-			
-			
-			if (error)
-			{
-				ConsoleHelper.WriteLine("Files not found", ConsoleColor.DarkYellow);
+				ConsoleHelper.WriteLine("File System Not Found", ConsoleColor.DarkYellow);
 				return Program.EXIT_ERROR;
 			}
 			else
 			{
-				ConsoleHelper.WriteLine("Files Found " + files.Count.ToString() + " file" + ((files.Count != 1) ? "s" : ""), ConsoleColor.DarkYellow);
+				ConsoleHelper.WriteLine("File System Found", ConsoleColor.DarkYellow);
 			}
 			
 			return Program.EXIT_OK;
