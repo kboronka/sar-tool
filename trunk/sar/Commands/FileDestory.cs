@@ -37,7 +37,8 @@ namespace skylib.sar
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-						
+				
+			Progress.Message = "Searching";
 			string filePattern = args[1];						
 			string root = Directory.GetCurrentDirectory();
 			IO.CheckRootAndPattern(ref root, ref filePattern);
@@ -55,12 +56,8 @@ namespace skylib.sar
 					{
 						try
 						{
-							File.SetAttributes(file, FileAttributes.Normal);
-							StreamWriter sw = new StreamWriter(file);
-							sw.WriteLine("file corrupt");
-							sw.Close();
-							sw.Dispose();
-							File.Delete(file);
+							Progress.Message = "Destroying " + file;
+							IO.DestroyFile(file);
 							ConsoleHelper.Write("destroyed: ", ConsoleColor.Cyan);
 							ConsoleHelper.WriteLine(file.Substring(root.Length + 1));
 							count++;
