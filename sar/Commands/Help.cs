@@ -32,27 +32,8 @@ namespace skylib.sar
 		{
 			if (!Help.titleDisplayed)
 			{
-				ConsoleHelper.Write(AssemblyInfo.Product + " v" + AssemblyInfo.Version, ConsoleColor.Yellow);
-				ConsoleHelper.WriteLine("  " + AssemblyInfo.Copyright);
-				titleDisplayed = true;
-				
-				string copyright = " \n";
-				copyright += "this software is distributed under the BSD license\n";
-				copyright += "\n";
-				copyright += "THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"\n";
-				copyright += "AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\n";
-				copyright += "IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE\n";
-				copyright += "ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE\n";
-				copyright += "LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR\n";
-				copyright += "CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF\n";
-				copyright += "SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS\n";
-				copyright += "INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN\n";
-				copyright += "CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)\n";
-				copyright += "ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n";
-				copyright += "POSSIBILITY OF SUCH DAMAGE.\n";
-				
-				ConsoleHelper.WriteLine(copyright, ConsoleColor.DarkGreen);
-				ConsoleHelper.DebugWriteLine("warning: this is a debug version\n");
+				ConsoleHelper.WriteTitle();
+				titleDisplayed = true;				
 			}
 		}
 		
