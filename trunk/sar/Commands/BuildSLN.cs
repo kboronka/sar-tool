@@ -40,7 +40,11 @@ namespace skylib.sar
 			
 			Progress.Message = "Searching";
 			string netVersion = args[1];
-			string filepath = IO.FindFile(args[2]);
+			string filePattern = args[2];
+			string root = Directory.GetCurrentDirectory();
+			IO.CheckRootAndPattern(ref root, ref filePattern);
+			List<string> files = IO.GetAllFiles(root, filePattern);
+			string filepath = files[0];
 			string filename = IO.GetFilename(filepath);
 			
 			// get list of msbuild versions availble
