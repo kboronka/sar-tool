@@ -56,7 +56,7 @@ namespace skylib.sar
 				{
 					msBuildFolders.Add(version, msBuildPath);
 					#if DEBUG
-					ConsoleHelper.WriteLine(version + " = " + msBuildPath);
+					ConsoleHelper.DebugWriteLine(version + " = " + msBuildPath);
 					#endif
 				}
 			}
