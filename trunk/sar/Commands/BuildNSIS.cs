@@ -51,9 +51,7 @@ namespace skylib.sar
 			
 			arguments += " " + scriptFile;
 			
-			#if DEBUG
-			ConsoleHelper.WriteLine(exePath + " " + arguments);
-			#endif
+			ConsoleHelper.DebugWriteLine(exePath + " " + arguments);
 
 			string output;
 			int exitcode = ConsoleHelper.Shell(exePath, arguments, out output);

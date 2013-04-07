@@ -44,10 +44,8 @@ namespace skylib.sar
 			string archiveroot = args[2];
 			if (archiveroot.Substring(archiveroot.Length - 1) != "\\") archiveroot = archiveroot + '\\';
 			
-			#if DEBUG
-			ConsoleHelper.WriteLine("filepattern: " + filepattern);
-			ConsoleHelper.WriteLine("archiveroot: " + archiveroot);
-			#endif
+			ConsoleHelper.DebugWriteLine("filepattern: " + filepattern);
+			ConsoleHelper.DebugWriteLine("archiveroot: " + archiveroot);
 			
 			
 			List<string> filelist = IO.GetAllFiles(filepattern);
@@ -73,22 +71,18 @@ namespace skylib.sar
 			}
 			
 			
-			#if DEBUG
-			ConsoleHelper.WriteLine("filepath: " + filepath);
-			ConsoleHelper.WriteLine("filepathNew: " + filepathNew);
-			#endif
+			ConsoleHelper.DebugWriteLine("filepath: " + filepath);
+			ConsoleHelper.DebugWriteLine("filepathNew: " + filepathNew);
 			
 			FileInfo originalFile = new FileInfo(filepath);
 			FileInfo oldestFile = IO.GetNewestFile(archiveroot);
 			
 			
-			#if DEBUG
-			ConsoleHelper.WriteLine("originalFile.Length: " + originalFile.Length.ToString());
+			ConsoleHelper.DebugWriteLine("originalFile.Length: " + originalFile.Length.ToString());
 			if (oldestFile != null)
 			{
-				ConsoleHelper.WriteLine("oldestFile.Length: " + oldestFile.Length.ToString());
+				ConsoleHelper.DebugWriteLine("oldestFile.Length: " + oldestFile.Length.ToString());
 			}
-			#endif
 			
 			if (oldestFile != null)
 			{
