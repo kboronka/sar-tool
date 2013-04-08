@@ -82,30 +82,7 @@ namespace skylib.sar
 				}
 			}
 			
-			// remove duplicates
-			changedFiles.Sort();
-			Int32 index = 0;
-			while (index < changedFiles.Count - 1)
-			{
-				if (changedFiles[index] == changedFiles[index + 1])
-					changedFiles.RemoveAt(index);
-				else
-					index++;
-			}
-
-
-			if (changedFiles.Count > 0)
-			{
-				ConsoleHelper.WriteLine("Replacments made in the following file" + ((changedFiles.Count > 1) ? "s" : ""));
-				foreach (string file in changedFiles)
-				{
-					ConsoleHelper.WriteLine(file.Replace(root, ""));
-				}
-			}
-			else
-			{
-				ConsoleHelper.WriteLine("search string was not found");
-			}
+			ConsoleHelper.WriteLine("Version number updated in " + changedFiles.Count.ToString() + " location" + ((changedFiles.Count != 1) ? "s" : ""), ConsoleColor.DarkYellow);
 			
 			return Program.EXIT_OK;
 		}
