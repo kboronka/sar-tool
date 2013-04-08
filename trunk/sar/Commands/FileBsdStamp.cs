@@ -80,7 +80,7 @@ namespace skylib.sar
 						if (code.IndexOf("using ") != -1) top = Math.Min(top, code.IndexOf("using "));
 						
 						StreamWriter sw = new StreamWriter(file);
-						sw.Write(copyright + "\n" + code.Substring(top));
+						sw.Write(copyright + "\r\n" + code.Substring(top));
 						sw.Close();
 						sw.Dispose();
 						updates++;
