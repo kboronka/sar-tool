@@ -120,19 +120,25 @@ namespace skylib.sar
 							exitCode = CommandHub.Execute(command, args);
 							args = new string[0];
 							backgroundThread.Abort();
-
 						}
 					}
 					catch (Exception ex)
 					{
-						args = new string[0];
-						backgroundThread.Abort();
-						
-						ConsoleHelper.WriteException(ex);
-
-						if (Program.Debug && commandlineActive)
+						try
 						{
-							Thread.Sleep(2000);
+							ConsoleHelper.WriteException(ex);
+
+							if (Program.Debug && commandlineActive)
+							{
+								Thread.Sleep(2000);
+							}
+							
+							args = new string[0];
+							backgroundThread.Abort();
+						}
+						catch
+						{
+							
 						}
 						
 						exitCode = EXIT_ERROR;
