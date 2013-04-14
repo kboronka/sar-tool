@@ -44,40 +44,29 @@ namespace skylib.sar
 			string root = Directory.GetCurrentDirectory();
 			IO.CheckRootAndPattern(ref root, ref filePattern);
 			List<string> files = IO.GetAllFiles(root, filePattern);
-			string filepath = files[0];
-			string filename = IO.GetFilename(filepath);
 			
-			// get list of msbuild versions availble
-			Progress.Message = "Locating Installed .NET versions";
-			string msbuildFolder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.System) + @"\..\Microsoft.NET\Framework";
-			Dictionary<string, string> msBuildFolders = new Dictionary<string, string>();
+			// sanity - no solution file found
+			if (files.Count == 0) throw new FileNotFoundException(filePattern + " solution file not found");
 			
-			foreach (string path in Directory.GetDirectories(msbuildFolder))
-			{
-				string version = path.Remove(0,path.LastIndexOf('\\')+1).Substring(1,3);
-				string msBuildPath = path + "\\MSBuild.exe";
-				if (File.Exists(msBuildPath))
-				{
-					msBuildFolders.Add(version, msBuildPath);
-					ConsoleHelper.DebugWriteLine(version + " = " + msBuildPath);
-				}
-			}
-			
-			// sanity - .net version installed
-			if (!msBuildFolders.ContainsKey(netVersion)) throw new ArgumentOutOfRangeException(".net version");
+			string soultionPath = files[0];
+			string solutionFileName = IO.GetFilename(soultionPath);
 			
 			// sanity - solution file exists
-			if (!File.Exists(filepath)) throw new FileNotFoundException(filepath + " solution file not found");
+			if (!File.Exists(soultionPath)) throw new FileNotFoundException(soultionPath + " solution file not found");
+
+			// get list of msbuild versions availble
+			Progress.Message = "Locating Installed .NET versions";
+			string msbuildPath = IO.FindDotNetFolder(netVersion) + @"\MSBuild.exe";
 			
-			string msbuildPath = msBuildFolders[netVersion];
-			string arguments = "\"" + filepath + "\"";
+
+			string arguments = "\"" + soultionPath + "\"";
 			
 			for (int i = 3; i < args.Length; i++)
 			{
 				arguments += " " + args[i];
 			}
 			
-			Progress.Message = "Building .NET Solution " + filename;
+			Progress.Message = "Building .NET Solution " + solutionFileName;
 			
 			string output;
 			int exitcode = ConsoleHelper.Shell(msbuildPath, arguments, out output);
