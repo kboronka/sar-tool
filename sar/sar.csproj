@@ -69,7 +69,7 @@
     <Compile Include="Commands\BuildNSIS.cs" />
     <Compile Include="Commands\Delay.cs" />
     <Compile Include="Commands\DirectoryTimestamp.cs" />
-    <Compile Include="Commands\FileBsdStamp.cs" />
+    <Compile Include="Commands\FileBsdHeader.cs" />
     <Compile Include="Commands\FileCopy.cs" />
     <Compile Include="Commands\FileDestory.cs" />
     <Compile Include="Commands\FileEncode.cs" />

@@ -20,11 +20,11 @@ using System.IO;
 
 namespace skylib.sar
 {
-	public class FileBsdStamp : BaseCommand
+	public class FileBsdHeader : BaseCommand
 	{
-		public FileBsdStamp(): base("File - BSD Stamp C# Files",
+		public FileBsdHeader(): base("File - BSD Stamp C# Files",
 		                            new List<string> { "file.bsd", "f.bsd" },
-		                            "-file.bsd <file_search_pattern>",
+		                            "-file.bsd [file_search_pattern]",
 		                            new List<string> { "-file.bsd *.cs" })
 		{
 			
@@ -38,9 +38,7 @@ namespace skylib.sar
 				throw new ArgumentException("incorrect number of arguments");
 			}
 			
-			string filePattern = args[1];
 			string copywriter = args[2];
-			
 			string copyright = "";
 			copyright += "/* Copyright (C) " + DateTime.Now.Year.ToString() + " " + copywriter + "\r\n";
 			copyright += " * \r\n";
@@ -57,20 +55,22 @@ namespace skylib.sar
 			copyright += " * POSSIBILITY OF SUCH DAMAGE.\r\n";
 			copyright += " */\r\n";
 			
+			Progress.Message = "Searching";
+			string filePattern = args[1];
 			string root = Directory.GetCurrentDirectory();
 			IO.CheckRootAndPattern(ref root, ref filePattern);
-			
 			List<string> files = IO.GetAllFiles(root, filePattern);
+
 			int updates = 0;
 			
 			foreach (string file in files)
-			{;
+			{
 				StreamReader reader = new StreamReader(file);
 				string code = reader.ReadToEnd();
 				reader.Close();
 				reader.Dispose();
 				
-				if (!code.StartsWith(copyright))
+				if (!code.StartsWith(copyright + "\r\n"))
 				{
 					if (code.IndexOf("namespace ") != -1)
 					{
@@ -88,7 +88,7 @@ namespace skylib.sar
 				}
 			}
 			
-			ConsoleHelper.WriteLine("Updates made in " + updates.ToString() + " file" + ((updates != 1) ? "s" : ""), ConsoleColor.DarkYellow);
+			ConsoleHelper.WriteLine("BSD Header updated on " + updates.ToString() + " file" + ((updates != 1) ? "s" : ""), ConsoleColor.DarkYellow);
 			
 			return Program.EXIT_OK;
 		}
