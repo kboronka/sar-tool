@@ -145,12 +145,15 @@ namespace skylib.sar
 					}
 				}
 				
+				ConsoleHelper.WriteLine("DEBUG");
 				return exitCode;
 			}
 			catch (Exception ex)
 			{
-				backgroundThread.Abort();
 				ConsoleHelper.WriteException(ex);
+				Thread.Sleep(2000);
+
+				backgroundThread.Abort();
 				
 				if (Program.Debug)
 				{
