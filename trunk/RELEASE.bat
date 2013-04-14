@@ -36,14 +36,13 @@
 	%SAR% -b.net 3.5 %SOLUTION% /p:Configuration=%CONFIG% /p:Platform=\"x86\"
 	if errorlevel 1 goto BuildFailed
 
-	
-:BuildComplete
 	copy sar\bin\%CONFIG%\*.exe release\*.exe
+	%SAR% -sky.gen SkyUpdate.info release\sar.exe https://sar-tool.googlecode.com/svn/trunk/release/sar.exe
 	copy license.txt release\license.txt
 
-	copy sar\bin\%CONFIG%\sar.exe sar.exe
-	%ZIP% "sar %VERSION%.zip" sar.exe license.txt
-	del sar.exe
+	
+:BuildComplete
+	%ZIP% "sar %VERSION%.zip" .\release\*.*
 	
 	svn commit -m "sar version %VERSION%"
 	svn copy %REPO%/trunk %REPO%/tags/%VERSION% -m "Tagging the %VERSION% version release of the project"

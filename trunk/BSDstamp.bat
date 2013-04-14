@@ -18,10 +18,10 @@
 :Paths
 	set SAR="lib\sar\sar.exe"
 
-	
 :Build
 	svn cleanup
 	svn update
 	%SAR% -f.bsd \sar\*.cs "Kevin Boronka"
+	%SAR% -sky.gen SkyUpdate.info release\sar.exe https://sar-tool.googlecode.com/svn/trunk/release/sar.exe
 	popd
 	exit /b 1	
