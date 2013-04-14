@@ -62,7 +62,7 @@ namespace skylib.sar
 					new FileEncode(),
 					new FileFind(),
 					new FileDestory(),
-					new FileBsdStamp(),
+					new FileBsdHeader(),
 					new FileMirror(),
 					new FileCopy(),
 					new FileLock(),
