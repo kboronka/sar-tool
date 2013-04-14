@@ -145,6 +145,7 @@ namespace skylib.sar
 					}
 				}
 				
+				backgroundThread.Abort();
 				ConsoleHelper.WriteLine("DEBUG");
 				return exitCode;
 			}
