@@ -14,52 +14,33 @@
  */
 
 using System;
-using skylib.Tools;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Threading;
+
+using skylib.Tools;
 
 namespace skylib.sar
 {
-	public class FileLock : BaseCommand
+	public class SkyUpdaterUpdate : BaseCommand
 	{
-		public FileLock() : base("File - Lock",
-		                         new List<string> { "file.lock", "f.lock" },
-		                         "-file.find [filepattern] <timeout>",
-		                         new List<string> { "-file.find \"*.exe\" 10000" })
+		public SkyUpdaterUpdate(): base("SkyUpdater - Check for new version",
+		                            new List<string> { "sky.update" },
+		                            "-sky.update",
+		                            new List<string> { "-sky.update" })
 		{
+
 		}
 		
 		public override int Execute(string[] args)
 		{
 			// sanity check
-			if (args.Length != 3)
+			if (args.Length != 1)
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
 			
-			Progress.Message = "Waiting for lock";
-			
-			int timeout = 5 * 60 * 1000;
-			Int32.TryParse(args[2], out timeout);
-			
-			Progress.Message = "Searching";
-			string filePattern = args[1];
-			string root = Directory.GetCurrentDirectory();
-			IO.CheckRootAndPattern(ref root, ref filePattern);
-			List<string> files = IO.GetAllFiles(root, filePattern);
-			
-			Progress.Message = "Waiting for lock";			
-			if (!IO.WaitForFileSystem(root, timeout, true))
-			{
-				ConsoleHelper.WriteLine("File System Not Found", ConsoleColor.DarkYellow);
-				return Program.EXIT_ERROR;
-			}
-			else
-			{
-				ConsoleHelper.WriteLine("File System Found", ConsoleColor.DarkYellow);
-			}
+			WebHelper.Download(@"http://sar-tool.googlecode.com/svn/trunk/release/sar.exe", IO.Temp + "sar.exe");
+			WebHelper.ReadURL(@"http://sar-tool.googlecode.com/svn/trunk/release/license.txt");
 			
 			return Program.EXIT_OK;
 		}

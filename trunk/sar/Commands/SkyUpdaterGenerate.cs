@@ -14,53 +14,54 @@
  */
 
 using System;
-using skylib.Tools;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Reflection;
 using System.IO;
-using System.Threading;
+
+using skylib.Tools;
 
 namespace skylib.sar
 {
-	public class FileLock : BaseCommand
+	public class SkyUpdaterGenerate : BaseCommand
 	{
-		public FileLock() : base("File - Lock",
-		                         new List<string> { "file.lock", "f.lock" },
-		                         "-file.find [filepattern] <timeout>",
-		                         new List<string> { "-file.find \"*.exe\" 10000" })
+		public SkyUpdaterGenerate(): base("SkyUpdater - Generate XML file from assembly",
+		                            new List<string> { "sky.generate", "sky.gen" },
+		                            "-sky.generate [xml] [assembly] [url]",
+		                            new List<string> { @"-sky.generate info.xml .\release\sar.exe https://sar-tool.googlecode.com/svn/trunk/release" })
 		{
+
 		}
 		
 		public override int Execute(string[] args)
 		{
 			// sanity check
-			if (args.Length != 3)
+			if (args.Length != 4)
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
-			Progress.Message = "Waiting for lock";
-			
-			int timeout = 5 * 60 * 1000;
-			Int32.TryParse(args[2], out timeout);
-			
+
 			Progress.Message = "Searching";
-			string filePattern = args[1];
+			string filePattern = args[2];
 			string root = Directory.GetCurrentDirectory();
 			IO.CheckRootAndPattern(ref root, ref filePattern);
 			List<string> files = IO.GetAllFiles(root, filePattern);
 			
-			Progress.Message = "Waiting for lock";			
-			if (!IO.WaitForFileSystem(root, timeout, true))
-			{
-				ConsoleHelper.WriteLine("File System Not Found", ConsoleColor.DarkYellow);
-				return Program.EXIT_ERROR;
-			}
-			else
-			{
-				ConsoleHelper.WriteLine("File System Found", ConsoleColor.DarkYellow);
-			}
+			if (files.Count == 0) throw new FileNotFoundException("File " + filePattern + " not found");
 			
+			AssemblyName assemblyname = AssemblyName.GetAssemblyName(files[0]);
+			
+			SkyUpdater updater = new SkyUpdater(assemblyname, StringHelper.TrimStart(files[0], root.Length), args[3]);
+
+			Progress.Message = "Generating XML";
+			filePattern = args[1];
+			root = Directory.GetCurrentDirectory();
+			IO.CheckRootAndPattern(ref root, ref filePattern);
+			if (!Directory.Exists(root)) throw new DirectoryNotFoundException(root + " does not exist");
+			
+			ConsoleHelper.DebugWriteLine(root + filePattern);
+			updater.Save(root + filePattern);
+			
+			ConsoleHelper.WriteLine(root + filePattern + " generated", ConsoleColor.DarkYellow);
 			return Program.EXIT_OK;
 		}
 	}
