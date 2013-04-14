@@ -5,7 +5,7 @@ using System.IO;
 
 using skylib.Tools;
 
-namespace skylib.Commands
+namespace skylib.sar
 {
 	public class Update : BaseCommand
 	{
@@ -27,9 +27,6 @@ namespace skylib.Commands
 			
 			WebHelper.Download(@"http://sar-tool.googlecode.com/svn/trunk/release/sar.exe", IO.Temp + "sar.exe");
 			WebHelper.ReadURL(@"http://sar-tool.googlecode.com/svn/trunk/release/license.txt");
-			
-			WebHelper.ReadURL();
-			NetHelper.Addaptors();
 			
 			return Program.EXIT_OK;
 		}
