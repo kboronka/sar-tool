@@ -32,7 +32,7 @@ namespace skylib.sar
 		{
 			if (!Help.titleDisplayed)
 			{
-				ConsoleHelper.WriteTitle();
+				ConsoleHelper.ApplicationTitle();
 				titleDisplayed = true;				
 			}
 		}
