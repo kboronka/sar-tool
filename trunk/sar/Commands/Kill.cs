@@ -42,20 +42,8 @@ namespace skylib.sar
 			string processName = args[1];
 			
 			Progress.Message = "Locating Process " + processName;
-			Process[] foundProcess = Process.GetProcessesByName(processName);
-			if (foundProcess.Length != 0)
-			{
-
-				foreach (Process process in foundProcess)
-				{
-					process.Kill();
-					ConsoleHelper.WriteLine(process.ProcessName + " has been shutdown", ConsoleColor.DarkYellow);
-				}
-			}
-			else
-			{
-				ConsoleHelper.WriteLine(processName + " not running", ConsoleColor.DarkYellow);
-			}
+			ConsoleHelper.KillProcess(processName);
+			ConsoleHelper.WriteLine(processName + " stopped", ConsoleColor.DarkYellow);
 			
 			return Program.EXIT_OK;
 		}
