@@ -72,6 +72,8 @@ namespace skylib.sar
 					new WindowsRearm(),
 					new WindowsRestart(),
 					new NetListAddaptors(),
+					new SkyUpdaterUpdate(),
+					new SkyUpdaterGenerate(),
 					new Delay()
 				};
 
