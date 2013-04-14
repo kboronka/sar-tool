@@ -14,9 +14,10 @@
  */
 
 using System;
-using skylib.Tools;
 using System.Collections.Generic;
 using System.IO;
+
+using skylib.Tools;
 
 namespace skylib.sar
 {
