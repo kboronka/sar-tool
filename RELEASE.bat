@@ -40,10 +40,9 @@
 :BuildComplete
 	copy sar\bin\%CONFIG%\*.exe release\*.exe
 	copy license.txt release\license.txt
-	copy readme.txt release\readme.txt
 
 	copy sar\bin\%CONFIG%\sar.exe sar.exe
-	%ZIP% "sar %VERSION%.zip" sar.exe readme.txt license.txt
+	%ZIP% "sar %VERSION%.zip" sar.exe license.txt
 	del sar.exe
 	
 	svn commit -m "sar version %VERSION%"
