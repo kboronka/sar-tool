@@ -126,6 +126,9 @@ namespace skylib.sar
 					{
 						try
 						{
+							backgroundThread.Abort();
+							Progress.UpdateTimer.Enabled = false;
+
 							ConsoleHelper.WriteException(ex);
 
 							if (Program.Debug && commandlineActive)
@@ -134,7 +137,6 @@ namespace skylib.sar
 							}
 							
 							args = new string[0];
-							backgroundThread.Abort();
 						}
 						catch
 						{
@@ -145,8 +147,9 @@ namespace skylib.sar
 					}
 				}
 				
+				Progress.UpdateTimer.Enabled = false;
 				backgroundThread.Abort();
-				ConsoleHelper.WriteLine("DEBUG");
+
 				return exitCode;
 			}
 			catch (Exception ex)
@@ -154,6 +157,7 @@ namespace skylib.sar
 				ConsoleHelper.WriteException(ex);
 				Thread.Sleep(2000);
 
+				Progress.UpdateTimer.Enabled = false;
 				backgroundThread.Abort();
 				
 				if (Program.Debug)
