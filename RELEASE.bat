@@ -30,7 +30,7 @@
 	svn cleanup
 	svn update	
 	%SAR% -f.bsd \sar\*.cs "Kevin Boronka"
-	%SAR% -r \sar\AssemblyInfo.* ((Version)\(\"\d+\.\d+\.\d+\.\d+\"\)) "Version(\"%VERSION%\")"
+	%SAR% -assy.ver \sar\AssemblyInfo.* %VERSION%
 
 	echo building binaries
 	%SAR% -b.net 3.5 %SOLUTION% /p:Configuration=%CONFIG% /p:Platform=\"x86\"
