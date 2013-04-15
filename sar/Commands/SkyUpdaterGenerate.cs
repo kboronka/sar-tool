@@ -25,9 +25,9 @@ namespace skylib.sar
 	public class SkyUpdaterGenerate : BaseCommand
 	{
 		public SkyUpdaterGenerate(): base("SkyUpdater - Generate XML file from assembly",
-		                            new List<string> { "sky.generate", "sky.gen" },
-		                            "-sky.generate [xml] [assembly] [url]",
-		                            new List<string> { @"-sky.generate info.xml .\release\sar.exe https://sar-tool.googlecode.com/svn/trunk/release" })
+		                                  new List<string> { "sky.generate", "sky.gen" },
+		                                  "-sky.generate [xml] [assembly] [url]",
+		                                  new List<string> { @"-sky.generate info.xml .\release\sar.exe https://sar-tool.googlecode.com/svn/trunk/release" })
 		{
 
 		}
@@ -45,21 +45,20 @@ namespace skylib.sar
 			string root = Directory.GetCurrentDirectory();
 			IO.CheckRootAndPattern(ref root, ref filePattern);
 			List<string> files = IO.GetAllFiles(root, filePattern);
-			
 			if (files.Count == 0) throw new FileNotFoundException("File " + filePattern + " not found");
 			
-			AssemblyName assemblyname = AssemblyName.GetAssemblyName(files[0]);
+			Progress.Message = "Locating XML";
+			string xmlFilePattern = args[1];
+			string xmlRoot = Directory.GetCurrentDirectory();
+			IO.CheckRootAndPattern(ref xmlRoot, ref xmlFilePattern);
+			string xmlFile = IO.FindFile(xmlRoot, xmlFilePattern);
+			if (!Directory.Exists(xmlRoot)) throw new DirectoryNotFoundException(xmlRoot + " does not exist");
+			//if (!File.Exists(xmlFile)) throw new FileNotFoundException(xmlFile + " does not exist");
 			
-			SkyUpdater updater = new SkyUpdater(assemblyname, StringHelper.TrimStart(files[0], root.Length), args[3]);
-
 			Progress.Message = "Generating XML";
-			filePattern = args[1];
-			root = Directory.GetCurrentDirectory();
-			IO.CheckRootAndPattern(ref root, ref filePattern);
-			if (!Directory.Exists(root)) throw new DirectoryNotFoundException(root + " does not exist");
-			
-			ConsoleHelper.DebugWriteLine(root + filePattern);
-			updater.Save(root + filePattern);
+			SkyUpdater updater = new SkyUpdater(AssemblyName.GetAssemblyName(files[0]));
+			updater.AddFile(StringHelper.TrimStart(files[0], root.Length), args[3]);
+			updater.Save(xmlFile);
 			
 			ConsoleHelper.WriteLine(root + filePattern + " generated", ConsoleColor.DarkYellow);
 			return Program.EXIT_OK;
