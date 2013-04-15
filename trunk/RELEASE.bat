@@ -7,7 +7,7 @@
 	:: SharpDevelop v3.2.1.6466					http://sourceforge.net/projects/sharpdevelop/files/SharpDevelop%203.x/3.2/SharpDevelop_3.2.1.6466_Setup.msi/download
 
 :DownloadLink
-	:: GoogleCode://code.google.com/p/sar-tool/downloads/list
+	:: GoogleCode: https://code.google.com/p/sar-tool/downloads/list
 	:: SourceForge: http://sourceforge.net/projects/sartool/files/
 
 :BuildEnvironment
@@ -37,13 +37,12 @@
 	if errorlevel 1 goto BuildFailed
 
 	copy sar\bin\%CONFIG%\*.exe release\*.exe
-	%SAR% -sky.gen SkyUpdate.info release\sar.exe https://sar-tool.googlecode.com/svn/trunk/release/sar.exe
 	copy license.txt release\license.txt
-
+	%SAR% -sky.gen SkyUpdate.info release\sar.exe https://sar-tool.googlecode.com/svn/trunk/release/sar.exe
 	
-:BuildComplete
 	%ZIP% "sar %VERSION%.zip" .\release\*.*
 	
+:BuildComplete
 	svn commit -m "sar version %VERSION%"
 	svn copy %REPO%/trunk %REPO%/tags/%VERSION% -m "Tagging the %VERSION% version release of the project"
 	svn update

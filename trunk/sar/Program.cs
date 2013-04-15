@@ -74,6 +74,7 @@ namespace skylib.sar
 					new NetListAddaptors(),
 					new SkyUpdaterUpdate(),
 					new SkyUpdaterGenerate(),
+					new SkyUpdaterAdd(),
 					new Delay()
 				};
 
