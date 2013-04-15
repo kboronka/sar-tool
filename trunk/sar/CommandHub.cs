@@ -14,8 +14,9 @@
  */
 
 using System;
-using skylib.Tools;
 using System.Collections.Generic;
+
+using skylib.Tools;
 
 namespace skylib.sar
 {
@@ -25,7 +26,15 @@ namespace skylib.sar
 		
 		public static void Add(string commandString, BaseCommand commandClass)
 		{
-			CommandHub.commands.Add(commandString, commandClass);
+			try
+			{
+				CommandHub.commands.Add(commandString, commandClass);
+			}
+			catch (Exception ex)
+			{
+				ConsoleHelper.WriteLine("Command: " + commandString);
+				ConsoleHelper.WriteException(ex);
+			}
 		}
 		
 		public static int Execute(string command, string[] args)
