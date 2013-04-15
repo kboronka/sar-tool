@@ -25,7 +25,7 @@ namespace skylib.sar
 	public class SkyUpdaterAdd : BaseCommand
 	{
 		public SkyUpdaterAdd(): base("SkyUpdater - Add file",
-		                             new List<string> { "sky.add", "sky.add" },
+		                             new List<string> { "sky.add" },
 		                             "-sky.add [xml] [file] [url]",
 		                             new List<string> { @"-sky.add info.xml .\release\sar.exe https://sar-tool.googlecode.com/svn/trunk/release/sar.exe" })
 		{
