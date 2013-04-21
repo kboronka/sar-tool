@@ -24,7 +24,7 @@ namespace skylib.sar
 	{
 		public FileDestory() : base("File - Destroy",
 		                            new List<string> { "file.destroy", "f.d" },
-		                            "-f.d <filepattern>",
+		                            "-f.d [filepattern]",
 		                            new List<string> { "-f.d \"*.vmdk\"" })
 		{
 		}
@@ -33,10 +33,13 @@ namespace skylib.sar
 		public override int Execute(string[] args)
 		{
 			// sanity check
-			if (args.Length != 2)
+			if (args.Length > 2 && args.Length > 3)
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
+			
+			// TODO: remove this when /q condition is working
+			if (args.Length == 3) Program.NoWarning = Program.NoWarning || (args[2] == "quite");
 			
 			Progress.Message = "Searching";
 			string filePattern = args[1];
@@ -44,34 +47,36 @@ namespace skylib.sar
 			IO.CheckRootAndPattern(ref root, ref filePattern);
 			List<string> files = IO.GetAllFiles(root, filePattern);
 			
-			
-			foreach (string file in files)
+			if (!Program.NoWarning)
 			{
-				ConsoleHelper.Write("found: ", ConsoleColor.Cyan);
-				ConsoleHelper.WriteLine(file.Substring(root.Length));
+				foreach (string file in files)
+				{
+					ConsoleHelper.Write("found: ", ConsoleColor.Cyan);
+					ConsoleHelper.WriteLine(StringHelper.TrimStart(file, root.Length));
+				}
+
+				ConsoleHelper.WriteLine(files.Count.ToString() + " file" + ((files.Count != 1) ? "s" : "") + " found");
 			}
 			
-			ConsoleHelper.WriteLine(files.Count.ToString() + " file" + ((files.Count != 1) ? "s" : "") + " found");
-			
-			int count = 0;
+			int counter = 0;
 			if (files.Count > 0)
 			{
-				if (Program.NoWarning || ConsoleHelper.Confirm("Destroy files? (y/n)"))
+				if (Program.NoWarning || ConsoleHelper.Confirm("Destroy " + files.Count.ToString() + " file" + ((files.Count != 1) ? "s" : "") + "? (y/n)"))
 				{
 					foreach (string file in files)
 					{
+						Progress.Message = "Destroying " + StringHelper.TrimStart(file, root.Length);// + file;
+						System.Threading.Thread.Sleep(500);
+
 						try
 						{
-							Progress.Message = "Destroying " + file;
 							IO.DestroyFile(file);
-							ConsoleHelper.Write("destroyed: ", ConsoleColor.Cyan);
-							ConsoleHelper.WriteLine(file.Substring(root.Length + 1));
-							count++;
+							counter++;
 						}
 						catch (Exception ex)
 						{
 							ConsoleHelper.Write("failed: ", ConsoleColor.Red);
-							ConsoleHelper.WriteLine(file.Substring(root.Length + 1));
+							ConsoleHelper.WriteLine(StringHelper.TrimStart(file, root.Length));
 							
 							if (Program.Debug)
 							{
@@ -82,8 +87,7 @@ namespace skylib.sar
 				}
 			}
 			
-			
-			ConsoleHelper.WriteLine("Files destroyed: " + count.ToString() + " of " + files.Count.ToString(), ConsoleColor.DarkYellow);
+			ConsoleHelper.WriteLine(counter.ToString() + " File" + ((counter != 1) ? "s" : "") + " Destroyed", ConsoleColor.DarkYellow);
 			return Program.EXIT_OK;
 		}
 	}
