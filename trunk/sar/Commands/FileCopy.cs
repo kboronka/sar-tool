@@ -47,8 +47,10 @@ namespace skylib.sar
 			IO.CheckRootAndPattern(ref root, ref filePattern);
 			List<string> files = IO.GetAllFiles(root, filePattern);
 			
+			int counter = 0;
 			for (int i = 0; i < files.Count; i++)
 			{
+				counter++;
 				// FIXME: the percentage complete string is not working
 				Progress.Message = i.ToString() + " of " + files.Count.ToString() + " " + ((i / files.Count) * 100).ToString() + "% ";
 				string filename = IO.GetFilename(files[i]);
@@ -63,8 +65,7 @@ namespace skylib.sar
 				//if (!File.Exists(destinationFile)) File.Copy(sourceFile, destinationFile);
 			}
 
-			ConsoleHelper.WriteLine(files.Count.ToString() + " file" + ((files.Count != 1) ? "s" : "") + " mirrored", ConsoleColor.DarkYellow);
-			
+			ConsoleHelper.WriteLine(counter.ToString() + " File" + ((counter != 1) ? "s" : "") + " Copied", ConsoleColor.DarkYellow);
 			return Program.EXIT_OK;
 		}
 	}
