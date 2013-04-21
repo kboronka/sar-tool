@@ -56,7 +56,7 @@ namespace skylib.sar
 			if (!File.Exists(xmlFile)) throw new FileNotFoundException(xmlFile + " does not exist");
 			
 			Progress.Message = "Generating XML";
-			SkyUpdater updater = new SkyUpdater(xmlFile);
+			SkyUpdater updater = SkyUpdater.Open(xmlFile);
 			foreach (string file in files)
 			{
 				updater.AddFile(StringHelper.TrimStart(file, root.Length), args[3]);
@@ -64,7 +64,7 @@ namespace skylib.sar
 			
 			updater.Save(xmlFile);
 			
-			ConsoleHelper.WriteLine(root + filePattern + " updated", ConsoleColor.DarkYellow);
+			ConsoleHelper.WriteLine(IO.GetFilename(xmlFile) + " updated", ConsoleColor.DarkYellow);
 			return Program.EXIT_OK;
 		}
 	}
