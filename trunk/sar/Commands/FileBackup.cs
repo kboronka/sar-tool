@@ -42,12 +42,18 @@ namespace skylib.sar
 			string root = Directory.GetCurrentDirectory();
 			IO.CheckRootAndPattern(ref root, ref filePattern);
 			List<string> files = IO.GetAllFiles(root, filePattern);
-			if (files.Count == 0) throw new FileNotFoundException("unable to find a file that matches pattern " + filePattern);
+			
+			ConsoleHelper.DebugWriteLine("pattern: " + filePattern);
+			ConsoleHelper.DebugWriteLine("root: " + root);
+			if (files.Count == 0) throw new FileNotFoundException("unable to find any files that match pattern: \"" + filePattern + "\" in root: \"" + root + "\"");
 			
 			Progress.Message = "Locating Archive Folder";
 			string archivepath = args[2];
 			string archiveroot = Directory.GetCurrentDirectory();
+			ConsoleHelper.DebugWriteLine("args[2]: " + args[2]);
 			archivepath = IO.CheckPath(archiveroot, archivepath);
+			ConsoleHelper.DebugWriteLine("archivepath: " + archivepath);
+			ConsoleHelper.DebugWriteLine("archiveroot: " + archiveroot);
 			if (!Directory.Exists(archiveroot))	throw new DirectoryNotFoundException("unable to find storage folder " + archiveroot);
 			
 			int counter = 0;
