@@ -4,7 +4,7 @@
 	:: TortoiseSVN (+command line tools)		http://www.filehippo.com/download_tortoisesvn/
 	:: 7zip 32bit								http://www.filehippo.com/download_7zip_32/
 	:: 7zip 64bit								http://www.filehippo.com/download_7-zip_64/
-	:: SharpDevelop v3.2.1.6466					http://sourceforge.net/projects/sharpdevelop/files/SharpDevelop%203.x/3.2/SharpDevelop_3.2.1.6466_Setup.msi/download
+	:: SharpDevelop v4x							http://www.icsharpcode.net/OpenSource/SD/Download/#SharpDevelop4x
 
 :DownloadLink
 	:: GoogleCode: https://code.google.com/p/sar-tool/downloads/list
