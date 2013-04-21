@@ -65,8 +65,7 @@ namespace skylib.sar
 				{
 					foreach (string file in files)
 					{
-						Progress.Message = "Destroying " + StringHelper.TrimStart(file, root.Length);// + file;
-						System.Threading.Thread.Sleep(500);
+						Progress.Message = "Destroying " + StringHelper.TrimStart(file, root.Length);
 
 						try
 						{
