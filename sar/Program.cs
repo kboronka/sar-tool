@@ -95,6 +95,8 @@ namespace skylib.sar
 							ConsoleHelper.Write("> ", ConsoleColor.White);
 							args = StringHelper.ParseString(ConsoleHelper.ReadLine(), " ");
 							
+							// TODO: handle /q condition (Program.NoWarning)
+							
 							if (args.Length == 0)
 							{
 								throw new ArgumentException("too few arguments");
