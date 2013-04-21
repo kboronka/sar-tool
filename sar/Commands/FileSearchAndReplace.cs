@@ -42,15 +42,30 @@ namespace skylib.sar
 				throw new ArgumentException("incorrect number of arguments");
 			}
 			
+			string search = args[2];
+			string replace = args[3];
+
 			string filePattern = args[1];
-			string searchString = args[2];
-			string replaceString = args[3];
 			string root = Directory.GetCurrentDirectory();
 			IO.CheckRootAndPattern(ref root, ref filePattern);
-			
-			List<string> changedFiles = IO.SearchAndReplaceInFiles(root, filePattern, searchString, replaceString);
-			ConsoleHelper.WriteLine("Replacments made in " + changedFiles.Count.ToString() + " file" + ((changedFiles.Count != 1) ? "s" : ""), ConsoleColor.DarkYellow);
-			
+			List<string> files = IO.GetAllFiles(root, filePattern);
+
+			int counter = 0;
+			int changes = 0;
+			foreach (string file in files)
+			{
+				if (Program.IncludeSVN || !IO.IsSVN(file))
+				{
+					int found = IO.SearchAndReplaceInFile(file, search, replace);
+					if (found > 0)
+					{
+						changes += found;
+						counter++;
+					}
+				}
+			}			
+
+			ConsoleHelper.WriteLine(changes.ToString() + " replacment" + ((changes != 1) ? "s" : "") + " made in " + counter.ToString() + " file" + ((counter != 1) ? "s" : ""), ConsoleColor.DarkYellow);
 			return Program.EXIT_OK;
 		}
 	}

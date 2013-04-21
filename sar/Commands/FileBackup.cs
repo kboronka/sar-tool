@@ -20,7 +20,7 @@ using System.IO;
 
 namespace skylib.sar
 {
-		public class FileBackup : BaseCommand
+	public class FileBackup : BaseCommand
 	{
 		public FileBackup() : base("File - Backup",
 		                           new List<string> { "file.backup", "f.bk" },
@@ -57,22 +57,24 @@ namespace skylib.sar
 			if (!Directory.Exists(archiveroot))	throw new DirectoryNotFoundException("unable to find storage folder " + archiveroot);
 			
 			int counter = 0;
-			
 			foreach (string file in files)
 			{
 				if (!file.Contains(archivepath))
 				{
-					string fileRelativePath = StringHelper.TrimStart(file, root.Length);
-					string backupFile = archivepath + file.Substring(root.Length);
-					string backupRoot = IO.GetRoot(backupFile);
+					if (Program.IncludeSVN || !IO.IsSVN(file))
+					{
+						string fileRelativePath = StringHelper.TrimStart(file, root.Length);
+						string backupFile = archivepath + file.Substring(root.Length);
+						string backupRoot = IO.GetRoot(backupFile);
 
-					
-					Progress.Message = "Coping " + fileRelativePath;
-					counter++;
-					
-					if (!Directory.Exists(backupRoot)) Directory.CreateDirectory(backupRoot);
-					if (File.Exists(backupFile)) File.Delete(backupFile);
-					File.Copy(file, backupFile);
+						
+						Progress.Message = "Coping " + fileRelativePath;
+						counter++;
+						
+						if (!Directory.Exists(backupRoot)) Directory.CreateDirectory(backupRoot);
+						if (File.Exists(backupFile)) File.Delete(backupFile);
+						File.Copy(file, backupFile);
+					}
 				}
 			}
 			

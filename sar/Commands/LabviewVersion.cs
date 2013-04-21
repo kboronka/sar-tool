@@ -38,7 +38,6 @@ namespace skylib.sar
 				throw new ArgumentException("incorrect number of arguments");
 			}
 			
-			string filePattern = args[1];
 			string[] version = args[2].Split('.');
 			
 			if (version.Length != 4)
@@ -46,34 +45,36 @@ namespace skylib.sar
 				throw new ArgumentException("incorrect number of arguments");
 			}
 			
+			Progress.Message = "Searching";
+			string filePattern = args[1];
 			string root = Directory.GetCurrentDirectory();
+			IO.CheckRootAndPattern(ref root, ref filePattern);
+			List<string> files = IO.GetAllFiles(root, filePattern);
 			
-			/*
-			<Property Name=\"TgtF_fileVersion.build\" Type=\"Int\">9</Property>
-			<Property Name=\"TgtF_fileVersion.major\" Type=\"Int\">9</Property>
-			<Property Name=\"TgtF_fileVersion.minor\" Type=\"Int\">9</Property>
-			<Property Name=\"TgtF_fileVersion.patch\" Type=\"Int\">9</Property>
-			 */
+			ConsoleHelper.DebugWriteLine("pattern: " + filePattern);
+			ConsoleHelper.DebugWriteLine("root: " + root);
+			if (files.Count == 0) throw new FileNotFoundException("unable to find any files that match pattern: \"" + filePattern + "\" in root: \"" + root + "\"");
+
 			
-			List<string> changedFiles = new List<string>();
-			changedFiles.AddRange(IO.SearchAndReplaceInFiles(root, filePattern, "<Property Name=\"TgtF_fileVersion.major\" Type=\"Int\">\\d{1,}</Property>", "<Property Name=\"TgtF_fileVersion.major\" Type=\"Int\">" + version[0] + "</Property>"));
-			changedFiles.AddRange(IO.SearchAndReplaceInFiles(root, filePattern, "<Property Name=\"TgtF_fileVersion.minor\" Type=\"Int\">\\d{1,}</Property>", "<Property Name=\"TgtF_fileVersion.minor\" Type=\"Int\">" + version[1] + "</Property>"));
-			changedFiles.AddRange(IO.SearchAndReplaceInFiles(root, filePattern, "<Property Name=\"TgtF_fileVersion.patch\" Type=\"Int\">\\d{1,}</Property>", "<Property Name=\"TgtF_fileVersion.patch\" Type=\"Int\">" + version[2] + "</Property>"));
-			changedFiles.AddRange(IO.SearchAndReplaceInFiles(root, filePattern, "<Property Name=\"TgtF_fileVersion.build\" Type=\"Int\">\\d{1,}</Property>", "<Property Name=\"TgtF_fileVersion.build\" Type=\"Int\">" + version[3] + "</Property>"));
+			int changes = 0;
+			int counter = 0;
+			foreach (string file in files)
+			{
+				if (Program.IncludeSVN || !IO.IsSVN(file))
+				{
+					counter++;
+					changes += IO.SearchAndReplaceInFile(file, "<Property Name=\"TgtF_fileVersion.major\" Type=\"Int\">\\d{1,}</Property>", "<Property Name=\"TgtF_fileVersion.major\" Type=\"Int\">" + version[0] + "</Property>");
+					changes += IO.SearchAndReplaceInFile(file, "<Property Name=\"TgtF_fileVersion.major\" Type=\"Int\">\\d{1,}</Property>", "<Property Name=\"TgtF_fileVersion.major\" Type=\"Int\">" + version[0] + "</Property>");
+					changes += IO.SearchAndReplaceInFile(file, "<Property Name=\"TgtF_fileVersion.minor\" Type=\"Int\">\\d{1,}</Property>", "<Property Name=\"TgtF_fileVersion.minor\" Type=\"Int\">" + version[1] + "</Property>");
+					changes += IO.SearchAndReplaceInFile(file, "<Property Name=\"TgtF_fileVersion.patch\" Type=\"Int\">\\d{1,}</Property>", "<Property Name=\"TgtF_fileVersion.patch\" Type=\"Int\">" + version[2] + "</Property>");
+					changes += IO.SearchAndReplaceInFile(file, "<Property Name=\"TgtF_fileVersion.build\" Type=\"Int\">\\d{1,}</Property>", "<Property Name=\"TgtF_fileVersion.build\" Type=\"Int\">" + version[3] + "</Property>");
+				}
+			}
 			
 			// remove duplicates
-			changedFiles.Sort();
-			Int32 index = 0;
-			while (index < changedFiles.Count - 1)
-			{
-				if (changedFiles[index] == changedFiles[index + 1])
-					changedFiles.RemoveAt(index);
-				else
-					index++;
-			}
 
 
-			if (changedFiles.Count > 0)
+			if (counter > 0)
 			{
 				ConsoleHelper.WriteLine("LabVIEW project version number updated", ConsoleColor.DarkYellow);
 			}

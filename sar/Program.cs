@@ -33,6 +33,7 @@ namespace skylib.sar
 		
 		public static bool NoWarning = false;
 		public static bool Debug = false;
+		public static bool IncludeSVN = false;
 
 		public static int Main(string[] args)
 		{
@@ -174,6 +175,7 @@ namespace skylib.sar
 		{
 			Program.NoWarning = false;
 			Program.Debug = false;
+			Program.IncludeSVN = false;
 			
 			#if DEBUG
 			Program.Debug = true;
@@ -193,6 +195,9 @@ namespace skylib.sar
 						case "/d":
 							Program.Debug = true;
 							break;
+						case "/svn":
+							Program.IncludeSVN = true;
+							break;
 						default:
 							result.Add(arg);
 							break;
@@ -204,8 +209,9 @@ namespace skylib.sar
 				}
 			}
 			
-			ConsoleHelper.DebugWriteLine("Program.NoWarning = " + Program.NoWarning.ToString());
-			ConsoleHelper.DebugWriteLine("Program.Debug = " + Program.Debug.ToString());
+			ConsoleHelper.DebugWriteLine("/q (quite)= " + Program.NoWarning.ToString());
+			ConsoleHelper.DebugWriteLine("/d (debug) = " + Program.Debug.ToString());
+			ConsoleHelper.DebugWriteLine("/svn (include .svn folders) = " + Program.IncludeSVN.ToString());
 			
 			return result.ToArray();
 		}

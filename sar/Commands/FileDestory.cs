@@ -66,8 +66,11 @@ namespace skylib.sar
 
 						try
 						{
-							IO.DestroyFile(file);
-							counter++;
+							if (Program.IncludeSVN || !IO.IsSVN(file))
+							{
+								IO.DestroyFile(file);
+								counter++;
+							}
 						}
 						catch (Exception ex)
 						{
