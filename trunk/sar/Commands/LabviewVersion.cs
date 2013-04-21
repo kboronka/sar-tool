@@ -75,7 +75,7 @@ namespace skylib.sar
 
 			if (changedFiles.Count > 0)
 			{
-				ConsoleHelper.WriteLine("LabVIEW project version number updated"), ConsoleColor.DarkYellow);
+				ConsoleHelper.WriteLine("LabVIEW project version number updated", ConsoleColor.DarkYellow);
 			}
 			else
 			{
