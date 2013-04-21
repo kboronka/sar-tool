@@ -51,16 +51,15 @@ namespace skylib.sar
 			string xmlFilePattern = args[1];
 			string xmlRoot = Directory.GetCurrentDirectory();
 			IO.CheckRootAndPattern(ref xmlRoot, ref xmlFilePattern);
-			string xmlFile = IO.FindFile(xmlRoot, xmlFilePattern);
+			string xmlFile = xmlRoot + xmlFilePattern;
 			if (!Directory.Exists(xmlRoot)) throw new DirectoryNotFoundException(xmlRoot + " does not exist");
-			//if (!File.Exists(xmlFile)) throw new FileNotFoundException(xmlFile + " does not exist");
 			
 			Progress.Message = "Generating XML";
-			SkyUpdater updater = new SkyUpdater(AssemblyName.GetAssemblyName(files[0]));
+			SkyUpdater updater = SkyUpdater.Make(AssemblyName.GetAssemblyName(files[0]));
 			updater.AddFile(StringHelper.TrimStart(files[0], root.Length), args[3]);
 			updater.Save(xmlFile);
 			
-			ConsoleHelper.WriteLine(root + filePattern + " generated", ConsoleColor.DarkYellow);
+			ConsoleHelper.WriteLine(IO.GetFilename(xmlFile) + " generated", ConsoleColor.DarkYellow);
 			return Program.EXIT_OK;
 		}
 	}
