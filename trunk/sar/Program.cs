@@ -36,10 +36,6 @@ namespace skylib.sar
 
 		public static int Main(string[] args)
 		{
-			#if DEBUG
-			Program.Debug = true;
-			#endif
-			
 			//FIXME: no error handling here
 			Progress progressBar = new Progress();
 			Thread backgroundThread = new Thread(new ThreadStart(progressBar.Enable));
@@ -94,8 +90,7 @@ namespace skylib.sar
 							Help.WriteTitle();
 							ConsoleHelper.Write("> ", ConsoleColor.White);
 							args = StringHelper.ParseString(ConsoleHelper.ReadLine(), " ");
-							
-							// TODO: handle /q condition (Program.NoWarning)
+							args = RemoveGlobalArgs(args);
 							
 							if (args.Length == 0)
 							{
@@ -104,9 +99,9 @@ namespace skylib.sar
 						}
 						else
 						{
+							args = RemoveGlobalArgs(args);
 							commandlineActive = true;
 						}
-						
 						
 						string command = args[0].ToLower();
 						if (command[0] == '-' || command[0] == '/')
@@ -173,6 +168,46 @@ namespace skylib.sar
 				
 				return EXIT_ERROR;
 			}
+		}
+		
+		public static string[] RemoveGlobalArgs(string[] args)
+		{
+			Program.NoWarning = false;
+			Program.Debug = false;
+			
+			#if DEBUG
+			Program.Debug = true;
+			#endif
+			
+			List<string> result = new List<string>();
+			
+			foreach (string arg in args)
+			{
+				if (arg.Length > 1 && arg.Substring(0, 1) == "/")
+				{
+					switch (arg.ToLower())
+					{
+						case "/q":
+							Program.NoWarning = true;
+							break;
+						case "/d":
+							Program.Debug = true;
+							break;
+						default:
+							result.Add(arg);
+							break;
+					}
+				}
+				else
+				{
+					result.Add(arg);
+				}
+			}
+			
+			ConsoleHelper.DebugWriteLine("Program.NoWarning = " + Program.NoWarning.ToString());
+			ConsoleHelper.DebugWriteLine("Program.Debug = " + Program.Debug.ToString());
+			
+			return result.ToArray();
 		}
 	}
 }

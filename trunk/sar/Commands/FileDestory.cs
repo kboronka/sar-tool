@@ -33,13 +33,10 @@ namespace skylib.sar
 		public override int Execute(string[] args)
 		{
 			// sanity check
-			if (args.Length > 2 && args.Length > 3)
+			if (args.Length != 2)
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
-			// TODO: remove this when /q condition is working
-			if (args.Length == 3) Program.NoWarning = Program.NoWarning || (args[2] == "quite");
 			
 			Progress.Message = "Searching";
 			string filePattern = args[1];
