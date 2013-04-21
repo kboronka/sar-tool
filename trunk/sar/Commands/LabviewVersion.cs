@@ -75,15 +75,11 @@ namespace skylib.sar
 
 			if (changedFiles.Count > 0)
 			{
-				ConsoleHelper.WriteLine("Replacments made in the following file" + ((changedFiles.Count > 1) ? "s" : ""));
-				foreach (string file in changedFiles)
-				{
-					ConsoleHelper.WriteLine(file.Replace(root, ""));
-				}
+				ConsoleHelper.WriteLine("LabVIEW project version number updated"), ConsoleColor.DarkYellow);
 			}
 			else
 			{
-				ConsoleHelper.WriteLine("search string was not found");
+				ConsoleHelper.WriteLine("LabVIEW project version number not updated", ConsoleColor.DarkYellow);
 			}
 			
 			return Program.EXIT_OK;
