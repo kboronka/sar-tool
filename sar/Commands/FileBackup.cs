@@ -20,12 +20,12 @@ using System.IO;
 
 namespace skylib.sar
 {
-	public class FileBackup : BaseCommand
+		public class FileBackup : BaseCommand
 	{
 		public FileBackup() : base("File - Backup",
-		                       new List<string> { "file.backup", "f.bk" },
-		                       @"-file.backup [FilePath] [backup_location]",
-		                       new List<string> { "-file.backup backup.zip \"c:\\backups\\\"" })
+		                           new List<string> { "file.backup", "f.bk" },
+		                           @"-file.backup [filepath/pattern] [destination]",
+		                           new List<string> { "-file.backup backup.zip \"c:\\backups\\\"" })
 		{
 		}
 		
@@ -37,71 +37,40 @@ namespace skylib.sar
 				throw new ArgumentException("incorrect number of arguments");
 			}
 			
+			Progress.Message = "Searching";
+			string filePattern = args[1];
+			string root = Directory.GetCurrentDirectory();
+			IO.CheckRootAndPattern(ref root, ref filePattern);
+			List<string> files = IO.GetAllFiles(root, filePattern);
+			if (files.Count == 0) throw new FileNotFoundException("unable to find a file that matches pattern " + filePattern);
 			
-			string filepattern = args[1];
-			string archiveroot = args[2];
-			if (archiveroot.Substring(archiveroot.Length - 1) != "\\") archiveroot = archiveroot + '\\';
+			Progress.Message = "Locating Archive Folder";
+			string archivepath = args[2];
+			string archiveroot = Directory.GetCurrentDirectory();
+			archivepath = IO.CheckPath(archiveroot, archivepath);
+			if (!Directory.Exists(archiveroot))	throw new DirectoryNotFoundException("unable to find storage folder " + archiveroot);
 			
-			ConsoleHelper.DebugWriteLine("filepattern: " + filepattern);
-			ConsoleHelper.DebugWriteLine("archiveroot: " + archiveroot);
+			int counter = 0;
 			
-			
-			List<string> filelist = IO.GetAllFiles(filepattern);
-			
-			if (!Directory.Exists(archiveroot))
+			foreach (string file in files)
 			{
-				throw new DirectoryNotFoundException("unable to find storage folder " + archiveroot);
-			}
-			
-			if (filelist.Count == 0)
-			{
-				throw new FileNotFoundException("unable to find a file that matches pattern " + filepattern);
-			}
-			
-			string filepath = filelist[0];
-			
-			string filepathNew = archiveroot + filepath.Substring(filepath.LastIndexOf('\\') + 1);
-			
-			// original file must exits
-			if (!File.Exists(filepath))
-			{
-				throw new FileNotFoundException("file not found. \"" + filepath + "\"");
-			}
-			
-			
-			ConsoleHelper.DebugWriteLine("filepath: " + filepath);
-			ConsoleHelper.DebugWriteLine("filepathNew: " + filepathNew);
-			
-			FileInfo originalFile = new FileInfo(filepath);
-			FileInfo oldestFile = IO.GetNewestFile(archiveroot);
-			
-			
-			ConsoleHelper.DebugWriteLine("originalFile.Length: " + originalFile.Length.ToString());
-			if (oldestFile != null)
-			{
-				ConsoleHelper.DebugWriteLine("oldestFile.Length: " + oldestFile.Length.ToString());
-			}
-			
-			if (oldestFile != null)
-			{
-				if (oldestFile.Length == originalFile.Length)
+				if (!file.Contains(archivepath))
 				{
-					ConsoleHelper.WriteLine("Backup Not Required", ConsoleColor.DarkYellow);
+					string fileRelativePath = StringHelper.TrimStart(file, root.Length);
+					string backupFile = archivepath + file.Substring(root.Length);
+					string backupRoot = IO.GetRoot(backupFile);
+
 					
-					return Program.EXIT_OK;
+					Progress.Message = "Coping " + fileRelativePath;
+					counter++;
+					
+					if (!Directory.Exists(backupRoot)) Directory.CreateDirectory(backupRoot);
+					if (File.Exists(backupFile)) File.Delete(backupFile);
+					File.Copy(file, backupFile);
 				}
 			}
 			
-			#if !DEBUG
-			File.Move(filepath, filepathNew);
-			#endif
-			
-			#if DEBUG
-			File.Copy(filepath, filepathNew);
-			#endif
-			
-			ConsoleHelper.WriteLine("Backup Successfully Completed", ConsoleColor.DarkYellow);
-			
+			ConsoleHelper.WriteLine(counter.ToString() + " File" + ((counter != 1) ? "s" : "") + " Copied", ConsoleColor.DarkYellow);
 			return Program.EXIT_OK;
 		}
 	}
