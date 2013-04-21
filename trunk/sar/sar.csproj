@@ -59,6 +59,9 @@
     <Compile Include="..\lib\skylib-source\Progress.cs">
       <Link>Progress.cs</Link>
     </Compile>
+    <Compile Include="..\lib\skylib-source\SkyUpdater.cs">
+      <Link>SkyUpdater.cs</Link>
+    </Compile>
     <Compile Include="..\lib\skylib-source\StringHelper.cs">
       <Link>StringHelper.cs</Link>
     </Compile>
