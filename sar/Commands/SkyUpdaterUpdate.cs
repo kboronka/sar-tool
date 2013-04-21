@@ -39,8 +39,18 @@ namespace skylib.sar
 				throw new ArgumentException("incorrect number of arguments");
 			}
 			
-			WebHelper.Download(@"http://sar-tool.googlecode.com/svn/trunk/release/sar.exe", IO.Temp + "sar.exe");
-			WebHelper.ReadURL(@"http://sar-tool.googlecode.com/svn/trunk/release/license.txt");
+			Progress.Message = "Checking for updates";
+			SkyUpdater updater = SkyUpdater.OpenURL(@"https://sar-tool.googlecode.com/svn/trunk/SkyUpdate.info");
+
+			if (AssemblyInfo.Version != updater.Version)
+			{
+				ConsoleHelper.WriteLine("Updates Available", ConsoleColor.DarkYellow);
+			}
+			else
+			{
+				ConsoleHelper.WriteLine("No Updates Available", ConsoleColor.DarkYellow);
+			}
+			
 			
 			return Program.EXIT_OK;
 		}

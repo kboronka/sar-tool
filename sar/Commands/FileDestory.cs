@@ -83,7 +83,7 @@ namespace skylib.sar
 			}
 			
 			
-			ConsoleHelper.WriteLine("Files destroyed: " + count.ToString() + " of " + files.Count.ToString());
+			ConsoleHelper.WriteLine("Files destroyed: " + count.ToString() + " of " + files.Count.ToString(), ConsoleColor.DarkYellow);
 			return Program.EXIT_OK;
 		}
 	}
