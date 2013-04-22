@@ -178,7 +178,7 @@ namespace skylib.sar
 			Program.IncludeSVN = false;
 			
 			#if DEBUG
-			Program.Debug = true;
+			//Program.Debug = true;
 			#endif
 			
 			List<string> result = new List<string>();
@@ -209,6 +209,7 @@ namespace skylib.sar
 				}
 			}
 			
+			ConsoleHelper.ShowDebug = Program.Debug;
 			ConsoleHelper.DebugWriteLine("/q (quite)= " + Program.NoWarning.ToString());
 			ConsoleHelper.DebugWriteLine("/d (debug) = " + Program.Debug.ToString());
 			ConsoleHelper.DebugWriteLine("/svn (include .svn folders) = " + Program.IncludeSVN.ToString());
