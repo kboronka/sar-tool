@@ -79,21 +79,13 @@ namespace skylib.sar
 					ConsoleHelper.WriteLine(serverAddres + " did not shutdown", ConsoleColor.DarkYellow);
 					return Program.EXIT_ERROR;
 				}
-				else
-				{
-					ConsoleHelper.WriteLine(serverAddres + " has shutdown", ConsoleColor.DarkYellow);
-				}
 				
-				Progress.Message = "Restarting " + serverAddres;
+				Progress.Message = "Starting " + serverAddres;
 				
 				if (!NetHelper.WaitForPing(serverAddres, timeout, true))
 				{
-					ConsoleHelper.WriteLine(serverAddres + " did not restart", ConsoleColor.DarkYellow);
+					ConsoleHelper.WriteLine(serverAddres + " did not start", ConsoleColor.DarkYellow);
 					return Program.EXIT_ERROR;
-				}
-				else
-				{
-					ConsoleHelper.WriteLine(serverAddres + " has restarted", ConsoleColor.DarkYellow);
 				}
 			}
 			
