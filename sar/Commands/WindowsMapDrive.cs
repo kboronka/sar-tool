@@ -55,8 +55,8 @@ namespace skylib.sar
 			
 			int exitcode;
 			
-			exitcode = ConsoleHelper.Shell("net", @"use " + drive + @": /DELETE");
-			exitcode = ConsoleHelper.Shell("net", @"use " + drive + @": " + uncPath);
+			exitcode = ConsoleHelper.Run("net", @"use " + drive + @": /DELETE");
+			exitcode = ConsoleHelper.Run("net", @"use " + drive + @": " + uncPath);
 			
 			if (exitcode != 0)
 			{
