@@ -69,7 +69,7 @@ namespace skylib.sar
 			Progress.Message = "Building .NET Solution " + solutionFileName;
 			
 			string output;
-			int exitcode = ConsoleHelper.Shell(msbuildPath, arguments, out output);
+			int exitcode = ConsoleHelper.Run(msbuildPath, arguments, out output);
 			if (exitcode != 0)
 			{
 				ConsoleHelper.DebugWriteLine("exit code: " + exitcode.ToString());

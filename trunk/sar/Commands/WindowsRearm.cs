@@ -134,7 +134,7 @@ namespace skylib.sar
 				*/
 				
 				Progress.Message = "Rearming Windows Activation";
-				ConsoleHelper.Shell("slmgr /rearm");
+				ConsoleHelper.Run("slmgr /rearm");
 				ConsoleHelper.WriteLine("Rearmed - Reboot Required", ConsoleColor.DarkYellow);
 				return Program.EXIT_OK;
 			}

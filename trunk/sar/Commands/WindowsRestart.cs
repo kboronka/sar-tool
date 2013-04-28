@@ -54,8 +54,8 @@ namespace skylib.sar
 			
 			int exitcode;
 			
-			exitcode = ConsoleHelper.Shell("net", @"use " + uncPath + @" /DELETE");
-			exitcode = ConsoleHelper.Shell("net", @"use " + uncPath + @" /USER:" + userName + " " + password);
+			exitcode = ConsoleHelper.Run("net", @"use " + uncPath + @" /DELETE");
+			exitcode = ConsoleHelper.Run("net", @"use " + uncPath + @" /USER:" + userName + " " + password);
 			
 			if (exitcode != 0)
 			{
@@ -63,7 +63,7 @@ namespace skylib.sar
 				return Program.EXIT_ERROR;
 			}
 			
-			exitcode = ConsoleHelper.Shell("shutdown", @"/r /m " + uncPath + @" /t 0 /f");
+			exitcode = ConsoleHelper.Run("shutdown", @"/r /m " + uncPath + @" /t 0 /f");
 
 			if (exitcode != 0)
 			{

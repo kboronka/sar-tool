@@ -57,7 +57,7 @@ namespace skylib.sar
 			Progress.Message = "Building NSIS Installer " + filename;
 			
 			string output;
-			int exitcode = ConsoleHelper.Shell(exePath, arguments, out output);
+			int exitcode = ConsoleHelper.Run(exePath, arguments, out output);
 			IO.Encode(filepath, originalEncoding);
 			
 			if (exitcode != 0)

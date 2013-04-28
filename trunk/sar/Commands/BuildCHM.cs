@@ -52,7 +52,7 @@ namespace skylib.sar
 			Progress.Message = "Building Online Help " + filename;
 			
 			string output;
-			int exitcode = ConsoleHelper.Shell(exePath, arguments, out output);
+			int exitcode = ConsoleHelper.Run(exePath, arguments, out output);
 			if (exitcode != 1)
 			{
 				ConsoleHelper.WriteLine("Build Failed", ConsoleColor.DarkYellow);

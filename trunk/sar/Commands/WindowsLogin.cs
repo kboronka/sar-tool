@@ -48,8 +48,8 @@ namespace skylib.sar
 			
 			int exitcode;
 			
-			exitcode = ConsoleHelper.Shell("net", @"use " + uncPath + @" /DELETE");
-			exitcode = ConsoleHelper.Shell("net", @"use " + uncPath + @" /USER:" + userName + " " + password + " /PERSISTENT:NO");
+			exitcode = ConsoleHelper.Run("net", @"use " + uncPath + @" /DELETE");
+			exitcode = ConsoleHelper.Run("net", @"use " + uncPath + @" /USER:" + userName + " " + password + " /PERSISTENT:NO");
 			
 			if (exitcode != 0)
 			{
