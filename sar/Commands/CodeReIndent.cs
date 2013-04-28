@@ -60,23 +60,72 @@ namespace skylib.sar
 						List<string> newlines = new List<string>();
 						int level = 0;
 						bool linecontinue = false;
-						
+						bool levelup = false;
+						bool meta = false;
+						bool metaContinue = false;
+						int linenumber = 0;
+
 						foreach (string line in lines)
 						{
+							linenumber++;
 							string newline = StringHelper.TrimWhiteSpace(line);
 							
-							string temp = StringHelper.Remove(line, new List<string> { "Private", "Public", "Shared" });
-							if (temp.Contains("'")) temp = temp.Substring(0, temp.IndexOf('\''));
+							// clean string
+							string temp = StringHelper.Remove(line, new List<string> { "Private", "Protected", "Public", "Shared", "Overridable", "Overrides", "Overloads", "Friend", "ReadOnly", "Partial", "Shadows", "Default" });
+							temp = StringHelper.TrimWhiteSpace(temp);
+							
+							// trim meta tags
+							meta = false;
+							if (temp.StartsWith("<"))
+							{
+								if (temp.Contains(">"))
+								{
+									meta = true;
+									temp = temp.Substring(temp.IndexOf('>') + 1);
+								}
+								else if (temp.EndsWith("_"))
+								{
+									temp = temp.Substring(temp.IndexOf('_'));
+									metaContinue = false;
+								}
+								else
+								{
+									ConsoleHelper.DebugWriteLine("invalid meta tag in code : " + file);
+								}
+							}
+							else if (metaContinue)
+							{
+								if (temp.Contains(">"))
+								{
+									meta = true;
+									metaContinue = false;
+									temp = temp.Substring(temp.IndexOf('>') + 1);
+								}
+								else
+								{
+									temp = "";
+								}
+							}
+							
+							
+							// trim comments
+							if (temp.Contains("'"))
+							{
+								temp = temp.Substring(0, temp.IndexOf('\''));
+							}
+							
 							temp = StringHelper.TrimWhiteSpace(temp);
 							
 							string firstword = StringHelper.FirstWord(temp);
+							string lastword = StringHelper.LastWord(temp);
 							
 							if (!string.IsNullOrEmpty(firstword) && firstword[0] != '\'')
 							{
+								// ******************** Level Down Before Print *************************** //
 								// single level
-								if (StringHelper.StartsWith(temp, new List<string>() { "Loop", "End", "End If", "Catch", "End Try", "End Select", "End Sub", "End Function", "End Enum", "Case" }) ||
-								    (temp.StartsWith("ElseIf") && temp.EndsWith("Then")) ||
-								    (temp.StartsWith("Else") && !temp.StartsWith("ElseIf"))
+								if (StringHelper.StartsWith(temp, new List<string>() { "Loop", "End", "End If", "Catch", "Finally", "End Try", "End Select", "End Sub", "End Function", "End Enum", "Case" }) ||
+								    (firstword == "ElseIf") ||
+								    (firstword == "Else" && !temp.StartsWith("Else :"))
 								   )
 								{
 									level--;
@@ -88,14 +137,38 @@ namespace skylib.sar
 									level--;
 								}
 								
-								if (level < 0) level = 0;
-								newlines.Add( new String('\t', level + (linecontinue ? 1 : 0)) + newline);
+								// ******************** correction for line continuation *************************** //
+								int correction = level;
+								//correction -= ((linecontinue) ? 1 : 0);
+								//correction -= ((linecontinue & !levelup) ? 1 : 0);
+								if (level + correction < 0)
+								{
+									if (temp != "#End Region")
+									{
+										ConsoleHelper.DebugWriteLine("invalid vb code : " + IO.GetFilename(file));
+										//ConsoleHelper.DebugWriteLine("file: " + file);
+										ConsoleHelper.DebugWriteLine("temp: " + temp);
+										ConsoleHelper.DebugWriteLine("line: " + linenumber.ToString());
+									}
+								}
 								
-								string lastword = StringHelper.LastWord(temp);
+								// ******************** Print Line *************************** //
+								if (correction < 0) correction = 0;
+								newlines.Add(new String('\t', correction) + (linecontinue ? new String(' ', 2) : "") + newline);
+								
+								linecontinue = StringHelper.EndsWith(temp, new List<string>() { "_" } ) & !meta;
+								
+								// ******************** Level Up after line *************************** //
 								if (StringHelper.EndsWith(temp, new List<string>() { "Then", "Else" }) ||
-								    StringHelper.StartsWith(temp, new List<string>() { "Class", "Function", "Enum", "Sub", "Select Case", "Case", "Do While", "While", "Try", "Catch" }))
+								    StringHelper.StartsWith(temp, new List<string>() { "Namespace", "Class", "Structure", "Function", "Property", "Enum", "Sub", "Module", "SyncLock", "Select Case", "Case", "For Each", "Do", "Do While", "While", "Try", "Catch", "Finally", "With" }) ||
+								    (firstword == "Get") || (firstword == "Set"))
 								{
 									level++;
+									levelup = true;
+								}
+								else
+								{
+									if (!linecontinue) levelup = false;
 								}
 								
 								// double level
@@ -103,8 +176,6 @@ namespace skylib.sar
 								{
 									level++;
 								}
-								
-								linecontinue = StringHelper.EndsWith(temp, new List<string>() { "_" } );
 							}
 							else
 							{
@@ -120,6 +191,21 @@ namespace skylib.sar
 							}
 						}
 						
+						// remove all extra empty lines
+						/*
+						for (int i = newlines.Count - 1; i < 0; i--)
+						{
+							if (string.IsNullOrEmpty(StringHelper.TrimWhiteSpace(newlines[i])))
+							{
+								newlines.RemoveAt(i);
+							}
+							else
+							{
+								break;
+							}
+						}
+						 */
+
 						IO.WriteFileLines(file, newlines);
 
 						break;
@@ -127,6 +213,7 @@ namespace skylib.sar
 						break;
 				}
 			}
+			
 			
 			ConsoleHelper.WriteLine(counter.ToString() + " File" + ((counter != 1) ? "s" : "") + " Checked", ConsoleColor.DarkYellow);
 			return Program.EXIT_OK;
