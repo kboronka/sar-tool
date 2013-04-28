@@ -34,6 +34,7 @@ namespace skylib.sar
 		public static bool NoWarning = false;
 		public static bool Debug = false;
 		public static bool IncludeSVN = false;
+		public static bool IncludeSubFolders = true;
 
 		public static int Main(string[] args)
 		{
@@ -176,6 +177,7 @@ namespace skylib.sar
 			Program.NoWarning = false;
 			Program.Debug = false;
 			Program.IncludeSVN = false;
+			Program.IncludeSubFolders = true;
 			
 			#if DEBUG
 			Program.Debug = true;
@@ -198,6 +200,9 @@ namespace skylib.sar
 						case "/svn":
 							Program.IncludeSVN = true;
 							break;
+						case "/nosubfolders":
+							Program.IncludeSubFolders = false;
+							break;
 						default:
 							result.Add(arg);
 							break;
@@ -210,9 +215,12 @@ namespace skylib.sar
 			}
 			
 			ConsoleHelper.ShowDebug = Program.Debug;
+			IO.IncludeSubFolders = Program.IncludeSubFolders;
+			
 			ConsoleHelper.DebugWriteLine("/q (quite)= " + Program.NoWarning.ToString());
 			ConsoleHelper.DebugWriteLine("/d (debug) = " + Program.Debug.ToString());
 			ConsoleHelper.DebugWriteLine("/svn (include .svn folders) = " + Program.IncludeSVN.ToString());
+			ConsoleHelper.DebugWriteLine("/nosubfolders = " + Program.IncludeSubFolders.ToString());
 			
 			return result.ToArray();
 		}
