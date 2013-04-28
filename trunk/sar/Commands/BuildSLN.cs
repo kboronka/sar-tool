@@ -72,9 +72,9 @@ namespace skylib.sar
 			int exitcode = ConsoleHelper.Shell(msbuildPath, arguments, out output);
 			if (exitcode != 0)
 			{
-				ConsoleHelper.WriteLine("Build Failed", ConsoleColor.DarkYellow);
+				ConsoleHelper.DebugWriteLine("exit code: " + exitcode.ToString());
 				ConsoleHelper.WriteLine(output, ConsoleColor.DarkCyan);
-				ConsoleHelper.WriteLine("exit code: " + exitcode.ToString());
+				ConsoleHelper.WriteLine("Build Failed", ConsoleColor.DarkYellow);
 				return exitcode;
 			}
 			else
