@@ -54,8 +54,8 @@ namespace skylib.sar
 			archivepath = IO.CheckPath(archiveroot, archivepath);
 			ConsoleHelper.DebugWriteLine("archivepath: " + archivepath);
 			ConsoleHelper.DebugWriteLine("archiveroot: " + archiveroot);
-			if (!Directory.Exists(archiveroot))	throw new DirectoryNotFoundException("unable to find storage folder " + archiveroot);
-			
+			if (!Directory.Exists(archiveroot))	Directory.CreateDirectory(archiveroot);
+
 			int counter = 0;
 			foreach (string file in files)
 			{
