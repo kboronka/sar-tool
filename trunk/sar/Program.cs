@@ -178,7 +178,7 @@ namespace skylib.sar
 			Program.IncludeSVN = false;
 			
 			#if DEBUG
-			//Program.Debug = true;
+			Program.Debug = true;
 			#endif
 			
 			List<string> result = new List<string>();
