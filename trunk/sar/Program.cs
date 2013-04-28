@@ -50,6 +50,7 @@ namespace skylib.sar
 					new BuildCHM(),
 					new BuildNSIS(),
 					new BuildSLN(),
+					new CodeReIndent(),
 					new AssemblyInfoVersion(),
 					new Kill(),
 					new LabviewVersion(),
@@ -220,7 +221,7 @@ namespace skylib.sar
 			ConsoleHelper.DebugWriteLine("/q (quite)= " + Program.NoWarning.ToString());
 			ConsoleHelper.DebugWriteLine("/d (debug) = " + Program.Debug.ToString());
 			ConsoleHelper.DebugWriteLine("/svn (include .svn folders) = " + Program.IncludeSVN.ToString());
-			ConsoleHelper.DebugWriteLine("/nosubfolders = " + Program.IncludeSubFolders.ToString());
+			ConsoleHelper.DebugWriteLine("/nosubfolders = " + (!Program.IncludeSubFolders).ToString());
 			
 			return result.ToArray();
 		}
