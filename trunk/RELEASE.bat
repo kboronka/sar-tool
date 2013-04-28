@@ -31,7 +31,8 @@
 	svn update	
 	%SAR% -f.bsd \sar\*.cs "Kevin Boronka"
 	%SAR% -assy.ver \sar\AssemblyInfo.* %VERSION%
-
+	%SAR% -f.d sar\bin\%CONFIG%\*.* /q /svn
+	
 	echo building binaries
 	%SAR% -b.net 3.5 %SOLUTION% /p:Configuration=%CONFIG% /p:Platform=\"x86\"
 	if errorlevel 1 goto BuildFailed
