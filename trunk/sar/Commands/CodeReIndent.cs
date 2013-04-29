@@ -123,7 +123,7 @@ namespace skylib.sar
 							{
 								// ******************** Level Down Before Print *************************** //
 								// single level
-								if (StringHelper.StartsWith(temp, new List<string>() { "Loop", "End", "End If", "Catch", "Finally", "End Try", "End Select", "End Sub", "End Function", "End Enum", "Case" }) ||
+								if (StringHelper.StartsWith(temp, new List<string>() { "Loop", "Next", "End", "End If", "Catch", "Finally", "End Try", "End Select", "End Sub", "End Function", "End Enum", "Case" }) ||
 								    (firstword == "ElseIf") ||
 								    (firstword == "Else" && !temp.StartsWith("Else :"))
 								   )
@@ -160,7 +160,7 @@ namespace skylib.sar
 								
 								// ******************** Level Up after line *************************** //
 								if (StringHelper.EndsWith(temp, new List<string>() { "Then", "Else" }) ||
-								    StringHelper.StartsWith(temp, new List<string>() { "Namespace", "Class", "Structure", "Function", "Property", "Enum", "Sub", "Module", "SyncLock", "Select Case", "Case", "For Each", "Do", "Do While", "While", "Try", "Catch", "Finally", "With" }) ||
+								    StringHelper.StartsWith(temp, new List<string>() { "Namespace", "Class", "Structure", "Function", "Property", "Enum", "Sub", "Module", "SyncLock", "Select Case", "Case", "For", "For Each", "Do", "Do While", "While", "Try", "Catch", "Finally", "With" }) ||
 								    (firstword == "Get") || (firstword == "Set"))
 								{
 									level++;
@@ -172,7 +172,7 @@ namespace skylib.sar
 								}
 								
 								// double level
-								if ( StringHelper.StartsWith(temp, new List<string>() { "Select Case" }))
+								if (StringHelper.StartsWith(temp, new List<string>() { "Select Case" }))
 								{
 									level++;
 								}
