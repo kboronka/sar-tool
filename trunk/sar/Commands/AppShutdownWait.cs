@@ -21,12 +21,12 @@ using System.Diagnostics;
 
 namespace skylib.sar
 {
-	public class Kill : BaseCommand
+	public class AppShutdownWait : BaseCommand
 	{
-		public Kill() : base("Kill Process",
-		                     new List<string> { "kill", "k" },
-		                     @"-kill [ProcessName]",
-		                     new List<string> { "-kill LabVIEW" })
+		public AppShutdownWait() : base("Application - Wait for shutdown",
+		                     new List<string> { "app.wait", "a.w" },
+		                     @"-app.wait [ProcessName]",
+		                     new List<string> { "-app.wait LabVIEW" })
 		{
 		}
 		
@@ -41,8 +41,8 @@ namespace skylib.sar
 			
 			string processName = args[1];
 			
-			Progress.Message = "Locating Process " + processName;
-			ConsoleHelper.KillProcess(processName);
+			Progress.Message = "Waiting for Process " + processName;
+			ConsoleHelper.WaitForProcess_Shutdown(processName);
 			ConsoleHelper.WriteLine(processName + " stopped", ConsoleColor.DarkYellow);
 			
 			return Program.EXIT_OK;
