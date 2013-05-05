@@ -41,7 +41,7 @@ namespace skylib.sar
 			
 			string processName = args[1];
 			
-			Progress.Message = "Waiting for Process " + processName;
+			Progress.Message = "Waiting for Process " + processName + " to stop";
 			ConsoleHelper.WaitForProcess_Shutdown(processName);
 			ConsoleHelper.WriteLine(processName + " stopped", ConsoleColor.DarkYellow);
 			
