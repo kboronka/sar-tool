@@ -53,6 +53,7 @@ namespace skylib.sar
 					new CodeReIndent(),
 					new AssemblyInfoVersion(),
 					new Kill(),
+					new AppShutdownWait(),
 					new LabviewVersion(),
 					new VboxManage(),
 					new FileBackup(),

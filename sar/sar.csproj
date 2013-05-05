@@ -69,6 +69,7 @@
       <Link>WebHelper.cs</Link>
     </Compile>
     <Compile Include="CommandHub.cs" />
+    <Compile Include="Commands\AppShutdownWait.cs" />
     <Compile Include="Commands\CodeReIndent.cs" />
     <Compile Include="Commands\FileBackup.cs" />
     <Compile Include="Commands\BaseCommand.cs" />
