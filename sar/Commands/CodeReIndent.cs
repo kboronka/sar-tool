@@ -64,6 +64,7 @@ namespace skylib.sar
 						bool meta = false;
 						bool metaContinue = false;
 						int linenumber = 0;
+						int lastIndentLevel = 0;
 
 						foreach (string line in lines)
 						{
@@ -71,7 +72,7 @@ namespace skylib.sar
 							string newline = StringHelper.TrimWhiteSpace(line);
 							
 							// clean string
-							string temp = StringHelper.Remove(line, new List<string> { "Private", "Protected", "Public", "Shared", "Overridable", "Overrides", "Overloads", "Friend", "ReadOnly", "Partial", "Shadows", "Default" });
+							string temp = StringHelper.Remove(line, new List<string> { "Private", "Protected", "Public", "Shared", "Overridable", "Overrides", "Overloads", "Friend", "ReadOnly", "Partial", "Shadows", "Default", "NotInheritable" });
 							temp = StringHelper.TrimWhiteSpace(temp);
 							
 							// trim meta tags
@@ -107,7 +108,6 @@ namespace skylib.sar
 								}
 							}
 							
-							
 							// trim comments
 							if (temp.Contains("'"))
 							{
@@ -118,13 +118,12 @@ namespace skylib.sar
 							
 							string firstword = StringHelper.FirstWord(temp);
 							string lastword = StringHelper.LastWord(temp);
-							
+						
 							if (!string.IsNullOrEmpty(firstword) && firstword[0] != '\'')
 							{
 								// ******************** Level Down Before Print *************************** //
 								// single level
-								if (StringHelper.StartsWith(temp, new List<string>() { "Loop", "Next", "End", "End If", "Catch", "Finally", "End Try", "End Select", "End Sub", "End Function", "End Enum", "Case" }) ||
-								    (firstword == "ElseIf") ||
+								if (StringHelper.StartsWith(temp, new List<string>() { "Loop", "Next", "End", "End If", "ElseIf", "#End If", "#ElseIf", "#Else", "Catch", "Finally", "End Try", "End Select", "End Sub", "End Function", "End Enum", "Case" }) ||
 								    (firstword == "Else" && !temp.StartsWith("Else :"))
 								   )
 								{
@@ -153,13 +152,14 @@ namespace skylib.sar
 								}
 								
 								// ******************** Print Line *************************** //
+								lastIndentLevel = correction;
 								if (correction < 0) correction = 0;
 								newlines.Add(new String('\t', correction) + (linecontinue ? new String(' ', 2) : "") + newline);
-								
+									
 								linecontinue = StringHelper.EndsWith(temp, new List<string>() { "_" } ) & !meta;
 								
 								// ******************** Level Up after line *************************** //
-								if (StringHelper.EndsWith(temp, new List<string>() { "Then", "Else" }) ||
+								if (StringHelper.EndsWith(temp, new List<string>() { "Then", "Else", "#ElseIf", "#Else" }) ||
 								    StringHelper.StartsWith(temp, new List<string>() { "Namespace", "Class", "Structure", "Function", "Property", "Enum", "Sub", "Module", "SyncLock", "Select Case", "Case", "For", "For Each", "Do", "Do While", "While", "Try", "Catch", "Finally", "With" }) ||
 								    (firstword == "Get") || (firstword == "Set"))
 								{
@@ -189,6 +189,11 @@ namespace skylib.sar
 									newlines.Add(newline);
 								}
 							}
+						}
+						
+						if (lastIndentLevel != 0)
+						{
+							ConsoleHelper.WriteLine("indent error : " + IO.GetFilename(file));
 						}
 						
 						// remove all extra empty lines
