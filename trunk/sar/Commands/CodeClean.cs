@@ -60,13 +60,20 @@ namespace skylib.sar
 						case "vb":
 							counter++;
 							// fix the "_ Then" lines
-							changes += IO.SearchAndReplaceInFile(file, @"(\s*([_*]\s*\r{1}\n{1}\s+)Then)", @" Then");
+							changes += IO.SearchAndReplaceInFile(file, @"([\s]*[_]{1}[\s]*[\n\r][\s]*Then)", @" Then");
 							
 							// remove empty lines after "Then"
-							changes += IO.SearchAndReplaceInFile(file, @"(Then\s*\r{0,1}\n{1}\s*\r{0,1}\n{1})", "Then\r\n");
+							changes += IO.SearchAndReplaceInFile(file, @"(Then[\s]*[\n\r][\s]*[\n\r]*)", "Then\n\r");
 							
 							// remove the xml documentation
-							changes += IO.SearchAndReplaceInFile(file, @"(\r{0,1}\n{1}\s*\'{3}\s*[^\r]+)", @"");
+							changes += IO.SearchAndReplaceInFile(file, @"([\n\r][\s]*[\']{3}[^\n\r]*)", @"");
+
+							// remove extra white space
+							changes += IO.SearchAndReplaceInFile(file, @"([\n\r]{2}[\n\r]{2}[\s]*End)", "\r\nEnd");							
+							changes += IO.SearchAndReplaceInFile(file, @"([\n\r]{2}[\n\r]{2}[\s]*Else)", "\r\nElse");
+							changes += IO.SearchAndReplaceInFile(file, @"([\n\r]{2}[\n\r]{2}[\s]*Next)", "\r\nNext");
+							changes += IO.SearchAndReplaceInFile(file, @"([\n\r]{2}[\n\r]{2}[\s]*Catch)", "\r\nCatch");
+							changes += IO.SearchAndReplaceInFile(file, @"([\n\r]{2}[\n\r]{2}[\s]*Finally)", "\r\nFinally");
 							
 							break;
 						default:
