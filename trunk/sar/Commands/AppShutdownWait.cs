@@ -34,15 +34,18 @@ namespace skylib.sar
 		public override int Execute(string[] args)
 		{
 			// sanity check
-			if (args.Length != 2)
+			if (args.Length < 2 || args.Length > 3)
 			{
 				throw new ArgumentException("wrong number of arguments");
 			}
 			
 			string processName = args[1];
+			int timeout = -1;
+			
+			if (args.Length == 3) int.TryParse(args[2], out timeout);
 			
 			Progress.Message = "Waiting for Process " + processName + " to stop";
-			ConsoleHelper.WaitForProcess_Shutdown(processName);
+			ConsoleHelper.WaitForProcess_Shutdown(processName, timeout);
 			ConsoleHelper.WriteLine(processName + " stopped", ConsoleColor.DarkYellow);
 			
 			return Program.EXIT_OK;

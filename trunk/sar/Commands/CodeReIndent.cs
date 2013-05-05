@@ -53,7 +53,6 @@ namespace skylib.sar
 				try
 				{
 					Progress.Message = "ReIndenting " + IO.GetFilename(file);
-					List<string> indent = new List<string>();
 					
 					switch (IO.GetFileExtension(file).ToLower())
 					{
