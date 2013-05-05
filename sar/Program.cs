@@ -51,6 +51,7 @@ namespace skylib.sar
 					new BuildNSIS(),
 					new BuildSLN(),
 					new CodeReIndent(),
+					new CodeClean(),
 					new AssemblyInfoVersion(),
 					new Kill(),
 					new AppShutdownWait(),
