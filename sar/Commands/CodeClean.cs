@@ -63,18 +63,17 @@ namespace skylib.sar
 							changes += IO.SearchAndReplaceInFile(file, @"([\s]*[_]{1}[\s]*[\n\r][\s]*Then)", @" Then");
 							
 							// remove empty lines after "Then"
-							changes += IO.SearchAndReplaceInFile(file, @"(Then[\s]*[\n\r][\s]*[\n\r]*)", "Then\n\r");
+							changes += IO.SearchAndReplaceInFile(file, @"(Then[\s]*[\n\r]{1,2}[\s]*[\n\r]+)", "Then\r\n");
 							
 							// remove the xml documentation
 							changes += IO.SearchAndReplaceInFile(file, @"([\n\r][\s]*[\']{3}[^\n\r]*)", @"");
 
 							// remove extra white space
-							changes += IO.SearchAndReplaceInFile(file, @"([\n\r]{2}[\n\r]{2}[\s]*End)", "\r\nEnd");							
-							changes += IO.SearchAndReplaceInFile(file, @"([\n\r]{2}[\n\r]{2}[\s]*Else)", "\r\nElse");
-							changes += IO.SearchAndReplaceInFile(file, @"([\n\r]{2}[\n\r]{2}[\s]*Next)", "\r\nNext");
-							changes += IO.SearchAndReplaceInFile(file, @"([\n\r]{2}[\n\r]{2}[\s]*Catch)", "\r\nCatch");
-							changes += IO.SearchAndReplaceInFile(file, @"([\n\r]{2}[\n\r]{2}[\s]*Finally)", "\r\nFinally");
+							changes += IO.SearchAndReplaceInFile(file, @"[\n\r]{2}[\n\r]{2}([\s]*)(End|Else|Next|Catch|Finally)", "\r\n$1$2");							
 							
+							// add once space between methods
+							changes += IO.SearchAndReplaceInFile(file, @"(End Sub|End Function|End Region)[\n\r]{1,2}[\n\r]*(\s*)(\S)", "$1\r\n\r\n$2$3");
+								
 							break;
 						default:
 							break;
