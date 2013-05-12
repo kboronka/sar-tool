@@ -73,7 +73,7 @@ namespace skylib.sar
 			{
 				// [assembly: AssemblyVersion("1.0.1.85")]
 				// <Assembly: AssemblyFileVersion("1.0")>
-				if (IO.SearchAndReplaceInFile(file, @"(AssemblyFileVersion|AssemblyVersion)[\(][\"][^\"]*[\"][)]", @"$1(""" + version + """)") > 0)
+				if (IO.SearchAndReplaceInFile(file, @"(AssemblyFileVersion|AssemblyVersion)[\(][\""][^\""]*[\""][)]", @"$1(""" + version + @""")") > 0)
 				{
 					changedFiles.Add(file);
 				}
