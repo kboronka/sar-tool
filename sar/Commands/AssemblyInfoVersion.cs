@@ -71,12 +71,9 @@ namespace skylib.sar
 			
 			foreach (string file in files)
 			{
-				if (IO.SearchAndReplaceInFile(file, "((Version)\\(\\\"\\d+\\.\\d+\\.\\d+\\.\\d+\\\"\\))", "Version(\"" + version + "\")") > 0)
-				{
-					changedFiles.Add(file);
-				}
-				
-				if (IO.SearchAndReplaceInFile(file, "((Version)\\(\\\"\\d+\\.\\d+\\.\\*+\\\"\\))", "Version(\"" + version + "\")") > 0)
+				// [assembly: AssemblyVersion("1.0.1.85")]
+				// <Assembly: AssemblyFileVersion("1.0")>
+				if (IO.SearchAndReplaceInFile(file, @"(AssemblyFileVersion|AssemblyVersion)[\(][\"][^\"]*[\"][)]", @"$1(""" + version + """)") > 0)
 				{
 					changedFiles.Add(file);
 				}
