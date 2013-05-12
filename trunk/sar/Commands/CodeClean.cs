@@ -59,14 +59,14 @@ namespace skylib.sar
 					{
 						case "vb":
 							counter++;
-							// fix the "_ Then" lines
-							changes += IO.SearchAndReplaceInFile(file, @"([\s]*[_]{1}[\s]*[\n\r][\s]*Then)", @" Then");
+							// fix the "_ Then" or _ Handles lines
+							changes += IO.SearchAndReplaceInFile(file, @"[\s]*[_]{1}[\s]*[\n\r][\s]*(Then|Handles)", @" $1");
 							
 							// remove empty lines after "Then"
-							changes += IO.SearchAndReplaceInFile(file, @"(Then[\s]*[\n\r]{1,2}[\s]*[\n\r]+)", "Then\r\n");
+							changes += IO.SearchAndReplaceInFile(file, @"Then[\s]*[\n\r]{1,2}[\s]*[\n\r]+(\s*)(\S)", "Then\r\n$1$2");
 							
 							// remove the xml documentation
-							changes += IO.SearchAndReplaceInFile(file, @"([\n\r][\s]*[\']{3}[^\n\r]*)", @"");
+							changes += IO.SearchAndReplaceInFile(file, @"[\n\r][\s]*[\']{3}[^\n\r]*", @"");
 
 							// remove extra white space
 							changes += IO.SearchAndReplaceInFile(file, @"[\n\r]{2}[\n\r]{2}([\s]*)(End|Else|Next|Catch|Finally)", "\r\n$1$2");							
