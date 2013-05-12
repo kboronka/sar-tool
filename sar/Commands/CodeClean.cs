@@ -69,7 +69,9 @@ namespace skylib.sar
 							changes += IO.SearchAndReplaceInFile(file, @"[\n\r][\s]*[\']{3}[^\n\r]*", @"");
 
 							// remove extra white space
-							changes += IO.SearchAndReplaceInFile(file, @"[\n\r]{2}[\n\r]{2}([\s]*)(End|Else|Next|Catch|Finally)", "\r\n$1$2");							
+							changes += IO.SearchAndReplaceInFile(file, @"\r*\n\r*\n(\s*)(End|Else|Next|Catch|Finally)", "\r\n$1$2");	
+							changes += IO.SearchAndReplaceInFile(file, @"(\r*\n\s*)(Do|Case|If|Else|For|Select|Private Sub|Public Sub|Public Class|Try|Catch)([^\r\n]*)\r*\n\r*\n", "$1$2$3\r\n");
+													
 							
 							// add once space between methods
 							changes += IO.SearchAndReplaceInFile(file, @"(End Sub|End Function|End Region)[\n\r]{1,2}[\n\r]*(\s*)(\S)", "$1\r\n\r\n$2$3");
