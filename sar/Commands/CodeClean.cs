@@ -74,7 +74,7 @@ namespace skylib.sar
 							changes += IO.SearchAndReplaceInFile(file, @"\r*\n(\r*\n\s*)(Loop|End)", "$1$2");
 
 							// one space between methods
-							changes += IO.SearchAndReplaceInFile(file, @"(End Sub|End Function)\r*\n([^\n\r])(\S*)", "$1\r\n\r\n$2$3");
+							changes += IO.SearchAndReplaceInFile(file, @"(End Sub|End Function)\r*\n([^\n\r])(\S*)\s(?:(?!Class)\w)", "$1\r\n\r\n$2$3");
 							changes += IO.SearchAndReplaceInFile(file, @"(End Sub|End Function)\r*\n\r*\n[\r\n]+(\s*)(\S)", "$1\r\n\r\n$2$3");
 
 							break;
