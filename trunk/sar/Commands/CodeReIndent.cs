@@ -162,7 +162,8 @@ namespace skylib.sar
 									
 									// ******************** Level Up after line *************************** //
 									if (StringHelper.EndsWith(temp, new List<string>() { "Then", "Else", "#ElseIf", "#Else" }) ||
-									    StringHelper.StartsWith(temp, new List<string>() { "Namespace", "Class", "Structure", "Function", "Property", "Operator", "Enum", "Sub", "Module", "SyncLock", "Select Case", "Case", "For", "For Each", "Do", "Do While", "While", "Try", "Catch", "Finally", "With" }) ||
+									    StringHelper.StartsWith(temp, new List<string>() { "Namespace", "Class", "Structure", "Function", "Property", "Operator", "Enum", "Sub", "Module", "SyncLock", "Select Case", "Case", "For", "For Each", "Do", "Do While", "While", "Try", "Catch", "Finally", "With", "Custom Event" }) ||
+									    temp.StartsWith("AddHandler(") ||  temp.StartsWith("RemoveHandler(") ||  temp.StartsWith("RaiseEvent(") ||
 									    (firstword == "Get") || (firstword == "Set"))
 									{
 										level++;
