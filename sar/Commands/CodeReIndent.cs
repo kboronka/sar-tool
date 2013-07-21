@@ -74,7 +74,7 @@ namespace skylib.sar
 								string newline = StringHelper.TrimWhiteSpace(line);
 								
 								// clean string
-								string temp = StringHelper.Remove(line, new List<string> { "Private", "Protected", "Public", "Shared", "Overridable", "Overrides", "Overloads", "Friend", "ReadOnly", "Partial", "Shadows", "Default", "NotInheritable" });
+								string temp = StringHelper.Remove(line, new List<string> { "Private", "Protected", "Public", "Shared", "Overridable", "Overrides", "Overloads", "Friend", "ReadOnly", "WriteOnly", "Partial", "Shadows", "Default", "NotInheritable" });
 								temp = StringHelper.TrimWhiteSpace(temp);
 								
 								// trim meta tags
@@ -162,7 +162,7 @@ namespace skylib.sar
 									
 									// ******************** Level Up after line *************************** //
 									if (StringHelper.EndsWith(temp, new List<string>() { "Then", "Else", "#ElseIf", "#Else" }) ||
-									    StringHelper.StartsWith(temp, new List<string>() { "Namespace", "Class", "Structure", "Function", "Property", "Enum", "Sub", "Module", "SyncLock", "Select Case", "Case", "For", "For Each", "Do", "Do While", "While", "Try", "Catch", "Finally", "With" }) ||
+									    StringHelper.StartsWith(temp, new List<string>() { "Namespace", "Class", "Structure", "Function", "Property", "Operator", "Enum", "Sub", "Module", "SyncLock", "Select Case", "Case", "For", "For Each", "Do", "Do While", "While", "Try", "Catch", "Finally", "With" }) ||
 									    (firstword == "Get") || (firstword == "Set"))
 									{
 										level++;
@@ -195,6 +195,7 @@ namespace skylib.sar
 							
 							if (lastIndentLevel != 0)
 							{
+								IO.WriteFileLines(file + ".error", newlines);
 								throw new Exception("failed to indent " + IO.GetFilename(file));
 							}
 							
