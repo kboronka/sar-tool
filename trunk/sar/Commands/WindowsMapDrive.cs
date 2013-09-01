@@ -23,8 +23,8 @@ namespace skylib.sar
 	public class WindowsMapDrive : BaseCommand
 	{
 		public WindowsMapDrive() : base("Windows - Map Drive", new List<string> { "windows.map", "win.map" },
-		                         "-windows.map [drive letter] [UNC path]",
-		                         new List<string>() { @"-windows.login \\192.168.0.244\temp" })
+		                                "-windows.map [drive letter] [UNC path] [persistent]",
+		                                new List<string>() { @"-windows.map S \\192.168.0.244\temp p" })
 		{
 			
 		}
@@ -32,7 +32,7 @@ namespace skylib.sar
 		public override int Execute(string[] args)
 		{
 			// sanity check
-			if (args.Length != 3)
+			if (args.Length < 3 || args.Length > 4)
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
@@ -52,11 +52,16 @@ namespace skylib.sar
 			string uncPath = serverAddres;
 			if (uncPath.Substring(0,2) != @"\\") uncPath = @"\\" + uncPath;
 			
+			string persistent = "";
+			if (args.Length == 4 && args[3] == "p")
+			{
+				persistent = " /savecred /p:yes";
+			}
 			
 			int exitcode;
 			
 			exitcode = ConsoleHelper.Run("net", @"use " + drive + @": /DELETE");
-			exitcode = ConsoleHelper.Run("net", @"use " + drive + @": " + uncPath);
+			exitcode = ConsoleHelper.Run("net", @"use " + drive + @": " + uncPath + persistent);
 			
 			if (exitcode != 0)
 			{
