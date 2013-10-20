@@ -30,6 +30,11 @@ namespace sar.Socket
 		private NetworkStream stream;
 		private Encoding encoding;
 		
+		private string hostname;
+		private int port;
+		
+		private bool connected;
+		
 		#region properties
 		
 		public bool HasRequest
@@ -79,9 +84,13 @@ namespace sar.Socket
 		{
 			try
 			{
-				if (ConnectionChange != null)
+				if (connected != this.connected)
 				{
-					ConnectionChange(connected, new System.EventArgs());
+					this.connected = connected;
+					if (ConnectionChange != null)
+					{
+						ConnectionChange(connected, new System.EventArgs());
+					}
 				}
 			}
 			catch
@@ -146,8 +155,10 @@ namespace sar.Socket
 		
 		public SocketClient(string hostname, int port, Encoding encoding)
 		{
+			this.hostname = hostname;
+			this.port = port;
 			this.encoding = encoding;
-			this.socket = new TcpClient(hostname, port);
+			this.socket = new TcpClient(this.hostname, this.port);
 			this.Initilize();
 		}
 		
@@ -188,8 +199,38 @@ namespace sar.Socket
 		
 		public void Disconnect()
 		{
-			this.stream.Close();
-			this.socket.Close();
+			try
+			{
+				if (!this.connected) return;
+				
+				if (this.stream != null)
+				{
+					this.stream.Close();
+				}
+				
+				if (this.socket != null)
+				{
+					this.socket.Close();
+				}
+			}
+			catch
+			{
+				
+			}
+			finally
+			{
+				//this.socket = null;
+				this.OnConnectionChange(false);
+			}
+		}
+		
+		public void Connect()
+		{
+			if (this.connected) return;
+			if (string.IsNullOrEmpty(this.hostname)) return;
+			
+			this.socket = new TcpClient(this.hostname, this.port);
+			this.Initilize();
 		}
 		
 		#endregion
@@ -254,38 +295,43 @@ namespace sar.Socket
 		{
 			lock (socket)
 			{
-				if (!socket.Connected)
-				{
-					messagesOut.Clear();
-				}
+
 				
 				if (messagesOut.Count == 0) return;
 				
 				lock (messagesOut)
 				{
-					lock (stream)
+					if (!socket.Connected)
 					{
-						try
+						messagesOut.Clear();
+						this.Disconnect();
+					}
+					
+					try
+					{
+						lock (stream)
 						{
 							stream.Write(messagesOut[0], 0, messagesOut[0].Length);
-							this.OnMessageSent(this.encoding.GetString(messagesOut[0]));
-							this.lastActivity = DateTime.Now;
+						}
+						
+						this.OnMessageSent(this.encoding.GetString(messagesOut[0]));
+						this.lastActivity = DateTime.Now;
+						messagesOut.RemoveAt(0);
+					}
+					catch (System.IO.IOException)
+					{
+						resendAttempts++;
+						if (resendAttempts >3)
+						{
+							// log error
 							messagesOut.RemoveAt(0);
+							resendAttempts = 0;
+							this.Disconnect();
 						}
-						catch (System.IO.IOException)
-						{
-							resendAttempts++;
-							if (resendAttempts >3)
-							{
-								// log error
-								messagesOut.RemoveAt(0);
-								resendAttempts = 0;
-							}
-						}
-						catch (ObjectDisposedException)
-						{
-							socket.Close();
-						}
+					}
+					catch (ObjectDisposedException)
+					{
+						this.Disconnect();
 					}
 				}
 			}
