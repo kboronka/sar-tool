@@ -32,7 +32,6 @@
 	%SAR% -f.bsd \sar\*.cs "Kevin Boronka"
 	%SAR% -f.bsd \sarControls\*.cs "Kevin Boronka"
 	%SAR% -f.bsd \sarTesting\*.cs "Kevin Boronka"
-
 	%SAR% -assy.ver \sar\AssemblyInfo.* %VERSION%
 	%SAR% -assy.ver \sarControls\AssemblyInfo.* %VERSION%
 	%SAR% -f.d sar\bin\%CONFIG%\*.* /q /svn
