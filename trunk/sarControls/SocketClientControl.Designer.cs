@@ -35,6 +35,8 @@ namespace sar.Controls
 			this.History = new System.Windows.Forms.ListBox();
 			this.Message = new System.Windows.Forms.TextBox();
 			this.Send = new System.Windows.Forms.Button();
+			this.DissconnectPB = new System.Windows.Forms.Button();
+			this.ConnectPB = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// connected
@@ -75,10 +77,32 @@ namespace sar.Controls
 			this.Send.UseVisualStyleBackColor = true;
 			this.Send.Click += new System.EventHandler(this.SendClick);
 			// 
+			// DissconnectPB
+			// 
+			this.DissconnectPB.Location = new System.Drawing.Point(358, 3);
+			this.DissconnectPB.Name = "DissconnectPB";
+			this.DissconnectPB.Size = new System.Drawing.Size(81, 23);
+			this.DissconnectPB.TabIndex = 3;
+			this.DissconnectPB.Text = "Dissconnect";
+			this.DissconnectPB.UseVisualStyleBackColor = true;
+			this.DissconnectPB.Click += new System.EventHandler(this.DissconnectPBClick);
+			// 
+			// ConnectPB
+			// 
+			this.ConnectPB.Location = new System.Drawing.Point(271, 3);
+			this.ConnectPB.Name = "ConnectPB";
+			this.ConnectPB.Size = new System.Drawing.Size(81, 23);
+			this.ConnectPB.TabIndex = 4;
+			this.ConnectPB.Text = "Connect";
+			this.ConnectPB.UseVisualStyleBackColor = true;
+			this.ConnectPB.Click += new System.EventHandler(this.ConnectPBClick);
+			// 
 			// SocketClientControl
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this.ConnectPB);
+			this.Controls.Add(this.DissconnectPB);
 			this.Controls.Add(this.Send);
 			this.Controls.Add(this.Message);
 			this.Controls.Add(this.History);
@@ -88,6 +112,8 @@ namespace sar.Controls
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.Button ConnectPB;
+		private System.Windows.Forms.Button DissconnectPB;
 		private System.Windows.Forms.Button Send;
 		private System.Windows.Forms.TextBox Message;
 		private System.Windows.Forms.ListBox History;
