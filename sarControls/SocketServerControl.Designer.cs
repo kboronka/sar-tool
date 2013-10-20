@@ -1,5 +1,7 @@
-﻿
-namespace sar.Testing.Controls
+﻿using sar.Tools;
+using sar.Socket;
+
+namespace sar.Controls
 {
 	partial class SocketServerControl
 	{
@@ -29,11 +31,28 @@ namespace sar.Testing.Controls
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.ActiveConnections = new System.Windows.Forms.Label();
+			this.SuspendLayout();
+			// 
+			// ActiveConnections
+			// 
+			this.ActiveConnections.ForeColor = System.Drawing.SystemColors.Control;
+			this.ActiveConnections.Location = new System.Drawing.Point(3, 11);
+			this.ActiveConnections.Name = "ActiveConnections";
+			this.ActiveConnections.Size = new System.Drawing.Size(149, 16);
+			this.ActiveConnections.TabIndex = 1;
+			this.ActiveConnections.Text = "Active Connections: 0";
 			// 
 			// SocketServerControl
 			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.BackColor = System.Drawing.SystemColors.WindowFrame;
+			this.Controls.Add(this.ActiveConnections);
 			this.Name = "SocketServerControl";
+			this.Size = new System.Drawing.Size(273, 90);
+			this.ResumeLayout(false);
 		}
+		private System.Windows.Forms.Label ActiveConnections;
 	}
 }

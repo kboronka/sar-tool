@@ -1,5 +1,7 @@
-﻿
-namespace sar.Testing.Controls
+﻿using sar.Tools;
+using sar.Socket;
+
+namespace sar.Controls
 {
 	partial class SocketClientControl
 	{

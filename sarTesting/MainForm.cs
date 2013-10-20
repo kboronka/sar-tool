@@ -28,6 +28,8 @@ namespace sar.Testing
 		{
 			InitializeComponent();
 			server = new SocketServer(8100, Encoding.ASCII);
+			this.socketServerControl1.Server = server;
+			
 			updateTimer = new System.Timers.Timer(1000);
 			updateTimer.Enabled = true;
 			updateTimer.Elapsed += new ElapsedEventHandler(UpdateTimerDone);
@@ -86,7 +88,7 @@ namespace sar.Testing
 				return;
 			}
 			
-			this.ActiveConnections.Text = "Active Connections: " + this.server.Connections.Count.ToString();
+			this.ActiveConnections.Text = "Active Connections: " + this.server.Clients.ToString();
 		}
 	}
 }

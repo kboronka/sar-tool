@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using sar.Tools;
 using sar.Socket;
 
-namespace sar.Testing.Controls
+namespace sar.Controls
 {
 	public partial class SocketClientControl : UserControl
 	{

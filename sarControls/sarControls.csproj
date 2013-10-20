@@ -74,6 +74,9 @@
     <EmbeddedResource Include="SocketClientControl.resx">
       <DependentUpon>SocketClientControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SocketServerControl.resx">
+      <DependentUpon>SocketServerControl.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

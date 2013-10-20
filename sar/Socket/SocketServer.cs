@@ -27,28 +27,80 @@ namespace sar.Socket
 {
 	public class SocketServer
 	{
-		private List<SocketClient> connections;
+		private List<SocketClient> clients;
 		private TcpListener listener;
-		
-		private int port;
 		private Encoding encoding;
-		private System.Threading.Timer serviceTimer;
+
+		#region properties
 		
-		public List<SocketClient> Connections
+		public int Clients
 		{
-			get { return this.connections; }
+			get { return this.clients.Count; }
 		}
 		
+		#endregion
+	
+		#region events
+		
+		#region Newclient
+
+		public EventHandler NewClient = null;
+		
+		private void OnNewClient(SocketClient client)
+		{
+			try
+			{
+				if (NewClient != null)
+				{
+					NewClient(client, new System.EventArgs());
+				}
+			}
+			catch
+			{
+			}
+		}
+
+		#endregion
+
+		#region ClientLost
+
+		public EventHandler ClientLost = null;
+		
+		private void OnClientLost(SocketClient client)
+		{
+			try
+			{
+				if (ClientLost != null)
+				{
+					ClientLost(client, new System.EventArgs());
+				}
+			}
+			catch
+			{
+			}
+		}
+
+		#endregion
+
+		#endregion
+		
+		#region constructor
+				
 		public SocketServer(int port, Encoding encoding)
 		{
-			this.port = port;
 			this.encoding = encoding;
-			this.connections = new List<SocketClient>();
-			this.listener = new TcpListener(IPAddress.Any, this.port);
+			this.clients = new List<SocketClient>();
+			this.listener = new TcpListener(IPAddress.Any, port);
 			this.listener.Start();
 			this.serviceTimer = new Timer(ServiceTick, null, 10, Timeout.Infinite);
 		}
 		
+		#endregion
+		
+		#region service
+		
+		private System.Threading.Timer serviceTimer;
+				
 		private void ServiceListener()
 		{
 			try
@@ -57,8 +109,9 @@ namespace sar.Socket
 				{
 					if (this.listener.Pending())
 					{
-						SocketClient newConnection = new SocketClient(this.listener.AcceptTcpClient(), this.encoding);
-						this.connections.Add(newConnection);
+						SocketClient client = new SocketClient(this.listener.AcceptTcpClient(), this.encoding);
+						this.clients.Add(client);
+						this.OnNewClient(client);
 					}
 				}
 			}
@@ -70,15 +123,21 @@ namespace sar.Socket
 			}
 		}
 		
-		private void ServiceConnections()
+		private void ServiceClients()
 		{
-			lock (this.connections)
+			lock (this.clients)
 			{
-				foreach (SocketClient connection in this.connections)
+				foreach (SocketClient client in this.clients)
 				{
-					if (connection.HasRequest)
+					if (!client.Connected)
 					{
-						string request = connection.ReadString;
+						this.clients.Remove(client);
+						OnClientLost(client);
+					}
+					
+					if (client.HasRequest)
+					{
+						string request = client.ReadString;
 						
 						if (!string.IsNullOrEmpty(request))
 						{
@@ -87,7 +146,7 @@ namespace sar.Socket
 							switch (command)
 							{
 								case "ping":
-									connection.SendData("echo");
+									client.SendData("echo");
 									break;
 								default:
 									break;
@@ -103,7 +162,7 @@ namespace sar.Socket
 			try
 			{
 				this.ServiceListener();
-				this.ServiceConnections();
+				this.ServiceClients();
 			}
 			catch (Exception ex)
 			{
@@ -112,8 +171,10 @@ namespace sar.Socket
 			}
 			finally
 			{
-				this.serviceTimer.Change(100, Timeout.Infinite );
+				this.serviceTimer.Change(10, Timeout.Infinite );
 			}
 		}
+		
+		#endregion
 	}
 }

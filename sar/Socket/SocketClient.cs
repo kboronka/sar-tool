@@ -17,7 +17,6 @@ using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
-//using System.Timers;
 using System.Threading;
 
 using sar.Tools;
@@ -29,13 +28,6 @@ namespace sar.Socket
 		private TcpClient socket;
 		private NetworkStream stream;
 		private Encoding encoding;
-		
-		private List<byte[]> messagesOut;
-		private List<byte[]> messagesIn;
-		private int attempts;
-
-		private DateTime lastActivity;
-		private System.Threading.Timer serviceTimer;
 		
 		#region properties
 		
@@ -79,7 +71,6 @@ namespace sar.Socket
 		#region events
 		
 		#region ConnectionChange
-
 
 		public EventHandler ConnectionChange = null;
 		
@@ -142,6 +133,8 @@ namespace sar.Socket
 
 		#endregion
 
+		#region constructors
+
 		public SocketClient(TcpClient socket, Encoding encoding)
 		{
 			//this.socket.ReceiveBufferSize;
@@ -163,10 +156,17 @@ namespace sar.Socket
 			this.stream = this.socket.GetStream();
 			this.messagesOut = new List<byte[]>();
 			this.messagesIn = new List<byte[]>();
-			this.attempts = 0;
+			this.resendAttempts = 0;
 			this.lastActivity = DateTime.UtcNow;
 			this.serviceTimer = new Timer(ServiceTick, null, 100, Timeout.Infinite);
 		}
+		
+		#endregion
+
+		#region messageQueue
+
+		private List<byte[]> messagesOut;
+		private List<byte[]> messagesIn;
 		
 		public void SendData(string data)
 		{
@@ -180,6 +180,24 @@ namespace sar.Socket
 				messagesOut.Add(data);
 			}
 		}
+		
+		#endregion
+		
+		#region methods
+		
+		public void Disconnect()
+		{
+			this.stream.Close();
+			this.socket.Close();
+		}
+		
+		#endregion
+		
+		#region service
+		
+		private System.Threading.Timer serviceTimer;
+		private int resendAttempts;
+		private DateTime lastActivity;
 		
 		private void ServiceIncoming()
 		{
@@ -203,7 +221,8 @@ namespace sar.Socket
 						{
 							foreach (string message in messages.Split(new string[] { "<message-end>" }, StringSplitOptions.None))
 							{
-								this.OnMessageRecived(message);	
+								this.OnMessageRecived(message);
+								this.lastActivity = DateTime.Now;
 								this.messagesIn.Add(this.encoding.GetBytes(message));
 							}
 						}
@@ -230,17 +249,18 @@ namespace sar.Socket
 						try
 						{
 							stream.Write(messagesOut[0], 0, messagesOut[0].Length);
-							this.OnMessageSent(this.encoding.GetString(messagesOut[0]));	
+							this.OnMessageSent(this.encoding.GetString(messagesOut[0]));
+							this.lastActivity = DateTime.Now;
 							messagesOut.RemoveAt(0);
 						}
 						catch (System.IO.IOException)
 						{
-							attempts++;
-							if (attempts >3)
+							resendAttempts++;
+							if (resendAttempts >3)
 							{
 								// log error
 								messagesOut.RemoveAt(0);
-								attempts = 0;
+								resendAttempts = 0;
 							}
 						}
 						catch (ObjectDisposedException)
@@ -272,5 +292,7 @@ namespace sar.Socket
 				this.serviceTimer.Change(100, Timeout.Infinite );
 			}
 		}
+		
+		#endregion
 	}
 }
