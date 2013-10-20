@@ -62,7 +62,7 @@ namespace skylib.sar
 							List<string> newlines = new List<string>();
 							int level = 0;
 							bool linecontinue = false;
-							bool levelup = false;
+							//bool levelup = false;
 							bool meta = false;
 							bool metaContinue = false;
 							int linenumber = 0;
@@ -167,11 +167,11 @@ namespace skylib.sar
 									    (firstword == "Get") || (firstword == "Set"))
 									{
 										level++;
-										levelup = true;
+										//levelup = true;
 									}
 									else
 									{
-										if (!linecontinue) levelup = false;
+										//if (!linecontinue) levelup = false;
 									}
 									
 									// double level

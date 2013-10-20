@@ -117,7 +117,6 @@ namespace skylib.sar
 						// Execute Command
 						if (command != "exit")
 						{
-
 							backgroundThread = new Thread(new ThreadStart(progressBar.Enable));
 							backgroundThread.Name = "RunningIndicator";
 							backgroundThread.IsBackground = true;
