@@ -92,10 +92,28 @@ namespace sar.Socket
 			this.clients = new List<SocketClient>();
 			this.listener = new TcpListener(IPAddress.Any, port);
 			this.listener.Start();
-			this.serviceTimer = new Timer(ServiceTick, null, 10, Timeout.Infinite);
+			this.serviceTimer = new Timer(this.ServiceTick, null, 10, Timeout.Infinite);
+			this.pingTimer = new Timer(this.Ping, null, 1000, Timeout.Infinite);
 		}
 		
 		#endregion
+		
+		#region methods
+		
+		public void Broadcast(string message)
+		{
+			lock (this.clients)
+			{
+				foreach (SocketClient client in this.clients)
+				{
+					client.SendData(message);
+				}
+			}			
+			
+		}
+		
+		#endregion
+		
 		
 		#region service
 		
@@ -175,6 +193,29 @@ namespace sar.Socket
 			}
 		}
 		
+		#endregion
+		
+		#region pingLoop
+		
+		private System.Threading.Timer pingTimer;
+
+		private void Ping(Object state)
+		{
+			try
+			{
+				this.Broadcast("ping");
+			}
+			catch (Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine(ex.Message);
+				System.Diagnostics.Debug.WriteLine(ex.StackTrace);
+			}
+			finally
+			{
+				this.pingTimer.Change(1000, Timeout.Infinite );
+			}
+		}
+
 		#endregion
 	}
 }

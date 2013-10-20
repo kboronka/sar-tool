@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -211,22 +212,40 @@ namespace sar.Socket
 				lock (stream)
 				{
 					string messages = "";
-					if (stream.DataAvailable)
+					try
 					{
-						byte[] bytes = new byte[socket.Available];
-						int bytesRead = stream.Read(bytes, 0, bytes.Length);
-						messages = this.encoding.GetString(bytes, 0, bytesRead);
-						
-						if (!String.IsNullOrEmpty(messages))
+						//this.stream = this.socket.GetStream().ReadTimeout = 6000;
+						if (socket.Available > 0)
 						{
-							foreach (string message in messages.Split(new string[] { "<message-end>" }, StringSplitOptions.None))
+							if (stream.DataAvailable)
 							{
-								this.OnMessageRecived(message);
-								this.lastActivity = DateTime.Now;
-								this.messagesIn.Add(this.encoding.GetBytes(message));
+								byte[] bytes = new byte[socket.Available];
+								int bytesRead = stream.Read(bytes, 0, bytes.Length);
+								messages = this.encoding.GetString(bytes, 0, bytesRead);
+								
+								if (!String.IsNullOrEmpty(messages))
+								{
+									foreach (string message in messages.Split(new string[] { "<message-end>" }, StringSplitOptions.None))
+									{
+										this.OnMessageRecived(message);
+										this.lastActivity = DateTime.Now;
+										this.messagesIn.Add(this.encoding.GetBytes(message));
+									}
+								}
 							}
 						}
 					}
+					catch (ObjectDisposedException ex)
+					{
+						// The NetworkStream is closed.
+						this.Disconnect();
+					}
+					catch (IOException ex)
+					{
+						// The underlying Socket is closed.
+						this.Disconnect();
+					}
+					
 				}
 			}
 		}
