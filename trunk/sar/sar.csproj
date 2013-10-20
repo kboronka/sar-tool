@@ -105,8 +105,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\lib\skylib-source\AssemblyInfo.cs" />
     <Compile Include="..\lib\skylib-source\IO.cs" />
+    <Compile Include="Socket\SocketClient.cs" />
+    <Compile Include="Socket\SocketServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Commands" />
+    <Folder Include="Socket" />
   </ItemGroup>
 </Project>
