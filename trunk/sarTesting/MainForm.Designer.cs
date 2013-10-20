@@ -33,6 +33,7 @@ namespace sar.Testing
 			this.label1 = new System.Windows.Forms.Label();
 			this.button1 = new System.Windows.Forms.Button();
 			this.button2 = new System.Windows.Forms.Button();
+			this.socketServerControl1 = new sar.Controls.SocketServerControl();
 			this.SuspendLayout();
 			// 
 			// ActiveConnections
@@ -71,11 +72,21 @@ namespace sar.Testing
 			this.button2.UseVisualStyleBackColor = true;
 			this.button2.Click += new System.EventHandler(this.Button2Click);
 			// 
+			// socketServerControl1
+			// 
+			this.socketServerControl1.BackColor = System.Drawing.SystemColors.WindowFrame;
+			this.socketServerControl1.Location = new System.Drawing.Point(25, 97);
+			this.socketServerControl1.Name = "socketServerControl1";
+			this.socketServerControl1.Server = null;
+			this.socketServerControl1.Size = new System.Drawing.Size(273, 90);
+			this.socketServerControl1.TabIndex = 4;
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(667, 341);
+			this.Controls.Add(this.socketServerControl1);
 			this.Controls.Add(this.button2);
 			this.Controls.Add(this.button1);
 			this.Controls.Add(this.label1);
@@ -84,6 +95,7 @@ namespace sar.Testing
 			this.Text = "sar.Testing";
 			this.ResumeLayout(false);
 		}
+		private sar.Controls.SocketServerControl socketServerControl1;
 		private System.Windows.Forms.Button button2;
 		private System.Windows.Forms.Button button1;
 		private System.Windows.Forms.Label label1;

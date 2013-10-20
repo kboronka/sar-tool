@@ -1,4 +1,6 @@
-﻿
+﻿using sar.Socket;
+using sar.Controls;
+
 namespace sar.Testing
 {
 	partial class SocketClientForm
@@ -29,7 +31,7 @@ namespace sar.Testing
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.socketClientControl1 = new sar.Testing.Controls.SocketClientControl();
+			this.socketClientControl1 = new sar.Controls.SocketClientControl();
 			this.SuspendLayout();
 			// 
 			// socketClientControl1
@@ -48,8 +50,9 @@ namespace sar.Testing
 			this.Controls.Add(this.socketClientControl1);
 			this.Name = "SocketClientForm";
 			this.Text = "SocketClientForm";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SocketClientFormFormClosing);
 			this.ResumeLayout(false);
 		}
-		private sar.Testing.Controls.SocketClientControl socketClientControl1;
+		private sar.Controls.SocketClientControl socketClientControl1;
 	}
 }

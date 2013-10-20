@@ -1,26 +1,63 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Timers;
 using System.Windows.Forms;
 
-namespace sar.Testing.Controls
+using sar.Tools;
+using sar.Socket;
+
+namespace sar.Controls
 {
-	/// <summary>
-	/// Description of SocketServerControl.
-	/// </summary>
 	public partial class SocketServerControl : UserControl
 	{
+		private SocketServer server;
+		
+		public SocketServer Server
+		{
+			get { return this.server; }
+			set
+			{
+				if (this.server != null)
+				{
+					this.server.NewClient -= new EventHandler(this.ClientsChanged);
+					this.server.ClientLost -= new EventHandler(this.ClientsChanged);
+				}
+				
+				this.server = value;
+				
+				if (this.server != null)
+				{
+					this.server.NewClient += new EventHandler(this.ClientsChanged);
+					this.server.ClientLost += new EventHandler(this.ClientsChanged);
+					this.UpdateControls();
+				}
+			}
+		}
+		
 		public SocketServerControl()
 		{
-			//
-			// The InitializeComponent() call is required for Windows Forms designer support.
-			//
 			InitializeComponent();
-			
-			//
-			// TODO: Add constructor code after the InitializeComponent() call.
-			//
 		}
+		
+		
+		private void ClientsChanged(object sender, EventArgs e)
+		{
+			this.UpdateControls();
+
+		}
+		
+		private void UpdateControls()
+		{
+			if (InvokeRequired)
+			{
+				this.Invoke(new MethodInvoker(UpdateControls));
+				return;
+			}
+			
+			this.ActiveConnections.Text = "Active Connections: " + this.server.Clients.ToString();
+		}		
 	}
 }
