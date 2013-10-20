@@ -151,6 +151,7 @@ namespace sar.Socket
 					{
 						this.clients.Remove(client);
 						OnClientLost(client);
+						break;
 					}
 					
 					if (client.HasRequest)
