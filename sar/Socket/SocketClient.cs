@@ -30,8 +30,8 @@ namespace sar.Socket
 		private NetworkStream stream;
 		private Encoding encoding;
 		
-		private string hostname;
-		private int port;
+		protected string hostname;
+		protected int port;
 		
 		private bool connected;
 		

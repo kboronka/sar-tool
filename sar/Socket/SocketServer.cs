@@ -30,6 +30,7 @@ namespace sar.Socket
 		private List<SocketClient> clients;
 		private TcpListener listener;
 		private Encoding encoding;
+		protected int port;
 
 		#region properties
 		
@@ -85,10 +86,11 @@ namespace sar.Socket
 		#endregion
 		
 		#region constructor
-				
+		
 		public SocketServer(int port, Encoding encoding)
 		{
 			this.encoding = encoding;
+			this.port = port;
 			this.clients = new List<SocketClient>();
 			this.listener = new TcpListener(IPAddress.Any, port);
 			this.listener.Start();
@@ -113,7 +115,6 @@ namespace sar.Socket
 		}
 		
 		#endregion
-		
 		
 		#region service
 		
