@@ -48,6 +48,12 @@ namespace sar.Testing
 			this.button1 = new System.Windows.Forms.Button();
 			this.button2 = new System.Windows.Forms.Button();
 			this.socketServerControl1 = new sar.Controls.SocketServerControl();
+			this.Connect3 = new System.Windows.Forms.Button();
+			this.Host = new System.Windows.Forms.TextBox();
+			this.label2 = new System.Windows.Forms.Label();
+			this.Port = new System.Windows.Forms.NumericUpDown();
+			this.label3 = new System.Windows.Forms.Label();
+			((System.ComponentModel.ISupportInitialize)(this.Port)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// ActiveConnections
@@ -62,7 +68,7 @@ namespace sar.Testing
 			// 
 			this.label1.Location = new System.Drawing.Point(25, 68);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(155, 239);
+			this.label1.Size = new System.Drawing.Size(155, 26);
 			this.label1.TabIndex = 1;
 			this.label1.Text = "log0";
 			// 
@@ -95,11 +101,71 @@ namespace sar.Testing
 			this.socketServerControl1.Size = new System.Drawing.Size(273, 90);
 			this.socketServerControl1.TabIndex = 4;
 			// 
+			// Connect3
+			// 
+			this.Connect3.Location = new System.Drawing.Point(279, 246);
+			this.Connect3.Name = "Connect3";
+			this.Connect3.Size = new System.Drawing.Size(75, 23);
+			this.Connect3.TabIndex = 5;
+			this.Connect3.Text = "connnect";
+			this.Connect3.UseVisualStyleBackColor = true;
+			this.Connect3.Click += new System.EventHandler(this.Connect3Click);
+			// 
+			// Host
+			// 
+			this.Host.Location = new System.Drawing.Point(92, 246);
+			this.Host.Name = "Host";
+			this.Host.Size = new System.Drawing.Size(100, 20);
+			this.Host.TabIndex = 6;
+			// 
+			// label2
+			// 
+			this.label2.Location = new System.Drawing.Point(92, 231);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(100, 12);
+			this.label2.TabIndex = 7;
+			this.label2.Text = "host";
+			// 
+			// Port
+			// 
+			this.Port.Location = new System.Drawing.Point(211, 246);
+			this.Port.Maximum = new decimal(new int[] {
+									8200,
+									0,
+									0,
+									0});
+			this.Port.Minimum = new decimal(new int[] {
+									8100,
+									0,
+									0,
+									0});
+			this.Port.Name = "Port";
+			this.Port.Size = new System.Drawing.Size(62, 20);
+			this.Port.TabIndex = 8;
+			this.Port.Value = new decimal(new int[] {
+									8100,
+									0,
+									0,
+									0});
+			// 
+			// label3
+			// 
+			this.label3.Location = new System.Drawing.Point(211, 231);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(100, 12);
+			this.label3.TabIndex = 9;
+			this.label3.Text = "port";
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(667, 341);
+			this.Controls.Add(this.label3);
+			this.Controls.Add(this.Port);
+			this.Controls.Add(this.label2);
+			this.Controls.Add(this.Host);
+			this.Controls.Add(this.Connect3);
 			this.Controls.Add(this.socketServerControl1);
 			this.Controls.Add(this.button2);
 			this.Controls.Add(this.button1);
@@ -107,8 +173,15 @@ namespace sar.Testing
 			this.Controls.Add(this.ActiveConnections);
 			this.Name = "MainForm";
 			this.Text = "sar.Testing";
+			((System.ComponentModel.ISupportInitialize)(this.Port)).EndInit();
 			this.ResumeLayout(false);
+			this.PerformLayout();
 		}
+		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.NumericUpDown Port;
+		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.TextBox Host;
+		private System.Windows.Forms.Button Connect3;
 		private sar.Controls.SocketServerControl socketServerControl1;
 		private System.Windows.Forms.Button button2;
 		private System.Windows.Forms.Button button1;
