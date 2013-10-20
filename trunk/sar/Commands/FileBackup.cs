@@ -71,9 +71,16 @@ namespace skylib.sar
 						Progress.Message = "Coping " + fileRelativePath;
 						counter++;
 						
-						if (!Directory.Exists(backupRoot)) Directory.CreateDirectory(backupRoot);
-						if (File.Exists(backupFile)) File.Delete(backupFile);
-						File.Copy(file, backupFile);
+						try
+						{
+							if (!Directory.Exists(backupRoot)) Directory.CreateDirectory(backupRoot);
+							if (File.Exists(backupFile)) File.Delete(backupFile);
+							File.Copy(file, backupFile);
+						}
+						catch (Exception ex)
+						{
+							ConsoleHelper.WriteLine(ex.Message, ConsoleColor.Red);
+						}
 					}
 				}
 			}
