@@ -2,7 +2,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace sar_testing
+namespace sar.Testing
 {
 	/// <summary>
 	/// Class with program entry point.

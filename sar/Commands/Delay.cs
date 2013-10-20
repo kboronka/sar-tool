@@ -14,13 +14,13 @@
  */
 
 using System;
-using skylib.Tools;
+using sar.Tools;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
-namespace skylib.sar
+namespace sar.Tools
 {
 	public class Delay : BaseCommand
 	{

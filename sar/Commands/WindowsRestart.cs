@@ -19,9 +19,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
-using skylib.Tools;
+using sar.Tools;
 
-namespace skylib.sar
+namespace sar.Tools
 {
 	public class WindowsRestart : BaseCommand
 	{

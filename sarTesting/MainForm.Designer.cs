@@ -1,5 +1,5 @@
 ﻿
-namespace sar_testing
+namespace sar.Testing
 {
 	partial class MainForm
 	{
@@ -81,7 +81,7 @@ namespace sar_testing
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.ActiveConnections);
 			this.Name = "MainForm";
-			this.Text = "sar_testing";
+			this.Text = "sar.Testing";
 			this.ResumeLayout(false);
 		}
 		private System.Windows.Forms.Button button2;

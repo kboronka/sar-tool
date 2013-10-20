@@ -20,9 +20,9 @@ using System.Text;
 //using System.Timers;
 using System.Threading;
 
-using skylib.Tools;
+using sar.Tools;
 
-namespace skylib.Socket
+namespace sar.Socket
 {
 	public class SocketClient
 	{

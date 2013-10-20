@@ -17,9 +17,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-using skylib.Tools;
+using sar.Tools;
 
-namespace skylib.sar
+namespace sar.Tools
 {
 	public class SkyUpdaterUpdate : BaseCommand
 	{

@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace sar_testing.Controls
+namespace sar.Testing.Controls
 {
 	/// <summary>
 	/// Description of SocketServerControl.
