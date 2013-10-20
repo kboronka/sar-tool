@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Security;
-
+using System.Xml;
 
 namespace sar.Tools
 {
@@ -295,6 +295,30 @@ namespace sar.Tools
 			}
 		}
 		
+		
+		#endregion
+		
+		#region XML
+		
+		private static XmlReaderSettings ReaderSettings()
+		{
+			XmlReaderSettings settings = new XmlReaderSettings();
+			settings.CloseInput = true;
+			settings.IgnoreComments = true;
+			settings.IgnoreProcessingInstructions = true;
+			settings.IgnoreWhitespace = true;
+			return settings;
+		}
+
+		private static XmlWriterSettings WriterSettings()
+		{
+			XmlWriterSettings settings = new XmlWriterSettings();
+			settings.CloseOutput = true;
+			settings.Encoding = Encoding.UTF8;
+			settings.Indent = true;
+			settings.IndentChars = "\t";
+			return settings;
+		}
 		
 		#endregion
 	}
