@@ -203,6 +203,7 @@ namespace sar
 							Program.IncludeSVN = true;
 							break;
 						case "/nosubfolders":
+						case "/nosubs":
 							Program.IncludeSubFolders = false;
 							break;
 						default:
