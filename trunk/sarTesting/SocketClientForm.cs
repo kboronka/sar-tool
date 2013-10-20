@@ -3,9 +3,9 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-using skylib.Socket;
+using sar.Socket;
 
-namespace sar_testing
+namespace sar.Testing
 {
 	public partial class SocketClientForm : Form
 	{

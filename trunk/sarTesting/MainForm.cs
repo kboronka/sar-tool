@@ -8,11 +8,10 @@ using System.Timers;
 using System.Threading;
 using System.Windows.Forms;
 
-using skylib;
-using skylib.Tools;
-using skylib.Socket;
+using sar.Tools;
+using sar.Socket;
 
-namespace sar_testing
+namespace sar.Testing
 {
 	public partial class MainForm : Form
 	{

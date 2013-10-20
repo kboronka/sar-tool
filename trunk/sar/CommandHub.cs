@@ -16,9 +16,9 @@
 using System;
 using System.Collections.Generic;
 
-using skylib.Tools;
+using sar.Tools;
 
-namespace skylib.sar
+namespace sar.Tools
 {
 	public class CommandHub
 	{

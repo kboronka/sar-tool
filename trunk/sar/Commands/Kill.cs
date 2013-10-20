@@ -14,12 +14,12 @@
  */
 
 using System;
-using skylib.Tools;
+using sar.Tools;
 using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
 
-namespace skylib.sar
+namespace sar.Tools
 {
 	public class Kill : BaseCommand
 	{

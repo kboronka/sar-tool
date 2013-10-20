@@ -6,10 +6,10 @@ using System.Drawing;
 using System.Timers;
 using System.Windows.Forms;
 
-using skylib.Tools;
-using skylib.Socket;
+using sar.Tools;
+using sar.Socket;
 
-namespace sar_testing.Controls
+namespace sar.Testing.Controls
 {
 	public partial class SocketClientControl : UserControl
 	{

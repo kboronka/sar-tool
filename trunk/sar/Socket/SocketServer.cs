@@ -21,9 +21,9 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
-using skylib.Tools;
+using sar.Tools;
 
-namespace skylib.Socket
+namespace sar.Socket
 {
 	public class SocketServer
 	{

@@ -1,5 +1,5 @@
 ﻿
-namespace sar_testing
+namespace sar.Testing
 {
 	partial class SocketClientForm
 	{
@@ -29,7 +29,7 @@ namespace sar_testing
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.socketClientControl1 = new sar_testing.Controls.SocketClientControl();
+			this.socketClientControl1 = new sar.Testing.Controls.SocketClientControl();
 			this.SuspendLayout();
 			// 
 			// socketClientControl1
@@ -50,6 +50,6 @@ namespace sar_testing
 			this.Text = "SocketClientForm";
 			this.ResumeLayout(false);
 		}
-		private sar_testing.Controls.SocketClientControl socketClientControl1;
+		private sar.Testing.Controls.SocketClientControl socketClientControl1;
 	}
 }

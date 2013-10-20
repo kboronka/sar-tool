@@ -14,12 +14,13 @@
  */
 
 using System;
-using skylib.Tools;
 using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
 
-namespace skylib.sar
+using sar.Tools;
+
+namespace sar.Tools
 {
 	public class AppShutdownWait : BaseCommand
 	{
