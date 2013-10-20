@@ -33,13 +33,23 @@ namespace sar.Tools
 		public override int Execute(string[] args)
 		{
 			// sanity check
+			if (args.Length < 2)
+			{
+				throw new ArgumentException("too few arguments");
+			}
+
+			// get list of msbuild versions available
+			string netVersion = args[1];
+			Progress.Message = "Locating Installed .NET versions";
+			string msbuildPath = IO.FindDotNetFolder(netVersion) + @"\MSBuild.exe";
+
+			// sanity check
 			if (args.Length < 3)
 			{
 				throw new ArgumentException("too few arguments");
 			}
 			
 			Progress.Message = "Searching";
-			string netVersion = args[1];
 			string filePattern = args[2];
 			string root = Directory.GetCurrentDirectory();
 			IO.CheckRootAndPattern(ref root, ref filePattern);
@@ -53,10 +63,6 @@ namespace sar.Tools
 			
 			// sanity - solution file exists
 			if (!File.Exists(soultionPath)) throw new FileNotFoundException(soultionPath + " solution file not found");
-
-			// get list of msbuild versions availble
-			Progress.Message = "Locating Installed .NET versions";
-			string msbuildPath = IO.FindDotNetFolder(netVersion) + @"\MSBuild.exe";
 			
 
 			string arguments = "\"" + soultionPath + "\"";
