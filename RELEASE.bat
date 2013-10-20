@@ -31,6 +31,7 @@
 	svn update	
 	%SAR% -f.bsd \sar\*.cs "Kevin Boronka"
 	%SAR% -assy.ver \sar\AssemblyInfo.* %VERSION%
+	%SAR% -assy.ver \sarControls\AssemblyInfo.* %VERSION%
 	%SAR% -f.d sar\bin\%CONFIG%\*.* /q /svn
 	
 	echo building binaries
@@ -38,6 +39,8 @@
 	if errorlevel 1 goto BuildFailed
 
 	copy sar\bin\%CONFIG%\*.exe release\*.exe
+	copy sarControls\bin\%CONFIG%\sarControls.dll release\sarControls.dll
+	
 	copy license.txt release\license.txt
 	%SAR% -sky.gen SkyUpdate.info release\sar.exe https://sar-tool.googlecode.com/svn/trunk/release/sar.exe
 	
