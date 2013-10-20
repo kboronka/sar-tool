@@ -120,5 +120,15 @@ namespace sar.Controls
 			
 			this.History.EndUpdate();
 		}
+		
+		void ConnectPBClick(object sender, EventArgs e)
+		{
+			this.Client.Connect();
+		}
+		
+		void DissconnectPBClick(object sender, EventArgs e)
+		{
+			this.Client.Disconnect();
+		}
 	}
 }
