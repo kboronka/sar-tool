@@ -300,7 +300,7 @@ namespace sar.Tools
 		
 		#region XML
 		
-		private static XmlReaderSettings ReaderSettings()
+		public static XmlReaderSettings ReaderSettings()
 		{
 			XmlReaderSettings settings = new XmlReaderSettings();
 			settings.CloseInput = true;
@@ -310,7 +310,7 @@ namespace sar.Tools
 			return settings;
 		}
 
-		private static XmlWriterSettings WriterSettings()
+		public static XmlWriterSettings WriterSettings()
 		{
 			XmlWriterSettings settings = new XmlWriterSettings();
 			settings.CloseOutput = true;
