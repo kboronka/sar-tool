@@ -72,6 +72,15 @@ namespace sar.Socket
 			get { return this.socket.Connected; }
 		}
 		
+		public int Port
+		{
+			get { return this.port; }
+		}
+		
+		public string Hostname
+		{
+			get { return this.hostname; }
+		}
 		#endregion
 
 		#region events

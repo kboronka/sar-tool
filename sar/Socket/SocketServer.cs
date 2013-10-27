@@ -39,6 +39,11 @@ namespace sar.Socket
 			get { return this.clients.Count; }
 		}
 		
+		public int Port
+		{
+			get { return this.port; }
+		}
+		
 		#endregion
 	
 		#region events
