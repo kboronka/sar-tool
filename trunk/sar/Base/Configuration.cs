@@ -35,7 +35,7 @@ namespace sar.Base
 			
 			if (File.Exists(this.path))
 			{
-				XmlReader reader = XmlReader.Create(this.path, StringHelper.ReaderSettings());
+				XmlReader reader = XmlReader.Create(this.path, StringHelper.ReaderSettings);
 				this.Deserialize(reader);
 				reader.Close();
 			}	
@@ -47,7 +47,7 @@ namespace sar.Base
 			
 			if (File.Exists(this.path))
 			{
-				XmlReader reader = XmlReader.Create(this.path, StringHelper.ReaderSettings());
+				XmlReader reader = XmlReader.Create(this.path, StringHelper.ReaderSettings);
 				this.Deserialize(reader);
 				reader.Close();
 			}
@@ -61,7 +61,7 @@ namespace sar.Base
 		public void Save(string path)
 		{
 			this.path = path;
-			XmlWriter writer = XmlWriter.Create(path, StringHelper.WriterSettings());
+			XmlWriter writer = XmlWriter.Create(path, StringHelper.WriterSettings);
 			
 			writer.WriteStartDocument();
 			writer.WriteStartElement(sar.Tools.AssemblyInfo.Name);

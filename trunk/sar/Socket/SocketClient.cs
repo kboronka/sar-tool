@@ -19,6 +19,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Xml;
 
 using sar.Tools;
 
@@ -29,11 +30,14 @@ namespace sar.Socket
 		private TcpClient socket;
 		private NetworkStream stream;
 		private Encoding encoding;
+		private long messageID;
 		
 		protected string hostname;
 		protected int port;
 		
 		private bool connected;
+		
+		private Dictionary<string, string> lookup = new Dictionary<string, string>();
 		
 		#region properties
 		
@@ -42,7 +46,7 @@ namespace sar.Socket
 			get { return this.messagesIn.Count > 0; }
 		}
 		
-		public byte[] ReadBytes
+		public SocketMessage Read
 		{
 			get
 			{
@@ -50,7 +54,7 @@ namespace sar.Socket
 				{
 					lock (this.messagesIn)
 					{
-						byte[] message = this.messagesIn[0];
+						SocketMessage message = this.messagesIn[0];
 						this.messagesIn.RemoveAt(0);
 						return message;
 					}
@@ -60,11 +64,6 @@ namespace sar.Socket
 					return null;
 				}
 			}
-		}
-		
-		public string ReadString
-		{
-			get { return this.encoding.GetString(this.ReadBytes); }
 		}
 		
 		public bool Connected
@@ -80,6 +79,35 @@ namespace sar.Socket
 		public string Hostname
 		{
 			get { return this.hostname; }
+		}
+		
+		public long ID
+		{
+			get
+			{
+				if (this.lookup.ContainsKey("clientID"))
+				{
+					return long.Parse(this.lookup["clientID"]);
+				}
+
+				return 0;
+			}
+			set
+			{
+				if (this.lookup.ContainsKey("clientID"))
+				{
+					this.lookup["clientID"] = value.ToString();
+				}
+				else
+				{
+					this.lookup.Add("clientID", value.ToString());
+				}
+			}
+		}
+		
+		public Dictionary<string, string> Lookup
+		{
+			get { return lookup; }
 		}
 		
 		#endregion
@@ -114,7 +142,7 @@ namespace sar.Socket
 
 		public EventHandler MessageRecived = null;
 		
-		private void OnMessageRecived(string message)
+		private void OnMessageRecived(SocketMessage message)
 		{
 			try
 			{
@@ -134,13 +162,12 @@ namespace sar.Socket
 
 		public EventHandler MessageSent = null;
 		
-		private void OnMessageSent(string message)
+		private void OnMessageSent(SocketMessage message)
 		{
 			try
 			{
 				if (MessageSent != null)
 				{
-					message = message.Substring(0, message.Length - "<message-end>".Length);
 					MessageSent(message, new System.EventArgs());
 				}
 			}
@@ -155,12 +182,14 @@ namespace sar.Socket
 
 		#region constructors
 
-		public SocketClient(TcpClient socket, Encoding encoding)
+		public SocketClient(TcpClient socket, long clientID, Encoding encoding)
 		{
 			//this.socket.ReceiveBufferSize;
+			this.ID = clientID;
 			this.socket = socket;
 			this.encoding = encoding;
 			this.Initilize();
+			this.SendData("set", "clientID", this.ID.ToString(), -1);
 		}
 		
 		public SocketClient(string hostname, int port, Encoding encoding)
@@ -176,8 +205,8 @@ namespace sar.Socket
 		{
 			this.OnConnectionChange(this.socket.Connected);
 			this.stream = this.socket.GetStream();
-			this.messagesOut = new List<byte[]>();
-			this.messagesIn = new List<byte[]>();
+			this.messagesOut = new List<SocketMessage>();
+			this.messagesIn = new List<SocketMessage>();
 			this.resendAttempts = 0;
 			this.lastActivity = DateTime.UtcNow;
 			this.serviceTimer = new Timer(ServiceTick, null, 100, Timeout.Infinite);
@@ -187,20 +216,41 @@ namespace sar.Socket
 
 		#region messageQueue
 
-		private List<byte[]> messagesOut;
-		private List<byte[]> messagesIn;
+		private List<SocketMessage> messagesOut;
+		private List<SocketMessage> messagesIn;
 		
-		public void SendData(string data)
+		public void SendData(string command)
 		{
-			this.SendData(this.encoding.GetBytes(data + "<message-end>"));
+			this.SendData(command, "", "", -1);
+		}
+		
+		public void SendData(string command, long toID)
+		{
+			this.SendData(command, "", "", toID);
 		}
 
-		private void SendData(byte[] data)
+		public void SendData(string command, string data, long toID)
+		{
+			this.SendData(command, "", data, toID);
+		}
+
+		public void SendData(string command, string member, string data, long toID)
+		{
+			this.messageID++;
+			SendData(new SocketMessage(this, command, this.messageID++, member, data, toID));
+		}
+		
+		public void SendData(SocketMessage message)
 		{
 			lock (messagesOut)
 			{
-				messagesOut.Add(data);
+				messagesOut.Add(message);
 			}
+		}
+		
+		private void SendData(byte[] data)
+		{
+
 		}
 		
 		#endregion
@@ -243,6 +293,30 @@ namespace sar.Socket
 			this.Initilize();
 		}
 		
+		private void PreProcessMessage(SocketMessage message)
+		{
+			switch (message.Command)
+			{
+				case "ping":
+					this.SendData("echo", message.FromID);
+					break;
+				case "set":
+					if (this.lookup.ContainsKey(message.Member))
+					{
+						this.lookup[message.Member] = message.Data;
+					}
+					else
+					{
+						this.lookup.Add(message.Member, message.Data);
+					}
+					
+					break;
+					
+				default:
+					break;
+			}
+		}
+		
 		#endregion
 		
 		#region service
@@ -276,11 +350,26 @@ namespace sar.Socket
 								
 								if (!String.IsNullOrEmpty(messages))
 								{
-									foreach (string message in messages.Split(new string[] { "<message-end>" }, StringSplitOptions.None))
+									foreach (string rawMessage in messages.Split(new string[] { "<?xml version=\"1.0\" encoding=\"utf-16\"?>" }, StringSplitOptions.None))
 									{
-										this.OnMessageRecived(message);
-										this.lastActivity = DateTime.Now;
-										this.messagesIn.Add(this.encoding.GetBytes(message));
+										try
+										{
+											if (!String.IsNullOrEmpty(rawMessage))
+											{
+												SocketMessage message = new SocketMessage(rawMessage);
+												this.PreProcessMessage(message);
+												this.OnMessageRecived(message);
+												this.lastActivity = DateTime.Now;
+												this.messagesIn.Add(message);
+											}
+										}
+										catch (Exception ex)
+										{
+											//System.Diagnostics.Debug.WriteLine(messages);
+											System.Diagnostics.Debug.WriteLine(ex.Message);
+											System.Diagnostics.Debug.WriteLine("rawMessage");
+											System.Diagnostics.Debug.WriteLine(rawMessage);
+										}
 									}
 								}
 							}
@@ -305,8 +394,6 @@ namespace sar.Socket
 		{
 			lock (socket)
 			{
-
-				
 				if (messagesOut.Count == 0) return;
 				
 				lock (messagesOut)
@@ -319,12 +406,14 @@ namespace sar.Socket
 					
 					try
 					{
+						byte[] messageBytes = this.encoding.GetBytes(this.messagesOut[0].ToString());
+
 						lock (stream)
 						{
-							stream.Write(messagesOut[0], 0, messagesOut[0].Length);
+							stream.Write(messageBytes, 0, messageBytes.Length);
 						}
 						
-						this.OnMessageSent(this.encoding.GetString(messagesOut[0]));
+						this.OnMessageSent(messagesOut[0]);
 						this.lastActivity = DateTime.Now;
 						messagesOut.RemoveAt(0);
 					}
@@ -360,7 +449,7 @@ namespace sar.Socket
 			catch (Exception ex)
 			{
 				System.Diagnostics.Debug.WriteLine(ex.Message);
-				throw ex;
+				//throw ex;
 			}
 			finally
 			{

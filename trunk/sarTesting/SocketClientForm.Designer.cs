@@ -51,17 +51,19 @@ namespace sar.Testing
 			// 
 			// socketClientControl1
 			// 
+			this.socketClientControl1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.socketClientControl1.Client = null;
-			this.socketClientControl1.Location = new System.Drawing.Point(12, 12);
+			this.socketClientControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.socketClientControl1.Location = new System.Drawing.Point(0, 0);
 			this.socketClientControl1.Name = "socketClientControl1";
-			this.socketClientControl1.Size = new System.Drawing.Size(442, 344);
+			this.socketClientControl1.Size = new System.Drawing.Size(452, 348);
 			this.socketClientControl1.TabIndex = 0;
 			// 
 			// SocketClientForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(465, 369);
+			this.ClientSize = new System.Drawing.Size(452, 348);
 			this.Controls.Add(this.socketClientControl1);
 			this.Name = "SocketClientForm";
 			this.Text = "SocketClientForm";
