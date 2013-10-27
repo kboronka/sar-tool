@@ -81,6 +81,7 @@ namespace sar.Socket
 		{
 			get { return this.hostname; }
 		}
+		
 		#endregion
 
 		#region events
@@ -285,12 +286,12 @@ namespace sar.Socket
 							}
 						}
 					}
-					catch (ObjectDisposedException ex)
+					catch (ObjectDisposedException)
 					{
 						// The NetworkStream is closed.
 						this.Disconnect();
 					}
-					catch (IOException ex)
+					catch (IOException)
 					{
 						// The underlying Socket is closed.
 						this.Disconnect();
