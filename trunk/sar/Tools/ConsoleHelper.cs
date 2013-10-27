@@ -134,6 +134,14 @@ namespace sar.Tools
 			ConsoleHelper.DebugWriteLine("warning: this is a debug version\n");
 		}
 		
+		public static void ApplicationShortTitle()
+		{
+			ConsoleHelper.Write(AssemblyInfo.Product + " v" + AssemblyInfo.Version, ConsoleColor.Yellow);
+			ConsoleHelper.WriteLine("  " + AssemblyInfo.Copyright);
+			
+			ConsoleHelper.DebugWriteLine("warning: this is a debug version\n");
+		}		
+		
 		public static void DebugWriteLine(string text)
 		{
 			if (ConsoleHelper.ShowDebug)
