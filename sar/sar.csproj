@@ -86,6 +86,7 @@
     <Compile Include="Commands\FileFind.cs" />
     <Compile Include="Commands\FileLock.cs" />
     <Compile Include="Commands\FileMirror.cs" />
+    <Compile Include="Commands\FileRemoveDirectory.cs" />
     <Compile Include="Commands\Help.cs" />
     <Compile Include="Commands\NetListAddaptors.cs" />
     <Compile Include="Commands\AssemblyInfoVersion.cs" />

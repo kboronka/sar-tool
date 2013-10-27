@@ -63,6 +63,7 @@ namespace sar
 					new FileEncode(),
 					new FileFind(),
 					new FileDestory(),
+					new FileRemoveDirectory(),
 					new FileBsdHeader(),
 					new FileMirror(),
 					new FileCopy(),
