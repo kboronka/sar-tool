@@ -300,24 +300,30 @@ namespace sar.Tools
 		
 		#region XML
 		
-		public static XmlReaderSettings ReaderSettings()
+		public static XmlReaderSettings ReaderSettings
 		{
-			XmlReaderSettings settings = new XmlReaderSettings();
-			settings.CloseInput = true;
-			settings.IgnoreComments = true;
-			settings.IgnoreProcessingInstructions = true;
-			settings.IgnoreWhitespace = true;
-			return settings;
+			get
+			{
+				XmlReaderSettings settings = new XmlReaderSettings();
+				settings.CloseInput = true;
+				settings.IgnoreComments = true;
+				settings.IgnoreProcessingInstructions = true;
+				settings.IgnoreWhitespace = true;
+				return settings;
+			}
 		}
 
-		public static XmlWriterSettings WriterSettings()
+		public static XmlWriterSettings WriterSettings
 		{
-			XmlWriterSettings settings = new XmlWriterSettings();
-			settings.CloseOutput = true;
-			settings.Encoding = Encoding.UTF8;
-			settings.Indent = true;
-			settings.IndentChars = "\t";
-			return settings;
+			get
+			{
+				XmlWriterSettings settings = new XmlWriterSettings();
+				settings.CloseOutput = true;
+				settings.Encoding = Encoding.UTF8;
+				settings.Indent = true;
+				settings.IndentChars = "\t";
+				return settings;
+			}
 		}
 		
 		#endregion

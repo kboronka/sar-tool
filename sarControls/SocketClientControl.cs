@@ -96,23 +96,50 @@ namespace sar.Controls
 		
 		private void MessageSent(object sender, EventArgs e)
 		{
-			string message = (string)sender;
-			if (!string.IsNullOrEmpty(message))
+			try
 			{
-				this.messageHistory.Add("SEND: " + message);
-				if (this.messageHistory.Count > maxHistory) this.messageHistory.RemoveAt(0);
-				this.UpdateHistory();
+				if (sender is SocketMessage)
+				{
+					SocketMessage message = (SocketMessage)sender;
+					string log = "OUT: (" + message.Id.ToString() + ")";
+					
+					if (!String.IsNullOrEmpty(message.Command)) log += " " + message.Command;
+					if (!String.IsNullOrEmpty(message.Member)) log += " " + message.Member;
+					if (!String.IsNullOrEmpty(message.Data)) log += " " + message.Data;
+					
+					this.messageHistory.Add(log);
+					if (this.messageHistory.Count > maxHistory) this.messageHistory.RemoveAt(0);
+					this.UpdateHistory();
+				}
 			}
+			catch (Exception)
+			{
+				
+			}
+			
 		}
 		
 		private void MessageRecived(object sender, EventArgs e)
 		{
-			string message = (string)sender;
-			if (!string.IsNullOrEmpty(message))
+			try
 			{
-				this.messageHistory.Add("RECIVED: " + message);
-				if (this.messageHistory.Count > maxHistory) this.messageHistory.RemoveAt(0);
-				this.UpdateHistory();
+				if (sender is SocketMessage)
+				{
+					SocketMessage message = (SocketMessage)sender;
+					string log = "IN: (" + message.Id.ToString() + ")";
+					
+					if (!String.IsNullOrEmpty(message.Command)) log += " " + message.Command;
+					if (!String.IsNullOrEmpty(message.Member)) log += " " + message.Member;
+					if (!String.IsNullOrEmpty(message.Data)) log += " " + message.Data;
+					
+					this.messageHistory.Add(log);
+					if (this.messageHistory.Count > maxHistory) this.messageHistory.RemoveAt(0);
+					this.UpdateHistory();
+				}
+			}
+			catch (Exception)
+			{
+				
 			}
 		}
 		
@@ -131,8 +158,8 @@ namespace sar.Controls
 			{
 				this.History.Items.Add(log);
 			}
-			
 			this.History.EndUpdate();
+			this.ClientID.Text = "ClientID: " + this.client.ID.ToString();
 		}
 		
 		void ConnectPBClick(object sender, EventArgs e)

@@ -30,6 +30,7 @@ namespace sar.Socket
 		private List<SocketClient> clients;
 		private TcpListener listener;
 		private Encoding encoding;
+		private long lastClientID;
 		protected int port;
 
 		#region properties
@@ -45,7 +46,7 @@ namespace sar.Socket
 		}
 		
 		#endregion
-	
+		
 		#region events
 		
 		#region Newclient
@@ -61,7 +62,7 @@ namespace sar.Socket
 					NewClient(client, new System.EventArgs());
 				}
 			}
-			catch
+			catch (Exception)
 			{
 			}
 		}
@@ -107,16 +108,30 @@ namespace sar.Socket
 		
 		#region methods
 		
-		public void Broadcast(string message)
+		public void Broadcast(string command, string member, string data)
 		{
 			lock (this.clients)
 			{
 				foreach (SocketClient client in this.clients)
 				{
-					client.SendData(message);
+					client.SendData(command, member, data, client.ID);
 				}
-			}			
-			
+			}
+		}
+		
+		private void ProcessMessage(SocketClient client, SocketMessage message)
+		{
+			if (message != null)
+			{
+				switch (message.Command.ToLower())
+				{
+					case "ping":
+						client.SendData("echo", client.ID);
+						break;
+					default:
+						break;
+				}
+			}
 		}
 		
 		#endregion
@@ -124,7 +139,7 @@ namespace sar.Socket
 		#region service
 		
 		private System.Threading.Timer serviceTimer;
-				
+		
 		private void ServiceListener()
 		{
 			try
@@ -133,7 +148,7 @@ namespace sar.Socket
 				{
 					if (this.listener.Pending())
 					{
-						SocketClient client = new SocketClient(this.listener.AcceptTcpClient(), this.encoding);
+						SocketClient client = new SocketClient(this.listener.AcceptTcpClient(), ++this.lastClientID, this.encoding);
 						this.clients.Add(client);
 						this.OnNewClient(client);
 					}
@@ -162,21 +177,7 @@ namespace sar.Socket
 					
 					if (client.HasRequest)
 					{
-						string request = client.ReadString;
-						
-						if (!string.IsNullOrEmpty(request))
-						{
-							string command = StringHelper.FirstWord(request).ToLower();
-							
-							switch (command)
-							{
-								case "ping":
-									client.SendData("echo");
-									break;
-								default:
-									break;
-							}
-						}
+						ProcessMessage(client, client.Read);
 					}
 				}
 			}
@@ -210,7 +211,7 @@ namespace sar.Socket
 		{
 			try
 			{
-				this.Broadcast("ping");
+				this.Broadcast("ping", "", "");
 			}
 			catch (Exception ex)
 			{
