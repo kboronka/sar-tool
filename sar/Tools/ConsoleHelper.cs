@@ -28,6 +28,9 @@ namespace sar.Tools
 {
 	public class ConsoleHelper
 	{
+		public const int EXIT_OK = 0;
+		public const int EXIT_ERROR = 1;
+		
 		private static bool progressVisible = false;
 		private static bool showDebug = false;
 		
@@ -200,18 +203,55 @@ namespace sar.Tools
 			return ConsoleHelper.ReadLine();
 		}
 		
+		public static int TryRun(string filename)
+		{
+			try
+			{
+				return Run(filename);
+			}
+			catch
+			{
+				return ConsoleHelper.EXIT_ERROR;
+			}
+		}
+		
 		public static int Run(string filename)
 		{
 			string output;
 			return ConsoleHelper.Run(filename, "", out output);
 		}
 		
+		public static int TryRun(string filename, string arguments)
+		{
+			try
+			{
+				return Run(filename, arguments);
+			}
+			catch
+			{
+				return ConsoleHelper.EXIT_ERROR;
+			}
+		}
+				
 		public static int Run(string filename, string arguments)
 		{
 			string output;
 			return ConsoleHelper.Run(filename, arguments, out output);
 		}
 		
+		public static int TryRun(string filename, string arguments, out string output)
+		{
+			try
+			{
+				return Run(filename, arguments, out output);
+			}
+			catch
+			{
+				output = "";
+				return ConsoleHelper.EXIT_ERROR;
+			}
+		}
+				
 		public static int Run(string filename, string arguments, out string output)
 		{
 			string error;
@@ -220,6 +260,20 @@ namespace sar.Tools
 			output += "\n" + error;
 			
 			return result;
+		}
+		
+		public static int TryRun(string filename, string arguments, out string output, out string error)
+		{
+			try
+			{
+				return Run(filename, arguments, out output, out error);
+			}
+			catch (Exception ex)
+			{
+				output = "Excpetion";
+				error = ex.Message;
+				return ConsoleHelper.EXIT_ERROR;
+			}
 		}
 		
 		public static int Run(string filename, string arguments, out string output, out string error)
