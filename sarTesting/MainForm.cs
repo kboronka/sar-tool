@@ -65,6 +65,8 @@ namespace sar.Testing
 			else
 			{
 				client1.SendData("ping");
+				client1.SendData("ping");
+				client1.SendData("ping");
 			}
 		}
 		

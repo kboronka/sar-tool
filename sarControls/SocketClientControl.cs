@@ -28,8 +28,6 @@ namespace sar.Controls
 	public partial class SocketClientControl : UserControl
 	{
 		private SocketClient client;
-		private List<string> messageHistory;
-		private int maxHistory = 10;
 		
 		public SocketClient Client
 		{
@@ -59,8 +57,14 @@ namespace sar.Controls
 		public SocketClientControl()
 		{
 			InitializeComponent();
-			this.messageHistory = new List<string>();
-			this.maxHistory = this.History.ClientSize.Height / this.History.ItemHeight;
+					
+			this.MessageList.Columns.Add("ID", -2, HorizontalAlignment.Left);
+			this.MessageList.Columns.Add("Direction", -2, HorizontalAlignment.Left);
+			this.MessageList.Columns.Add("From", -2, HorizontalAlignment.Left);
+			this.MessageList.Columns.Add("To", -2, HorizontalAlignment.Left);
+			this.MessageList.Columns.Add("Message", -2, HorizontalAlignment.Left);
+			this.MessageList.HeaderStyle = ColumnHeaderStyle.Nonclickable;
+			this.MessageList.FullRowSelect = true;
 		}
 		
 		private void SendClick(object sender, EventArgs e)
@@ -70,28 +74,18 @@ namespace sar.Controls
 				return;
 			}
 			
-			if (!string.IsNullOrEmpty(Message.Text))
+			if (!string.IsNullOrEmpty(CustomMessage.Text))
 			{
-				this.client.SendData(Message.Text);
-				Message.Text = "";
+				this.client.SendData(CustomMessage.Text);
+				CustomMessage.Text = "";
 			}
 		}
 		
 		private void Connected(object sender, EventArgs e)
 		{
 			bool connected = (bool)sender;
-			if (connected)
-			{
-				this.messageHistory.Add("Connected");
-			}
-			else
-			{
-				this.messageHistory.Add("Disconnected");
-			}
 			
-			this.connected.Status = connected;
-			if (this.messageHistory.Count > maxHistory) this.messageHistory.RemoveAt(0);
-			this.UpdateHistory();
+			this.UpdateControls();
 		}
 		
 		private void MessageSent(object sender, EventArgs e)
@@ -101,15 +95,7 @@ namespace sar.Controls
 				if (sender is SocketMessage)
 				{
 					SocketMessage message = (SocketMessage)sender;
-					string log = "OUT: (" + message.Id.ToString() + ")";
-					
-					if (!String.IsNullOrEmpty(message.Command)) log += " " + message.Command;
-					if (!String.IsNullOrEmpty(message.Member)) log += " " + message.Member;
-					if (!String.IsNullOrEmpty(message.Data)) log += " " + message.Data;
-					
-					this.messageHistory.Add(log);
-					if (this.messageHistory.Count > maxHistory) this.messageHistory.RemoveAt(0);
-					this.UpdateHistory();
+					this.UpdateHistory("<", message);
 				}
 			}
 			catch (Exception)
@@ -132,9 +118,7 @@ namespace sar.Controls
 					if (!String.IsNullOrEmpty(message.Member)) log += " " + message.Member;
 					if (!String.IsNullOrEmpty(message.Data)) log += " " + message.Data;
 					
-					this.messageHistory.Add(log);
-					if (this.messageHistory.Count > maxHistory) this.messageHistory.RemoveAt(0);
-					this.UpdateHistory();
+					this.UpdateHistory(">", message);
 				}
 			}
 			catch (Exception)
@@ -143,23 +127,44 @@ namespace sar.Controls
 			}
 		}
 		
-		private void UpdateHistory()
+		private void UpdateControls()
 		{
 			if (InvokeRequired)
 			{
-				this.Invoke(new MethodInvoker(UpdateHistory));
+				this.Invoke(new MethodInvoker(UpdateControls));
 				return;
 			}
 			
-			this.History.BeginUpdate();
-			this.History.Items.Clear();
-			
-			foreach (string log in this.messageHistory)
-			{
-				this.History.Items.Add(log);
-			}
-			this.History.EndUpdate();
+			this.connected.Status = this.client.Connected;
+			this.PacketsIn.Text = "In: " + this.client.PacketsIn.ToString();
+			this.PacketsOut.Text = "Out: " + this.client.PacketsOut.ToString();
 			this.ClientID.Text = "ClientID: " + this.client.ID.ToString();
+		}
+			
+		private void UpdateHistory(string direction, SocketMessage message)
+		{
+			this.Invoke((MethodInvoker) delegate
+			            {
+			            	this.UpdateControls();
+
+			            	this.MessageList.BeginUpdate();
+			            	ListViewItem newItem = new ListViewItem(message.Id.ToString());
+			            	newItem.SubItems.Add(direction);
+			            	newItem.SubItems.Add(message.FromID.ToString());
+			            	newItem.SubItems.Add(message.ToID.ToString());
+			            	newItem.SubItems.Add(message.Command);
+
+			            	this.MessageList.Items.Add(newItem);
+			            	
+			            	int max = (this.MessageList.ClientSize.Height / this.MessageList.GetItemRect(0).Height) - 1;
+			            	
+			            	while (this.MessageList.Items.Count > max)
+			            	{
+			            		this.MessageList.Items.RemoveAt(0);
+			            	}
+			            	
+			            	this.MessageList.EndUpdate();
+			            });
 		}
 		
 		void ConnectPBClick(object sender, EventArgs e)
