@@ -35,7 +35,7 @@ namespace sar.Base
 			
 			if (File.Exists(this.path))
 			{
-				XmlReader reader = XmlReader.Create(this.path, StringHelper.ReaderSettings);
+				XML.Reader reader = new XML.Reader(this.path);
 				this.Deserialize(reader);
 				reader.Close();
 			}
@@ -47,7 +47,7 @@ namespace sar.Base
 			
 			if (File.Exists(this.path))
 			{
-				XmlReader reader = XmlReader.Create(this.path, StringHelper.ReaderSettings);
+				XML.Reader reader = new XML.Reader(this.path);
 
 				try
 				{
@@ -70,18 +70,12 @@ namespace sar.Base
 		public void Save(string path)
 		{
 			this.path = path;
-			XmlWriter writer = XmlWriter.Create(path, StringHelper.WriterSettings);
-			
-			writer.WriteStartDocument();
-			writer.WriteStartElement(sar.Tools.AssemblyInfo.Name);
-			writer.WriteAttributeString("version", sar.Tools.AssemblyInfo.Version);
+			XML.Writer writer = new XML.Writer(path);
 			this.Serialize(writer);
-			writer.WriteEndElement();
-			
 			writer.Close();
 		}
 		
-		protected abstract void Deserialize(XmlReader reader);
-		protected abstract void Serialize(XmlWriter writer);
+		protected abstract void Deserialize(XML.Reader reader);
+		protected abstract void Serialize(XML.Writer writer);
 	}
 }

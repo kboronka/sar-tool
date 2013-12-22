@@ -386,7 +386,7 @@ namespace sar.Socket
 											{
 												try
 												{
-													using (XmlReader reader = XmlReader.Create(sr, StringHelper.ReaderSettings))
+													using (XML.Reader reader = new XML.Reader(sr))
 													{
 														while (reader.Read())
 														{
@@ -462,7 +462,7 @@ namespace sar.Socket
 							
 							using (StringWriter sw = new StringWriter())
 							{
-								using (XmlWriter writer = XmlWriter.Create(sw, StringHelper.WriterSettings))
+								using (XML.Writer writer = new XML.Writer(sw))
 								{
 									writer.WriteStartElement("SocketMessages");
 									
