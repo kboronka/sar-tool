@@ -80,7 +80,7 @@ namespace sar.Socket
 			this.length = data.Length;
 		}
 		
-		public SocketMessage(XmlReader reader)
+		public SocketMessage(XML.Reader reader)
 		{
 			try
 			{
@@ -107,7 +107,7 @@ namespace sar.Socket
 		}
 		
 		
-		public void Serialize(XmlWriter writer)
+		public void Serialize(XML.Writer writer)
 		{
 			writer.WriteStartElement("SocketMessage");
 			writer.WriteAttributeString("id", this.id.ToString());

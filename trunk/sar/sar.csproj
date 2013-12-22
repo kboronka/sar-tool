@@ -130,6 +130,7 @@
     <Compile Include="Tools\StringHelper.cs" />
     <Compile Include="Tools\Subversion.cs" />
     <Compile Include="Tools\WebHelper.cs" />
+    <Compile Include="Tools\XmlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Commands" />
