@@ -37,6 +37,11 @@ namespace sar.Socket
 		
 		private bool connected;
 		
+		private long packetsIn;
+		private long packetsOut;
+		
+		private Exception lastError;
+		
 		private Dictionary<string, string> lookup = new Dictionary<string, string>();
 		
 		#region properties
@@ -110,6 +115,26 @@ namespace sar.Socket
 			get { return lookup; }
 		}
 		
+		public long PacketsIn
+		{
+			get { return packetsIn; }
+		}
+
+		public long PacketsOut
+		{
+			get { return packetsOut; }
+		}
+		
+		private Exception LastError
+		{
+			set
+			{
+				System.Diagnostics.Debug.WriteLine(value.Message);
+				System.Diagnostics.Debug.WriteLine(value.StackTrace);
+				this.lastError = value;
+			}
+		}
+		
 		#endregion
 
 		#region events
@@ -131,8 +156,9 @@ namespace sar.Socket
 					}
 				}
 			}
-			catch
+			catch (Exception ex)
 			{
+				this.LastError = ex;
 			}
 		}
 
@@ -151,8 +177,9 @@ namespace sar.Socket
 					MessageRecived(message, new System.EventArgs());
 				}
 			}
-			catch
+			catch (Exception ex)
 			{
+				this.LastError = ex;
 			}
 		}
 
@@ -171,8 +198,9 @@ namespace sar.Socket
 					MessageSent(message, new System.EventArgs());
 				}
 			}
-			catch
+			catch (Exception ex)
 			{
+				this.LastError = ex;
 			}
 		}
 
@@ -273,9 +301,9 @@ namespace sar.Socket
 					this.socket.Close();
 				}
 			}
-			catch
+			catch (Exception ex)
 			{
-				
+				this.LastError = ex;
 			}
 			finally
 			{
@@ -336,7 +364,6 @@ namespace sar.Socket
 				
 				lock (stream)
 				{
-					string messages = "";
 					try
 					{
 						//this.stream = this.socket.GetStream().ReadTimeout = 6000;
@@ -346,30 +373,55 @@ namespace sar.Socket
 							{
 								byte[] bytes = new byte[socket.Available];
 								int bytesRead = stream.Read(bytes, 0, bytes.Length);
-								messages = this.encoding.GetString(bytes, 0, bytesRead);
+								string messages = this.encoding.GetString(bytes, 0, bytesRead);
+								List<SocketMessage> newMessages = new List<SocketMessage>();
 								
 								if (!String.IsNullOrEmpty(messages))
 								{
-									foreach (string rawMessage in messages.Split(new string[] { "<?xml version=\"1.0\" encoding=\"utf-16\"?>" }, StringSplitOptions.None))
+									foreach (string rawString in messages.Split(new string[] { "<?xml version=\"1.0\" encoding=\"utf-16\"?>" }, StringSplitOptions.None))
 									{
-										try
+										if (!String.IsNullOrEmpty(rawString))
 										{
-											if (!String.IsNullOrEmpty(rawMessage))
+											using (StringReader sr = new StringReader(rawString))
 											{
-												SocketMessage message = new SocketMessage(rawMessage);
-												this.PreProcessMessage(message);
-												this.OnMessageRecived(message);
-												this.lastActivity = DateTime.Now;
-												this.messagesIn.Add(message);
+												try
+												{
+													using (XmlReader reader = XmlReader.Create(sr, StringHelper.ReaderSettings))
+													{
+														while (reader.Read())
+														{
+															if (reader.NodeType == XmlNodeType.Element)
+															{
+																switch (reader.Name)
+																{
+																	case "SocketMessage":
+																		newMessages.Add(new SocketMessage(reader));
+																		break;
+																	default:
+																		break;
+																}
+															}
+														}
+													}
+												}
+												catch (Exception ex)
+												{
+													this.LastError = ex;
+												}
 											}
 										}
-										catch (Exception ex)
-										{
-											//System.Diagnostics.Debug.WriteLine(messages);
-											System.Diagnostics.Debug.WriteLine(ex.Message);
-											System.Diagnostics.Debug.WriteLine("rawMessage");
-											System.Diagnostics.Debug.WriteLine(rawMessage);
-										}
+									}
+								}
+								
+								lock (this.messagesIn)
+								{
+									foreach (SocketMessage message in newMessages)
+									{
+										this.packetsIn++;
+										this.PreProcessMessage(message);
+										this.lastActivity = DateTime.Now;
+										this.messagesIn.Add(message);
+										this.OnMessageRecived(message);
 									}
 								}
 							}
@@ -398,32 +450,57 @@ namespace sar.Socket
 				
 				lock (messagesOut)
 				{
-					if (!socket.Connected)
-					{
-						messagesOut.Clear();
-						this.Disconnect();
-					}
-					
 					try
 					{
-						byte[] messageBytes = this.encoding.GetBytes(this.messagesOut[0].ToString());
-
-						lock (stream)
+						if (!socket.Connected)
 						{
-							stream.Write(messageBytes, 0, messageBytes.Length);
+							this.Disconnect();
 						}
-						
-						this.OnMessageSent(messagesOut[0]);
-						this.lastActivity = DateTime.Now;
-						messagesOut.RemoveAt(0);
+						else
+						{
+							string messages = "";
+							
+							using (StringWriter sw = new StringWriter())
+							{
+								using (XmlWriter writer = XmlWriter.Create(sw, StringHelper.WriterSettings))
+								{
+									writer.WriteStartElement("SocketMessages");
+									
+									foreach (SocketMessage message in this.messagesOut)
+									{
+										message.Serialize(writer);
+									}
+									
+									writer.WriteEndElement();
+								}
+								
+								messages = sw.ToString();
+							}
+							
+							byte[] messageBytes = this.encoding.GetBytes(messages.ToString());
+
+							lock (stream)
+							{
+								stream.Write(messageBytes, 0, messageBytes.Length);
+							}
+							
+							foreach (SocketMessage message in this.messagesOut)
+							{
+								this.packetsOut++;
+								this.OnMessageSent(message);
+							}
+							
+							this.lastActivity = DateTime.Now;
+							this.messagesOut.Clear();
+						}
 					}
 					catch (System.IO.IOException)
 					{
 						resendAttempts++;
 						if (resendAttempts >3)
 						{
-							// log error
-							messagesOut.RemoveAt(0);
+							// TODO: log error
+							this.messagesOut.Clear();
 							resendAttempts = 0;
 							this.Disconnect();
 						}
@@ -448,8 +525,7 @@ namespace sar.Socket
 			}
 			catch (Exception ex)
 			{
-				System.Diagnostics.Debug.WriteLine(ex.Message);
-				//throw ex;
+				this.LastError = ex;
 			}
 			finally
 			{

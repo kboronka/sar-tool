@@ -220,7 +220,7 @@ namespace sar.Socket
 			}
 			finally
 			{
-				this.pingTimer.Change(1000, Timeout.Infinite );
+				this.pingTimer.Change(8000, Timeout.Infinite );
 			}
 		}
 
