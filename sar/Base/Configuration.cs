@@ -38,7 +38,7 @@ namespace sar.Base
 				XmlReader reader = XmlReader.Create(this.path, StringHelper.ReaderSettings);
 				this.Deserialize(reader);
 				reader.Close();
-			}	
+			}
 		}
 		
 		public Configuration(string path)
@@ -48,7 +48,16 @@ namespace sar.Base
 			if (File.Exists(this.path))
 			{
 				XmlReader reader = XmlReader.Create(this.path, StringHelper.ReaderSettings);
-				this.Deserialize(reader);
+
+				try
+				{
+					this.Deserialize(reader);
+				}
+				catch
+				{
+					
+				}
+				
 				reader.Close();
 			}
 		}
