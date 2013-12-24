@@ -60,6 +60,9 @@ namespace sar.Tools
 			{
 				try
 				{
+					string attributeValue = this.reader.GetAttribute(name);
+					if (String.IsNullOrEmpty(attributeValue)) return "";
+					
 					return this.reader.GetAttribute(name);
 				}
 				catch
@@ -74,7 +77,8 @@ namespace sar.Tools
 			{
 				try
 				{
-					return long.Parse(this.reader.GetAttribute(name));
+					string attributeValue = GetAttributeString(name);
+					return long.Parse(attributeValue);
 				}
 				catch
 				{
