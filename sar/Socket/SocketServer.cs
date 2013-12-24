@@ -32,6 +32,7 @@ namespace sar.Socket
 		private Encoding encoding;
 		private long lastClientID;
 		protected int port;
+		private Dictionary<string, string> memCache = new Dictionary<string, string>();
 
 		#region properties
 		
@@ -43,6 +44,11 @@ namespace sar.Socket
 		public int Port
 		{
 			get { return this.port; }
+		}
+		
+		public Dictionary<string, string> MemCache
+		{
+			get { return this.memCache; }
 		}
 		
 		#endregion
@@ -128,6 +134,31 @@ namespace sar.Socket
 					case "ping":
 						client.SendData("echo", client.ID);
 						break;
+						
+						
+					case "set":
+						lock (this.memCache)
+						{
+							this.memCache[message.Member] = message.Data;
+						}
+						
+						if (message.ToID == -1)
+						{
+							this.Broadcast(message.Command, message.Member, message.Data);
+						}
+
+						break;
+						
+						
+					case "get":
+						lock (this.memCache)
+						{
+							client.SendData("set", message.Member, this.memCache[message.Member], message.FromID);
+						}
+						
+						break;
+						
+						
 					default:
 						break;
 				}
