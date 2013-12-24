@@ -82,7 +82,11 @@ namespace sar.Tools
 		
 		public void WriteLine(string text, DateTime timestamp)
 		{
-			this.LogWriter.WriteLine(timestamp.ToString(TIMESTAMP) + "\t" + text);
+			lock (this.LogWriter)
+			{
+				this.LogWriter.WriteLine(timestamp.ToString(TIMESTAMP) + "\t" + text);
+				this.LogWriter.Flush();
+			}
 		}
 		
 		public void WriteLine(string text)
