@@ -30,7 +30,6 @@ namespace sar.Testing
 {
 	public partial class MainForm : Form
 	{
-		private System.Timers.Timer updateTimer;
 		private SocketClient client1;
 		private SocketClient client2;
 		private SocketClient client3;
@@ -46,10 +45,6 @@ namespace sar.Testing
 			InitializeComponent();
 			server = new SocketServer(8100, Encoding.ASCII);
 			this.socketServerControl1.Server = server;
-			
-			updateTimer = new System.Timers.Timer(1000);
-			updateTimer.Enabled = true;
-			updateTimer.Elapsed += new ElapsedEventHandler(UpdateTimerDone);
 		}
 		
 		void Button1Click(object sender, EventArgs e)
@@ -61,6 +56,8 @@ namespace sar.Testing
 				this.client1Form.Client = client1;
 				this.client1Form.Show();
 				client1.SendData("ping");
+				
+				client1.SetCallBack("testmember", new SocketValue.DataChangedHandler(this.Client1Update));
 			}
 			else
 			{
@@ -86,7 +83,7 @@ namespace sar.Testing
 			}
 		}
 		
-		 void Connect3Click(object sender, EventArgs e)
+		void Connect3Click(object sender, EventArgs e)
 		{
 			if (client3 == null)
 			{
@@ -100,29 +97,6 @@ namespace sar.Testing
 			{
 				client3.SendData("ping");
 			}
-		}		
-		
-		private void UpdateTimerDone(object sender, ElapsedEventArgs e)
-		{
-			try
-			{
-				this.UpdateControls();
-			}
-			catch (Exception ex)
-			{
-				System.Diagnostics.Debug.WriteLine(ex.Message);
-			}
-		}
-		
-		private void UpdateControls()
-		{
-			if (InvokeRequired)
-			{
-				this.Invoke(new MethodInvoker(UpdateControls));
-				return;
-			}
-			
-			this.ActiveConnections.Text = "Active Connections: " + this.server.Clients.ToString();
 		}
 		
 		void SetClick(object sender, EventArgs e)
@@ -134,6 +108,31 @@ namespace sar.Testing
 		{
 			if (this.client1 != null) this.Client1Member.Text = "Client1: " + this.client1.Get("testmember");
 			if (this.client2 != null) this.Client2Member.Text = "Client2: " + this.client2.Get("testmember");
+		}
+		
+		private void Client1Update(string data)
+		{
+			this.Invoke((MethodInvoker) delegate
+			            {
+			            	this.Client1Member.Text = "Client1: " + data;
+			            });
+			
+		}
+		
+		private void Set_C1Click(object sender, EventArgs e)
+		{
+			if (this.client1 != null)
+			{
+				this.client1.Set("testmember", DateTime.Now.ToString());
+			}
+		}
+		
+		void Set_C2Click(object sender, EventArgs e)
+		{
+			if (this.client2 != null)
+			{
+				this.client2.Set("testmember", DateTime.Now.ToString());
+			}
 		}
 	}
 }

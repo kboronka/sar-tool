@@ -42,8 +42,6 @@ namespace sar.Socket
 		
 		private Exception lastError;
 		
-		private Dictionary<string, string> memCache = new Dictionary<string, string>();
-		
 		#region properties
 		
 		public bool HasRequest
@@ -90,22 +88,21 @@ namespace sar.Socket
 		{
 			get
 			{
-				if (this.memCache.ContainsKey("clientID"))
+				try
 				{
-					return long.Parse(this.memCache["clientID"]);
+					return long.Parse(this.Get("clientID"));
 				}
-
+				catch
+				{
+					
+				}
+				
 				return 0;
 			}
 			set
 			{
-				this.memCache["clientID"] = value.ToString();
+				this.Store("clientID", value.ToString());
 			}
-		}
-		
-		public Dictionary<string, string> MemCache
-		{
-			get { return memCache; }
 		}
 		
 		public long PacketsIn
@@ -126,6 +123,51 @@ namespace sar.Socket
 				System.Diagnostics.Debug.WriteLine(value.StackTrace);
 				this.lastError = value;
 			}
+		}
+		
+		#endregion
+		
+		#region memcache
+		
+		private Dictionary<string, SocketValue> memCache = new Dictionary<string, SocketValue>();
+		
+		public void SetCallBack(string member, SocketValue.DataChangedHandler handler)
+		{
+			lock(this.memCache)
+			{
+				if (!this.memCache.ContainsKey(member))
+				{
+					this.memCache[member] = new SocketValue();
+				}
+				
+				this.memCache[member].DataChanged += handler;
+			}
+		}
+		
+		private void Store(string member, string data)
+		{
+			lock(this.memCache)
+			{
+				if (!this.memCache.ContainsKey(member))
+				{
+					this.memCache[member] = new SocketValue();
+				}
+				
+				this.memCache[member].Data = data;
+			}
+		}
+		
+		public string Get(string member)
+		{
+			lock(this.memCache)
+			{
+				if (this.memCache.ContainsKey(member))
+				{
+					return this.memCache[member].Data;
+				}
+			}
+
+			return "";
 		}
 		
 		#endregion
@@ -240,19 +282,9 @@ namespace sar.Socket
 		private List<SocketMessage> messagesOut;
 		private List<SocketMessage> messagesIn;
 		
-		public string Get(string member)
-		{
-			if (this.memCache.ContainsKey(member))
-			{
-				return this.memCache[member];
-			}
-
-			return "";
-		}
-		
 		public void Set(string member, string data)
 		{
-			this.memCache[member] = data;
+			this.Store(member, data);
 			this.SendData("set", member, data);
 		}
 		
@@ -340,10 +372,10 @@ namespace sar.Socket
 						this.SendData("echo", message.FromID);
 						return true;
 					case "set":
-						this.memCache[message.Member] = message.Data;
+						this.Store(message.Member, message.Data);
 						return true;
 					case "get":
-						this.SendData("set", message.Member, this.memCache[message.Member], message.FromID);
+						this.SendData("set", message.Member, this.Get(message.Member), message.FromID);
 						return true;
 					default:
 						break;

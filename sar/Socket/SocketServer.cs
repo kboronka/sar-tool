@@ -32,7 +32,7 @@ namespace sar.Socket
 		private Encoding encoding;
 		private long lastClientID = 100;
 		protected int port;
-		private Dictionary<string, string> memCache = new Dictionary<string, string>();
+		private Dictionary<string, SocketValue> memCache = new Dictionary<string, SocketValue>();
 
 		#region properties
 		
@@ -46,7 +46,7 @@ namespace sar.Socket
 			get { return this.port; }
 		}
 		
-		public Dictionary<string, string> MemCache
+		public Dictionary<string, SocketValue> MemCache
 		{
 			get { return this.memCache; }
 		}
@@ -118,7 +118,7 @@ namespace sar.Socket
 		{
 			if (this.memCache.ContainsKey(member))
 			{
-				return this.memCache[member];
+				return this.memCache[member].Data;
 			}
 
 			return "";
@@ -126,9 +126,23 @@ namespace sar.Socket
 		
 		public void Set(string member, string data)
 		{
-			this.memCache[member] = data;
+			this.Store(member, data);
 			this.Broadcast("set", member, data);
 		}
+		
+		public void Store(string member, string data)
+		{
+			lock(this.memCache)
+			{
+				if (!this.memCache.ContainsKey(member))
+				{
+					this.memCache[member] = new SocketValue();
+				}
+				
+				this.memCache[member].Data = data;
+			}
+		}
+		
 		
 		public void Broadcast(string command, string member, string data)
 		{
@@ -153,10 +167,7 @@ namespace sar.Socket
 						
 						
 					case "set":
-						lock (this.memCache)
-						{
-							this.memCache[message.Member] = message.Data;
-						}
+						this.Store(message.Member, message.Data);
 						
 						if (message.ToID == -1)
 						{
@@ -169,7 +180,7 @@ namespace sar.Socket
 					case "get":
 						lock (this.memCache)
 						{
-							client.SendData("set", message.Member, this.memCache[message.Member], message.FromID);
+							client.SendData("set", message.Member, this.Get(message.Member), message.FromID);
 						}
 						
 						break;
