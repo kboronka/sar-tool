@@ -42,7 +42,7 @@ namespace sar.Socket
 		
 		private Exception lastError;
 		
-		private Dictionary<string, string> lookup = new Dictionary<string, string>();
+		private Dictionary<string, string> memCache = new Dictionary<string, string>();
 		
 		#region properties
 		
@@ -90,29 +90,22 @@ namespace sar.Socket
 		{
 			get
 			{
-				if (this.lookup.ContainsKey("clientID"))
+				if (this.memCache.ContainsKey("clientID"))
 				{
-					return long.Parse(this.lookup["clientID"]);
+					return long.Parse(this.memCache["clientID"]);
 				}
 
 				return 0;
 			}
 			set
 			{
-				if (this.lookup.ContainsKey("clientID"))
-				{
-					this.lookup["clientID"] = value.ToString();
-				}
-				else
-				{
-					this.lookup.Add("clientID", value.ToString());
-				}
+				this.memCache["clientID"] = value.ToString();
 			}
 		}
 		
-		public Dictionary<string, string> Lookup
+		public Dictionary<string, string> MemCache
 		{
-			get { return lookup; }
+			get { return memCache; }
 		}
 		
 		public long PacketsIn
@@ -321,28 +314,27 @@ namespace sar.Socket
 			this.Initilize();
 		}
 		
-		private void PreProcessMessage(SocketMessage message)
+		private bool ProcessMessage(SocketMessage message)
 		{
-			switch (message.Command)
+			if (message != null)
 			{
-				case "ping":
-					this.SendData("echo", message.FromID);
-					break;
-				case "set":
-					if (this.lookup.ContainsKey(message.Member))
-					{
-						this.lookup[message.Member] = message.Data;
-					}
-					else
-					{
-						this.lookup.Add(message.Member, message.Data);
-					}
-					
-					break;
-					
-				default:
-					break;
+				switch (message.Command)
+				{
+					case "ping":
+						this.SendData("echo", message.FromID);
+						return true;
+					case "set":
+						this.memCache[message.Member] = message.Data;
+						return true;
+					case "get":
+						this.SendData("set", message.Member, this.memCache[message.Member], message.FromID);
+						return true;
+					default:
+						break;
+				}
 			}
+			
+			return false;
 		}
 		
 		#endregion
@@ -418,9 +410,8 @@ namespace sar.Socket
 									foreach (SocketMessage message in newMessages)
 									{
 										this.packetsIn++;
-										this.PreProcessMessage(message);
+										if (!this.ProcessMessage(message)) this.messagesIn.Add(message);
 										this.lastActivity = DateTime.Now;
-										this.messagesIn.Add(message);
 										this.OnMessageRecived(message);
 									}
 								}
