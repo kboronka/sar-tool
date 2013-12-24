@@ -107,6 +107,7 @@
     <Compile Include="Socket\SocketClient.cs" />
     <Compile Include="Socket\SocketMessage.cs" />
     <Compile Include="Socket\SocketServer.cs" />
+    <Compile Include="Socket\SocketValue.cs" />
     <Compile Include="Tools\ActiveDirectory.cs" />
     <Compile Include="Tools\ApplicationInfo.cs" />
     <Compile Include="Tools\AssemblyInfo.cs" />

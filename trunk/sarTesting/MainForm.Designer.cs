@@ -43,8 +43,6 @@ namespace sar.Testing
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.ActiveConnections = new System.Windows.Forms.Label();
-			this.label1 = new System.Windows.Forms.Label();
 			this.button1 = new System.Windows.Forms.Button();
 			this.button2 = new System.Windows.Forms.Button();
 			this.socketServerControl1 = new sar.Controls.SocketServerControl();
@@ -58,24 +56,10 @@ namespace sar.Testing
 			this.Client1Member = new System.Windows.Forms.Label();
 			this.Client2Member = new System.Windows.Forms.Label();
 			this.Get = new System.Windows.Forms.Button();
+			this.Set_C1 = new System.Windows.Forms.Button();
+			this.Set_C2 = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.Port)).BeginInit();
 			this.SuspendLayout();
-			// 
-			// ActiveConnections
-			// 
-			this.ActiveConnections.Location = new System.Drawing.Point(25, 23);
-			this.ActiveConnections.Name = "ActiveConnections";
-			this.ActiveConnections.Size = new System.Drawing.Size(149, 16);
-			this.ActiveConnections.TabIndex = 0;
-			this.ActiveConnections.Text = "Active Connections: 0";
-			// 
-			// label1
-			// 
-			this.label1.Location = new System.Drawing.Point(25, 68);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(155, 26);
-			this.label1.TabIndex = 1;
-			this.label1.Text = "log0";
 			// 
 			// button1
 			// 
@@ -100,7 +84,7 @@ namespace sar.Testing
 			// socketServerControl1
 			// 
 			this.socketServerControl1.BackColor = System.Drawing.SystemColors.WindowFrame;
-			this.socketServerControl1.Location = new System.Drawing.Point(25, 97);
+			this.socketServerControl1.Location = new System.Drawing.Point(12, 12);
 			this.socketServerControl1.Name = "socketServerControl1";
 			this.socketServerControl1.Server = null;
 			this.socketServerControl1.Size = new System.Drawing.Size(273, 90);
@@ -108,7 +92,7 @@ namespace sar.Testing
 			// 
 			// Connect3
 			// 
-			this.Connect3.Location = new System.Drawing.Point(279, 246);
+			this.Connect3.Location = new System.Drawing.Point(210, 127);
 			this.Connect3.Name = "Connect3";
 			this.Connect3.Size = new System.Drawing.Size(75, 23);
 			this.Connect3.TabIndex = 5;
@@ -118,14 +102,14 @@ namespace sar.Testing
 			// 
 			// Host
 			// 
-			this.Host.Location = new System.Drawing.Point(92, 246);
+			this.Host.Location = new System.Drawing.Point(23, 127);
 			this.Host.Name = "Host";
 			this.Host.Size = new System.Drawing.Size(100, 20);
 			this.Host.TabIndex = 6;
 			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point(92, 231);
+			this.label2.Location = new System.Drawing.Point(23, 112);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(100, 12);
 			this.label2.TabIndex = 7;
@@ -133,7 +117,7 @@ namespace sar.Testing
 			// 
 			// Port
 			// 
-			this.Port.Location = new System.Drawing.Point(211, 246);
+			this.Port.Location = new System.Drawing.Point(142, 127);
 			this.Port.Maximum = new decimal(new int[] {
 									8200,
 									0,
@@ -155,7 +139,7 @@ namespace sar.Testing
 			// 
 			// label3
 			// 
-			this.label3.Location = new System.Drawing.Point(211, 231);
+			this.label3.Location = new System.Drawing.Point(142, 112);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(100, 12);
 			this.label3.TabIndex = 9;
@@ -167,7 +151,7 @@ namespace sar.Testing
 			this.Set.Name = "Set";
 			this.Set.Size = new System.Drawing.Size(75, 23);
 			this.Set.TabIndex = 10;
-			this.Set.Text = "Set";
+			this.Set.Text = "Set All";
 			this.Set.UseVisualStyleBackColor = true;
 			this.Set.Click += new System.EventHandler(this.SetClick);
 			// 
@@ -180,7 +164,7 @@ namespace sar.Testing
 			// 
 			// Client1Member
 			// 
-			this.Client1Member.Location = new System.Drawing.Point(449, 156);
+			this.Client1Member.Location = new System.Drawing.Point(302, 142);
 			this.Client1Member.Name = "Client1Member";
 			this.Client1Member.Size = new System.Drawing.Size(149, 16);
 			this.Client1Member.TabIndex = 12;
@@ -188,7 +172,7 @@ namespace sar.Testing
 			// 
 			// Client2Member
 			// 
-			this.Client2Member.Location = new System.Drawing.Point(449, 172);
+			this.Client2Member.Location = new System.Drawing.Point(302, 158);
 			this.Client2Member.Name = "Client2Member";
 			this.Client2Member.Size = new System.Drawing.Size(149, 16);
 			this.Client2Member.TabIndex = 13;
@@ -196,7 +180,7 @@ namespace sar.Testing
 			// 
 			// Get
 			// 
-			this.Get.Location = new System.Drawing.Point(555, 142);
+			this.Get.Location = new System.Drawing.Point(302, 181);
 			this.Get.Name = "Get";
 			this.Get.Size = new System.Drawing.Size(75, 23);
 			this.Get.TabIndex = 14;
@@ -204,11 +188,33 @@ namespace sar.Testing
 			this.Get.UseVisualStyleBackColor = true;
 			this.Get.Click += new System.EventHandler(this.GetClick);
 			// 
+			// Set_C1
+			// 
+			this.Set_C1.Location = new System.Drawing.Point(555, 137);
+			this.Set_C1.Name = "Set_C1";
+			this.Set_C1.Size = new System.Drawing.Size(75, 23);
+			this.Set_C1.TabIndex = 15;
+			this.Set_C1.Text = "Set Client 1";
+			this.Set_C1.UseVisualStyleBackColor = true;
+			this.Set_C1.Click += new System.EventHandler(this.Set_C1Click);
+			// 
+			// Set_C2
+			// 
+			this.Set_C2.Location = new System.Drawing.Point(555, 158);
+			this.Set_C2.Name = "Set_C2";
+			this.Set_C2.Size = new System.Drawing.Size(75, 23);
+			this.Set_C2.TabIndex = 16;
+			this.Set_C2.Text = "Set Client 2";
+			this.Set_C2.UseVisualStyleBackColor = true;
+			this.Set_C2.Click += new System.EventHandler(this.Set_C2Click);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(667, 341);
+			this.ClientSize = new System.Drawing.Size(667, 216);
+			this.Controls.Add(this.Set_C2);
+			this.Controls.Add(this.Set_C1);
 			this.Controls.Add(this.Get);
 			this.Controls.Add(this.Client2Member);
 			this.Controls.Add(this.Client1Member);
@@ -222,14 +228,14 @@ namespace sar.Testing
 			this.Controls.Add(this.socketServerControl1);
 			this.Controls.Add(this.button2);
 			this.Controls.Add(this.button1);
-			this.Controls.Add(this.label1);
-			this.Controls.Add(this.ActiveConnections);
 			this.Name = "MainForm";
 			this.Text = "sar.Testing";
 			((System.ComponentModel.ISupportInitialize)(this.Port)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.Button Set_C2;
+		private System.Windows.Forms.Button Set_C1;
 		private System.Windows.Forms.Button Get;
 		private System.Windows.Forms.Label Client2Member;
 		private System.Windows.Forms.Label Client1Member;
@@ -243,7 +249,5 @@ namespace sar.Testing
 		private sar.Controls.SocketServerControl socketServerControl1;
 		private System.Windows.Forms.Button button2;
 		private System.Windows.Forms.Button button1;
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.Label ActiveConnections;
 	}
 }
