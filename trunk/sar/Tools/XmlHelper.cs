@@ -49,7 +49,7 @@ namespace sar.Tools
 				this.reader = XmlReader.Create(stringReader, ReaderSettings);
 			}
 			
-			public string GetAttribute(string name)
+			public string GetAttributeString(string name)
 			{
 				try
 				{
@@ -61,6 +61,20 @@ namespace sar.Tools
 				}
 				
 				return "";
+			}
+
+			public long GetAttributeLong(string name)
+			{
+				try
+				{
+					return long.Parse(this.reader.GetAttribute(name));
+				}
+				catch
+				{
+					
+				}
+				
+				return 0;
 			}
 			
 			public bool Read()
@@ -130,8 +144,7 @@ namespace sar.Tools
 			
 			public void WriteAttributeString(string name, string value)
 			{
-				if (String.IsNullOrEmpty(value)) value = "";
-				this.writer.WriteAttributeString(name, value);
+				if (!String.IsNullOrEmpty(value)) this.writer.WriteAttributeString(name, value);
 			}
 			
 			public void WriteValue(string value)
@@ -141,7 +154,7 @@ namespace sar.Tools
 			
 			public void WriteStartElement(string name)
 			{
-				this.writer.WriteStartAttribute(name);
+				this.writer.WriteStartElement(name);
 			}
 
 			public void WriteEndElement()
