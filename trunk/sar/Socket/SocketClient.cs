@@ -210,7 +210,7 @@ namespace sar.Socket
 			this.socket = socket;
 			this.encoding = encoding;
 			this.Initilize();
-			this.SendData("set", "clientID", this.ID.ToString(), -1);
+			this.SendData("set", "clientID", clientID.ToString());
 		}
 		
 		public SocketClient(string hostname, int port, Encoding encoding)
@@ -240,25 +240,41 @@ namespace sar.Socket
 		private List<SocketMessage> messagesOut;
 		private List<SocketMessage> messagesIn;
 		
+		public string Get(string member)
+		{
+			if (this.memCache.ContainsKey(member))
+			{
+				return this.memCache[member];
+			}
+
+			return "";
+		}
+		
+		public void Set(string member, string data)
+		{
+			this.memCache[member] = data;
+			this.SendData("set", member, data);
+		}
+		
 		public void SendData(string command)
 		{
 			this.SendData(command, "", "", -1);
 		}
 		
-		public void SendData(string command, long toID)
+		public void SendData(string command, long to)
 		{
-			this.SendData(command, "", "", toID);
+			this.SendData(command, "", "", to);
 		}
 
-		public void SendData(string command, string data, long toID)
+		public void SendData(string command, string member, string data)
 		{
-			this.SendData(command, "", data, toID);
+			this.SendData(command, member, data, this.ID);
 		}
-
-		public void SendData(string command, string member, string data, long toID)
+		
+		public void SendData(string command, string member, string data, long to)
 		{
 			this.messageID++;
-			SendData(new SocketMessage(this, command, this.messageID++, member, data, toID));
+			SendData(new SocketMessage(this, command, this.messageID++, member, data, to));
 		}
 		
 		public void SendData(SocketMessage message)

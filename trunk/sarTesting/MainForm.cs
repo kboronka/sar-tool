@@ -124,5 +124,16 @@ namespace sar.Testing
 			
 			this.ActiveConnections.Text = "Active Connections: " + this.server.Clients.ToString();
 		}
+		
+		void SetClick(object sender, EventArgs e)
+		{
+			this.server.Set("testmember", TestMember.Text);
+		}
+		
+		void GetClick(object sender, EventArgs e)
+		{
+			if (this.client1 != null) this.Client1Member.Text = "Client1: " + this.client1.Get("testmember");
+			if (this.client2 != null) this.Client2Member.Text = "Client2: " + this.client2.Get("testmember");
+		}
 	}
 }

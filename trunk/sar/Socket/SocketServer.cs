@@ -30,7 +30,7 @@ namespace sar.Socket
 		private List<SocketClient> clients;
 		private TcpListener listener;
 		private Encoding encoding;
-		private long lastClientID;
+		private long lastClientID = 100;
 		protected int port;
 		private Dictionary<string, string> memCache = new Dictionary<string, string>();
 
@@ -113,6 +113,22 @@ namespace sar.Socket
 		#endregion
 		
 		#region methods
+		
+		public string Get(string member)
+		{
+			if (this.memCache.ContainsKey(member))
+			{
+				return this.memCache[member];
+			}
+
+			return "";
+		}
+		
+		public void Set(string member, string data)
+		{
+			this.memCache[member] = data;
+			this.Broadcast("set", member, data);
+		}
 		
 		public void Broadcast(string command, string member, string data)
 		{
