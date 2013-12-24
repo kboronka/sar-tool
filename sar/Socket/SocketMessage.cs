@@ -87,12 +87,12 @@ namespace sar.Socket
 				if (reader.NodeType != XmlNodeType.Element) throw new XmlException("SocketMessage Element Required");
 				if (reader.Name != "SocketMessage") throw new XmlException("SocketMessage Element Required");
 				
-				this.id = long.Parse(reader.GetAttribute("id"));
-				this.command = reader.GetAttribute("command");
-				this.member = reader.GetAttribute("member");
-				this.fromID = long.Parse(reader.GetAttribute("from"));
-				this.toID = long.Parse(reader.GetAttribute("to"));
-				this.length = long.Parse(reader.GetAttribute("len"));
+				this.id = long.Parse(reader.GetAttributeString("id"));
+				this.command = reader.GetAttributeString("command");
+				this.member = reader.GetAttributeString("member");
+				this.fromID = long.Parse(reader.GetAttributeString("from"));
+				this.toID = long.Parse(reader.GetAttributeString("to"));
+				this.length = long.Parse(reader.GetAttributeString("len"));
 				if (this.length > 0) reader.Read();
 				this.data = reader.Value;
 			}
