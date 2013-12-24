@@ -53,6 +53,11 @@ namespace sar.Testing
 			this.label2 = new System.Windows.Forms.Label();
 			this.Port = new System.Windows.Forms.NumericUpDown();
 			this.label3 = new System.Windows.Forms.Label();
+			this.Set = new System.Windows.Forms.Button();
+			this.TestMember = new System.Windows.Forms.TextBox();
+			this.Client1Member = new System.Windows.Forms.Label();
+			this.Client2Member = new System.Windows.Forms.Label();
+			this.Get = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.Port)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -156,11 +161,59 @@ namespace sar.Testing
 			this.label3.TabIndex = 9;
 			this.label3.Text = "port";
 			// 
+			// Set
+			// 
+			this.Set.Location = new System.Drawing.Point(555, 113);
+			this.Set.Name = "Set";
+			this.Set.Size = new System.Drawing.Size(75, 23);
+			this.Set.TabIndex = 10;
+			this.Set.Text = "Set";
+			this.Set.UseVisualStyleBackColor = true;
+			this.Set.Click += new System.EventHandler(this.SetClick);
+			// 
+			// TestMember
+			// 
+			this.TestMember.Location = new System.Drawing.Point(449, 113);
+			this.TestMember.Name = "TestMember";
+			this.TestMember.Size = new System.Drawing.Size(100, 20);
+			this.TestMember.TabIndex = 11;
+			// 
+			// Client1Member
+			// 
+			this.Client1Member.Location = new System.Drawing.Point(449, 156);
+			this.Client1Member.Name = "Client1Member";
+			this.Client1Member.Size = new System.Drawing.Size(149, 16);
+			this.Client1Member.TabIndex = 12;
+			this.Client1Member.Text = "Client 1: ";
+			// 
+			// Client2Member
+			// 
+			this.Client2Member.Location = new System.Drawing.Point(449, 172);
+			this.Client2Member.Name = "Client2Member";
+			this.Client2Member.Size = new System.Drawing.Size(149, 16);
+			this.Client2Member.TabIndex = 13;
+			this.Client2Member.Text = "Client 2: ";
+			// 
+			// Get
+			// 
+			this.Get.Location = new System.Drawing.Point(555, 142);
+			this.Get.Name = "Get";
+			this.Get.Size = new System.Drawing.Size(75, 23);
+			this.Get.TabIndex = 14;
+			this.Get.Text = "Get";
+			this.Get.UseVisualStyleBackColor = true;
+			this.Get.Click += new System.EventHandler(this.GetClick);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(667, 341);
+			this.Controls.Add(this.Get);
+			this.Controls.Add(this.Client2Member);
+			this.Controls.Add(this.Client1Member);
+			this.Controls.Add(this.TestMember);
+			this.Controls.Add(this.Set);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.Port);
 			this.Controls.Add(this.label2);
@@ -177,6 +230,11 @@ namespace sar.Testing
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.Button Get;
+		private System.Windows.Forms.Label Client2Member;
+		private System.Windows.Forms.Label Client1Member;
+		private System.Windows.Forms.TextBox TestMember;
+		private System.Windows.Forms.Button Set;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.NumericUpDown Port;
 		private System.Windows.Forms.Label label2;
