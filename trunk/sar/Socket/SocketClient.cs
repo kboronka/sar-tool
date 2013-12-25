@@ -131,7 +131,7 @@ namespace sar.Socket
 		
 		private Dictionary<string, SocketValue> memCache = new Dictionary<string, SocketValue>();
 		
-		public void SetCallBack(string member, SocketValue.DataChangedHandler handler)
+		public void RegisterCallback(string member, SocketValue.DataChangedHandler handler)
 		{
 			lock(this.memCache)
 			{
@@ -284,8 +284,14 @@ namespace sar.Socket
 		
 		public void Set(string member, string data)
 		{
+			this.Set(member, data, false);
+		}
+		
+		public void Set(string member, string data, bool global)
+		{
 			this.Store(member, data);
-			this.SendData("set", member, data);
+			if (!global) this.SendData("set", member, data);
+			if (global) this.SendData("set", member, data, -1);
 		}
 		
 		public void SendData(string command)
@@ -575,3 +581,4 @@ namespace sar.Socket
 		#endregion
 	}
 }
+
