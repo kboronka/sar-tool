@@ -71,7 +71,16 @@ namespace sar.Base
 		{
 			this.path = path;
 			XML.Writer writer = new XML.Writer(path);
-			this.Serialize(writer);
+			
+			try
+			{
+				this.Serialize(writer);
+			}
+			catch
+			{
+				
+			}
+			
 			writer.Close();
 		}
 		
