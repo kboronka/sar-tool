@@ -58,7 +58,6 @@ namespace sar.Testing
 			this.Get = new System.Windows.Forms.Button();
 			this.Set_C1 = new System.Windows.Forms.Button();
 			this.Set_C2 = new System.Windows.Forms.Button();
-			this.cardReader = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.Port)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -209,14 +208,6 @@ namespace sar.Testing
 			this.Set_C2.UseVisualStyleBackColor = true;
 			this.Set_C2.Click += new System.EventHandler(this.Set_C2Click);
 			// 
-			// cardReader
-			// 
-			this.cardReader.Location = new System.Drawing.Point(12, 191);
-			this.cardReader.Name = "cardReader";
-			this.cardReader.Size = new System.Drawing.Size(537, 16);
-			this.cardReader.TabIndex = 13;
-			this.cardReader.Text = "CardReader";
-			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -225,7 +216,6 @@ namespace sar.Testing
 			this.Controls.Add(this.Set_C2);
 			this.Controls.Add(this.Set_C1);
 			this.Controls.Add(this.Get);
-			this.Controls.Add(this.cardReader);
 			this.Controls.Add(this.Client2Member);
 			this.Controls.Add(this.Client1Member);
 			this.Controls.Add(this.TestMember);
@@ -244,7 +234,6 @@ namespace sar.Testing
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
-		private System.Windows.Forms.Label cardReader;
 		private System.Windows.Forms.Button Set_C2;
 		private System.Windows.Forms.Button Set_C1;
 		private System.Windows.Forms.Button Get;
