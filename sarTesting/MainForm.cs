@@ -45,6 +45,14 @@ namespace sar.Testing
 			InitializeComponent();
 			server = new SocketServer(8100, Encoding.ASCII);
 			this.socketServerControl1.Server = server;
+			
+			client3 = new SocketClient("10.240.14.25", 8111, Encoding.ASCII);
+			this.client3Form = new SocketClientForm();
+			this.client3Form.Client = client3;
+			this.client3Form.Show();
+			client3.SetCallBack("ATS.CardReader", new SocketValue.DataChangedHandler(this.ReaderChange));
+			client3.SendData("ping");
+			
 		}
 		
 		void Button1Click(object sender, EventArgs e)
@@ -119,6 +127,14 @@ namespace sar.Testing
 			
 		}
 		
+		private void ReaderChange(string data)
+		{
+			this.Invoke((MethodInvoker) delegate
+			            {
+			            	this.cardReader.Text = "> " + data + " >> " + DateTime.Now.ToString();
+			            });	
+		}
+		
 		private void Set_C1Click(object sender, EventArgs e)
 		{
 			if (this.client1 != null)
@@ -132,6 +148,18 @@ namespace sar.Testing
 			if (this.client2 != null)
 			{
 				this.client2.Set("testmember", DateTime.Now.ToString());
+			}
+		}
+		
+		private void Connect3_25Click(object sender, EventArgs e)
+		{
+			if (client3 == null)
+			{
+
+			}
+			else
+			{
+				client3.SendData("ping");
 			}
 		}
 	}
