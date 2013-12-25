@@ -50,7 +50,7 @@ namespace sar.Testing
 			this.client3Form = new SocketClientForm();
 			this.client3Form.Client = client3;
 			this.client3Form.Show();
-			client3.SetCallBack("ATS.CardReader", new SocketValue.DataChangedHandler(this.ReaderChange));
+			client3.RegisterCallback("ATS.CardReader", new SocketValue.DataChangedHandler(this.ReaderChange));
 			client3.SendData("ping");
 			
 		}
@@ -65,7 +65,7 @@ namespace sar.Testing
 				this.client1Form.Show();
 				client1.SendData("ping");
 				
-				client1.SetCallBack("testmember", new SocketValue.DataChangedHandler(this.Client1Update));
+				client1.RegisterCallback("testmember", new SocketValue.DataChangedHandler(this.Client1Update));
 			}
 			else
 			{
