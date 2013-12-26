@@ -95,7 +95,7 @@ namespace sar.Socket
 
 		#endregion
 
-		#region ClientLost
+		#region DataChanged
 
 		private SocketValue.DataChangedHandler dataChanged = null;
 		public event SocketValue.DataChangedHandler DataChanged

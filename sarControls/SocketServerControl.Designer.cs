@@ -47,7 +47,7 @@ namespace sar.Controls
 		private void InitializeComponent()
 		{
 			this.ActiveConnections = new System.Windows.Forms.Label();
-			this.MessageList = new System.Windows.Forms.ListView();
+			this.socketMemCacheList1 = new sar.Controls.SocketMemCacheList();
 			this.SuspendLayout();
 			// 
 			// ActiveConnections
@@ -59,32 +59,31 @@ namespace sar.Controls
 			this.ActiveConnections.TabIndex = 1;
 			this.ActiveConnections.Text = "Active Connections: 0";
 			// 
-			// MessageList
+			// socketMemCacheList1
 			// 
-			this.MessageList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.socketMemCacheList1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
 									| System.Windows.Forms.AnchorStyles.Left) 
 									| System.Windows.Forms.AnchorStyles.Right)));
-			this.MessageList.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-			this.MessageList.Location = new System.Drawing.Point(3, 19);
-			this.MessageList.Name = "MessageList";
-			this.MessageList.ShowGroups = false;
-			this.MessageList.Size = new System.Drawing.Size(388, 234);
-			this.MessageList.TabIndex = 10;
-			this.MessageList.UseCompatibleStateImageBehavior = false;
-			this.MessageList.View = System.Windows.Forms.View.Details;
+			this.socketMemCacheList1.Client = null;
+			this.socketMemCacheList1.Location = new System.Drawing.Point(4, 19);
+			this.socketMemCacheList1.Name = "socketMemCacheList1";
+			this.socketMemCacheList1.Server = null;
+			this.socketMemCacheList1.Size = new System.Drawing.Size(387, 234);
+			this.socketMemCacheList1.TabIndex = 11;
+			this.socketMemCacheList1.UseCompatibleStateImageBehavior = false;
 			// 
 			// SocketServerControl
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.WindowFrame;
-			this.Controls.Add(this.MessageList);
+			this.Controls.Add(this.socketMemCacheList1);
 			this.Controls.Add(this.ActiveConnections);
 			this.Name = "SocketServerControl";
 			this.Size = new System.Drawing.Size(394, 256);
 			this.ResumeLayout(false);
 		}
-		private System.Windows.Forms.ListView MessageList;
+		private sar.Controls.SocketMemCacheList socketMemCacheList1;
 		private System.Windows.Forms.Label ActiveConnections;
 	}
 }
