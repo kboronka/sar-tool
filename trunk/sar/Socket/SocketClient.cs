@@ -372,6 +372,7 @@ namespace sar.Socket
 		{
 			if (message != null)
 			{
+				
 				switch (message.Command)
 				{
 					case "ping":
@@ -379,16 +380,18 @@ namespace sar.Socket
 						return true;
 					case "set":
 						this.Store(message.Member, message.Data);
-						return true;
+						return (message.ToID == this.ID);
 					case "get":
 						this.SendData("set", message.Member, this.Get(message.Member), message.FromID);
 						return true;
 					default:
 						break;
 				}
+				
+				return false;
 			}
 			
-			return false;
+			return true;
 		}
 		
 		#endregion
