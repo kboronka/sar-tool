@@ -47,27 +47,44 @@ namespace sar.Controls
 		private void InitializeComponent()
 		{
 			this.ActiveConnections = new System.Windows.Forms.Label();
+			this.MessageList = new System.Windows.Forms.ListView();
 			this.SuspendLayout();
 			// 
 			// ActiveConnections
 			// 
 			this.ActiveConnections.ForeColor = System.Drawing.SystemColors.Control;
-			this.ActiveConnections.Location = new System.Drawing.Point(3, 11);
+			this.ActiveConnections.Location = new System.Drawing.Point(3, 0);
 			this.ActiveConnections.Name = "ActiveConnections";
-			this.ActiveConnections.Size = new System.Drawing.Size(149, 16);
+			this.ActiveConnections.Size = new System.Drawing.Size(142, 16);
 			this.ActiveConnections.TabIndex = 1;
 			this.ActiveConnections.Text = "Active Connections: 0";
+			// 
+			// MessageList
+			// 
+			this.MessageList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+									| System.Windows.Forms.AnchorStyles.Left) 
+									| System.Windows.Forms.AnchorStyles.Right)));
+			this.MessageList.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+			this.MessageList.Location = new System.Drawing.Point(3, 19);
+			this.MessageList.Name = "MessageList";
+			this.MessageList.ShowGroups = false;
+			this.MessageList.Size = new System.Drawing.Size(388, 234);
+			this.MessageList.TabIndex = 10;
+			this.MessageList.UseCompatibleStateImageBehavior = false;
+			this.MessageList.View = System.Windows.Forms.View.Details;
 			// 
 			// SocketServerControl
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.WindowFrame;
+			this.Controls.Add(this.MessageList);
 			this.Controls.Add(this.ActiveConnections);
 			this.Name = "SocketServerControl";
-			this.Size = new System.Drawing.Size(273, 90);
+			this.Size = new System.Drawing.Size(394, 256);
 			this.ResumeLayout(false);
 		}
+		private System.Windows.Forms.ListView MessageList;
 		private System.Windows.Forms.Label ActiveConnections;
 	}
 }

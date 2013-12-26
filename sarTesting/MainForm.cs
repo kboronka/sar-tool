@@ -56,7 +56,6 @@ namespace sar.Testing
 				this.client1Form.Client = client1;
 				this.client1Form.Show();
 				client1.SendData("ping");
-				
 				client1.RegisterCallback("testmember", new SocketValue.DataChangedHandler(this.Client1Update));
 			}
 			else
@@ -76,6 +75,7 @@ namespace sar.Testing
 				this.client2Form.Client = client2;
 				this.client2Form.Show();
 				client2.SendData("ping");
+				client2.RegisterCallback("testmember", new SocketValue.DataChangedHandler(this.Client2Update));
 			}
 			else
 			{
@@ -110,11 +110,20 @@ namespace sar.Testing
 			if (this.client2 != null) this.Client2Member.Text = "Client2: " + this.client2.Get("testmember");
 		}
 		
-		private void Client1Update(string data)
+		private void Client1Update(SocketValue data)
 		{
 			this.Invoke((MethodInvoker) delegate
 			            {
-			            	this.Client1Member.Text = "Client1: " + data;
+			            	this.Client1Member.Text = "Client1: " + data.Data;
+			            });
+			
+		}
+
+		private void Client2Update(SocketValue data)
+		{
+			this.Invoke((MethodInvoker) delegate
+			            {
+			            	this.Client2Member.Text = "Client2: " + data.Data;
 			            });
 			
 		}

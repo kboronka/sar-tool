@@ -39,6 +39,7 @@ namespace sar.Socket
 		
 		private long packetsIn;
 		private long packetsOut;
+		private SocketServer parent;
 		
 		private Exception lastError;
 		
@@ -138,6 +139,7 @@ namespace sar.Socket
 				if (!this.memCache.ContainsKey(member))
 				{
 					this.memCache[member] = new SocketValue();
+					this.SendData("get", member, "", -2);
 				}
 				
 				this.memCache[member].DataChanged += handler;
@@ -245,9 +247,9 @@ namespace sar.Socket
 
 		#region constructors
 
-		public SocketClient(TcpClient socket, long clientID, Encoding encoding)
+		public SocketClient(SocketServer parent, TcpClient socket, long clientID, Encoding encoding)
 		{
-			//this.socket.ReceiveBufferSize;
+			this.parent = parent;
 			this.ID = clientID;
 			this.socket = socket;
 			this.encoding = encoding;
@@ -257,6 +259,7 @@ namespace sar.Socket
 		
 		public SocketClient(string hostname, int port, Encoding encoding)
 		{
+			this.parent = null;
 			this.hostname = hostname;
 			this.port = port;
 			this.encoding = encoding;
@@ -372,6 +375,11 @@ namespace sar.Socket
 		{
 			if (message != null)
 			{
+				if (this.parent != null)
+				{
+					// if client is attached to a server, then the server should respond
+					return false;
+				}
 				
 				switch (message.Command)
 				{

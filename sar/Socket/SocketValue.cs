@@ -46,10 +46,15 @@ namespace sar.Socket
 				{
 					this.data = value;
 					this.timestamp = DateTime.Now;
-					OnDataChange(this.data);
+					OnDataChange(this);
 				}
 			}
 			get { return this.data; }
+		}
+		
+		public DateTime Timestamp
+		{
+			get { return timestamp; }
 		}
 		
 		
@@ -59,7 +64,9 @@ namespace sar.Socket
 		
 		#region DataChanged
 		
-		public delegate void DataChangedHandler(string s);
+		public delegate void DataChangedHandler(SocketValue sv);
+		private DataChangedHandler dataChanged = null;
+		
 		public event DataChangedHandler DataChanged
 		{
 			add
@@ -72,9 +79,7 @@ namespace sar.Socket
 			}
 		}
 		
-		private DataChangedHandler dataChanged = null;
-		
-		private void OnDataChange(string data)
+		private void OnDataChange(SocketValue data)
 		{
 			try
 			{
