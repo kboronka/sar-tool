@@ -116,6 +116,11 @@ namespace sar.Socket
 			get { return packetsOut; }
 		}
 		
+		public Dictionary<string, SocketValue> MemCache
+		{
+			get { return this.memCache; }
+		}
+		
 		private Exception LastError
 		{
 			set
@@ -139,6 +144,7 @@ namespace sar.Socket
 				if (!this.memCache.ContainsKey(member))
 				{
 					this.memCache[member] = new SocketValue();
+					this.memCache[member].DataChanged += new SocketValue.DataChangedHandler(this.OnMemCacheChanged);
 					this.SendData("get", member, "", -2);
 				}
 				
@@ -153,6 +159,7 @@ namespace sar.Socket
 				if (!this.memCache.ContainsKey(member))
 				{
 					this.memCache[member] = new SocketValue();
+					this.memCache[member].DataChanged += new SocketValue.DataChangedHandler(this.OnMemCacheChanged);
 				}
 				
 				this.memCache[member].Data = data;
@@ -238,6 +245,39 @@ namespace sar.Socket
 			catch (Exception ex)
 			{
 				this.LastError = ex;
+			}
+		}
+
+		#endregion
+
+		#region DataChanged
+
+		private SocketValue.DataChangedHandler dataChanged = null;
+		public event SocketValue.DataChangedHandler DataChanged
+		{
+			add
+			{
+				this.dataChanged += value;
+			}
+			remove
+			{
+				this.dataChanged -= value;
+			}
+		}
+		
+		private void OnMemCacheChanged(SocketValue data)
+		{
+			try
+			{
+				SocketValue.DataChangedHandler handler;
+				if (null != (handler = (SocketValue.DataChangedHandler)this.dataChanged))
+				{
+					handler(data);
+				}
+			}
+			catch
+			{
+
 			}
 		}
 

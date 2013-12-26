@@ -44,19 +44,26 @@ namespace sar.Testing
 		{
 			InitializeComponent();
 			server = new SocketServer(8100, Encoding.ASCII);
-			this.socketServerControl1.Server = server;			
+			this.socketServerControl1.Server = server;
+
+			client1 = new SocketClient("localhost", 8100, Encoding.ASCII);
+			client1.RegisterCallback("testmember", new SocketValue.DataChangedHandler(this.Client1Update));
+			this.socketMemCacheList1.Client = client1;
+			client1.SendData("ping");
+			
+			client2 = new SocketClient("localhost", 8100, Encoding.ASCII);
+			client2.RegisterCallback("testmember", new SocketValue.DataChangedHandler(this.Client2Update));
+			this.socketMemCacheList2.Client = client2;
+			client2.SendData("ping");
 		}
 		
 		void Button1Click(object sender, EventArgs e)
 		{
-			if (client1 == null)
+			if (this.client1Form == null)
 			{
-				client1 = new SocketClient("localhost", 8100, Encoding.ASCII);
 				this.client1Form = new SocketClientForm();
 				this.client1Form.Client = client1;
 				this.client1Form.Show();
-				client1.SendData("ping");
-				client1.RegisterCallback("testmember", new SocketValue.DataChangedHandler(this.Client1Update));
 			}
 			else
 			{
@@ -68,14 +75,11 @@ namespace sar.Testing
 		
 		void Button2Click(object sender, EventArgs e)
 		{
-			if (client2 == null)
+			if (this.client2Form == null)
 			{
-				client2 = new SocketClient("localhost", 8100, Encoding.ASCII);
 				this.client2Form = new SocketClientForm();
 				this.client2Form.Client = client2;
 				this.client2Form.Show();
-				client2.SendData("ping");
-				client2.RegisterCallback("testmember", new SocketValue.DataChangedHandler(this.Client2Update));
 			}
 			else
 			{
@@ -88,10 +92,11 @@ namespace sar.Testing
 			if (client3 == null)
 			{
 				client3 = new SocketClient(this.Host.Text, (int)this.Port.Value, Encoding.ASCII);
+				client3.SendData("ping");
+
 				this.client3Form = new SocketClientForm();
 				this.client3Form.Client = client3;
 				this.client3Form.Show();
-				client3.SendData("ping");
 			}
 			else
 			{

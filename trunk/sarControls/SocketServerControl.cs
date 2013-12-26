@@ -28,7 +28,7 @@ namespace sar.Controls
 	public partial class SocketServerControl : UserControl
 	{
 		private SocketServer server;
-		
+
 		public SocketServer Server
 		{
 			get { return this.server; }
@@ -38,7 +38,7 @@ namespace sar.Controls
 				{
 					this.server.NewClient -= new EventHandler(this.ClientsChanged);
 					this.server.ClientLost -= new EventHandler(this.ClientsChanged);
-					this.server.DataChanged -= new SocketValue.DataChangedHandler(this.DataChanged);
+					socketMemCacheList1.Server = null;
 				}
 				
 				this.server = value;
@@ -47,7 +47,7 @@ namespace sar.Controls
 				{
 					this.server.NewClient += new EventHandler(this.ClientsChanged);
 					this.server.ClientLost += new EventHandler(this.ClientsChanged);
-					this.server.DataChanged += new SocketValue.DataChangedHandler(this.DataChanged);
+					socketMemCacheList1.Server = this.server;
 				}
 			}
 		}
@@ -55,46 +55,13 @@ namespace sar.Controls
 		public SocketServerControl()
 		{
 			InitializeComponent();
-			this.MessageList.Columns.Add("Member", -2, HorizontalAlignment.Left);
-			this.MessageList.Columns.Add("Value", -2, HorizontalAlignment.Left);
-			this.MessageList.Columns.Add("Timestamp", -2, HorizontalAlignment.Left);
-			this.MessageList.HeaderStyle = ColumnHeaderStyle.Nonclickable;
-			this.MessageList.FullRowSelect = true;
 		}
-		
 		
 		private void ClientsChanged(object sender, EventArgs e)
 		{
 			this.Invoke((MethodInvoker) delegate
 			            {
 			            	this.ActiveConnections.Text = "Active Connections: " + this.server.Clients.ToString();
-			            });
-		}
-		
-		private void DataChanged(SocketValue data)
-		{
-			this.Invoke((MethodInvoker) delegate
-			            {
-			            	this.MessageList.BeginUpdate();
-			            	this.MessageList.Items.Clear();
-			            	
-			            	foreach (KeyValuePair<string, SocketValue> entry in this.server.MemCache)
-			            	{
-			            		ListViewItem newItem = new ListViewItem(entry.Key);
-			            		newItem.SubItems.Add(entry.Value.Data);
-			            		newItem.SubItems.Add(entry.Value.Timestamp.ToString());
-			            		this.MessageList.Items.Add(newItem);
-			            	}
-			            	
-			            	this.MessageList.Columns[0].Width = -2;
-			            	this.MessageList.Columns[1].Width = -2;
-			            	this.MessageList.Columns[2].Width = -2;
-			            	/*
-			            	this.MessageList.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.ColumnContent);
-			            	this.MessageList.AutoResizeColumn(1, ColumnHeaderAutoResizeStyle.ColumnContent);
-			            	this.MessageList.AutoResizeColumn(2, ColumnHeaderAutoResizeStyle.ColumnContent);
-							*/
-			            	this.MessageList.EndUpdate();
 			            });
 		}
 	}

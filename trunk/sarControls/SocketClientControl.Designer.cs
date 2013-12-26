@@ -74,7 +74,7 @@ namespace sar.Controls
 			// 
 			this.CustomMessage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
 									| System.Windows.Forms.AnchorStyles.Right)));
-			this.CustomMessage.Location = new System.Drawing.Point(4, 341);
+			this.CustomMessage.Location = new System.Drawing.Point(4, 344);
 			this.CustomMessage.Name = "CustomMessage";
 			this.CustomMessage.Size = new System.Drawing.Size(388, 20);
 			this.CustomMessage.TabIndex = 2;
@@ -82,7 +82,7 @@ namespace sar.Controls
 			// Send
 			// 
 			this.Send.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.Send.Location = new System.Drawing.Point(397, 338);
+			this.Send.Location = new System.Drawing.Point(397, 341);
 			this.Send.Name = "Send";
 			this.Send.Size = new System.Drawing.Size(64, 23);
 			this.Send.TabIndex = 3;
@@ -124,7 +124,7 @@ namespace sar.Controls
 			// PacketsIn
 			// 
 			this.PacketsIn.AutoSize = true;
-			this.PacketsIn.Location = new System.Drawing.Point(4, 22);
+			this.PacketsIn.Location = new System.Drawing.Point(4, 24);
 			this.PacketsIn.Name = "PacketsIn";
 			this.PacketsIn.Size = new System.Drawing.Size(21, 14);
 			this.PacketsIn.TabIndex = 6;
@@ -133,7 +133,7 @@ namespace sar.Controls
 			// PacketsOut
 			// 
 			this.PacketsOut.AutoSize = true;
-			this.PacketsOut.Location = new System.Drawing.Point(4, 36);
+			this.PacketsOut.Location = new System.Drawing.Point(4, 38);
 			this.PacketsOut.Name = "PacketsOut";
 			this.PacketsOut.Size = new System.Drawing.Size(30, 14);
 			this.PacketsOut.TabIndex = 7;
@@ -148,7 +148,7 @@ namespace sar.Controls
 			this.MessageList.Location = new System.Drawing.Point(4, 69);
 			this.MessageList.Name = "MessageList";
 			this.MessageList.ShowGroups = false;
-			this.MessageList.Size = new System.Drawing.Size(457, 266);
+			this.MessageList.Size = new System.Drawing.Size(457, 269);
 			this.MessageList.TabIndex = 9;
 			this.MessageList.UseCompatibleStateImageBehavior = false;
 			this.MessageList.View = System.Windows.Forms.View.Details;
@@ -170,7 +170,7 @@ namespace sar.Controls
 			this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.Name = "SocketClientControl";
-			this.Size = new System.Drawing.Size(465, 367);
+			this.Size = new System.Drawing.Size(465, 370);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}

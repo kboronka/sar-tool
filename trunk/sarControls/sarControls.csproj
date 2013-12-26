@@ -56,6 +56,7 @@
     <Compile Include="SocketClientControl.Designer.cs">
       <DependentUpon>SocketClientControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="SocketMemCacheList.cs" />
     <Compile Include="SocketServerControl.cs" />
     <Compile Include="SocketServerControl.Designer.cs">
       <DependentUpon>SocketServerControl.cs</DependentUpon>
