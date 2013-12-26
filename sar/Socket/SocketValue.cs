@@ -55,7 +55,6 @@ namespace sar.Socket
 		
 		#endregion
 		
-		
 		#region events
 		
 		#region DataChanged
