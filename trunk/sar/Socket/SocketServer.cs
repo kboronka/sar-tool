@@ -95,6 +95,39 @@ namespace sar.Socket
 
 		#endregion
 
+		#region ClientLost
+
+		private SocketValue.DataChangedHandler dataChanged = null;
+		public event SocketValue.DataChangedHandler DataChanged
+		{
+			add
+			{
+				this.dataChanged += value;
+			}
+			remove
+			{
+				this.dataChanged -= value;
+			}
+		}
+		
+		private void OnMemCacheChanged(SocketValue data)
+		{
+			try
+			{
+				SocketValue.DataChangedHandler handler;
+				if (null != (handler = (SocketValue.DataChangedHandler)this.dataChanged))
+				{
+					handler(data);
+				}
+			}
+			catch
+			{
+
+			}
+		}
+
+		#endregion
+		
 		#endregion
 		
 		#region constructor
@@ -137,6 +170,7 @@ namespace sar.Socket
 				if (!this.memCache.ContainsKey(member))
 				{
 					this.memCache[member] = new SocketValue();
+					this.memCache[member].DataChanged += new SocketValue.DataChangedHandler(this.OnMemCacheChanged);
 				}
 				
 				this.memCache[member].Data = data;
@@ -185,7 +219,17 @@ namespace sar.Socket
 						
 						break;
 						
+					case "get-all":
+						lock (this.memCache)
+						{
+							foreach (KeyValuePair<string, SocketValue> entry in this.memCache)
+							{
+								SocketValue val = entry.Value;
+								client.SendData("set", entry.Key, entry.Value.Data, message.FromID);
+							}
+						}
 						
+						break;
 					default:
 						break;
 				}
@@ -206,7 +250,7 @@ namespace sar.Socket
 				{
 					if (this.listener.Pending())
 					{
-						SocketClient client = new SocketClient(this.listener.AcceptTcpClient(), ++this.lastClientID, this.encoding);
+						SocketClient client = new SocketClient(this, this.listener.AcceptTcpClient(), ++this.lastClientID, this.encoding);
 						this.clients.Add(client);
 						this.OnNewClient(client);
 					}
