@@ -147,6 +147,24 @@ namespace sar.Socket
 		
 		#region methods
 		
+		public void Shutdown()
+		{
+			lock (this.listener)
+			{
+				this.listener.Stop();
+			}
+			
+			lock (this.clients)
+			{
+				foreach (SocketClient client in this.clients)
+				{
+					client.Disconnect();
+				}
+				
+				this.clients = new List<SocketClient>();
+			}
+		}
+		
 		public string Get(string member)
 		{
 			if (this.memCache.ContainsKey(member))
@@ -176,7 +194,6 @@ namespace sar.Socket
 				this.memCache[member].Data = data;
 			}
 		}
-		
 		
 		public void Broadcast(string command, string member, string data)
 		{
@@ -239,6 +256,8 @@ namespace sar.Socket
 		#endregion
 		
 		#region service
+		
+		#region listners
 		
 		private System.Threading.Timer serviceTimer;
 		
@@ -305,6 +324,8 @@ namespace sar.Socket
 		
 		#endregion
 		
+		#endregion
+		
 		#region pingLoop
 		
 		private System.Threading.Timer pingTimer;
@@ -322,7 +343,7 @@ namespace sar.Socket
 			}
 			finally
 			{
-				this.pingTimer.Change(1000, Timeout.Infinite );
+				//this.pingTimer.Change(1000, Timeout.Infinite );
 			}
 		}
 

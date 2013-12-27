@@ -72,7 +72,11 @@ namespace sar.Socket
 		
 		public bool Connected
 		{
-			get { return this.socket.Connected; }
+			get
+			{
+				if (this.socket == null) return false;
+				return this.connected;
+			}
 		}
 		
 		public int Port
@@ -289,12 +293,21 @@ namespace sar.Socket
 
 		public SocketClient(SocketServer parent, TcpClient socket, long clientID, Encoding encoding)
 		{
+			this.socket = socket;
+			this.stream = this.socket.GetStream();
+
 			this.parent = parent;
 			this.ID = clientID;
-			this.socket = socket;
 			this.encoding = encoding;
-			this.Initilize();
+			this.messagesOut = new List<SocketMessage>();
+			this.messagesIn = new List<SocketMessage>();
+			
+			this.OnConnectionChange(true);
+			
 			this.SendData("set", "clientID", clientID.ToString());
+			
+			this.serviceConnectionTimer = new Timer(this.ServiceConnectionTick, null, 10, Timeout.Infinite);
+			this.serviceTimer = new Timer(this.ServiceTick, null, 100, Timeout.Infinite);
 		}
 		
 		public SocketClient(string hostname, int port, Encoding encoding)
@@ -303,19 +316,11 @@ namespace sar.Socket
 			this.hostname = hostname;
 			this.port = port;
 			this.encoding = encoding;
-			this.socket = new TcpClient(this.hostname, this.port);
-			this.Initilize();
-		}
-		
-		private void Initilize()
-		{
-			this.OnConnectionChange(this.socket.Connected);
-			this.stream = this.socket.GetStream();
 			this.messagesOut = new List<SocketMessage>();
 			this.messagesIn = new List<SocketMessage>();
-			this.resendAttempts = 0;
-			this.lastActivity = DateTime.UtcNow;
-			this.serviceTimer = new Timer(ServiceTick, null, 100, Timeout.Infinite);
+			
+			this.serviceConnectionTimer = new Timer(this.ServiceConnectionTick, null, 10, Timeout.Infinite);
+			this.serviceTimer = new Timer(this.ServiceTick, null, 100, Timeout.Infinite);
 		}
 		
 		#endregion
@@ -405,10 +410,19 @@ namespace sar.Socket
 		public void Connect()
 		{
 			if (this.connected) return;
+			if (this.parent != null) return;
 			if (string.IsNullOrEmpty(this.hostname)) return;
 			
-			this.socket = new TcpClient(this.hostname, this.port);
-			this.Initilize();
+			try
+			{
+				this.socket = new TcpClient(this.hostname, this.port);
+				this.stream = this.socket.GetStream();
+				this.OnConnectionChange(true);
+			}
+			catch
+			{
+				
+			}
 		}
 		
 		private bool ProcessMessage(SocketMessage message)
@@ -446,12 +460,76 @@ namespace sar.Socket
 		
 		#region service
 		
+		#region connection
+		
+		private System.Threading.Timer serviceConnectionTimer;
+		
+		private void ServiceConnection()
+		{
+			if (this.socket == null)
+			{
+				try
+				{
+					this.Connect();
+				}
+				catch
+				{
+					this.socket = null;
+				}
+			}
+			
+			
+			if (!this.connected) this.socket = null;
+			if (this.socket == null) return;
+			
+			lock (socket)
+			{
+				if (!socket.Connected)
+				{
+					this.Disconnect();
+					return;
+				}
+				
+				if( this.socket.Client.Poll(0, SelectMode.SelectRead))
+				{
+					byte[] buff = new byte[1];
+					if(this.socket.Client.Receive(buff,  SocketFlags.Peek) == 0)
+					{
+						this.Disconnect();
+					}
+				}
+			}
+		}
+
+		private void ServiceConnectionTick( Object state )
+		{
+			try
+			{
+				this.ServiceConnection();
+			}
+			catch (Exception ex)
+			{
+				this.LastError = ex;
+			}
+			finally
+			{
+				this.serviceConnectionTimer.Change(250, Timeout.Infinite );
+			}
+		}
+
+		#endregion
+
+		#region input/output
+		
 		private System.Threading.Timer serviceTimer;
 		private int resendAttempts;
 		private DateTime lastActivity;
 		
 		private void ServiceIncoming()
 		{
+			if (this.socket == null) return;
+			if (!this.connected) return;
+			
 			lock (socket)
 			{
 				if (!socket.Connected)
@@ -526,20 +604,22 @@ namespace sar.Socket
 					catch (ObjectDisposedException)
 					{
 						// The NetworkStream is closed.
-						this.Disconnect();
+						//this.Disconnect();
 					}
 					catch (IOException)
 					{
 						// The underlying Socket is closed.
-						this.Disconnect();
+						//this.Disconnect();
 					}
-					
 				}
 			}
 		}
 		
 		private void ServiceOutgoing()
 		{
+			if (this.socket == null) return;
+			if (!this.connected) return;
+			
 			lock (socket)
 			{
 				if (messagesOut.Count == 0) return;
@@ -548,47 +628,41 @@ namespace sar.Socket
 				{
 					try
 					{
-						if (!socket.Connected)
+
+						string messages = "";
+						
+						using (StringWriter sw = new StringWriter())
 						{
-							this.Disconnect();
-						}
-						else
-						{
-							string messages = "";
-							
-							using (StringWriter sw = new StringWriter())
+							using (XML.Writer writer = new XML.Writer(sw))
 							{
-								using (XML.Writer writer = new XML.Writer(sw))
+								writer.WriteStartElement("SocketMessages");
+								
+								foreach (SocketMessage message in this.messagesOut)
 								{
-									writer.WriteStartElement("SocketMessages");
-									
-									foreach (SocketMessage message in this.messagesOut)
-									{
-										message.Serialize(writer);
-									}
-									
-									writer.WriteEndElement();
+									message.Serialize(writer);
 								}
 								
-								messages = sw.ToString();
+								writer.WriteEndElement();
 							}
 							
-							byte[] messageBytes = this.encoding.GetBytes(messages.ToString());
-
-							lock (stream)
-							{
-								stream.Write(messageBytes, 0, messageBytes.Length);
-							}
-							
-							foreach (SocketMessage message in this.messagesOut)
-							{
-								this.packetsOut++;
-								this.OnMessageSent(message);
-							}
-							
-							this.lastActivity = DateTime.Now;
-							this.messagesOut.Clear();
+							messages = sw.ToString();
 						}
+						
+						byte[] messageBytes = this.encoding.GetBytes(messages.ToString());
+
+						lock (stream)
+						{
+							stream.Write(messageBytes, 0, messageBytes.Length);
+						}
+						
+						foreach (SocketMessage message in this.messagesOut)
+						{
+							this.packetsOut++;
+							this.OnMessageSent(message);
+						}
+						
+						this.lastActivity = DateTime.Now;
+						this.messagesOut.Clear();
 					}
 					catch (System.IO.IOException)
 					{
@@ -598,12 +672,12 @@ namespace sar.Socket
 							// TODO: log error
 							this.messagesOut.Clear();
 							resendAttempts = 0;
-							this.Disconnect();
+							//this.Disconnect();
 						}
 					}
 					catch (ObjectDisposedException)
 					{
-						this.Disconnect();
+						//this.Disconnect();
 					}
 				}
 			}
@@ -613,11 +687,8 @@ namespace sar.Socket
 		{
 			try
 			{
-				if (this.socket.Connected)
-				{
-					this.ServiceIncoming();
-					this.ServiceOutgoing();
-				}
+				this.ServiceIncoming();
+				this.ServiceOutgoing();
 			}
 			catch (Exception ex)
 			{
@@ -628,6 +699,8 @@ namespace sar.Socket
 				this.serviceTimer.Change(100, Timeout.Infinite );
 			}
 		}
+		
+		#endregion
 		
 		#endregion
 	}

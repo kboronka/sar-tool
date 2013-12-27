@@ -160,5 +160,24 @@ namespace sar.Testing
 				client3.SendData("ping");
 			}
 		}
+		
+		void StartServerClick(object sender, EventArgs e)
+		{
+			if (this.server == null)
+			{
+				server = new SocketServer(8100, Encoding.ASCII);
+				this.socketServerControl1.Server = server;
+			}
+		}
+		
+		void StopServerClick(object sender, EventArgs e)
+		{
+			if (this.server != null)
+			{
+				this.server.Shutdown();
+				server = null;
+				this.socketServerControl1.Server = null;
+			}
+		}
 	}
 }
