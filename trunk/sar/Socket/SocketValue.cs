@@ -62,7 +62,7 @@ namespace sar.Socket
 		
 		#region events
 		
-		#region DataChanged
+		#region data changed
 		
 		public delegate void DataChangedHandler(SocketValue sv);
 		private DataChangedHandler dataChanged = null;
@@ -98,5 +98,10 @@ namespace sar.Socket
 		#endregion
 
 		#endregion
+		
+        public override string ToString()
+        {
+            return this.data;
+        }		
 	}
 }
