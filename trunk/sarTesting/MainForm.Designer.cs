@@ -60,6 +60,8 @@ namespace sar.Testing
 			this.Set_C2 = new System.Windows.Forms.Button();
 			this.socketMemCacheList1 = new sar.Controls.SocketMemCacheList();
 			this.socketMemCacheList2 = new sar.Controls.SocketMemCacheList();
+			this.StopServer = new System.Windows.Forms.Button();
+			this.StartServer = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.Port)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -94,7 +96,7 @@ namespace sar.Testing
 			// 
 			// Connect3
 			// 
-			this.Connect3.Location = new System.Drawing.Point(199, 348);
+			this.Connect3.Location = new System.Drawing.Point(597, 420);
 			this.Connect3.Name = "Connect3";
 			this.Connect3.Size = new System.Drawing.Size(75, 23);
 			this.Connect3.TabIndex = 5;
@@ -104,14 +106,14 @@ namespace sar.Testing
 			// 
 			// Host
 			// 
-			this.Host.Location = new System.Drawing.Point(12, 348);
+			this.Host.Location = new System.Drawing.Point(410, 420);
 			this.Host.Name = "Host";
 			this.Host.Size = new System.Drawing.Size(100, 20);
 			this.Host.TabIndex = 6;
 			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point(12, 333);
+			this.label2.Location = new System.Drawing.Point(410, 405);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(100, 12);
 			this.label2.TabIndex = 7;
@@ -119,7 +121,7 @@ namespace sar.Testing
 			// 
 			// Port
 			// 
-			this.Port.Location = new System.Drawing.Point(131, 348);
+			this.Port.Location = new System.Drawing.Point(529, 420);
 			this.Port.Maximum = new decimal(new int[] {
 									8200,
 									0,
@@ -141,7 +143,7 @@ namespace sar.Testing
 			// 
 			// label3
 			// 
-			this.label3.Location = new System.Drawing.Point(131, 333);
+			this.label3.Location = new System.Drawing.Point(529, 405);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(100, 12);
 			this.label3.TabIndex = 9;
@@ -166,7 +168,7 @@ namespace sar.Testing
 			// 
 			// Client1Member
 			// 
-			this.Client1Member.Location = new System.Drawing.Point(382, 337);
+			this.Client1Member.Location = new System.Drawing.Point(410, 330);
 			this.Client1Member.Name = "Client1Member";
 			this.Client1Member.Size = new System.Drawing.Size(149, 16);
 			this.Client1Member.TabIndex = 12;
@@ -174,7 +176,7 @@ namespace sar.Testing
 			// 
 			// Client2Member
 			// 
-			this.Client2Member.Location = new System.Drawing.Point(382, 353);
+			this.Client2Member.Location = new System.Drawing.Point(410, 346);
 			this.Client2Member.Name = "Client2Member";
 			this.Client2Member.Size = new System.Drawing.Size(149, 16);
 			this.Client2Member.TabIndex = 13;
@@ -182,7 +184,7 @@ namespace sar.Testing
 			// 
 			// Get
 			// 
-			this.Get.Location = new System.Drawing.Point(301, 348);
+			this.Get.Location = new System.Drawing.Point(410, 365);
 			this.Get.Name = "Get";
 			this.Get.Size = new System.Drawing.Size(75, 23);
 			this.Get.TabIndex = 14;
@@ -236,11 +238,33 @@ namespace sar.Testing
 			this.socketMemCacheList2.UseCompatibleStateImageBehavior = false;
 			this.socketMemCacheList2.View = System.Windows.Forms.View.Details;
 			// 
+			// StopServer
+			// 
+			this.StopServer.Location = new System.Drawing.Point(108, 322);
+			this.StopServer.Name = "StopServer";
+			this.StopServer.Size = new System.Drawing.Size(75, 23);
+			this.StopServer.TabIndex = 19;
+			this.StopServer.Text = "Stop";
+			this.StopServer.UseVisualStyleBackColor = true;
+			this.StopServer.Click += new System.EventHandler(this.StopServerClick);
+			// 
+			// StartServer
+			// 
+			this.StartServer.Location = new System.Drawing.Point(12, 322);
+			this.StartServer.Name = "StartServer";
+			this.StartServer.Size = new System.Drawing.Size(75, 23);
+			this.StartServer.TabIndex = 20;
+			this.StartServer.Text = "Start";
+			this.StartServer.UseVisualStyleBackColor = true;
+			this.StartServer.Click += new System.EventHandler(this.StartServerClick);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1011, 400);
+			this.ClientSize = new System.Drawing.Size(1011, 467);
+			this.Controls.Add(this.StartServer);
+			this.Controls.Add(this.StopServer);
 			this.Controls.Add(this.socketMemCacheList2);
 			this.Controls.Add(this.socketMemCacheList1);
 			this.Controls.Add(this.Set_C2);
@@ -264,6 +288,8 @@ namespace sar.Testing
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.Button StartServer;
+		private System.Windows.Forms.Button StopServer;
 		private sar.Controls.SocketMemCacheList socketMemCacheList2;
 		private sar.Controls.SocketMemCacheList socketMemCacheList1;
 		private System.Windows.Forms.Button Set_C2;
