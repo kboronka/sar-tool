@@ -308,6 +308,7 @@ namespace sar.Socket
 			
 			this.serviceConnectionTimer = new Timer(this.ServiceConnectionTick, null, 10, Timeout.Infinite);
 			this.serviceTimer = new Timer(this.ServiceTick, null, 100, Timeout.Infinite);
+			this.heartbeatTimer = new Timer(this.HeartbeatTick, null, 200, Timeout.Infinite);
 		}
 		
 		public SocketClient(string hostname, int port, Encoding encoding)
@@ -321,6 +322,7 @@ namespace sar.Socket
 			
 			this.serviceConnectionTimer = new Timer(this.ServiceConnectionTick, null, 10, Timeout.Infinite);
 			this.serviceTimer = new Timer(this.ServiceTick, null, 100, Timeout.Infinite);
+			this.heartbeatTimer = new Timer(this.HeartbeatTick, null, 200, Timeout.Infinite);
 		}
 		
 		#endregion
@@ -415,13 +417,32 @@ namespace sar.Socket
 			
 			try
 			{
+				
+				this.socket = new TcpClient();
+				IAsyncResult asyncConnection = this.socket.BeginConnect(this.hostname, this.port, null, null);
+				System.Threading.WaitHandle wh = asyncConnection.AsyncWaitHandle;
+				try
+				{
+					if (!asyncConnection.AsyncWaitHandle.WaitOne(TimeSpan.FromMilliseconds(2000), false))
+					{
+						this.socket.Close();
+						throw new TimeoutException();
+					}
+					
+					this.socket.EndConnect(asyncConnection);
+				}
+				finally
+				{
+					wh.Close();
+				}
+				
 				this.socket = new TcpClient(this.hostname, this.port);
 				this.stream = this.socket.GetStream();
 				this.OnConnectionChange(true);
 			}
 			catch
 			{
-				
+				this.socket = null;
 			}
 		}
 		
@@ -437,16 +458,22 @@ namespace sar.Socket
 				
 				switch (message.Command)
 				{
+					case "heartbeat":
+						return true;
 					case "ping":
 						this.SendData("echo", message.FromID);
+						this.OnMessageRecived(message);
 						return true;
 					case "set":
 						this.Store(message.Member, message.Data);
+						this.OnMessageRecived(message);
 						return (message.ToID == this.ID);
 					case "get":
 						this.SendData("set", message.Member, this.Get(message.Member), message.FromID);
+						this.OnMessageRecived(message);
 						return true;
 					default:
+						this.OnMessageRecived(message);
 						break;
 				}
 				
@@ -490,13 +517,27 @@ namespace sar.Socket
 					return;
 				}
 				
-				if( this.socket.Client.Poll(0, SelectMode.SelectRead))
+				try
 				{
-					byte[] buff = new byte[1];
-					if(this.socket.Client.Receive(buff,  SocketFlags.Peek) == 0)
+					/*
+					if (!(this.socket.Client.Poll(1, SelectMode.SelectRead) && socket.Available == 0))
 					{
 						this.Disconnect();
 					}
+					 */
+
+					if( this.socket.Client.Poll(1, SelectMode.SelectRead))
+					{
+						byte[] buff = new byte[1];
+						if(this.socket.Client.Receive(buff,  SocketFlags.Peek) == 0)
+						{
+							this.Disconnect();
+						}
+					}
+				}
+				catch
+				{
+					this.Disconnect();
 				}
 			}
 		}
@@ -595,7 +636,6 @@ namespace sar.Socket
 										this.packetsIn++;
 										if (!this.ProcessMessage(message)) this.messagesIn.Add(message);
 										this.lastActivity = DateTime.Now;
-										this.OnMessageRecived(message);
 									}
 								}
 							}
@@ -658,7 +698,14 @@ namespace sar.Socket
 						foreach (SocketMessage message in this.messagesOut)
 						{
 							this.packetsOut++;
-							this.OnMessageSent(message);
+							switch (message.Command)
+							{
+								case "heartbeat":
+									break;
+								default:
+									this.OnMessageSent(message);
+									break;
+							}
 						}
 						
 						this.lastActivity = DateTime.Now;
@@ -672,7 +719,7 @@ namespace sar.Socket
 							// TODO: log error
 							this.messagesOut.Clear();
 							resendAttempts = 0;
-							//this.Disconnect();
+//							this.Disconnect();
 						}
 					}
 					catch (ObjectDisposedException)
@@ -700,6 +747,32 @@ namespace sar.Socket
 			}
 		}
 		
+		#endregion
+		
+		#region heartbeat
+		
+		private System.Threading.Timer heartbeatTimer;
+
+		private void HeartbeatTick(Object state)
+		{
+			try
+			{
+				if (this.connected)
+				{
+					this.SendData("heartbeat");
+				}
+			}
+			catch (Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine(ex.Message);
+				System.Diagnostics.Debug.WriteLine(ex.StackTrace);
+			}
+			finally
+			{
+				this.heartbeatTimer.Change(this.connected ? 500 : 2000, Timeout.Infinite );
+			}
+		}
+
 		#endregion
 		
 		#endregion

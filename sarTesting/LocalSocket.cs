@@ -28,7 +28,7 @@ using sar.Socket;
 
 namespace sar.Testing
 {
-	public partial class MainForm : Form
+	public partial class LocalSocket : Form
 	{
 		private SocketClient client1;
 		private SocketClient client2;
@@ -40,7 +40,7 @@ namespace sar.Testing
 		
 		private SocketServer server;
 		
-		public MainForm()
+		public LocalSocket()
 		{
 			InitializeComponent();
 			server = new SocketServer(8100, Encoding.ASCII);
