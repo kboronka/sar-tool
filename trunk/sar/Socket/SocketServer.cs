@@ -324,8 +324,6 @@ namespace sar.Socket
 		
 		#endregion
 		
-		#endregion
-		
 		#region pingLoop
 		
 		private System.Threading.Timer pingTimer;
@@ -348,5 +346,7 @@ namespace sar.Socket
 		}
 
 		#endregion
+		
+		#endregion		
 	}
 }

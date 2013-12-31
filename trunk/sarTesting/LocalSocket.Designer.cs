@@ -15,7 +15,7 @@
 
 namespace sar.Testing
 {
-	partial class MainForm
+	partial class LocalSocket
 	{
 		/// <summary>
 		/// Designer variable used to keep track of non-visual components.
@@ -28,9 +28,35 @@ namespace sar.Testing
 		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected override void Dispose(bool disposing)
 		{
-			if (disposing) {
+			if (disposing)
+			{
 				if (components != null) {
 					components.Dispose();
+				}
+				
+				if (this.server != null)
+				{
+					this.server.Shutdown();
+					server = null;
+					this.socketServerControl1.Server = null;
+				}
+				
+				if (this.client1 != null)
+				{
+					this.client1.Disconnect();
+					this.client1 = null;
+				}
+				
+				if (this.client2 != null)
+				{
+					this.client2.Disconnect();
+					this.client2 = null;
+				}
+				
+				if (this.client3 != null)
+				{
+					this.client3.Disconnect();
+					this.client3 = null;
 				}
 			}
 			base.Dispose(disposing);
@@ -123,23 +149,23 @@ namespace sar.Testing
 			// 
 			this.Port.Location = new System.Drawing.Point(529, 420);
 			this.Port.Maximum = new decimal(new int[] {
-									8200,
-									0,
-									0,
-									0});
+			                                	8200,
+			                                	0,
+			                                	0,
+			                                	0});
 			this.Port.Minimum = new decimal(new int[] {
-									8100,
-									0,
-									0,
-									0});
+			                                	8100,
+			                                	0,
+			                                	0,
+			                                	0});
 			this.Port.Name = "Port";
 			this.Port.Size = new System.Drawing.Size(62, 20);
 			this.Port.TabIndex = 8;
 			this.Port.Value = new decimal(new int[] {
-									8100,
-									0,
-									0,
-									0});
+			                              	8100,
+			                              	0,
+			                              	0,
+			                              	0});
 			// 
 			// label3
 			// 
