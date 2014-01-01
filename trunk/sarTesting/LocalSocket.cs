@@ -106,13 +106,13 @@ namespace sar.Testing
 		
 		void SetClick(object sender, EventArgs e)
 		{
-			this.client1.Set("testmember", TestMember.Text, true);
+			this.client1.SetValue("testmember", TestMember.Text, true);
 		}
 		
 		void GetClick(object sender, EventArgs e)
 		{
-			if (this.client1 != null) this.Client1Member.Text = "Client1: " + this.client1.Get("testmember");
-			if (this.client2 != null) this.Client2Member.Text = "Client2: " + this.client2.Get("testmember");
+			if (this.client1 != null) this.Client1Member.Text = "Client1: " + this.client1.GetValue("testmember");
+			if (this.client2 != null) this.Client2Member.Text = "Client2: " + this.client2.GetValue("testmember");
 		}
 		
 		private void Client1Update(SocketValue data)
@@ -137,7 +137,7 @@ namespace sar.Testing
 		{
 			if (this.client1 != null)
 			{
-				this.client1.Set("testmember", DateTime.Now.ToString());
+				this.client1.SetValue("testmember", DateTime.Now.ToString());
 			}
 		}
 		
@@ -145,7 +145,7 @@ namespace sar.Testing
 		{
 			if (this.client2 != null)
 			{
-				this.client2.Set("testmember", DateTime.Now.ToString());
+				this.client2.SetValue("testmember", DateTime.Now.ToString());
 			}
 		}
 		

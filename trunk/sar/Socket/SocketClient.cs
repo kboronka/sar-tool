@@ -95,7 +95,7 @@ namespace sar.Socket
 			{
 				try
 				{
-					return long.Parse(this.Get("clientID"));
+					return long.Parse(this.GetValue("clientID"));
 				}
 				catch
 				{
@@ -170,7 +170,7 @@ namespace sar.Socket
 			}
 		}
 		
-		public string Get(string member)
+		public string GetValue(string member)
 		{
 			lock(this.memCache)
 			{
@@ -181,6 +181,19 @@ namespace sar.Socket
 			}
 
 			return "";
+		}
+		
+		public System.DateTime GetTimestamp(string member)
+		{
+			lock(this.memCache)
+			{
+				if (this.memCache.ContainsKey(member))
+				{
+					return this.memCache[member].Timestamp;
+				}
+			}
+
+			return DateTime.Now;
 		}
 		
 		#endregion
@@ -332,12 +345,12 @@ namespace sar.Socket
 		private List<SocketMessage> messagesOut;
 		private List<SocketMessage> messagesIn;
 		
-		public void Set(string member, string data)
+		public void SetValue(string member, string data)
 		{
-			this.Set(member, data, false);
+			this.SetValue(member, data, false);
 		}
 		
-		public void Set(string member, string data, bool global)
+		public void SetValue(string member, string data, bool global)
 		{
 			this.Store(member, data);
 			if (!global) this.SendData("set", member, data);
@@ -469,7 +482,7 @@ namespace sar.Socket
 						this.OnMessageRecived(message);
 						return (message.ToID == this.ID);
 					case "get":
-						this.SendData("set", message.Member, this.Get(message.Member), message.FromID);
+						this.SendData("set", message.Member, this.GetValue(message.Member), message.FromID);
 						this.OnMessageRecived(message);
 						return true;
 					default:
