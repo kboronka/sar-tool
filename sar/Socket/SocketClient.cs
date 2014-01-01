@@ -710,12 +710,12 @@ namespace sar.Socket
 						
 						foreach (SocketMessage message in this.messagesOut)
 						{
-							this.packetsOut++;
 							switch (message.Command)
 							{
 								case "heartbeat":
 									break;
 								default:
+									this.packetsOut++;
 									this.OnMessageSent(message);
 									break;
 							}
