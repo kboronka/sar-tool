@@ -57,9 +57,9 @@ namespace sar.Controls
 		public SocketClientControl()
 		{
 			InitializeComponent();
-					
+			
 			this.MessageList.Columns.Add("ID", -2, HorizontalAlignment.Left);
-			this.MessageList.Columns.Add("Direction", -2, HorizontalAlignment.Left);
+			this.MessageList.Columns.Add("", -2, HorizontalAlignment.Left);
 			this.MessageList.Columns.Add("From", -2, HorizontalAlignment.Left);
 			this.MessageList.Columns.Add("To", -2, HorizontalAlignment.Left);
 			this.MessageList.Columns.Add("Message", -2, HorizontalAlignment.Left);
@@ -140,7 +140,7 @@ namespace sar.Controls
 			this.PacketsOut.Text = "Out: " + this.client.PacketsOut.ToString();
 			this.ClientID.Text = "ClientID: " + this.client.ID.ToString();
 		}
-			
+		
 		private void UpdateHistory(string direction, SocketMessage message)
 		{
 			this.Invoke((MethodInvoker) delegate
@@ -162,6 +162,12 @@ namespace sar.Controls
 			            	{
 			            		this.MessageList.Items.RemoveAt(0);
 			            	}
+			            	
+			            	this.MessageList.Columns[0].Width = -2;
+			            	this.MessageList.Columns[1].Width = -2;
+			            	this.MessageList.Columns[2].Width = -2;
+			            	this.MessageList.Columns[3].Width = -2;
+			            	this.MessageList.Columns[4].Width = -2;
 			            	
 			            	this.MessageList.EndUpdate();
 			            });
