@@ -166,15 +166,5 @@ namespace sar.Controls
 			            	this.MessageList.EndUpdate();
 			            });
 		}
-		
-		void ConnectPBClick(object sender, EventArgs e)
-		{
-			this.Client.Connect();
-		}
-		
-		void DissconnectPBClick(object sender, EventArgs e)
-		{
-			this.Client.Disconnect();
-		}
 	}
 }

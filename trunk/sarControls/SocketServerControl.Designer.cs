@@ -52,10 +52,12 @@ namespace sar.Controls
 			// 
 			// ActiveConnections
 			// 
+			this.ActiveConnections.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+									| System.Windows.Forms.AnchorStyles.Right)));
 			this.ActiveConnections.ForeColor = System.Drawing.SystemColors.Control;
-			this.ActiveConnections.Location = new System.Drawing.Point(3, 0);
+			this.ActiveConnections.Location = new System.Drawing.Point(0, 0);
 			this.ActiveConnections.Name = "ActiveConnections";
-			this.ActiveConnections.Size = new System.Drawing.Size(142, 16);
+			this.ActiveConnections.Size = new System.Drawing.Size(394, 16);
 			this.ActiveConnections.TabIndex = 1;
 			this.ActiveConnections.Text = "Active Connections: 0";
 			// 
@@ -65,17 +67,20 @@ namespace sar.Controls
 									| System.Windows.Forms.AnchorStyles.Left) 
 									| System.Windows.Forms.AnchorStyles.Right)));
 			this.socketMemCacheList1.Client = null;
-			this.socketMemCacheList1.Location = new System.Drawing.Point(4, 19);
+			this.socketMemCacheList1.FullRowSelect = true;
+			this.socketMemCacheList1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+			this.socketMemCacheList1.Location = new System.Drawing.Point(0, 19);
 			this.socketMemCacheList1.Name = "socketMemCacheList1";
 			this.socketMemCacheList1.Server = null;
-			this.socketMemCacheList1.Size = new System.Drawing.Size(387, 234);
+			this.socketMemCacheList1.Size = new System.Drawing.Size(394, 237);
 			this.socketMemCacheList1.TabIndex = 11;
 			this.socketMemCacheList1.UseCompatibleStateImageBehavior = false;
+			this.socketMemCacheList1.View = System.Windows.Forms.View.Details;
 			// 
 			// SocketServerControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.SystemColors.WindowFrame;
 			this.Controls.Add(this.socketMemCacheList1);
 			this.Controls.Add(this.ActiveConnections);

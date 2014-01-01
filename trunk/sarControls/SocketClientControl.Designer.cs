@@ -49,8 +49,6 @@ namespace sar.Controls
 			this.connected = new sar.Controls.BooleanIndicator();
 			this.CustomMessage = new System.Windows.Forms.TextBox();
 			this.Send = new System.Windows.Forms.Button();
-			this.DissconnectPB = new System.Windows.Forms.Button();
-			this.ConnectPB = new System.Windows.Forms.Button();
 			this.ClientID = new System.Windows.Forms.Label();
 			this.PacketsIn = new System.Windows.Forms.Label();
 			this.PacketsOut = new System.Windows.Forms.Label();
@@ -60,7 +58,6 @@ namespace sar.Controls
 			// connected
 			// 
 			this.connected.Caption = "Connected";
-			this.connected.Font = new System.Drawing.Font("Arial", 9.75F);
 			this.connected.Location = new System.Drawing.Point(4, 4);
 			this.connected.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.connected.MaximumSize = new System.Drawing.Size(500, 16);
@@ -90,52 +87,30 @@ namespace sar.Controls
 			this.Send.UseVisualStyleBackColor = true;
 			this.Send.Click += new System.EventHandler(this.SendClick);
 			// 
-			// DissconnectPB
-			// 
-			this.DissconnectPB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.DissconnectPB.Location = new System.Drawing.Point(380, 27);
-			this.DissconnectPB.Name = "DissconnectPB";
-			this.DissconnectPB.Size = new System.Drawing.Size(81, 23);
-			this.DissconnectPB.TabIndex = 3;
-			this.DissconnectPB.Text = "Dissconnect";
-			this.DissconnectPB.UseVisualStyleBackColor = true;
-			this.DissconnectPB.Click += new System.EventHandler(this.DissconnectPBClick);
-			// 
-			// ConnectPB
-			// 
-			this.ConnectPB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.ConnectPB.Location = new System.Drawing.Point(381, 4);
-			this.ConnectPB.Name = "ConnectPB";
-			this.ConnectPB.Size = new System.Drawing.Size(81, 23);
-			this.ConnectPB.TabIndex = 4;
-			this.ConnectPB.Text = "Connect";
-			this.ConnectPB.UseVisualStyleBackColor = true;
-			this.ConnectPB.Click += new System.EventHandler(this.ConnectPBClick);
-			// 
 			// ClientID
 			// 
 			this.ClientID.AutoSize = true;
-			this.ClientID.Location = new System.Drawing.Point(4, 52);
+			this.ClientID.Location = new System.Drawing.Point(4, 20);
 			this.ClientID.Name = "ClientID";
-			this.ClientID.Size = new System.Drawing.Size(48, 14);
+			this.ClientID.Size = new System.Drawing.Size(50, 13);
 			this.ClientID.TabIndex = 5;
 			this.ClientID.Text = "ClientID: ";
 			// 
 			// PacketsIn
 			// 
 			this.PacketsIn.AutoSize = true;
-			this.PacketsIn.Location = new System.Drawing.Point(4, 24);
+			this.PacketsIn.Location = new System.Drawing.Point(118, 6);
 			this.PacketsIn.Name = "PacketsIn";
-			this.PacketsIn.Size = new System.Drawing.Size(21, 14);
+			this.PacketsIn.Size = new System.Drawing.Size(22, 13);
 			this.PacketsIn.TabIndex = 6;
 			this.PacketsIn.Text = "In: ";
 			// 
 			// PacketsOut
 			// 
 			this.PacketsOut.AutoSize = true;
-			this.PacketsOut.Location = new System.Drawing.Point(4, 38);
+			this.PacketsOut.Location = new System.Drawing.Point(110, 20);
 			this.PacketsOut.Name = "PacketsOut";
-			this.PacketsOut.Size = new System.Drawing.Size(30, 14);
+			this.PacketsOut.Size = new System.Drawing.Size(30, 13);
 			this.PacketsOut.TabIndex = 7;
 			this.PacketsOut.Text = "Out: ";
 			// 
@@ -145,10 +120,10 @@ namespace sar.Controls
 									| System.Windows.Forms.AnchorStyles.Left) 
 									| System.Windows.Forms.AnchorStyles.Right)));
 			this.MessageList.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-			this.MessageList.Location = new System.Drawing.Point(4, 69);
+			this.MessageList.Location = new System.Drawing.Point(4, 37);
 			this.MessageList.Name = "MessageList";
 			this.MessageList.ShowGroups = false;
-			this.MessageList.Size = new System.Drawing.Size(457, 269);
+			this.MessageList.Size = new System.Drawing.Size(457, 301);
 			this.MessageList.TabIndex = 9;
 			this.MessageList.UseCompatibleStateImageBehavior = false;
 			this.MessageList.View = System.Windows.Forms.View.Details;
@@ -162,12 +137,9 @@ namespace sar.Controls
 			this.Controls.Add(this.PacketsOut);
 			this.Controls.Add(this.PacketsIn);
 			this.Controls.Add(this.ClientID);
-			this.Controls.Add(this.ConnectPB);
-			this.Controls.Add(this.DissconnectPB);
 			this.Controls.Add(this.Send);
 			this.Controls.Add(this.CustomMessage);
 			this.Controls.Add(this.connected);
-			this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.Name = "SocketClientControl";
 			this.Size = new System.Drawing.Size(465, 370);
@@ -178,8 +150,6 @@ namespace sar.Controls
 		private System.Windows.Forms.Label PacketsOut;
 		private System.Windows.Forms.Label PacketsIn;
 		private System.Windows.Forms.Label ClientID;
-		private System.Windows.Forms.Button ConnectPB;
-		private System.Windows.Forms.Button DissconnectPB;
 		private System.Windows.Forms.Button Send;
 		private System.Windows.Forms.TextBox CustomMessage;
 		private sar.Controls.BooleanIndicator connected;
