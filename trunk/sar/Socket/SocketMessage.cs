@@ -74,7 +74,7 @@ namespace sar.Socket
 		
 		#endregion
 		
-		public SocketMessage(SocketClient client, string command, long messageID, string member, string data, long destinationID)
+		public SocketMessage(SocketMemCache client, string command, long messageID, string member, string data, long destinationID)
 		{
 			this.command = command;
 			this.id = messageID;
@@ -85,11 +85,11 @@ namespace sar.Socket
 			this.timestamp = DateTime.Now;
 		}
 		
-		public SocketMessage(long messageID, string member, SocketValue data, long destinationID)
+		public SocketMessage(long messageID, SocketValue data, long destinationID)
 		{
 			this.command = "set";
 			this.id = messageID;
-			this.member = member;
+			this.member = data.Name;
 			this.data = data.Data;
 			this.fromID = data.SourceID;
 			this.toID = destinationID;

@@ -25,14 +25,13 @@ using sar.Tools;
 
 namespace sar.Socket
 {
-	public class SocketServer
+	public class SocketServer : SocketMemCache
 	{
 		private List<SocketClient> clients;
 		private TcpListener listener;
 		private Encoding encoding;
 		private long lastClientID = 100;
 		protected int port;
-		private Dictionary<string, SocketValue> memCache = new Dictionary<string, SocketValue>();
 
 		#region properties
 		
@@ -49,6 +48,18 @@ namespace sar.Socket
 		public Dictionary<string, SocketValue> MemCache
 		{
 			get { return this.memCache; }
+		}
+		
+		public override long ID
+		{
+			get
+			{
+				return -1;
+			}
+			set
+			{
+				
+			}
 		}
 		
 		#endregion
@@ -114,7 +125,7 @@ namespace sar.Socket
 			}
 		}
 		
-		private void OnMemCacheChanged(SocketValue data)
+		protected override void OnMemCacheChanged(SocketValue data)
 		{
 			try
 			{
@@ -174,57 +185,12 @@ namespace sar.Socket
 			}
 		}
 		
-		public string Get(string member)
-		{
-			if (this.memCache.ContainsKey(member))
-			{
-				return this.memCache[member].Data;
-			}
-
-			return "";
-		}
-		
 		public void Set(string member, string data)
 		{
 			this.Store(member, data);
 			this.Broadcast("set", member, data);
 		}
-		
-		private void Store(SocketMessage message)
-		{
-			string member = message.Member;
-
-			lock(this.memCache)
-			{
-				if (!this.memCache.ContainsKey(member))
-				{
-					this.memCache[member] = new SocketValue(member);
-					this.memCache[member].DataChanged += new SocketValue.DataChangedHandler(this.OnMemCacheChanged);
-				}
 				
-				this.memCache[member].Data = message.Data;
-				this.memCache[member].SourceID = message.FromID;
-				this.memCache[member].Timestamp = message.Timestamp;
-			}
-		}
-		
-		private void Store(string member, string data)
-		{
-			lock(this.memCache)
-			{
-				if (!this.memCache.ContainsKey(member))
-				{
-					this.memCache[member] = new SocketValue(member);
-					this.memCache[member].DataChanged += new SocketValue.DataChangedHandler(this.OnMemCacheChanged);
-				}
-				
-				
-				this.memCache[member].Data = data;
-				this.memCache[member].SourceID = -1;
-				this.memCache[member].Timestamp = DateTime.Now;
-			}
-		}
-		
 		public void Broadcast(SocketMessage message)
 		{
 			lock (this.clients)
@@ -245,6 +211,11 @@ namespace sar.Socket
 					client.SendData(command, member, data, client.ID);
 				}
 			}
+		}
+		
+		public override void SendData(SocketMessage message)
+		{
+			// FIXME... execute a broadcast
 		}
 		
 		private void ProcessMessage(SocketClient client, SocketMessage message)
@@ -272,7 +243,7 @@ namespace sar.Socket
 					case "get":
 						lock (this.memCache)
 						{
-							client.SendData("set", message.Member, this.Get(message.Member), message.FromID);
+							client.SendValue(this.Get(message.Member), -1);
 						}
 						
 						break;
@@ -283,7 +254,7 @@ namespace sar.Socket
 							foreach (KeyValuePair<string, SocketValue> entry in this.memCache)
 							{
 								SocketValue val = entry.Value;
-								client.SendValue(entry.Key, entry.Value, message.FromID);
+								client.SendValue(entry.Value, message.FromID);
 							}
 						}
 						
