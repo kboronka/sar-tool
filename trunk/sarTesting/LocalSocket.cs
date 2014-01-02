@@ -137,7 +137,7 @@ namespace sar.Testing
 		{
 			if (this.client1 != null)
 			{
-				this.client1.SetValue("testmember", DateTime.Now.ToString());
+				this.client1.SetValue("testmember", DateTime.Now.ToString("ss.fff"));
 			}
 		}
 		
@@ -145,7 +145,7 @@ namespace sar.Testing
 		{
 			if (this.client2 != null)
 			{
-				this.client2.SetValue("testmember", DateTime.Now.ToString());
+				this.client2.SetValue("testmember", DateTime.Now.ToString("ss.fff"));
 			}
 		}
 		

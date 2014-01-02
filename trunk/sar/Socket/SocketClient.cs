@@ -147,12 +147,30 @@ namespace sar.Socket
 			{
 				if (!this.memCache.ContainsKey(member))
 				{
-					this.memCache[member] = new SocketValue();
+					this.memCache[member] = new SocketValue(member);
 					this.memCache[member].DataChanged += new SocketValue.DataChangedHandler(this.OnMemCacheChanged);
 					this.SendData("get", member, "", -2);
 				}
 				
 				this.memCache[member].DataChanged += handler;
+			}
+		}
+		
+		private void Store(SocketMessage message)
+		{
+			string member = message.Member;
+
+			lock(this.memCache)
+			{
+				if (!this.memCache.ContainsKey(member))
+				{
+					this.memCache[member] = new SocketValue(member);
+					this.memCache[member].DataChanged += new SocketValue.DataChangedHandler(this.OnMemCacheChanged);
+				}
+				
+				this.memCache[member].Data = message.Data;
+				this.memCache[member].SourceID = message.FromID;
+				this.memCache[member].Timestamp = message.Timestamp;
 			}
 		}
 		
@@ -162,38 +180,33 @@ namespace sar.Socket
 			{
 				if (!this.memCache.ContainsKey(member))
 				{
-					this.memCache[member] = new SocketValue();
+					this.memCache[member] = new SocketValue(member);
 					this.memCache[member].DataChanged += new SocketValue.DataChangedHandler(this.OnMemCacheChanged);
 				}
 				
+				
 				this.memCache[member].Data = data;
+				this.memCache[member].SourceID = this.ID;
+				this.memCache[member].Timestamp = DateTime.Now;
+			}
+		}
+		
+		protected SocketValue Get(string member)
+		{
+			lock(this.memCache)
+			{
+				if (!this.memCache.ContainsKey(member))
+				{
+					this.Store(member, "not found");
+				}
+				
+				return this.memCache[member];
 			}
 		}
 		
 		public string GetValue(string member)
 		{
-			lock(this.memCache)
-			{
-				if (this.memCache.ContainsKey(member))
-				{
-					return this.memCache[member].Data;
-				}
-			}
-
-			return "";
-		}
-		
-		public System.DateTime GetTimestamp(string member)
-		{
-			lock(this.memCache)
-			{
-				if (this.memCache.ContainsKey(member))
-				{
-					return this.memCache[member].Timestamp;
-				}
-			}
-
-			return DateTime.Now;
+			return this.Get(member).Data;
 		}
 		
 		#endregion
@@ -317,7 +330,7 @@ namespace sar.Socket
 			
 			this.OnConnectionChange(true);
 			
-			this.SendData("set", "clientID", clientID.ToString());
+			this.SendData("set", "clientID", clientID.ToString(), this.ID);
 			
 			this.serviceConnectionTimer = new Timer(this.ServiceConnectionTick, null, 10, Timeout.Infinite);
 			this.serviceTimer = new Timer(this.ServiceTick, null, 100, Timeout.Infinite);
@@ -353,8 +366,8 @@ namespace sar.Socket
 		public void SetValue(string member, string data, bool global)
 		{
 			this.Store(member, data);
-			if (!global) this.SendData("set", member, data);
-			if (global) this.SendData("set", member, data, -1);
+			if (!global) this.SendValue(member, this.Get(member), this.ID);
+			if (global) this.SendValue(member, this.Get(member), -1);
 		}
 		
 		public void SendData(string command)
@@ -367,15 +380,16 @@ namespace sar.Socket
 			this.SendData(command, "", "", to);
 		}
 
-		public void SendData(string command, string member, string data)
+		public void SendValue(string member, SocketValue data, long to)
 		{
-			this.SendData(command, member, data, this.ID);
+			this.messageID++;
+			SendData(new SocketMessage(this.messageID, member, data, to));
 		}
 		
 		public void SendData(string command, string member, string data, long to)
 		{
 			this.messageID++;
-			SendData(new SocketMessage(this, command, this.messageID++, member, data, to));
+			SendData(new SocketMessage(this, command, this.messageID, member, data, to));
 		}
 		
 		public void SendData(SocketMessage message)
@@ -478,7 +492,7 @@ namespace sar.Socket
 						this.OnMessageRecived(message);
 						return true;
 					case "set":
-						this.Store(message.Member, message.Data);
+						this.Store(message);
 						this.OnMessageRecived(message);
 						return (message.ToID == this.ID);
 					case "get":

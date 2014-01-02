@@ -29,6 +29,7 @@ namespace sar.Controls
 	{
 		private SocketClient client;
 		
+		[Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public SocketClient Client
 		{
 			get { return this.client; }
@@ -102,7 +103,6 @@ namespace sar.Controls
 			{
 				
 			}
-			
 		}
 		
 		private void MessageRecived(object sender, EventArgs e)

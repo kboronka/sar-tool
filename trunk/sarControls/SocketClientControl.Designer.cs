@@ -58,6 +58,7 @@ namespace sar.Controls
 			// connected
 			// 
 			this.connected.Caption = "Connected";
+			this.connected.Font = new System.Drawing.Font("Arial", 9.75F);
 			this.connected.Location = new System.Drawing.Point(4, 4);
 			this.connected.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.connected.MaximumSize = new System.Drawing.Size(500, 16);
@@ -71,15 +72,15 @@ namespace sar.Controls
 			// 
 			this.CustomMessage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
 									| System.Windows.Forms.AnchorStyles.Right)));
-			this.CustomMessage.Location = new System.Drawing.Point(4, 344);
+			this.CustomMessage.Location = new System.Drawing.Point(0, 350);
 			this.CustomMessage.Name = "CustomMessage";
-			this.CustomMessage.Size = new System.Drawing.Size(388, 20);
+			this.CustomMessage.Size = new System.Drawing.Size(395, 20);
 			this.CustomMessage.TabIndex = 2;
 			// 
 			// Send
 			// 
 			this.Send.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.Send.Location = new System.Drawing.Point(397, 341);
+			this.Send.Location = new System.Drawing.Point(401, 348);
 			this.Send.Name = "Send";
 			this.Send.Size = new System.Drawing.Size(64, 23);
 			this.Send.TabIndex = 3;
@@ -120,10 +121,10 @@ namespace sar.Controls
 									| System.Windows.Forms.AnchorStyles.Left) 
 									| System.Windows.Forms.AnchorStyles.Right)));
 			this.MessageList.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-			this.MessageList.Location = new System.Drawing.Point(4, 37);
+			this.MessageList.Location = new System.Drawing.Point(0, 37);
 			this.MessageList.Name = "MessageList";
 			this.MessageList.ShowGroups = false;
-			this.MessageList.Size = new System.Drawing.Size(457, 301);
+			this.MessageList.Size = new System.Drawing.Size(465, 307);
 			this.MessageList.TabIndex = 9;
 			this.MessageList.UseCompatibleStateImageBehavior = false;
 			this.MessageList.View = System.Windows.Forms.View.Details;
