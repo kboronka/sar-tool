@@ -94,7 +94,7 @@ namespace sar.Socket
 			{
 				try
 				{
-					return long.Parse(this.GetValue("clientID"));
+					return long.Parse(this.GetValue("Me.ID"));
 				}
 				catch
 				{
@@ -105,7 +105,7 @@ namespace sar.Socket
 			}
 			set
 			{
-				this.Store("clientID", value.ToString());
+				this.Store("Me.ID", value.ToString());
 			}
 		}
 		
@@ -255,7 +255,7 @@ namespace sar.Socket
 			
 			this.OnConnectionChange(true);
 			
-			this.SendData("set", "clientID", clientID.ToString(), this.ID);
+			this.SendData("set", "Me.ID", clientID.ToString(), this.ID);
 			
 			this.serviceConnectionTimer = new Timer(this.ServiceConnectionTick, null, 10, Timeout.Infinite);
 			this.serviceTimer = new Timer(this.ServiceTick, null, 100, Timeout.Infinite);
