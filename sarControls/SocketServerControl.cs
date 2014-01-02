@@ -29,6 +29,7 @@ namespace sar.Controls
 	{
 		private SocketServer server;
 
+		[Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public SocketServer Server
 		{
 			get { return this.server; }

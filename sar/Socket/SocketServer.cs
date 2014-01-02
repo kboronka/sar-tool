@@ -63,6 +63,8 @@ namespace sar.Socket
 		{
 			try
 			{
+				this.Set("Server.Clients", this.clients.Count.ToString());
+				
 				if (NewClient != null)
 				{
 					NewClient(client, new System.EventArgs());
@@ -83,6 +85,8 @@ namespace sar.Socket
 		{
 			try
 			{
+				this.Set("Server.Clients", this.clients.Count.ToString());
+				
 				if (ClientLost != null)
 				{
 					ClientLost(client, new System.EventArgs());
@@ -141,6 +145,11 @@ namespace sar.Socket
 			this.listener.Start();
 			this.serviceTimer = new Timer(this.ServiceTick, null, 10, Timeout.Infinite);
 			this.pingTimer = new Timer(this.Ping, null, 1000, Timeout.Infinite);
+			this.Store("Server.Version", AssemblyInfo.SarVersion);
+			this.Store("Server.Port", this.port.ToString());
+			this.Store("Server.Clients", this.clients.Count.ToString());
+			this.Store("Application.Product", AssemblyInfo.Product);
+			this.Store("Application.Version", AssemblyInfo.Version);
 		}
 		
 		#endregion
@@ -181,17 +190,49 @@ namespace sar.Socket
 			this.Broadcast("set", member, data);
 		}
 		
-		public void Store(string member, string data)
+		private void Store(SocketMessage message)
+		{
+			string member = message.Member;
+
+			lock(this.memCache)
+			{
+				if (!this.memCache.ContainsKey(member))
+				{
+					this.memCache[member] = new SocketValue(member);
+					this.memCache[member].DataChanged += new SocketValue.DataChangedHandler(this.OnMemCacheChanged);
+				}
+				
+				this.memCache[member].Data = message.Data;
+				this.memCache[member].SourceID = message.FromID;
+				this.memCache[member].Timestamp = message.Timestamp;
+			}
+		}
+		
+		private void Store(string member, string data)
 		{
 			lock(this.memCache)
 			{
 				if (!this.memCache.ContainsKey(member))
 				{
-					this.memCache[member] = new SocketValue();
+					this.memCache[member] = new SocketValue(member);
 					this.memCache[member].DataChanged += new SocketValue.DataChangedHandler(this.OnMemCacheChanged);
 				}
 				
+				
 				this.memCache[member].Data = data;
+				this.memCache[member].SourceID = -1;
+				this.memCache[member].Timestamp = DateTime.Now;
+			}
+		}
+		
+		public void Broadcast(SocketMessage message)
+		{
+			lock (this.clients)
+			{
+				foreach (SocketClient client in this.clients)
+				{
+					client.SendData(message);
+				}
 			}
 		}
 		
@@ -218,11 +259,11 @@ namespace sar.Socket
 						
 						
 					case "set":
-						this.Store(message.Member, message.Data);
+						this.Store(message);
 						
 						if (message.ToID == -1)
 						{
-							this.Broadcast(message.Command, message.Member, message.Data);
+							this.Broadcast(message);
 						}
 
 						break;
@@ -242,7 +283,7 @@ namespace sar.Socket
 							foreach (KeyValuePair<string, SocketValue> entry in this.memCache)
 							{
 								SocketValue val = entry.Value;
-								client.SendData("set", entry.Key, entry.Value.Data, message.FromID);
+								client.SendValue(entry.Key, entry.Value, message.FromID);
 							}
 						}
 						
@@ -347,6 +388,6 @@ namespace sar.Socket
 
 		#endregion
 		
-		#endregion		
+		#endregion
 	}
 }

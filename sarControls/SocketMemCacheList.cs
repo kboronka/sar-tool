@@ -27,8 +27,9 @@ namespace sar.Controls
 	{
 		private SocketServer server;
 		private SocketClient client;
-		private Dictionary<string, SocketValue> memCache = new Dictionary<string, SocketValue>();
+		private Dictionary<string, SocketValue> memCache;
 		
+		[Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public SocketServer Server
 		{
 			get { return this.server; }
@@ -37,7 +38,7 @@ namespace sar.Controls
 				if (this.server != null)
 				{
 					this.server.DataChanged -= new SocketValue.DataChangedHandler(this.DataChanged);
-					this.memCache = null;
+					this.MemCache = null;
 				}
 				
 				this.server = value;
@@ -45,11 +46,12 @@ namespace sar.Controls
 				if (this.server != null)
 				{
 					this.server.DataChanged += new SocketValue.DataChangedHandler(this.DataChanged);
-					this.memCache = this.server.MemCache;
+					this.MemCache = this.server.MemCache;
 				}
 			}
 		}
-				
+		
+		[Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public SocketClient Client
 		{
 			get { return this.client; }
@@ -58,7 +60,7 @@ namespace sar.Controls
 				if (this.client != null)
 				{
 					this.client.DataChanged -= new SocketValue.DataChangedHandler(this.DataChanged);
-					this.memCache = null;
+					this.MemCache = null;
 				}
 				
 				this.client = value;
@@ -66,8 +68,23 @@ namespace sar.Controls
 				if (this.client != null)
 				{
 					this.client.DataChanged += new SocketValue.DataChangedHandler(this.DataChanged);
-					this.memCache = this.client.MemCache;
+					this.MemCache = this.client.MemCache;
 				}
+			}
+		}
+		
+		[Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+		private Dictionary<string, SocketValue> MemCache
+		{
+			set
+			{
+				if (value == null)
+				{
+					this.memCache = new Dictionary<string, SocketValue>();
+				}
+				
+				this.memCache = value;
+				this.InitializeList();
 			}
 		}
 		
@@ -76,29 +93,74 @@ namespace sar.Controls
 			this.Columns.Add("Member", -2, HorizontalAlignment.Left);
 			this.Columns.Add("Value", -2, HorizontalAlignment.Left);
 			this.Columns.Add("Timestamp", -2, HorizontalAlignment.Left);
+			this.Columns.Add("Source", -2, HorizontalAlignment.Left);
 			this.HeaderStyle = ColumnHeaderStyle.Nonclickable;
 			this.FullRowSelect = true;
 			this.View = View.Details;
 		}
 		
+		private void InitializeList()
+		{
+			try
+			{
+				if (this.memCache == null) return;
+				
+				this.BeginUpdate();
+				this.Items.Clear();
+				
+				foreach (KeyValuePair<string, SocketValue> entry in this.memCache)
+				{
+					ListViewItem newItem = new ListViewItem(entry.Value.Name);
+					newItem.Name = entry.Value.Name;
+					newItem.SubItems.Add(entry.Value.Data);
+					newItem.SubItems.Add(entry.Value.Timestamp.ToString());
+					newItem.SubItems.Add(entry.Value.SourceID.ToString());
+					this.Items.Add(newItem);
+				}
+				
+				this.Columns[0].Width = -2;
+				this.Columns[1].Width = -2;
+				this.Columns[2].Width = -2;
+				this.Columns[3].Width = -2;
+				this.EndUpdate();
+			}
+			catch
+			{
+				
+			}
+		}
+		
 		private void DataChanged(SocketValue data)
 		{
+			if (this.memCache == null) return;
+			
 			this.Invoke((MethodInvoker) delegate
 			            {
 			            	this.BeginUpdate();
-			            	this.Items.Clear();
-			            	
-			            	foreach (KeyValuePair<string, SocketValue> entry in this.memCache)
+
+			            	if (this.Items.ContainsKey(data.Name))
 			            	{
-			            		ListViewItem newItem = new ListViewItem(entry.Key);
-			            		newItem.SubItems.Add(entry.Value.Data);
-			            		newItem.SubItems.Add(entry.Value.Timestamp.ToString());
+			            		ListViewItem[] existingItems = this.Items.Find(data.Name, true);
+			            		ListViewItem existingItem = existingItems[0];
+			            		existingItem.SubItems[0].Text = data.Name;
+			            		existingItem.SubItems[1].Text = data.Data;
+			            		existingItem.SubItems[2].Text = data.Timestamp.ToString();
+			            		existingItem.SubItems[3].Text = data.SourceID.ToString();
+			            	}
+			            	else
+			            	{
+			            		ListViewItem newItem = new ListViewItem(data.Name);
+			            		newItem.Name = data.Name;
+			            		newItem.SubItems.Add(data.Data);
+			            		newItem.SubItems.Add(data.Timestamp.ToString());
+			            		newItem.SubItems.Add(data.SourceID.ToString());
 			            		this.Items.Add(newItem);
 			            	}
 			            	
 			            	this.Columns[0].Width = -2;
 			            	this.Columns[1].Width = -2;
 			            	this.Columns[2].Width = -2;
+			            	this.Columns[3].Width = -2;
 			            	this.EndUpdate();
 			            });
 		}

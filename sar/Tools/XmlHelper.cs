@@ -16,6 +16,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -26,6 +27,10 @@ namespace sar.Tools
 {
 	public class XML
 	{
+		public const string DATE = "yyyy-MM-dd";
+		public const string DATETIME = "yyyy-MM-dd HH:mm:ss";
+		public const string DATETIME_LONG = "yyyy-MM-dd HH:mm:ss.fff";
+		
 		public class Reader : IDisposable
 		{
 			private XmlReader reader;
@@ -72,6 +77,21 @@ namespace sar.Tools
 				
 				return "";
 			}
+			
+			public DateTime GetAttributeTimestamp(string name)
+			{
+				try
+				{
+					string attributeValue = this.reader.GetAttribute(name);
+					return DateTime.ParseExact(attributeValue, XML.DATETIME_LONG, DateTimeFormatInfo.InvariantInfo);
+				}
+				catch
+				{
+					
+				}
+
+				return new DateTime(2001, 1, 1);			
+			}
 
 			public long GetAttributeLong(string name)
 			{
@@ -116,11 +136,6 @@ namespace sar.Tools
 				this.Close();
 				
 				Dispose(true);
-				// This object will be cleaned up by the Dispose method.
-				// Therefore, you should call GC.SupressFinalize to
-				// take this object off the finalization queue
-				// and prevent finalization code for this object
-				// from executing a second time.
 				GC.SuppressFinalize(this);
 			}
 			
@@ -156,6 +171,18 @@ namespace sar.Tools
 			public void WriteAttributeString(string name, string value)
 			{
 				if (!String.IsNullOrEmpty(value)) this.writer.WriteAttributeString(name, value);
+			}
+			
+			public void WriteAttributeString(string name, DateTime value)
+			{
+				string attributeValue = value.ToString(XML.DATETIME_LONG);
+				this.WriteAttributeString(name, attributeValue);
+			}
+				
+			public void WriteAttributeString(string name, long value)
+			{
+				string attributeValue = value.ToString();
+				this.WriteAttributeString(name, attributeValue);
 			}
 			
 			public void WriteValue(string value)
@@ -198,11 +225,6 @@ namespace sar.Tools
 				this.Close();
 				
 				Dispose(true);
-				// This object will be cleaned up by the Dispose method.
-				// Therefore, you should call GC.SupressFinalize to
-				// take this object off the finalization queue
-				// and prevent finalization code for this object
-				// from executing a second time.
 				GC.SuppressFinalize(this);
 			}
 			

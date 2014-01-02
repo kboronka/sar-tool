@@ -27,6 +27,7 @@ namespace sar.Tools
 		private static string product;
 		private static string company;
 		private static string version;
+		private static string sarVersion;
 		private static string copyright;
 
 		public static string Name
@@ -82,6 +83,19 @@ namespace sar.Tools
 				return AssemblyInfo.version;
 			}
 		}
+		
+		public static string SarVersion
+		{
+			get
+			{
+				if (string.IsNullOrEmpty(AssemblyInfo.sarVersion))
+				{
+					AssemblyInfo.sarVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+				}
+				
+				return AssemblyInfo.sarVersion;
+			}
+		}		
 		
 		public static string Copyright
 		{

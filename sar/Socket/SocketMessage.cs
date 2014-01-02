@@ -29,11 +29,11 @@ namespace sar.Socket
 	{
 		private string command;
 		private long id;
-		private long length;
 		private string member;
 		private string data;
 		private long fromID;
 		private long toID;
+		private DateTime timestamp;
 		
 		#region properties
 		
@@ -67,17 +67,33 @@ namespace sar.Socket
 			get { return toID; }
 		}
 		
+		public DateTime Timestamp
+		{
+			get { return timestamp; }
+		}
+		
 		#endregion
 		
-		public SocketMessage(SocketClient client, string command, long messageID, string member, string data, long toID)
+		public SocketMessage(SocketClient client, string command, long messageID, string member, string data, long destinationID)
 		{
 			this.command = command;
 			this.id = messageID;
 			this.member = member;
 			this.data = data;
 			this.fromID = client.ID;
-			this.toID = toID;
-			this.length = data.Length;
+			this.toID = destinationID;
+			this.timestamp = DateTime.Now;
+		}
+		
+		public SocketMessage(long messageID, string member, SocketValue data, long destinationID)
+		{
+			this.command = "set";
+			this.id = messageID;
+			this.member = member;
+			this.data = data.Data;
+			this.fromID = data.SourceID;
+			this.toID = destinationID;
+			this.timestamp = data.Timestamp;			
 		}
 		
 		public SocketMessage(XML.Reader reader)
@@ -87,13 +103,14 @@ namespace sar.Socket
 				if (reader.NodeType != XmlNodeType.Element) throw new XmlException("SocketMessage Element Required");
 				if (reader.Name != "SocketMessage") throw new XmlException("SocketMessage Element Required");
 				
-				this.id = long.Parse(reader.GetAttributeString("id"));
+				this.id = reader.GetAttributeLong("id");
 				this.command = reader.GetAttributeString("command");
 				this.member = reader.GetAttributeString("member");
-				this.fromID = long.Parse(reader.GetAttributeString("from"));
-				this.toID = long.Parse(reader.GetAttributeString("to"));
-				this.length = long.Parse(reader.GetAttributeString("len"));
-				if (this.length > 0) reader.Read();
+				this.fromID = reader.GetAttributeLong("from");
+				this.toID = reader.GetAttributeLong("to");
+				long length = reader.GetAttributeLong("len");
+				this.timestamp = reader.GetAttributeTimestamp("timestamp");
+				if (length > 0) reader.Read();
 				this.data = reader.Value;
 			}
 			catch (Exception)
@@ -110,12 +127,13 @@ namespace sar.Socket
 		public void Serialize(XML.Writer writer)
 		{
 			writer.WriteStartElement("SocketMessage");
-			writer.WriteAttributeString("id", this.id.ToString());
+			writer.WriteAttributeString("id", this.id);
 			writer.WriteAttributeString("command", this.command);
 			writer.WriteAttributeString("member", this.member);
-			writer.WriteAttributeString("len", this.length.ToString());
-			writer.WriteAttributeString("from", this.fromID.ToString());
-			writer.WriteAttributeString("to", this.toID.ToString());
+			writer.WriteAttributeString("len", this.data.Length);
+			writer.WriteAttributeString("from", this.fromID);
+			writer.WriteAttributeString("to", this.toID);
+			writer.WriteAttributeString("timestamp", this.timestamp);
 			writer.WriteValue(this.data);
 			writer.WriteEndElement();		// SocketMessage
 		}
