@@ -149,6 +149,8 @@ namespace sar.Socket
 				if (connected != this.connected)
 				{
 					this.connected = connected;
+					if (this.connected) this.SendData("get-all");
+
 					if (ConnectionChange != null)
 					{
 						ConnectionChange(connected, new System.EventArgs());
