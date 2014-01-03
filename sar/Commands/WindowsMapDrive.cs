@@ -22,9 +22,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class WindowsMapDrive : BaseCommand
+	public class WindowsMapDrive : Command
 	{
-		public WindowsMapDrive(CommandHubBase commandHub) : base(commandHub, "Windows - Map Drive", new List<string> { "windows.map", "win.map" },
+		public WindowsMapDrive(Base.CommandHub parent) : base(parent, "Windows - Map Drive", new List<string> { "windows.map", "win.map" },
 		                                "-windows.map [drive letter] [UNC path] [persistent]",
 		                                new List<string>() { @"-windows.map S \\192.168.0.244\temp p" })
 		{

@@ -24,9 +24,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class WindowsRearm : BaseCommand
+	public class WindowsRearm : Command
 	{
-		public WindowsRearm(CommandHubBase commandHub) : base(commandHub, "Windows - Activation Trial Rearm",
+		public WindowsRearm(Base.CommandHub parent) : base(parent, "Windows - Activation Trial Rearm",
 		                             new List<string> { "windows.rearm", "win.rearm", "w.rarm" },
 		                             @"-windows.rearm",
 		                             new List<string> { "-windows.rearm" })

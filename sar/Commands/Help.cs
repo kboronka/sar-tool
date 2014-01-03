@@ -21,11 +21,11 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class Help : BaseCommand
+	public class Help : Command
 	{
 		private static bool titleDisplayed = false;
 		
-		public Help(CommandHubBase parent) : base(parent, "Help", new List<string> { "help", "?" }, "-help [command]", new List<string>() { @"-help bk" })
+		public Help(Base.CommandHub parent) : base(parent, "Help", new List<string> { "help", "?" }, "-help [command]", new List<string>() { @"-help bk" })
 		{
 			
 		}
@@ -48,7 +48,7 @@ namespace sar.Commands
 				string commandString = args[1];
 				if (this.commandHub.commands.ContainsKey(commandString))
 				{
-					BaseCommand command = this.commandHub.commands[commandString];
+					Command command = this.commandHub.commands[commandString];
 					
 					ConsoleHelper.WriteLine("\nUsage:", ConsoleColor.White);
 					ConsoleHelper.WriteLine("\t" + command.Usage);
@@ -71,8 +71,8 @@ namespace sar.Commands
 				ConsoleHelper.WriteLine("\t -help [command]");
 				ConsoleHelper.WriteLine("\nCommands:", ConsoleColor.White);
 				
-				BaseCommand lastCommand = null;
-				foreach (BaseCommand command in this.commandHub.commands.Values)
+				Command lastCommand = null;
+				foreach (Command command in this.commandHub.commands.Values)
 				{
 					if (command != lastCommand)
 					{

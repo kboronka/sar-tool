@@ -23,9 +23,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class AppShutdownWait : BaseCommand
+	public class AppShutdownWait : Command
 	{
-		public AppShutdownWait(CommandHubBase commandHub) : base(commandHub, "Application - Wait for shutdown",
+		public AppShutdownWait(Base.CommandHub parent) : base(parent, "Application - Wait for shutdown",
 		                     new List<string> { "app.wait", "a.w" },
 		                     @"-app.wait [ProcessName]",
 		                     new List<string> { "-app.wait LabVIEW" })

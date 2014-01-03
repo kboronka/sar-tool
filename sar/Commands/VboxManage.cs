@@ -22,9 +22,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class VboxManage : BaseCommand
+	public class VboxManage : Command
 	{
-		public VboxManage(CommandHubBase commandHub) : base(commandHub, "Vbox Manage Tool",
+		public VboxManage(Base.CommandHub parent) : base(parent, "Vbox Manage Tool",
 		                           new List<string> { "vbox.manage", "vb.manage" },
 		                           @"-vbox.manage [arg1] [arg2] [arg3]",
 		                           new List<string> { "-vbox.manage modifyhd \"WinXP-disk1.vdi\" --resize 3000" })

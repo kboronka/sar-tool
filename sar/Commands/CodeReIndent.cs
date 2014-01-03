@@ -22,9 +22,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class CodeReIndent : BaseCommand
+	public class CodeReIndent : Command
 	{
-		public CodeReIndent(CommandHubBase commandHub) : base(commandHub, "Code - ReIndent",
+		public CodeReIndent(Base.CommandHub parent) : base(parent, "Code - ReIndent",
 		                             new List<string> { "code.reindent", "c.reindent", "c.r" },
 		                             @"-code.reindent [filepath/pattern]",
 		                             new List<string> { "-code.reindent *.vb" })

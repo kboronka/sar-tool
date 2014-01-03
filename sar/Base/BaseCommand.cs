@@ -14,12 +14,13 @@
  */
 
 using System;
-using sar.Tools;
 using System.Collections.Generic;
+
+using sar.Tools;
 
 namespace sar.Base
 {
-	public abstract class BaseCommand
+	public abstract class Command
 	{
 		private string usage;
 		private List<string> examples;
@@ -29,7 +30,7 @@ namespace sar.Base
 		private delegate int FunctionPointer (string[] args);
 		public Delegate function;
 		
-		protected CommandHubBase commandHub;
+		protected CommandHub commandHub;
 		
 		public List<string> Commands
 		{
@@ -63,7 +64,7 @@ namespace sar.Base
 			}
 		}
 
-		protected BaseCommand(CommandHubBase parent, string name, List<string> commands, string help, List<string> examples)
+		protected Command(CommandHub parent, string name, List<string> commands, string help, List<string> examples)
 		{
 			this.function = new FunctionPointer(this.Execute);
 			this.usage = help;
@@ -80,5 +81,4 @@ namespace sar.Base
 
 		public abstract int Execute(string[] args);
 	}
-
 }

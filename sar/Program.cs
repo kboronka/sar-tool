@@ -20,7 +20,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 
 using sar.Commands;
-using sar.Base;
 using sar.Tools;
 
 
@@ -33,103 +32,19 @@ namespace sar
 	{
 		public static int Main(string[] args)
 		{
-			//FIXME: no error handling here
-
-			CommandHub hub = new CommandHub();
-			ConsoleHelper.Start();
-			if (args.Length == 0) Help.WriteTitle();
-			
 			try
 			{
-				// process command line arguments
-				bool commandlineActive = false;
-				int exitCode = ConsoleHelper.EXIT_OK;
+				CommandHub hub = new CommandHub();
+				ConsoleHelper.Start();
+				if (args.Length == 0) Help.WriteTitle();
+				int exitCode = hub.ProcessCommands(args);
 				
-				while (!commandlineActive)
-				{
-					try
-					{
-						if (args.Length == 0)
-						{
-							commandlineActive = false;
-							args = new string[1];
-							ConsoleHelper.Write("> ", ConsoleColor.White);
-							
-							args = StringHelper.ParseString(ConsoleHelper.ReadLine(), " ");
-							args = hub.RemoveGlobalArgs(args);
-							
-							if (args.Length == 0)
-							{
-								throw new ArgumentException("too few arguments");
-							}
-						}
-						else
-						{
-							args = hub.RemoveGlobalArgs(args);
-							commandlineActive = true;
-						}
-						
-						string command = args[0].ToLower();
-						if (command[0] == '-' || command[0] == '/')
-						{
-							command = command.Substring(1);
-						}
-						
-						// Execute Command
-						if (command != "exit")
-						{
-							Progress.UpdateTimer.Enabled = true;
-							exitCode = hub.Execute(command, args);
-							Progress.UpdateTimer.Enabled = false;
-							args = new string[0];
-						}
-					}
-					catch (Exception ex)
-					{
-						try
-						{
-							Progress.UpdateTimer.Enabled = false;
-							//backgroundThread.Abort();
-							//Progress.UpdateTimer.Enabled = false;
-
-							ConsoleHelper.WriteException(ex);
-
-							if (hub.Debug && commandlineActive)
-							{
-								Thread.Sleep(2000);
-							}
-							
-							args = new string[0];
-						}
-						catch
-						{
-							
-						}
-						
-						exitCode = ConsoleHelper.EXIT_ERROR;
-					}
-				}
-				
-				Progress.UpdateTimer.Enabled = false;
-				//backgroundThread.Abort();
-
 				ConsoleHelper.Shutdown();
 				return exitCode;
 			}
 			catch (Exception ex)
 			{
 				ConsoleHelper.WriteException(ex);
-				Thread.Sleep(2000);
-
-				Progress.UpdateTimer.Enabled = false;
-				//backgroundThread.Abort();
-				
-				if (hub.Debug)
-				{
-					ConsoleHelper.WriteLine("Press anykey to continue", ConsoleColor.Yellow);
-					ConsoleHelper.ReadKey();
-				}
-				
 				ConsoleHelper.Shutdown();
 				return ConsoleHelper.EXIT_ERROR;
 			}

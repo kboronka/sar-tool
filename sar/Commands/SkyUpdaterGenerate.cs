@@ -23,9 +23,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class SkyUpdaterGenerate : BaseCommand
+	public class SkyUpdaterGenerate : Command
 	{
-		public SkyUpdaterGenerate(CommandHubBase commandHub): base(commandHub, "SkyUpdater - Generate XML file from assembly",
+		public SkyUpdaterGenerate(Base.CommandHub commandHub): base(commandHub, "SkyUpdater - Generate XML file from assembly",
 		                                  new List<string> { "sky.generate", "sky.gen" },
 		                                  "-sky.generate [xml] [assembly] [url]",
 		                                  new List<string> { @"-sky.generate info.xml .\release\sar.exe https://sar-tool.googlecode.com/svn/trunk/release" })

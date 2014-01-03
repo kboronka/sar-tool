@@ -24,9 +24,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class WindowsRestart : BaseCommand
+	public class WindowsRestart : Command
 	{
-		public WindowsRestart(CommandHubBase commandHub) : base(commandHub, "Windows - Restart",
+		public WindowsRestart(Base.CommandHub parent) : base(parent, "Windows - Restart",
 		                               new List<string> { "windows.restart", "win.restart" },
 		                               @"-windows.restart [ip | computername] [domain/username] [password] <timeout (ms)>",
 		                               new List<string> { "-windows.restart 192.168.0.244 admin-username mypassword 35000" })

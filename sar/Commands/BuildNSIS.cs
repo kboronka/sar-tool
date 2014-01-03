@@ -23,9 +23,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class BuildNSIS : BaseCommand
+	public class BuildNSIS : Command
 	{
-		public BuildNSIS(CommandHubBase commandHub) : base(commandHub, "Build - NSIS installer",
+		public BuildNSIS(Base.CommandHub parent) : base(parent, "Build - NSIS installer",
 		                          new List<string> { "build.nsis", "b.nsis" },
 		                          "-b.nsis [nsis_filepath]",
 		                          new List<string> { @"-b.nsis src\Installer\chesscup.nsi" })

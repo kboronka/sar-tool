@@ -22,9 +22,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class FileTimestamp : BaseCommand
+	public class FileTimestamp : Command
 	{
-		public FileTimestamp(CommandHubBase commandHub) : base(commandHub, "File - Timestamp Name", 
+		public FileTimestamp(Base.CommandHub parent) : base(parent, "File - Timestamp Name", 
 		                                new List<string> { "file.timestamp", "f.t", "timestamp", "t" },
 		                                @"-timestamp <FilePath> [date/time format]",
 		                               new List<string> { "-timestamp backup.zip \"yyyy.MM.dd-HH.mm\"" })

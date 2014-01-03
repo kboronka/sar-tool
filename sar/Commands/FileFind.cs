@@ -22,9 +22,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class FileFind : BaseCommand
+	public class FileFind : Command
 	{
-		public FileFind(CommandHubBase commandHub) : base(commandHub, "File - Find",
+		public FileFind(Base.CommandHub parent) : base(parent, "File - Find",
 		                         new List<string> { "file.find", "f.f" },
 		                         "-file.find [filepattern]",
 		                         new List<string> { "-file.find \"*.vmdk\"" })

@@ -22,9 +22,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class SkyUpdaterUpdate : BaseCommand
+	public class SkyUpdaterUpdate : Command
 	{
-		public SkyUpdaterUpdate(CommandHubBase commandHub): base(commandHub, "SkyUpdater - Check for new version",
+		public SkyUpdaterUpdate(Base.CommandHub commandHub): base(commandHub, "SkyUpdater - Check for new version",
 		                            new List<string> { "sky.update" },
 		                            "-sky.update",
 		                            new List<string> { "-sky.update" })

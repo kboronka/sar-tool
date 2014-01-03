@@ -22,9 +22,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class FileSearchAndReplace : BaseCommand
+	public class FileSearchAndReplace : Command
 	{
-		public FileSearchAndReplace(CommandHubBase commandHub) : base(commandHub, "File - Search And Replace",
+		public FileSearchAndReplace(Base.CommandHub parent) : base(parent, "File - Search And Replace",
 		                                 new List<string> { "replace", "r" },
 		                                 "-replace <file_search_pattern> <search_text> <replace_text>",
 		                                 new List<string> {

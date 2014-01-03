@@ -23,9 +23,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class FileEncode : BaseCommand
+	public class FileEncode : Command
 	{
-		public FileEncode(CommandHubBase commandHub) : base(commandHub, "File - Encode",
+		public FileEncode(Base.CommandHub parent) : base(parent, "File - Encode",
 		                               new List<string> { "file.encode", "f.e" },
 		                               "-file.encode [filepattern] [UTF7 | UTF8 | UTF32 | Unicode | BigEndianUnicode | ASCII]",
 		                               new List<string> { "-file.encode \"*.nsis\" utf8" })

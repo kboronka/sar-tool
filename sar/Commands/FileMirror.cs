@@ -22,9 +22,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class FileMirror : BaseCommand
+	public class FileMirror : Command
 	{
-		public FileMirror(CommandHubBase commandHub) : base(commandHub, "File - Mirror",
+		public FileMirror(Base.CommandHub parent) : base(parent, "File - Mirror",
 		                           new List<string> { "file.mirror", "f.m" },
 		                           @"-f.m [root\filepattern] [destination]",
 		                           new List<string> { "-file.mirror \"*.*\" \"\\\\10.242.211.57\transfer\\x\\\"" })

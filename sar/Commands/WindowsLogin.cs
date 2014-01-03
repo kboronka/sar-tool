@@ -22,9 +22,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class WindowsLogin : BaseCommand
+	public class WindowsLogin : Command
 	{
-		public WindowsLogin(CommandHubBase commandHub) : base(commandHub, "Windows - Login", new List<string> { "windows.login", "win.login", "net.login", "n.login" },
+		public WindowsLogin(Base.CommandHub parent) : base(parent, "Windows - Login", new List<string> { "windows.login", "win.login", "net.login", "n.login" },
 		                         "-windows.login [ip] [domain/username] [password]",
 		                         new List<string>() { @"-windows.login \\192.168.0.244\temp test testpw" })
 		{
