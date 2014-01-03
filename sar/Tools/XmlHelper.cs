@@ -31,6 +31,9 @@ namespace sar.Tools
 		public const string DATETIME = "yyyy-MM-dd HH:mm:ss";
 		public const string DATETIME_LONG = "yyyy-MM-dd HH:mm:ss.fff";
 		
+		public const string TIME = "HH:mm:ss";
+		public const string TIME_LONG = "HH:mm:ss.fff";
+		
 		public class Reader : IDisposable
 		{
 			private XmlReader reader;
@@ -91,6 +94,21 @@ namespace sar.Tools
 				}
 
 				return new DateTime(2001, 1, 1);			
+			}
+			
+			public TimeSpan GetAttributeTimeSpan(string name)
+			{
+				try
+				{
+					string attributeValue = this.reader.GetAttribute(name);
+					return DateTime.ParseExact(attributeValue, XML.TIME_LONG, DateTimeFormatInfo.InvariantInfo).TimeOfDay;
+				}
+				catch
+				{
+					
+				}
+
+				return new TimeSpan(0, 0, 0);
 			}
 
 			public long GetAttributeLong(string name)
@@ -178,7 +196,13 @@ namespace sar.Tools
 				string attributeValue = value.ToString(XML.DATETIME_LONG);
 				this.WriteAttributeString(name, attributeValue);
 			}
-				
+
+			public void WriteAttributeString(string name, TimeSpan value)
+			{
+				string attributeValue = value.ToString();
+				this.WriteAttributeString(name, attributeValue);
+			}
+			
 			public void WriteAttributeString(string name, long value)
 			{
 				string attributeValue = value.ToString();

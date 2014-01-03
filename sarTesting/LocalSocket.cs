@@ -43,15 +43,15 @@ namespace sar.Testing
 		public LocalSocket()
 		{
 			InitializeComponent();
-			server = new SocketServer(8100, Encoding.ASCII);
+			server = new SocketServer(8104, Encoding.ASCII);
 			this.socketServerControl1.Server = server;
 
-			client1 = new SocketClient("localhost", 8100, Encoding.ASCII);
+			client1 = new SocketClient("localhost", 8104, Encoding.ASCII);
 			client1.RegisterCallback("testmember", new SocketValue.DataChangedHandler(this.Client1Update));
 			this.socketMemCacheList1.Client = client1;
 			client1.SendData("ping");
 			
-			client2 = new SocketClient("localhost", 8100, Encoding.ASCII);
+			client2 = new SocketClient("localhost", 8104, Encoding.ASCII);
 			client2.RegisterCallback("testmember", new SocketValue.DataChangedHandler(this.Client2Update));
 			this.socketMemCacheList2.Client = client2;
 			client2.SendData("ping");
