@@ -35,7 +35,7 @@ namespace sar.Base
 			
 		}
 		
-		internal int ProcessCommands(string[] args)
+		public int ProcessCommands(string[] args)
 		{
 			try
 			{
