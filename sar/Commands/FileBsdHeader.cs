@@ -14,15 +14,17 @@
  */
 
 using System;
-using sar.Tools;
 using System.Collections.Generic;
 using System.IO;
 
-namespace sar.Tools
+using sar.Tools;
+using sar.Base;
+
+namespace sar.Commands
 {
 	public class FileBsdHeader : BaseCommand
 	{
-		public FileBsdHeader(): base("File - BSD Stamp C# Files",
+		public FileBsdHeader(CommandHubBase commandHub): base(commandHub, "File - BSD Stamp C# Files",
 		                            new List<string> { "file.bsd", "f.bsd" },
 		                            "-file.bsd [file_search_pattern]",
 		                            new List<string> { "-file.bsd *.cs" })
@@ -90,7 +92,7 @@ namespace sar.Tools
 			
 			ConsoleHelper.WriteLine("BSD Header updated on " + updates.ToString() + " file" + ((updates != 1) ? "s" : ""), ConsoleColor.DarkYellow);
 			
-			return Program.EXIT_OK;
+			return ConsoleHelper.EXIT_OK;
 		}
 	}
 }

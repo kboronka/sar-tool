@@ -18,14 +18,8 @@ using System.Windows.Forms;
 
 namespace sar.Testing
 {
-	/// <summary>
-	/// Class with program entry point.
-	/// </summary>
 	internal sealed class Program
 	{
-		/// <summary>
-		/// Program entry point.
-		/// </summary>
 		[STAThread]
 		private static void Main(string[] args)
 		{

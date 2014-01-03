@@ -19,12 +19,13 @@ using System.Reflection;
 using System.IO;
 
 using sar.Tools;
+using sar.Base;
 
-namespace sar.Tools
+namespace sar.Commands
 {
 	public class SkyUpdaterAdd : BaseCommand
 	{
-		public SkyUpdaterAdd(): base("SkyUpdater - Add file",
+		public SkyUpdaterAdd(CommandHubBase commandHub): base(commandHub, "SkyUpdater - Add file",
 		                             new List<string> { "sky.add" },
 		                             "-sky.add [xml] [file] [url]",
 		                             new List<string> { @"-sky.add info.xml .\release\sar.exe https://sar-tool.googlecode.com/svn/trunk/release/sar.exe" })
@@ -65,7 +66,7 @@ namespace sar.Tools
 			updater.Save(xmlFile);
 			
 			ConsoleHelper.WriteLine(IO.GetFilename(xmlFile) + " updated", ConsoleColor.DarkYellow);
-			return Program.EXIT_OK;
+			return ConsoleHelper.EXIT_OK;
 		}
 	}
 }

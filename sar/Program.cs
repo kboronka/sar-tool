@@ -18,6 +18,9 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading;
+
+using sar.Commands;
+using sar.Base;
 using sar.Tools;
 
 
@@ -28,61 +31,19 @@ namespace sar
 {
 	public class Program
 	{
-		public const int EXIT_OK = 0;
-		public const int EXIT_ERROR = 1;
-		
-		public static bool NoWarning = false;
-		public static bool Debug = false;
-		public static bool IncludeSVN = false;
-		public static bool IncludeSubFolders = true;
-
 		public static int Main(string[] args)
 		{
 			//FIXME: no error handling here
-			Progress progressBar = new Progress();
-			Thread backgroundThread = new Thread(new ThreadStart(progressBar.Enable));
+
+			CommandHub hub = new CommandHub();
+			ConsoleHelper.Start();
+			if (args.Length == 0) Help.WriteTitle();
 			
 			try
 			{
-				// load all command modules
-				List<BaseCommand> allCommands = new List<BaseCommand>() {
-					new Help(),
-					new BuildCHM(),
-					new BuildNSIS(),
-					new BuildSLN(),
-					new CodeReIndent(),
-					new CodeClean(),
-					new AssemblyInfoVersion(),
-					new Kill(),
-					new AppShutdownWait(),
-					new LabviewVersion(),
-					new VboxManage(),
-					new FileBackup(),
-					new FileSearchAndReplace(),
-					new FileTimestamp(),
-					new FileEncode(),
-					new FileFind(),
-					new FileDestory(),
-					new FileRemoveDirectory(),
-					new FileBsdHeader(),
-					new FileMirror(),
-					new FileCopy(),
-					new FileLock(),
-					new DirectoryTimestamp(),
-					new WindowsLogin(),
-					new WindowsMapDrive(),
-					new WindowsRearm(),
-					new WindowsRestart(),
-					new NetListAddaptors(),
-					new SkyUpdaterUpdate(),
-					new SkyUpdaterGenerate(),
-					new SkyUpdaterAdd(),
-					new Delay()
-				};
-
 				// process command line arguments
 				bool commandlineActive = false;
-				int exitCode = EXIT_OK;
+				int exitCode = ConsoleHelper.EXIT_OK;
 				
 				while (!commandlineActive)
 				{
@@ -92,11 +53,10 @@ namespace sar
 						{
 							commandlineActive = false;
 							args = new string[1];
-							
-							Help.WriteTitle();
 							ConsoleHelper.Write("> ", ConsoleColor.White);
+							
 							args = StringHelper.ParseString(ConsoleHelper.ReadLine(), " ");
-							args = RemoveGlobalArgs(args);
+							args = hub.RemoveGlobalArgs(args);
 							
 							if (args.Length == 0)
 							{
@@ -105,7 +65,7 @@ namespace sar
 						}
 						else
 						{
-							args = RemoveGlobalArgs(args);
+							args = hub.RemoveGlobalArgs(args);
 							commandlineActive = true;
 						}
 						
@@ -118,25 +78,23 @@ namespace sar
 						// Execute Command
 						if (command != "exit")
 						{
-							backgroundThread = new Thread(new ThreadStart(progressBar.Enable));
-							backgroundThread.Name = "RunningIndicator";
-							backgroundThread.IsBackground = true;
-							backgroundThread.Start();
-							exitCode = CommandHub.Execute(command, args);
+							Progress.UpdateTimer.Enabled = true;
+							exitCode = hub.Execute(command, args);
+							Progress.UpdateTimer.Enabled = false;
 							args = new string[0];
-							backgroundThread.Abort();
 						}
 					}
 					catch (Exception ex)
 					{
 						try
 						{
-							backgroundThread.Abort();
 							Progress.UpdateTimer.Enabled = false;
+							//backgroundThread.Abort();
+							//Progress.UpdateTimer.Enabled = false;
 
 							ConsoleHelper.WriteException(ex);
 
-							if (Program.Debug && commandlineActive)
+							if (hub.Debug && commandlineActive)
 							{
 								Thread.Sleep(2000);
 							}
@@ -148,13 +106,14 @@ namespace sar
 							
 						}
 						
-						exitCode = EXIT_ERROR;
+						exitCode = ConsoleHelper.EXIT_ERROR;
 					}
 				}
 				
 				Progress.UpdateTimer.Enabled = false;
-				backgroundThread.Abort();
+				//backgroundThread.Abort();
 
+				ConsoleHelper.Shutdown();
 				return exitCode;
 			}
 			catch (Exception ex)
@@ -163,70 +122,17 @@ namespace sar
 				Thread.Sleep(2000);
 
 				Progress.UpdateTimer.Enabled = false;
-				backgroundThread.Abort();
+				//backgroundThread.Abort();
 				
-				if (Program.Debug)
+				if (hub.Debug)
 				{
 					ConsoleHelper.WriteLine("Press anykey to continue", ConsoleColor.Yellow);
 					ConsoleHelper.ReadKey();
 				}
 				
-				return EXIT_ERROR;
+				ConsoleHelper.Shutdown();
+				return ConsoleHelper.EXIT_ERROR;
 			}
-		}
-		
-		public static string[] RemoveGlobalArgs(string[] args)
-		{
-			Program.NoWarning = false;
-			Program.Debug = false;
-			Program.IncludeSVN = false;
-			Program.IncludeSubFolders = true;
-			
-			#if DEBUG
-			Program.Debug = true;
-			#endif
-			
-			List<string> result = new List<string>();
-			
-			foreach (string arg in args)
-			{
-				if (arg.Length > 1 && arg.Substring(0, 1) == "/")
-				{
-					switch (arg.ToLower())
-					{
-						case "/q":
-							Program.NoWarning = true;
-							break;
-						case "/d":
-							Program.Debug = true;
-							break;
-						case "/svn":
-							Program.IncludeSVN = true;
-							break;
-						case "/nosubfolders":
-						case "/nosubs":
-							Program.IncludeSubFolders = false;
-							break;
-						default:
-							result.Add(arg);
-							break;
-					}
-				}
-				else
-				{
-					result.Add(arg);
-				}
-			}
-			
-			ConsoleHelper.ShowDebug = Program.Debug;
-			IO.IncludeSubFolders = Program.IncludeSubFolders;
-			
-			ConsoleHelper.DebugWriteLine("/q (quite)= " + Program.NoWarning.ToString());
-			ConsoleHelper.DebugWriteLine("/d (debug) = " + Program.Debug.ToString());
-			ConsoleHelper.DebugWriteLine("/svn (include .svn folders) = " + Program.IncludeSVN.ToString());
-			ConsoleHelper.DebugWriteLine("/nosubfolders = " + (!Program.IncludeSubFolders).ToString());
-			
-			return result.ToArray();
 		}
 	}
 }

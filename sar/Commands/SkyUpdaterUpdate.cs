@@ -18,12 +18,13 @@ using System.Collections.Generic;
 using System.IO;
 
 using sar.Tools;
+using sar.Base;
 
-namespace sar.Tools
+namespace sar.Commands
 {
 	public class SkyUpdaterUpdate : BaseCommand
 	{
-		public SkyUpdaterUpdate(): base("SkyUpdater - Check for new version",
+		public SkyUpdaterUpdate(CommandHubBase commandHub): base(commandHub, "SkyUpdater - Check for new version",
 		                            new List<string> { "sky.update" },
 		                            "-sky.update",
 		                            new List<string> { "-sky.update" })
@@ -52,7 +53,7 @@ namespace sar.Tools
 			}
 			
 			
-			return Program.EXIT_OK;
+			return ConsoleHelper.EXIT_OK;
 		}
 	}
 }

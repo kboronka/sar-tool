@@ -14,17 +14,19 @@
  */
 
 using System;
-using sar.Tools;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
-namespace sar.Tools
+using sar.Tools;
+using sar.Base;
+
+namespace sar.Commands
 {
 	public class Delay : BaseCommand
 	{
-		public Delay() : base("Delay",
+		public Delay(CommandHubBase commandHub) : base(commandHub, "Delay",
 		                      new List<string> { "delay" },
 		                      @"-delay <milliseconds>",
 		                      new List<string> { "-delay 5000" })
@@ -56,7 +58,7 @@ namespace sar.Tools
 				Progress.Message = StringHelper.MillisecondsToSecondsString(timeremaining) + " ";
 			}
 			
-			return Program.EXIT_OK;
+			return ConsoleHelper.EXIT_OK;
 		}
 	}
 }

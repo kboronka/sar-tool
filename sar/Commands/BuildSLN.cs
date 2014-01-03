@@ -14,15 +14,17 @@
  */
 
 using System;
-using sar.Tools;
 using System.Collections.Generic;
 using System.IO;
 
-namespace sar.Tools
+using sar.Tools;
+using sar.Base;
+
+namespace sar.Commands
 {
 	public class BuildSLN : BaseCommand
 	{
-		public BuildSLN() : base("Build - .NET soultion",
+		public BuildSLN(CommandHubBase commandHub) : base(commandHub, "Build - .NET soultion",
 		                         new List<string> { "build.net", "b.net" },
 		                         "-b.net [.net version] [solution_path] [msbuild arguments]",
 		                         new List<string> { "-b.net 3.5 sar.sln /p:Configuration=Release /p:Platform=\"x86\"" })
@@ -86,7 +88,7 @@ namespace sar.Tools
 			else
 			{
 				ConsoleHelper.WriteLine("Build Successfully Completed", ConsoleColor.DarkYellow);
-				return Program.EXIT_OK;
+				return ConsoleHelper.EXIT_OK;
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-# SharpDevelop 4.3
+# SharpDevelop 4.4
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sar", "sar\sar.csproj", "{74862D71-2342-4EAE-8C29-D25F2A195677}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sarTesting", "sarTesting\sarTesting.csproj", "{CF782D66-812A-46EE-9E1D-95879FC285D0}"

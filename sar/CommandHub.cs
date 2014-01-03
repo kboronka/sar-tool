@@ -16,43 +16,52 @@
 using System;
 using System.Collections.Generic;
 
+using sar.Base;
+using sar.Commands;
 using sar.Tools;
 
 namespace sar.Tools
 {
-	public class CommandHub
+	public class CommandHub : Base.CommandHubBase
 	{
-		public static Dictionary<string, BaseCommand> commands = new Dictionary<string, BaseCommand>();
-		
-		public static void Add(string commandString, BaseCommand commandClass)
+		private List<BaseCommand> allCommands;
+		public CommandHub() : base()
 		{
-			try
-			{
-				CommandHub.commands.Add(commandString, commandClass);
-			}
-			catch (Exception ex)
-			{
-				ConsoleHelper.WriteLine("Command: " + commandString);
-				ConsoleHelper.WriteException(ex);
-			}
-		}
-		
-		public static int Execute(string command, string[] args)
-		{
-			if (String.IsNullOrEmpty(command))
-			{
-				throw new NullReferenceException("no command provided");
-			}
-			
-			command = command.ToLower();
-			
-			if (!CommandHub.commands.ContainsKey(command))
-			{
-				throw new ArgumentException("Unknown command");
-			}
-			
-			return CommandHub.commands[command].Execute(args);
-			//return (int)CommandHub.commands[command].function.DynamicInvoke(new object[] { args });
+			// load all command modules
+			this.allCommands = new List<BaseCommand>() {
+				new Help(this),
+				new BuildCHM(this),
+				new BuildNSIS(this),
+				new BuildSLN(this),
+				new CodeReIndent(this),
+				new CodeClean(this),
+				new AssemblyInfoVersion(this),
+				new Kill(this),
+				new AppShutdownWait(this),
+				new LabviewVersion(this),
+				new VboxManage(this),
+				new FileBackup(this),
+				new FileSearchAndReplace(this),
+				new FileTimestamp(this),
+				new FileEncode(this),
+				new FileFind(this),
+				new FileDestory(this),
+				new FileRemoveDirectory(this),
+				new FileBsdHeader(this),
+				new FileMirror(this),
+				new FileCopy(this),
+				new FileLock(this),
+				new DirectoryTimestamp(this),
+				new WindowsLogin(this),
+				new WindowsMapDrive(this),
+				new WindowsRearm(this),
+				new WindowsRestart(this),
+				new NetListAddaptors(this),
+				new SkyUpdaterUpdate(this),
+				new SkyUpdaterGenerate(this),
+				new SkyUpdaterAdd(this),
+				new Delay(this)
+			};
 		}
 	}
 }

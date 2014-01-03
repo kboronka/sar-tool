@@ -17,7 +17,7 @@ using System;
 using sar.Tools;
 using System.Collections.Generic;
 
-namespace sar.Tools
+namespace sar.Base
 {
 	public abstract class BaseCommand
 	{
@@ -28,6 +28,8 @@ namespace sar.Tools
 		private List<string> commands;
 		private delegate int FunctionPointer (string[] args);
 		public Delegate function;
+		
+		protected CommandHubBase commandHub;
 		
 		public List<string> Commands
 		{
@@ -61,17 +63,18 @@ namespace sar.Tools
 			}
 		}
 
-		protected BaseCommand(string name, List<string> commands, string help, List<string> examples)
+		protected BaseCommand(CommandHubBase parent, string name, List<string> commands, string help, List<string> examples)
 		{
 			this.function = new FunctionPointer(this.Execute);
 			this.usage = help;
 			this.name = name;
 			this.commands = commands;
 			this.examples = examples;
+			this.commandHub = parent;
 			
 			foreach (string command in commands)
 			{
-				CommandHub.Add(command.ToLower(), this);
+				parent.Add(command.ToLower(), this);
 			}
 		}
 

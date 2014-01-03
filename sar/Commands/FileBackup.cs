@@ -14,15 +14,17 @@
  */
 
 using System;
-using sar.Tools;
 using System.Collections.Generic;
 using System.IO;
 
-namespace sar.Tools
+using sar.Tools;
+using sar.Base;
+
+namespace sar.Commands
 {
 	public class FileBackup : BaseCommand
 	{
-		public FileBackup() : base("File - Backup",
+		public FileBackup(CommandHubBase parent) : base(parent, "File - Backup",
 		                           new List<string> { "file.backup", "f.bk" },
 		                           @"-file.backup [filepath/pattern] [destination]",
 		                           new List<string> { "-file.backup backup.zip \"c:\\backups\\\"" })
@@ -61,7 +63,7 @@ namespace sar.Tools
 			{
 				if (!file.Contains(archivepath))
 				{
-					if (Program.IncludeSVN || !IO.IsSVN(file))
+					if (this.commandHub.IncludeSVN || !IO.IsSVN(file))
 					{
 						string fileRelativePath = StringHelper.TrimStart(file, root.Length);
 						string backupFile = archivepath + file.Substring(root.Length);
@@ -86,7 +88,7 @@ namespace sar.Tools
 			}
 			
 			ConsoleHelper.WriteLine(counter.ToString() + " File" + ((counter != 1) ? "s" : "") + " Copied", ConsoleColor.DarkYellow);
-			return Program.EXIT_OK;
+			return ConsoleHelper.EXIT_OK;
 		}
 	}
 }

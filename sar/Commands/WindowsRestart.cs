@@ -20,12 +20,13 @@ using System.IO;
 using System.Threading;
 
 using sar.Tools;
+using sar.Base;
 
-namespace sar.Tools
+namespace sar.Commands
 {
 	public class WindowsRestart : BaseCommand
 	{
-		public WindowsRestart() : base("Windows - Restart",
+		public WindowsRestart(CommandHubBase commandHub) : base(commandHub, "Windows - Restart",
 		                               new List<string> { "windows.restart", "win.restart" },
 		                               @"-windows.restart [ip | computername] [domain/username] [password] <timeout (ms)>",
 		                               new List<string> { "-windows.restart 192.168.0.244 admin-username mypassword 35000" })
@@ -60,7 +61,7 @@ namespace sar.Tools
 			if (exitcode != 0)
 			{
 				ConsoleHelper.WriteLine("Login Failed", ConsoleColor.DarkYellow);
-				return Program.EXIT_ERROR;
+				return ConsoleHelper.EXIT_ERROR;
 			}
 			
 			exitcode = ConsoleHelper.Run("shutdown", @"/r /m " + uncPath + @" /t 0 /f");
@@ -68,7 +69,7 @@ namespace sar.Tools
 			if (exitcode != 0)
 			{
 				ConsoleHelper.WriteLine(serverAddres + " failed to restart", ConsoleColor.DarkYellow);
-				return Program.EXIT_ERROR;
+				return ConsoleHelper.EXIT_ERROR;
 			}
 			
 			if (timeout != 0)
@@ -77,7 +78,7 @@ namespace sar.Tools
 				if (!NetHelper.WaitForPing(serverAddres, timeout, false))
 				{
 					ConsoleHelper.WriteLine(serverAddres + " did not shutdown", ConsoleColor.DarkYellow);
-					return Program.EXIT_ERROR;
+					return ConsoleHelper.EXIT_ERROR;
 				}
 				
 				Progress.Message = "Starting " + serverAddres;
@@ -85,12 +86,12 @@ namespace sar.Tools
 				if (!NetHelper.WaitForPing(serverAddres, timeout, true))
 				{
 					ConsoleHelper.WriteLine(serverAddres + " did not start", ConsoleColor.DarkYellow);
-					return Program.EXIT_ERROR;
+					return ConsoleHelper.EXIT_ERROR;
 				}
 			}
 			
 			ConsoleHelper.WriteLine(serverAddres + " reboot complete", ConsoleColor.DarkYellow);
-			return Program.EXIT_OK;
+			return ConsoleHelper.EXIT_OK;
 		}
 	}
 }

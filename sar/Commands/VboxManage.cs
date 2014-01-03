@@ -14,15 +14,17 @@
  */
 
 using System;
-using sar.Tools;
 using System.Collections.Generic;
 using System.IO;
 
-namespace sar.Tools
+using sar.Tools;
+using sar.Base;
+
+namespace sar.Commands
 {
 	public class VboxManage : BaseCommand
 	{
-		public VboxManage() : base("Vbox Manage Tool",
+		public VboxManage(CommandHubBase commandHub) : base(commandHub, "Vbox Manage Tool",
 		                           new List<string> { "vbox.manage", "vb.manage" },
 		                           @"-vbox.manage [arg1] [arg2] [arg3]",
 		                           new List<string> { "-vbox.manage modifyhd \"WinXP-disk1.vdi\" --resize 3000" })
@@ -58,7 +60,7 @@ namespace sar.Tools
 			else
 			{
 				ConsoleHelper.WriteLine("Command Successfully Completed", ConsoleColor.DarkYellow);
-				return Program.EXIT_OK;
+				return ConsoleHelper.EXIT_OK;
 			}
 		}
 	}

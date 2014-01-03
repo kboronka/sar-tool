@@ -14,16 +14,18 @@
  */
 
 using System;
-using sar.Tools;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace sar.Tools
+using sar.Tools;
+using sar.Base;
+
+namespace sar.Commands
 {
 	public class BuildNSIS : BaseCommand
 	{
-		public BuildNSIS() : base("Build - NSIS installer",
+		public BuildNSIS(CommandHubBase commandHub) : base(commandHub, "Build - NSIS installer",
 		                          new List<string> { "build.nsis", "b.nsis" },
 		                          "-b.nsis [nsis_filepath]",
 		                          new List<string> { @"-b.nsis src\Installer\chesscup.nsi" })
@@ -69,7 +71,7 @@ namespace sar.Tools
 			else
 			{
 				ConsoleHelper.WriteLine("Build Successfully Completed", ConsoleColor.DarkYellow);
-				return Program.EXIT_OK;
+				return ConsoleHelper.EXIT_OK;
 			}
 		}
 	}

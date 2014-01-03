@@ -14,16 +14,18 @@
  */
 
 using System;
-using sar.Tools;
 using System.Collections.Generic;
 
-namespace sar.Tools
+using sar.Tools;
+using sar.Base;
+
+namespace sar.Commands
 {
 	public class Help : BaseCommand
 	{
 		private static bool titleDisplayed = false;
 		
-		public Help() : base("Help", new List<string> { "help", "?" }, "-help [command]", new List<string>() { @"-help bk" })
+		public Help(CommandHubBase parent) : base(parent, "Help", new List<string> { "help", "?" }, "-help [command]", new List<string>() { @"-help bk" })
 		{
 			
 		}
@@ -44,9 +46,9 @@ namespace sar.Tools
 			if (args.Length == 2)
 			{
 				string commandString = args[1];
-				if (CommandHub.commands.ContainsKey(commandString))
+				if (this.commandHub.commands.ContainsKey(commandString))
 				{
-					BaseCommand command = CommandHub.commands[commandString];
+					BaseCommand command = this.commandHub.commands[commandString];
 					
 					ConsoleHelper.WriteLine("\nUsage:", ConsoleColor.White);
 					ConsoleHelper.WriteLine("\t" + command.Usage);
@@ -70,7 +72,7 @@ namespace sar.Tools
 				ConsoleHelper.WriteLine("\nCommands:", ConsoleColor.White);
 				
 				BaseCommand lastCommand = null;
-				foreach (BaseCommand command in CommandHub.commands.Values)
+				foreach (BaseCommand command in this.commandHub.commands.Values)
 				{
 					if (command != lastCommand)
 					{
@@ -91,7 +93,7 @@ namespace sar.Tools
 				}
 			}
 			
-			return Program.EXIT_OK;
+			return ConsoleHelper.EXIT_OK;
 		}
 	}
 }

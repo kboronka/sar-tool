@@ -14,15 +14,17 @@
  */
 
 using System;
-using sar.Tools;
 using System.Collections.Generic;
 using System.IO;
 
-namespace sar.Tools
+using sar.Tools;
+using sar.Base;
+
+namespace sar.Commands
 {
 	public class WindowsLogin : BaseCommand
 	{
-		public WindowsLogin() : base("Windows - Login", new List<string> { "windows.login", "win.login", "net.login", "n.login" },
+		public WindowsLogin(CommandHubBase commandHub) : base(commandHub, "Windows - Login", new List<string> { "windows.login", "win.login", "net.login", "n.login" },
 		                         "-windows.login [ip] [domain/username] [password]",
 		                         new List<string>() { @"-windows.login \\192.168.0.244\temp test testpw" })
 		{
@@ -54,11 +56,11 @@ namespace sar.Tools
 			if (exitcode != 0)
 			{
 				ConsoleHelper.WriteLine("Login to " + serverAddres + " has failed", ConsoleColor.DarkYellow);
-				return Program.EXIT_ERROR;
+				return ConsoleHelper.EXIT_ERROR;
 			}
 
 			ConsoleHelper.WriteLine("Login to " + serverAddres + " was successful", ConsoleColor.DarkYellow);
-			return Program.EXIT_OK;
+			return ConsoleHelper.EXIT_OK;
 		}
 	}
 }

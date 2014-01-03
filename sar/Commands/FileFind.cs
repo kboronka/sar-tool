@@ -14,15 +14,17 @@
  */
 
 using System;
-using sar.Tools;
 using System.Collections.Generic;
 using System.IO;
 
-namespace sar.Tools
+using sar.Tools;
+using sar.Base;
+
+namespace sar.Commands
 {
 	public class FileFind : BaseCommand
 	{
-		public FileFind() : base("File - Find",
+		public FileFind(CommandHubBase commandHub) : base(commandHub, "File - Find",
 		                         new List<string> { "file.find", "f.f" },
 		                         "-file.find [filepattern]",
 		                         new List<string> { "-file.find \"*.vmdk\"" })
@@ -51,7 +53,7 @@ namespace sar.Tools
 
 			ConsoleHelper.WriteLine("Files Found " + files.Count.ToString() + " file" + ((files.Count != 1) ? "s" : ""), ConsoleColor.DarkYellow);
 			
-			return Program.EXIT_OK;
+			return ConsoleHelper.EXIT_OK;
 		}
 	}
 }

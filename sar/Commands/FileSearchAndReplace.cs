@@ -14,15 +14,17 @@
  */
 
 using System;
-using sar.Tools;
 using System.Collections.Generic;
 using System.IO;
 
-namespace sar.Tools
+using sar.Tools;
+using sar.Base;
+
+namespace sar.Commands
 {
 	public class FileSearchAndReplace : BaseCommand
 	{
-		public FileSearchAndReplace() : base("File - Search And Replace",
+		public FileSearchAndReplace(CommandHubBase commandHub) : base(commandHub, "File - Search And Replace",
 		                                 new List<string> { "replace", "r" },
 		                                 "-replace <file_search_pattern> <search_text> <replace_text>",
 		                                 new List<string> {
@@ -54,7 +56,7 @@ namespace sar.Tools
 			int changes = 0;
 			foreach (string file in files)
 			{
-				if (Program.IncludeSVN || !IO.IsSVN(file))
+				if (this.commandHub.IncludeSVN || !IO.IsSVN(file))
 				{
 					int found = IO.SearchAndReplaceInFile(file, search, replace);
 					if (found > 0)
@@ -66,7 +68,7 @@ namespace sar.Tools
 			}			
 
 			ConsoleHelper.WriteLine(changes.ToString() + " replacment" + ((changes != 1) ? "s" : "") + " made in " + counter.ToString() + " file" + ((counter != 1) ? "s" : ""), ConsoleColor.DarkYellow);
-			return Program.EXIT_OK;
+			return ConsoleHelper.EXIT_OK;
 		}
 	}
 }

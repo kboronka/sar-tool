@@ -19,12 +19,13 @@ using System.Reflection;
 using System.IO;
 
 using sar.Tools;
+using sar.Base;
 
-namespace sar.Tools
+namespace sar.Commands
 {
 	public class SkyUpdaterGenerate : BaseCommand
 	{
-		public SkyUpdaterGenerate(): base("SkyUpdater - Generate XML file from assembly",
+		public SkyUpdaterGenerate(CommandHubBase commandHub): base(commandHub, "SkyUpdater - Generate XML file from assembly",
 		                                  new List<string> { "sky.generate", "sky.gen" },
 		                                  "-sky.generate [xml] [assembly] [url]",
 		                                  new List<string> { @"-sky.generate info.xml .\release\sar.exe https://sar-tool.googlecode.com/svn/trunk/release" })
@@ -60,7 +61,7 @@ namespace sar.Tools
 			updater.Save(xmlFile);
 			
 			ConsoleHelper.WriteLine(IO.GetFilename(xmlFile) + " generated", ConsoleColor.DarkYellow);
-			return Program.EXIT_OK;
+			return ConsoleHelper.EXIT_OK;
 		}
 	}
 }

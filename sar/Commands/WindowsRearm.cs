@@ -14,17 +14,19 @@
  */
 
 using System;
-using sar.Tools;
 using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
 using System.Threading;
 
-namespace sar.Tools
+using sar.Tools;
+using sar.Base;
+
+namespace sar.Commands
 {
 	public class WindowsRearm : BaseCommand
 	{
-		public WindowsRearm() : base("Windows - Activation Trial Rearm",
+		public WindowsRearm(CommandHubBase commandHub) : base(commandHub, "Windows - Activation Trial Rearm",
 		                             new List<string> { "windows.rearm", "win.rearm", "w.rarm" },
 		                             @"-windows.rearm",
 		                             new List<string> { "-windows.rearm" })
@@ -44,7 +46,7 @@ namespace sar.Tools
 				throw new Exception("Windows 7 not detected");
 			}
 			
-			if (Program.NoWarning || ConsoleHelper.Confirm("Caution: Rearm Activation? (y/n) "))
+			if (this.commandHub.NoWarning || ConsoleHelper.Confirm("Caution: Rearm Activation? (y/n) "))
 			{
 				/*
 				string token = IO.Windows + @"\ServiceProfiles\NetworkService\AppData\Roaming\Microsoft\SoftwareProtectionPlatform\tokens.dat";
@@ -73,7 +75,7 @@ namespace sar.Tools
 				
 				try
 				{
-					if (ConsoleHelper.Shell("net stop sppsvc") != Program.EXIT_OK) throw new Exception("failed to stop sppsvc");
+					if (ConsoleHelper.Shell("net stop sppsvc") != ConsoleHelper.EXIT_OK) throw new Exception("failed to stop sppsvc");
 				}
 				catch (Exception ex)
 				{
@@ -98,7 +100,7 @@ namespace sar.Tools
 				
 				try
 				{
-					if (ConsoleHelper.Shell("net start sppsvc") != Program.EXIT_OK) throw new Exception("failed to stop sppsvc");
+					if (ConsoleHelper.Shell("net start sppsvc") != ConsoleHelper.EXIT_OK) throw new Exception("failed to stop sppsvc");
 				}
 				catch (Exception ex)
 				{
@@ -106,11 +108,11 @@ namespace sar.Tools
 				}
 				
 				
-				if (ConsoleHelper.Shell("slmgr /dlv") != Program.EXIT_OK) throw new Exception("failed to slmgr /dlv");
+				if (ConsoleHelper.Shell("slmgr /dlv") != ConsoleHelper.EXIT_OK) throw new Exception("failed to slmgr /dlv");
 				
 				try
 				{
-					if (ConsoleHelper.Shell("net stop sppsvc") != Program.EXIT_OK) throw new Exception("failed to stop sppsvc");
+					if (ConsoleHelper.Shell("net stop sppsvc") != ConsoleHelper.EXIT_OK) throw new Exception("failed to stop sppsvc");
 				}
 				catch (Exception ex)
 				{
@@ -136,10 +138,10 @@ namespace sar.Tools
 				Progress.Message = "Rearming Windows Activation";
 				ConsoleHelper.Run("slmgr /rearm");
 				ConsoleHelper.WriteLine("Rearmed - Reboot Required", ConsoleColor.DarkYellow);
-				return Program.EXIT_OK;
+				return ConsoleHelper.EXIT_OK;
 			}
 			
-			return Program.EXIT_ERROR;
+			return ConsoleHelper.EXIT_ERROR;
 		}
 	}
 }

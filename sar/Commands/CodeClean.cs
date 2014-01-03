@@ -14,15 +14,17 @@
  */
 
 using System;
-using sar.Tools;
 using System.Collections.Generic;
 using System.IO;
 
-namespace sar.Tools
+using sar.Tools;
+using sar.Base;
+
+namespace sar.Commands
 {
 	public class CodeClean : BaseCommand
 	{
-		public CodeClean() : base("Code - Clean",
+		public CodeClean(CommandHubBase commandHub) : base(commandHub, "Code - Clean",
 		                             new List<string> { "code.clean", "c.clean", "c.c" },
 		                             @"-code.reindent [filepath/pattern]",
 		                             new List<string> { "-code.clean *.vb" })
@@ -90,7 +92,7 @@ namespace sar.Tools
 			
 			
 			ConsoleHelper.WriteLine(changes.ToString() + " line" + ((changes != 1) ? "s" : "") + " cleaned", ConsoleColor.DarkYellow);
-			return Program.EXIT_OK;
+			return ConsoleHelper.EXIT_OK;
 		}
 	}
 }
