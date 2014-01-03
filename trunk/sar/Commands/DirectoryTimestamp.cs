@@ -22,9 +22,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class DirectoryTimestamp : BaseCommand
+	public class DirectoryTimestamp : Command
 	{
-		public DirectoryTimestamp(CommandHubBase commandHub) : base(commandHub, "Directory - Timestamp Name", 
+		public DirectoryTimestamp(Base.CommandHub parent) : base(parent, "Directory - Timestamp Name", 
 		                                new List<string> { "dir.timestamp", "d.t" },
 		                                @"-dir.timestamp [FilePath] [date/time format]",
 		                               new List<string> { "-dir.timestamp backup.zip \"yyyy.MM.dd-HH.mm\"" })

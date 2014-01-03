@@ -22,9 +22,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class AssemblyInfoVersion : BaseCommand
+	public class AssemblyInfoVersion : Command
 	{
-		public AssemblyInfoVersion(CommandHubBase commandHub) : base(commandHub, "Set AssemblyInfo version number",
+		public AssemblyInfoVersion(Base.CommandHub parent) : base(parent, "Set AssemblyInfo version number",
 		                                    new List<string> { "assembly.version", "assy.ver" },
 		                                    "-assembly.version [AssemblyInfo file] [version]",
 		                                    new List<string> { "-assembly.version \"AssemblyInfo.cs\" \"1.0.2.1\"" })

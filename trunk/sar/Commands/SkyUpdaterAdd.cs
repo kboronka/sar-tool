@@ -23,9 +23,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class SkyUpdaterAdd : BaseCommand
+	public class SkyUpdaterAdd : Command
 	{
-		public SkyUpdaterAdd(CommandHubBase commandHub): base(commandHub, "SkyUpdater - Add file",
+		public SkyUpdaterAdd(Base.CommandHub commandHub): base(commandHub, "SkyUpdater - Add file",
 		                             new List<string> { "sky.add" },
 		                             "-sky.add [xml] [file] [url]",
 		                             new List<string> { @"-sky.add info.xml .\release\sar.exe https://sar-tool.googlecode.com/svn/trunk/release/sar.exe" })

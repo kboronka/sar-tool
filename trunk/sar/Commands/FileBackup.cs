@@ -22,9 +22,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class FileBackup : BaseCommand
+	public class FileBackup : Command
 	{
-		public FileBackup(CommandHubBase parent) : base(parent, "File - Backup",
+		public FileBackup(Base.CommandHub parent) : base(parent, "File - Backup",
 		                           new List<string> { "file.backup", "f.bk" },
 		                           @"-file.backup [filepath/pattern] [destination]",
 		                           new List<string> { "-file.backup backup.zip \"c:\\backups\\\"" })

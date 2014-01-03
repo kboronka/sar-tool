@@ -22,9 +22,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class LabviewVersion : BaseCommand
+	public class LabviewVersion : Command
 	{
-		public LabviewVersion(CommandHubBase commandHub) : base(commandHub, "Set LabVIEW project version number",
+		public LabviewVersion(Base.CommandHub parent) : base(parent, "Set LabVIEW project version number",
 		                               new List<string> { "lv_ver" },
 		                               "-lv_ver [lvproj_file] [version]",
 		                               new List<string> { "-lv_ver \"*.lvproj_file\" \"1.0.2.1\"" })

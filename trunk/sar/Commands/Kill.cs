@@ -23,9 +23,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class Kill : BaseCommand
+	public class Kill : Command
 	{
-		public Kill(CommandHubBase commandHub) : base(commandHub, "Kill Process",
+		public Kill(Base.CommandHub parent) : base(parent, "Kill Process",
 		                     new List<string> { "kill", "k" },
 		                     @"-kill [ProcessName]",
 		                     new List<string> { "-kill LabVIEW" })

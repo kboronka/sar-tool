@@ -1,25 +1,114 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 using sar.Tools;
 
 namespace sar.Base
 {
-	public class CommandHubBase
+	public abstract class CommandHub
 	{
-		public CommandHubBase()
-		{
-		
-		}
-		
 		public bool NoWarning = false;
 		public bool Debug = false;
 		public bool IncludeSVN = false;
 		public bool IncludeSubFolders = true;
-		public Dictionary<string, BaseCommand> commands = new Dictionary<string, BaseCommand>();
+		public bool commandlineActive = false;
+		internal Dictionary<string, Command> commands = new Dictionary<string, Command>();
 		
-		public void Add(string commandString, BaseCommand commandClass)
+		public CommandHub()
+		{
+			
+		}
+		
+		internal int ProcessCommands(string[] args)
+		{
+			try
+			{
+				int exitCode = ConsoleHelper.EXIT_OK;
+				
+				while (!commandlineActive)
+				{
+					try
+					{
+						if (args.Length == 0)
+						{
+							commandlineActive = false;
+							args = new string[1];
+							ConsoleHelper.Write("> ", ConsoleColor.White);
+							
+							args = StringHelper.ParseString(ConsoleHelper.ReadLine(), " ");
+							args = this.RemoveGlobalArgs(args);
+							
+							if (args.Length == 0)
+							{
+								throw new ArgumentException("too few arguments");
+							}
+						}
+						else
+						{
+							args = this.RemoveGlobalArgs(args);
+							commandlineActive = true;
+						}
+						
+						string command = args[0].ToLower();
+						if (command[0] == '-' || command[0] == '/')
+						{
+							command = command.Substring(1);
+						}
+						
+						// Execute Command
+						if (command != "exit")
+						{
+							Progress.UpdateTimer.Enabled = true;
+							exitCode = this.Execute(command, args);
+							Progress.UpdateTimer.Enabled = false;
+							args = new string[0];
+						}
+					}
+					catch (Exception ex)
+					{
+						try
+						{
+							Progress.UpdateTimer.Enabled = false;
+							ConsoleHelper.WriteException(ex);
+
+							if (this.Debug && commandlineActive)
+							{
+								Thread.Sleep(2000);
+							}
+							
+							args = new string[0];
+						}
+						catch
+						{
+							
+						}
+						
+						exitCode = ConsoleHelper.EXIT_ERROR;
+					}
+				}
+				
+				ConsoleHelper.Shutdown();
+				return exitCode;
+			}
+			catch (Exception ex)
+			{
+				Progress.UpdateTimer.Enabled = false;
+				ConsoleHelper.WriteException(ex);
+				Thread.Sleep(2000);
+				
+				if (this.Debug)
+				{
+					ConsoleHelper.WriteLine("Press anykey to continue", ConsoleColor.Yellow);
+					ConsoleHelper.ReadKey();
+				}
+
+				return ConsoleHelper.EXIT_ERROR;
+			}
+		}
+		
+		internal void Add(string commandString, Command commandClass)
 		{
 			try
 			{
@@ -32,7 +121,7 @@ namespace sar.Base
 			}
 		}
 		
-		public int Execute(string command, string[] args)
+		private int Execute(string command, string[] args)
 		{
 			if (String.IsNullOrEmpty(command))
 			{
@@ -54,7 +143,7 @@ namespace sar.Base
 			return exitCode;
 		}
 		
-		public string[] RemoveGlobalArgs(string[] args)
+		private string[] RemoveGlobalArgs(string[] args)
 		{
 			this.NoWarning = false;
 			this.Debug = false;

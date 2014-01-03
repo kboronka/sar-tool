@@ -22,9 +22,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class CodeClean : BaseCommand
+	public class CodeClean : Command
 	{
-		public CodeClean(CommandHubBase commandHub) : base(commandHub, "Code - Clean",
+		public CodeClean(Base.CommandHub parent) : base(parent, "Code - Clean",
 		                             new List<string> { "code.clean", "c.clean", "c.c" },
 		                             @"-code.reindent [filepath/pattern]",
 		                             new List<string> { "-code.clean *.vb" })

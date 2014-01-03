@@ -22,9 +22,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class FileBsdHeader : BaseCommand
+	public class FileBsdHeader : Command
 	{
-		public FileBsdHeader(CommandHubBase commandHub): base(commandHub, "File - BSD Stamp C# Files",
+		public FileBsdHeader(Base.CommandHub commandHub): base(commandHub, "File - BSD Stamp C# Files",
 		                            new List<string> { "file.bsd", "f.bsd" },
 		                            "-file.bsd [file_search_pattern]",
 		                            new List<string> { "-file.bsd *.cs" })

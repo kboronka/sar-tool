@@ -22,9 +22,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class FileDestory : BaseCommand
+	public class FileDestory : Command
 	{
-		public FileDestory(CommandHubBase commandHub) : base(commandHub, "File - Destroy",
+		public FileDestory(Base.CommandHub parent) : base(parent, "File - Destroy",
 		                            new List<string> { "file.destroy", "f.d" },
 		                            "-f.d [filepattern]",
 		                            new List<string> { "-f.d \"*.vmdk\"" })

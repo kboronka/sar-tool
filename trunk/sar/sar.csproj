@@ -136,7 +136,6 @@
     <Compile Include="Tools\XmlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Base\Console" />
     <Folder Include="Commands" />
     <Folder Include="Base" />
     <Folder Include="Socket" />

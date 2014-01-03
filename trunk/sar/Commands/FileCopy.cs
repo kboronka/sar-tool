@@ -22,9 +22,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class FileCopy : BaseCommand
+	public class FileCopy : Command
 	{
-		public FileCopy(CommandHubBase commandHub) : base(commandHub, "File - Copy",
+		public FileCopy(Base.CommandHub parent) : base(parent, "File - Copy",
 		                           new List<string> { "file.copy", "f.c" },
 		                           @"-file.copy [root\filepattern] [destination] <speedlimt>",
 		                           new List<string> { "-file.copy \"*.*\" \"\\\\10.242.211.57\transfer\\x\\\"" })

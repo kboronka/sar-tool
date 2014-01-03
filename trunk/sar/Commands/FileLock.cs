@@ -24,9 +24,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class FileLock : BaseCommand
+	public class FileLock : Command
 	{
-		public FileLock(CommandHubBase commandHub) : base(commandHub, "File - Lock",
+		public FileLock(Base.CommandHub parent) : base(parent, "File - Lock",
 		                         new List<string> { "file.lock", "f.lock" },
 		                         "-file.find [filepattern] <timeout>",
 		                         new List<string> { "-file.find \"*.exe\" 10000" })

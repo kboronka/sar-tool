@@ -22,13 +22,13 @@ using sar.Tools;
 
 namespace sar.Tools
 {
-	public class CommandHub : Base.CommandHubBase
+	public class CommandHub : Base.CommandHub
 	{
-		private List<BaseCommand> allCommands;
+		private List<Command> allCommands;
 		public CommandHub() : base()
 		{
 			// load all command modules
-			this.allCommands = new List<BaseCommand>() {
+			this.allCommands = new List<Command>() {
 				new Help(this),
 				new BuildCHM(this),
 				new BuildNSIS(this),

@@ -22,9 +22,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class FileRemoveDirectory : BaseCommand
+	public class FileRemoveDirectory : Command
 	{
-		public FileRemoveDirectory(CommandHubBase commandHub) : base(commandHub, "File - Remove Directory",
+		public FileRemoveDirectory(Base.CommandHub parent) : base(parent, "File - Remove Directory",
 		                                    new List<string> { "file.removedirectory", "f.rd", "d.d" },
 		                                    "-f.d [filepattern]",
 		                                    new List<string> { "-f.rd \"C:\\Temp\"" })

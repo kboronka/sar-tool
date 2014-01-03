@@ -22,9 +22,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class BuildCHM : BaseCommand
+	public class BuildCHM : Command
 	{
-		public BuildCHM(CommandHubBase commandHub) : base(commandHub, "Build - CHM help file",
+		public BuildCHM(Base.CommandHub parent) : base(parent, "Build - CHM help file",
 		                         new List<string> { "build.chm", "b.chm" },
 		                         "-b.chm [hhp_filepath]",
 		                         new List<string> { @"-b.chm help\help.hhp" })

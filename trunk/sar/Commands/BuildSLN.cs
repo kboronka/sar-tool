@@ -22,9 +22,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class BuildSLN : BaseCommand
+	public class BuildSLN : Command
 	{
-		public BuildSLN(CommandHubBase commandHub) : base(commandHub, "Build - .NET soultion",
+		public BuildSLN(Base.CommandHub parent) : base(parent, "Build - .NET soultion",
 		                         new List<string> { "build.net", "b.net" },
 		                         "-b.net [.net version] [solution_path] [msbuild arguments]",
 		                         new List<string> { "-b.net 3.5 sar.sln /p:Configuration=Release /p:Platform=\"x86\"" })
