@@ -14,15 +14,17 @@
  */
 
 using System;
-using sar.Tools;
 using System.Collections.Generic;
 using System.IO;
 
-namespace sar.Tools
+using sar.Tools;
+using sar.Base;
+
+namespace sar.Commands
 {
 	public class WindowsMapDrive : BaseCommand
 	{
-		public WindowsMapDrive() : base("Windows - Map Drive", new List<string> { "windows.map", "win.map" },
+		public WindowsMapDrive(CommandHubBase commandHub) : base(commandHub, "Windows - Map Drive", new List<string> { "windows.map", "win.map" },
 		                                "-windows.map [drive letter] [UNC path] [persistent]",
 		                                new List<string>() { @"-windows.map S \\192.168.0.244\temp p" })
 		{
@@ -66,11 +68,11 @@ namespace sar.Tools
 			if (exitcode != 0)
 			{
 				ConsoleHelper.WriteLine("Login to " + serverAddres + " has failed", ConsoleColor.DarkYellow);
-				return Program.EXIT_ERROR;
+				return ConsoleHelper.EXIT_ERROR;
 			}
 
 			ConsoleHelper.WriteLine("Login to " + serverAddres + " was successful", ConsoleColor.DarkYellow);
-			return Program.EXIT_OK;
+			return ConsoleHelper.EXIT_OK;
 		}
 	}
 }

@@ -14,16 +14,18 @@
  */
 
 using System;
-using sar.Tools;
 using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
 
-namespace sar.Tools
+using sar.Tools;
+using sar.Base;
+
+namespace sar.Commands
 {
 	public class Kill : BaseCommand
 	{
-		public Kill() : base("Kill Process",
+		public Kill(CommandHubBase commandHub) : base(commandHub, "Kill Process",
 		                     new List<string> { "kill", "k" },
 		                     @"-kill [ProcessName]",
 		                     new List<string> { "-kill LabVIEW" })
@@ -45,7 +47,7 @@ namespace sar.Tools
 			ConsoleHelper.KillProcess(processName);
 			ConsoleHelper.WriteLine(processName + " stopped", ConsoleColor.DarkYellow);
 			
-			return Program.EXIT_OK;
+			return ConsoleHelper.EXIT_OK;
 		}
 	}
 }

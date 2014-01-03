@@ -14,17 +14,19 @@
  */
 
 using System;
-using sar.Tools;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
-namespace sar.Tools
+using sar.Tools;
+using sar.Base;
+
+namespace sar.Commands
 {
 	public class FileLock : BaseCommand
 	{
-		public FileLock() : base("File - Lock",
+		public FileLock(CommandHubBase commandHub) : base(commandHub, "File - Lock",
 		                         new List<string> { "file.lock", "f.lock" },
 		                         "-file.find [filepattern] <timeout>",
 		                         new List<string> { "-file.find \"*.exe\" 10000" })
@@ -54,14 +56,14 @@ namespace sar.Tools
 			if (!IO.WaitForFileSystem(root, timeout, true))
 			{
 				ConsoleHelper.WriteLine("File System Not Found", ConsoleColor.DarkYellow);
-				return Program.EXIT_ERROR;
+				return ConsoleHelper.EXIT_ERROR;
 			}
 			else
 			{
 				ConsoleHelper.WriteLine("File System Found", ConsoleColor.DarkYellow);
 			}
 			
-			return Program.EXIT_OK;
+			return ConsoleHelper.EXIT_OK;
 		}
 	}
 }

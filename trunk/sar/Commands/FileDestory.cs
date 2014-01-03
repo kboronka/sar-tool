@@ -14,15 +14,17 @@
  */
 
 using System;
-using sar.Tools;
 using System.Collections.Generic;
 using System.IO;
 
-namespace sar.Tools
+using sar.Tools;
+using sar.Base;
+
+namespace sar.Commands
 {
 	public class FileDestory : BaseCommand
 	{
-		public FileDestory() : base("File - Destroy",
+		public FileDestory(CommandHubBase commandHub) : base(commandHub, "File - Destroy",
 		                            new List<string> { "file.destroy", "f.d" },
 		                            "-f.d [filepattern]",
 		                            new List<string> { "-f.d \"*.vmdk\"" })
@@ -44,7 +46,7 @@ namespace sar.Tools
 			IO.CheckRootAndPattern(ref root, ref filePattern);
 			List<string> files = IO.GetAllFiles(root, filePattern);
 			
-			if (!Program.NoWarning)
+			if (!this.commandHub.NoWarning)
 			{
 				foreach (string file in files)
 				{
@@ -58,7 +60,7 @@ namespace sar.Tools
 			int counter = 0;
 			if (files.Count > 0)
 			{
-				if (Program.NoWarning || ConsoleHelper.Confirm("Destroy " + files.Count.ToString() + " file" + ((files.Count != 1) ? "s" : "") + "? (y/n)"))
+				if (this.commandHub.NoWarning || ConsoleHelper.Confirm("Destroy " + files.Count.ToString() + " file" + ((files.Count != 1) ? "s" : "") + "? (y/n)"))
 				{
 					foreach (string file in files)
 					{
@@ -66,7 +68,7 @@ namespace sar.Tools
 
 						try
 						{
-							if (Program.IncludeSVN || !IO.IsSVN(file))
+							if (this.commandHub.IncludeSVN || !IO.IsSVN(file))
 							{
 								IO.DestroyFile(file);
 								counter++;
@@ -77,7 +79,7 @@ namespace sar.Tools
 							ConsoleHelper.Write("failed: ", ConsoleColor.Red);
 							ConsoleHelper.WriteLine(StringHelper.TrimStart(file, root.Length));
 							
-							if (Program.Debug)
+							if (this.commandHub.Debug)
 							{
 								ConsoleHelper.WriteException(ex);
 							}
@@ -87,7 +89,7 @@ namespace sar.Tools
 			}
 			
 			ConsoleHelper.WriteLine(counter.ToString() + " File" + ((counter != 1) ? "s" : "") + " Destroyed", ConsoleColor.DarkYellow);
-			return Program.EXIT_OK;
+			return ConsoleHelper.EXIT_OK;
 		}
 	}
 }

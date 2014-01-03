@@ -14,15 +14,17 @@
  */
 
 using System;
-using sar.Tools;
 using System.Collections.Generic;
 using System.IO;
 
-namespace sar.Tools
+using sar.Tools;
+using sar.Base;
+
+namespace sar.Commands
 {
 	public class LabviewVersion : BaseCommand
 	{
-		public LabviewVersion() : base("Set LabVIEW project version number",
+		public LabviewVersion(CommandHubBase commandHub) : base(commandHub, "Set LabVIEW project version number",
 		                               new List<string> { "lv_ver" },
 		                               "-lv_ver [lvproj_file] [version]",
 		                               new List<string> { "-lv_ver \"*.lvproj_file\" \"1.0.2.1\"" })
@@ -60,7 +62,7 @@ namespace sar.Tools
 			int counter = 0;
 			foreach (string file in files)
 			{
-				if (Program.IncludeSVN || !IO.IsSVN(file))
+				if (this.commandHub.IncludeSVN || !IO.IsSVN(file))
 				{
 					counter++;
 					changes += IO.SearchAndReplaceInFile(file, "<Property Name=\"TgtF_fileVersion.major\" Type=\"Int\">\\d{1,}</Property>", "<Property Name=\"TgtF_fileVersion.major\" Type=\"Int\">" + version[0] + "</Property>");
@@ -83,7 +85,7 @@ namespace sar.Tools
 				ConsoleHelper.WriteLine("LabVIEW project version number not updated", ConsoleColor.DarkYellow);
 			}
 			
-			return Program.EXIT_OK;
+			return ConsoleHelper.EXIT_OK;
 		}
 	}
 }

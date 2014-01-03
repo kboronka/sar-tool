@@ -14,15 +14,17 @@
  */
 
 using System;
-using sar.Tools;
 using System.Collections.Generic;
 using System.IO;
 
-namespace sar.Tools
+using sar.Tools;
+using sar.Base;
+
+namespace sar.Commands
 {
 	public class FileCopy : BaseCommand
 	{
-		public FileCopy() : base("File - Copy",
+		public FileCopy(CommandHubBase commandHub) : base(commandHub, "File - Copy",
 		                           new List<string> { "file.copy", "f.c" },
 		                           @"-file.copy [root\filepattern] [destination] <speedlimt>",
 		                           new List<string> { "-file.copy \"*.*\" \"\\\\10.242.211.57\transfer\\x\\\"" })
@@ -66,7 +68,7 @@ namespace sar.Tools
 			}
 
 			ConsoleHelper.WriteLine(counter.ToString() + " File" + ((counter != 1) ? "s" : "") + " Copied", ConsoleColor.DarkYellow);
-			return Program.EXIT_OK;
+			return ConsoleHelper.EXIT_OK;
 		}
 	}
 }

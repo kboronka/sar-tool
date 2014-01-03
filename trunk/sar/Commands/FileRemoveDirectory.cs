@@ -14,15 +14,17 @@
  */
 
 using System;
-using sar.Tools;
 using System.Collections.Generic;
 using System.IO;
 
-namespace sar.Tools
+using sar.Tools;
+using sar.Base;
+
+namespace sar.Commands
 {
 	public class FileRemoveDirectory : BaseCommand
 	{
-		public FileRemoveDirectory() : base("File - Remove Directory",
+		public FileRemoveDirectory(CommandHubBase commandHub) : base(commandHub, "File - Remove Directory",
 		                                    new List<string> { "file.removedirectory", "f.rd", "d.d" },
 		                                    "-f.d [filepattern]",
 		                                    new List<string> { "-f.rd \"C:\\Temp\"" })
@@ -45,7 +47,7 @@ namespace sar.Tools
 			if (!Directory.Exists(root)) throw new ApplicationException("Directory does not exist");
 			
 			
-			if (!Program.NoWarning)
+			if (!this.commandHub.NoWarning)
 			{
 				foreach (string directory in directories)
 				{
@@ -58,7 +60,7 @@ namespace sar.Tools
 			
 			if (directories.Count > 0)
 			{
-				if (Program.NoWarning || ConsoleHelper.Confirm("Destroy " + directories.Count.ToString() + " director" + ((directories.Count != 1) ? "ies" : "y") + "? (y/n)"))
+				if (this.commandHub.NoWarning || ConsoleHelper.Confirm("Destroy " + directories.Count.ToString() + " director" + ((directories.Count != 1) ? "ies" : "y") + "? (y/n)"))
 				{
 					Progress.Message = "Destroying " + root;
 					
@@ -71,7 +73,7 @@ namespace sar.Tools
 						ConsoleHelper.Write("failed: ", ConsoleColor.Red);
 						ConsoleHelper.WriteLine(root);
 						
-						if (Program.Debug)
+						if (this.commandHub.Debug)
 						{
 							ConsoleHelper.WriteException(ex);
 						}
@@ -80,7 +82,7 @@ namespace sar.Tools
 			}
 			
 			ConsoleHelper.WriteLine(directories.Count.ToString() + " Director" + ((directories.Count != 1) ? "ies" : "y") + " Destroyed", ConsoleColor.DarkYellow);
-			return Program.EXIT_OK;
+			return ConsoleHelper.EXIT_OK;
 		}
 	}
 }

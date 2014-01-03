@@ -18,12 +18,13 @@ using System.Collections.Generic;
 using System.IO;
 
 using sar.Tools;
+using sar.Base;
 
-namespace sar.Tools
+namespace sar.Commands
 {
 	public class NetListAddaptors : BaseCommand
 	{
-		public NetListAddaptors() : base("Network - List Addaptors",
+		public NetListAddaptors(CommandHubBase commandHub) : base(commandHub, "Network - List Addaptors",
 		                                 new List<string> { "net.list", "n.l" },
 		                                 @"-net.list",
 		                                 new List<string> { "-net.list" })
@@ -41,7 +42,7 @@ namespace sar.Tools
 			
 			NetHelper.Addaptors();
 			
-			return Program.EXIT_OK;
+			return ConsoleHelper.EXIT_OK;
 		}
 	}
 }

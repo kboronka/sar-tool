@@ -14,15 +14,17 @@
  */
 
 using System;
-using sar.Tools;
 using System.Collections.Generic;
 using System.IO;
 
-namespace sar.Tools
+using sar.Tools;
+using sar.Base;
+
+namespace sar.Commands
 {
 	public class CodeReIndent : BaseCommand
 	{
-		public CodeReIndent() : base("Code - ReIndent",
+		public CodeReIndent(CommandHubBase commandHub) : base(commandHub, "Code - ReIndent",
 		                             new List<string> { "code.reindent", "c.reindent", "c.r" },
 		                             @"-code.reindent [filepath/pattern]",
 		                             new List<string> { "-code.reindent *.vb" })
@@ -215,7 +217,7 @@ namespace sar.Tools
 			
 			
 			ConsoleHelper.WriteLine(counter.ToString() + " File" + ((counter != 1) ? "s" : "") + " Checked", ConsoleColor.DarkYellow);
-			return Program.EXIT_OK;
+			return ConsoleHelper.EXIT_OK;
 		}
 	}
 }

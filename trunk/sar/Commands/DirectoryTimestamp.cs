@@ -14,15 +14,17 @@
  */
 
 using System;
-using sar.Tools;
 using System.Collections.Generic;
 using System.IO;
 
-namespace sar.Tools
+using sar.Tools;
+using sar.Base;
+
+namespace sar.Commands
 {
 	public class DirectoryTimestamp : BaseCommand
 	{
-		public DirectoryTimestamp() : base("Directory - Timestamp Name", 
+		public DirectoryTimestamp(CommandHubBase commandHub) : base(commandHub, "Directory - Timestamp Name", 
 		                                new List<string> { "dir.timestamp", "d.t" },
 		                                @"-dir.timestamp [FilePath] [date/time format]",
 		                               new List<string> { "-dir.timestamp backup.zip \"yyyy.MM.dd-HH.mm\"" })
@@ -62,7 +64,7 @@ namespace sar.Tools
 			Directory.Move(dirpath, dirpathNew);
 			
 			ConsoleHelper.WriteLine("directory renamed to " + dirpathNew, ConsoleColor.DarkYellow);
-			return Program.EXIT_OK;
+			return ConsoleHelper.EXIT_OK;
 		}
 	}
 }

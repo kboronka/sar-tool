@@ -14,15 +14,17 @@
  */
 
 using System;
-using sar.Tools;
 using System.Collections.Generic;
 using System.IO;
 
-namespace sar.Tools
+using sar.Tools;
+using sar.Base;
+
+namespace sar.Commands
 {
 	public class FileMirror : BaseCommand
 	{
-		public FileMirror() : base("File - Mirror",
+		public FileMirror(CommandHubBase commandHub) : base(commandHub, "File - Mirror",
 		                           new List<string> { "file.mirror", "f.m" },
 		                           @"-f.m [root\filepattern] [destination]",
 		                           new List<string> { "-file.mirror \"*.*\" \"\\\\10.242.211.57\transfer\\x\\\"" })
@@ -63,7 +65,7 @@ namespace sar.Tools
 
 			ConsoleHelper.WriteLine(files.Count.ToString() + " file" + ((files.Count != 1) ? "s" : "") + " mirrored", ConsoleColor.DarkYellow);
 			
-			return Program.EXIT_OK;
+			return ConsoleHelper.EXIT_OK;
 		}
 	}
 }

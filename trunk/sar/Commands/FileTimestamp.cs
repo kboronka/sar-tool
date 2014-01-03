@@ -14,15 +14,17 @@
  */
 
 using System;
-using sar.Tools;
 using System.Collections.Generic;
 using System.IO;
 
-namespace sar.Tools
+using sar.Tools;
+using sar.Base;
+
+namespace sar.Commands
 {
 	public class FileTimestamp : BaseCommand
 	{
-		public FileTimestamp() : base("File - Timestamp Name", 
+		public FileTimestamp(CommandHubBase commandHub) : base(commandHub, "File - Timestamp Name", 
 		                                new List<string> { "file.timestamp", "f.t", "timestamp", "t" },
 		                                @"-timestamp <FilePath> [date/time format]",
 		                               new List<string> { "-timestamp backup.zip \"yyyy.MM.dd-HH.mm\"" })
@@ -63,7 +65,7 @@ namespace sar.Tools
 			File.Move(filepath, filepathNew);
 			
 			ConsoleHelper.WriteLine("file renamed to " + filepathNew, ConsoleColor.DarkYellow);
-			return Program.EXIT_OK;
+			return ConsoleHelper.EXIT_OK;
 		}		
 	}
 }

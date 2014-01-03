@@ -14,16 +14,18 @@
  */
 
 using System;
-using sar.Tools;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace sar.Tools
+using sar.Tools;
+using sar.Base;
+
+namespace sar.Commands
 {
 	public class FileEncode : BaseCommand
 	{
-		public FileEncode() : base("File - Encode",
+		public FileEncode(CommandHubBase commandHub) : base(commandHub, "File - Encode",
 		                               new List<string> { "file.encode", "f.e" },
 		                               "-file.encode [filepattern] [UTF7 | UTF8 | UTF32 | Unicode | BigEndianUnicode | ASCII]",
 		                               new List<string> { "-file.encode \"*.nsis\" utf8" })
@@ -81,7 +83,7 @@ namespace sar.Tools
 
 			ConsoleHelper.WriteLine("Files Enocded " + files.Count.ToString() + " file" + ((files.Count != 1) ? "s" : ""), ConsoleColor.DarkYellow);
 			
-			return Program.EXIT_OK;
+			return ConsoleHelper.EXIT_OK;
 		}
 	}
 }

@@ -19,12 +19,13 @@ using System.IO;
 using System.Diagnostics;
 
 using sar.Tools;
+using sar.Base;
 
-namespace sar.Tools
+namespace sar.Commands
 {
 	public class AppShutdownWait : BaseCommand
 	{
-		public AppShutdownWait() : base("Application - Wait for shutdown",
+		public AppShutdownWait(CommandHubBase commandHub) : base(commandHub, "Application - Wait for shutdown",
 		                     new List<string> { "app.wait", "a.w" },
 		                     @"-app.wait [ProcessName]",
 		                     new List<string> { "-app.wait LabVIEW" })
@@ -49,7 +50,7 @@ namespace sar.Tools
 			ConsoleHelper.WaitForProcess_Shutdown(processName, timeout);
 			ConsoleHelper.WriteLine(processName + " stopped", ConsoleColor.DarkYellow);
 			
-			return Program.EXIT_OK;
+			return ConsoleHelper.EXIT_OK;
 		}
 	}
 }

@@ -14,15 +14,17 @@
  */
 
 using System;
-using sar.Tools;
 using System.Collections.Generic;
 using System.IO;
 
-namespace sar.Tools
+using sar.Tools;
+using sar.Base;
+
+namespace sar.Commands
 {
 	public class BuildCHM : BaseCommand
 	{
-		public BuildCHM() : base("Build - CHM help file",
+		public BuildCHM(CommandHubBase commandHub) : base(commandHub, "Build - CHM help file",
 		                         new List<string> { "build.chm", "b.chm" },
 		                         "-b.chm [hhp_filepath]",
 		                         new List<string> { @"-b.chm help\help.hhp" })
@@ -57,12 +59,12 @@ namespace sar.Tools
 			{
 				ConsoleHelper.WriteLine("Build Failed", ConsoleColor.DarkYellow);
 				ConsoleHelper.WriteLine(output, ConsoleColor.DarkCyan);
-				return Program.EXIT_ERROR;
+				return ConsoleHelper.EXIT_ERROR;
 			}
 			else
 			{
 				ConsoleHelper.WriteLine("Build Successfully Completed", ConsoleColor.DarkYellow);
-				return Program.EXIT_OK;
+				return ConsoleHelper.EXIT_OK;
 			}
 		}
 	}
