@@ -147,14 +147,27 @@ namespace sar.Socket
 		
 		#region constructor
 		
-		public SocketServer(int port, Encoding encoding)
+		public SocketServer(int port)
 		{
-			this.encoding = encoding;
 			this.port = port;
+			this.StartServer(this.port);
+		}
+		
+		public SocketServer(int port, FileLogger errorLog)
+		{
+			this.ErrorLog = errorLog;
+			this.port = port;
+			this.StartServer(this.port);
+		}
+		
+		private void StartServer(int port)
+		{
+			this.encoding = Encoding.ASCII;
 			this.clients = new List<SocketClient>();
-			this.listener = new TcpListener(IPAddress.Any, port);
+			this.listener = new TcpListener(IPAddress.Any, this.port);
 			this.listener.Start();
-			this.serviceTimer = new Timer(this.ServiceTick, null, 10, Timeout.Infinite);
+			this.serviceListenerTimer = new Timer(this.ServiceListenerTick, null, 1, Timeout.Infinite);
+			this.serviceClientsTimer = new Timer(this.ServiceClientsTick, null, 1, Timeout.Infinite);
 			this.pingTimer = new Timer(this.Ping, null, 1000, Timeout.Infinite);
 			this.Store("Server.Version", AssemblyInfo.SarVersion);
 			this.Store("Server.Port", this.port.ToString());
@@ -190,7 +203,7 @@ namespace sar.Socket
 			this.Store(member, data);
 			this.Broadcast("set", member, data);
 		}
-				
+		
 		public void Broadcast(SocketMessage message)
 		{
 			lock (this.clients)
@@ -271,7 +284,7 @@ namespace sar.Socket
 		
 		#region listners
 		
-		private System.Threading.Timer serviceTimer;
+		private System.Threading.Timer serviceListenerTimer;
 		
 		private void ServiceListener()
 		{
@@ -281,7 +294,7 @@ namespace sar.Socket
 				{
 					if (this.listener.Pending())
 					{
-						SocketClient client = new SocketClient(this, this.listener.AcceptTcpClient(), ++this.lastClientID, this.encoding);
+						SocketClient client = new SocketClient(this, this.listener.AcceptTcpClient(), ++this.lastClientID, this.ErrorLog);
 						this.clients.Add(client);
 						this.OnNewClient(client);
 					}
@@ -289,48 +302,73 @@ namespace sar.Socket
 			}
 			catch (Exception ex)
 			{
-				System.Diagnostics.Debug.WriteLine(ex.Message);
-				// add execption handler
-				throw ex;
+				this.Log(ex);
 			}
 		}
 		
-		private void ServiceClients()
-		{
-			lock (this.clients)
-			{
-				foreach (SocketClient client in this.clients)
-				{
-					if (!client.Connected)
-					{
-						this.clients.Remove(client);
-						OnClientLost(client);
-						break;
-					}
-					
-					if (client.HasRequest)
-					{
-						ProcessMessage(client, client.Read);
-					}
-				}
-			}
-		}
-		
-		private void ServiceTick(Object state)
+		private void ServiceListenerTick(Object state)
 		{
 			try
 			{
 				this.ServiceListener();
+			}
+			catch (Exception ex)
+			{
+				this.Log(ex);
+			}
+			finally
+			{
+				this.serviceListenerTimer.Change(10, Timeout.Infinite );
+			}
+		}
+		
+		#endregion
+		
+		#region clients
+		
+		private System.Threading.Timer serviceClientsTimer;
+
+		private void ServiceClients()
+		{
+			try
+			{
+				lock (this.clients)
+				{
+					foreach (SocketClient client in this.clients)
+					{
+						if (!client.Connected)
+						{
+							this.clients.Remove(client);
+							OnClientLost(client);
+							break;
+						}
+						
+						if (client.HasRequest)
+						{
+							ProcessMessage(client, client.Read);
+						}
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				this.Log(ex);
+			}
+		}
+		
+		private void ServiceClientsTick(Object state)
+		{
+			try
+			{
 				this.ServiceClients();
 			}
 			catch (Exception ex)
 			{
-				System.Diagnostics.Debug.WriteLine(ex.Message);
-				System.Diagnostics.Debug.WriteLine(ex.StackTrace);
+				this.Log(ex);
 			}
 			finally
 			{
-				this.serviceTimer.Change(10, Timeout.Infinite );
+				this.serviceClientsTimer.Change(10, Timeout.Infinite );
 			}
 		}
 		
