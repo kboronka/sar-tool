@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SkyUpdater version="1.0.1.131">
+	<Version>1.0.1.132</Version>
+	<Application>sar</Application>
+	<Files>
+		<File>
+			<URL>https://sar-tool.googlecode.com/svn/trunk/release/sar.exe</URL>
+			<Path>sar.exe</Path>
+		</File>
+	</Files>
+</SkyUpdater>
