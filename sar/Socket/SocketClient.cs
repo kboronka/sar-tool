@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
 using System.Text;
@@ -248,16 +249,24 @@ namespace sar.Socket
 		{
 			this.socket = socket;
 			this.stream = this.socket.GetStream();
-
 			this.parent = parent;
 			this.ID = clientID;
 			this.encoding = encoding;
 			this.messagesOut = new List<SocketMessage>();
 			this.messagesIn = new List<SocketMessage>();
 			
-			this.OnConnectionChange(true);
+			// send ClientID
+			try
+			{
+				this.SendData("set", "Me.ID", this.ID.ToString(), this.ID);
+				ServiceOutgoing();
+			}
+			catch
+			{
+				
+			}
 			
-			this.SendData("set", "Me.ID", clientID.ToString(), this.ID);
+			this.OnConnectionChange(true);
 			
 			this.serviceConnectionTimer = new Timer(this.ServiceConnectionTick, null, 10, Timeout.Infinite);
 			this.serviceTimer = new Timer(this.ServiceTick, null, 100, Timeout.Infinite);
@@ -353,6 +362,31 @@ namespace sar.Socket
 				
 				this.socket = new TcpClient(this.hostname, this.port);
 				this.stream = this.socket.GetStream();
+				
+				// send ClientID
+				try
+				{
+					Stopwatch timeout = new Stopwatch();
+					timeout.Start();
+					
+					this.ID = ServiceIncoming();
+					while (this.ID != 0)
+					{
+						Thread.Sleep(10);
+						this.ID = ServiceIncoming();
+						if (timeout.ElapsedMilliseconds > 5000)
+						{
+							this.Disconnect();
+							throw new ApplicationException("Did not recive client ID");
+						}
+					}
+
+				}
+				catch
+				{
+					
+				}
+				
 				this.OnConnectionChange(true);
 			}
 			catch
@@ -481,10 +515,11 @@ namespace sar.Socket
 		private int resendAttempts;
 		private DateTime lastActivity;
 		
-		private void ServiceIncoming()
+		private int ServiceIncoming()
 		{
-			if (this.socket == null) return;
-			if (!this.connected) return;
+			int newClientID = 0;
+			if (this.socket == null) return newClientID;
+			if (!this.connected) return newClientID;
 			
 			lock (socket)
 			{
@@ -549,6 +584,7 @@ namespace sar.Socket
 									foreach (SocketMessage message in newMessages)
 									{
 										this.packetsIn++;
+										if (message.Member == "Me.ID") newClientID = int.Parse(message.Data);
 										if (!this.ProcessMessage(message)) this.messagesIn.Add(message);
 										this.lastActivity = DateTime.Now;
 									}
@@ -568,6 +604,8 @@ namespace sar.Socket
 					}
 				}
 			}
+			
+			return newClientID;
 		}
 		
 		private void ServiceOutgoing()
