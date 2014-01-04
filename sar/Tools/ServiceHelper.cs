@@ -81,31 +81,34 @@ namespace sar.Tools
 			if (results.ExitCode != Shell.EXIT_OK) throw new Exception ("Failed to uninstall " + serviceName);
 		}
 		
-		public static void TryUninstall(string serviceFilePath)
+		public static bool TryUninstall(string serviceFilePath)
 		{
 			foreach (string dotNetVersion in IO.GetDotNetVersions())
 			{
 				try
 				{
 					Uninstall(dotNetVersion, serviceFilePath);
-					return;
+					return true;
 				}
 				catch
 				{
 					
 				}
 			}
+			
+			return false;
 		}
 		
-		public static void TryUninstall(string dotNetVersion, string serviceFilePath)
+		public static bool TryUninstall(string dotNetVersion, string serviceFilePath)
 		{
 			try
 			{
 				Uninstall(dotNetVersion, serviceFilePath);
+				return true;
 			}
 			catch
 			{
-				
+				return false;
 			}
 		}
 		
@@ -126,15 +129,16 @@ namespace sar.Tools
 			}
 		}
 		
-		public static void TryStart(string serviceFilePath)
+		public static bool TryStart(string serviceFilePath)
 		{
 			try
 			{
 				Start(serviceFilePath);
+				return true;
 			}
 			catch
 			{
-				
+				return false;
 			}
 		}
 
@@ -154,15 +158,16 @@ namespace sar.Tools
 			}
 		}
 		
-		public static void TryStop(string serviceFilePath)
+		public static bool TryStop(string serviceFilePath)
 		{
 			try
 			{
 				Stop(serviceFilePath);
+				return true;
 			}
 			catch
 			{
-				
+				return false;
 			}
 		}
 
