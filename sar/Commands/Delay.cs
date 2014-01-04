@@ -27,7 +27,7 @@ namespace sar.Commands
 	public class Delay : Command
 	{
 		public Delay(Base.CommandHub parent) : base(parent, "Delay",
-		                      new List<string> { "delay" },
+		                      new List<string> { "delay", "d" },
 		                      @"-delay <milliseconds>",
 		                      new List<string> { "-delay 5000" })
 		{
