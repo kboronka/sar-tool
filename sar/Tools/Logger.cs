@@ -108,7 +108,7 @@ namespace sar.Tools
 		
 		public void WriteLine(string text, DateTime timestamp)
 		{
-			if (this.logTimestamp) text = timestamp.ToString(TIMESTAMP) + "\t" + text
+			if (this.logTimestamp) text = timestamp.ToString(TIMESTAMP) + "\t" + text;
 			this.WriteLine(text);
 		}
 		
