@@ -36,7 +36,7 @@ namespace sar
 			{
 				CommandHub hub = new CommandHub();
 				ConsoleHelper.Start();
-				if (args.Length == 0) Help.WriteTitle();
+				if (args.Length == 0) ConsoleHelper.ApplicationTitle();
 				int exitCode = hub.ProcessCommands(args);
 				
 				ConsoleHelper.Shutdown();

@@ -23,26 +23,13 @@ namespace sar.Commands
 {
 	public class Help : Command
 	{
-		private static bool titleDisplayed = false;
-		
 		public Help(Base.CommandHub parent) : base(parent, "Help", new List<string> { "help", "?" }, "-help [command]", new List<string>() { @"-help bk" })
 		{
 			
 		}
 		
-		public static void WriteTitle()
-		{
-			if (!Help.titleDisplayed)
-			{
-				ConsoleHelper.ApplicationTitle();
-				titleDisplayed = true;				
-			}
-		}
-		
 		public override int Execute(string[] args)
 		{
-			Help.WriteTitle();
-
 			if (args.Length == 2)
 			{
 				string commandString = args[1];
