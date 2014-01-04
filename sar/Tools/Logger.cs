@@ -25,7 +25,7 @@ namespace sar.Tools
 {
 	public partial class Logger : Form
 	{
-		private const string TIMESTAMP = "yyyy/MM/dd HH:mm:ss.fff";
+		private const string TIMESTAMP = "HH:mm:ss.fff";
 		private const string FILETIMESTAMP = "yyyy-MM-dd";
 		public const string ISO8601_TIMESTAMP = "yyyy-MM-ddTHH:mm:ssZ";
 		
@@ -36,6 +36,7 @@ namespace sar.Tools
 		private string path;
 		private StreamWriter writer;
 		private DateTime today;
+		private bool logTimestamp = true;
 		
 		private List<string> lines = new List<string>();
 		
@@ -65,6 +66,11 @@ namespace sar.Tools
 				
 				return this.writer;
 			}
+		}
+		
+		public bool LogTimestamp
+		{
+			get { return logTimestamp; }
 		}
 		
 		#endregion
@@ -102,7 +108,8 @@ namespace sar.Tools
 		
 		public void WriteLine(string text, DateTime timestamp)
 		{
-			this.WriteLine(timestamp.ToString(TIMESTAMP) + "\t" + text);
+			if (this.logTimestamp) text = timestamp.ToString(TIMESTAMP) + "\t" + text
+			this.WriteLine(text);
 		}
 		
 		public void WriteLine(string text)
