@@ -249,6 +249,7 @@ namespace sar.Socket
 		{
 			this.socket = socket;
 			this.stream = this.socket.GetStream();
+			this.connected = true;
 			this.parent = parent;
 			this.ID = clientID;
 			this.encoding = encoding;
@@ -258,7 +259,7 @@ namespace sar.Socket
 			// send ClientID
 			try
 			{
-				this.SendData("set", "Me.ID", this.ID.ToString(), this.ID);
+				this.SendData("set", "Me.ID", clientID.ToString(), this.ID);
 				ServiceOutgoing();
 			}
 			catch
@@ -305,6 +306,15 @@ namespace sar.Socket
 		#endregion
 		
 		#region methods
+		
+		public SocketValue ForceReadValue(string member)
+		{
+			// TODO
+			// SendValue
+			// force
+			
+			return null;
+		}
 		
 		public void Disconnect()
 		{
@@ -362,32 +372,37 @@ namespace sar.Socket
 				
 				this.socket = new TcpClient(this.hostname, this.port);
 				this.stream = this.socket.GetStream();
+				this.connected = true;
 				
-				// send ClientID
+				// wait for clientID
 				try
 				{
 					Stopwatch timeout = new Stopwatch();
 					timeout.Start();
+
+					this.SendData("get-all", this.ID);
+					ServiceOutgoing();
 					
-					this.ID = ServiceIncoming();
-					while (this.ID != 0)
+					while(!ServiceIncoming("Me.ID"))
 					{
 						Thread.Sleep(10);
-						this.ID = ServiceIncoming();
-						if (timeout.ElapsedMilliseconds > 5000)
+						
+						if (timeout.ElapsedMilliseconds > 30000)
 						{
 							this.Disconnect();
+							this.connected = false;
 							throw new ApplicationException("Did not recive client ID");
 						}
 					}
-
+					
+					this.ID = int.Parse(GetValue("Me.ID"));
 				}
 				catch
 				{
 					
 				}
 				
-				this.OnConnectionChange(true);
+				this.OnConnectionChange(this.connected);
 			}
 			catch
 			{
@@ -515,11 +530,16 @@ namespace sar.Socket
 		private int resendAttempts;
 		private DateTime lastActivity;
 		
-		private int ServiceIncoming()
+		private bool ServiceIncoming()
 		{
-			int newClientID = 0;
-			if (this.socket == null) return newClientID;
-			if (!this.connected) return newClientID;
+			return ServiceIncoming("");
+		}
+		
+		private bool ServiceIncoming(string member)
+		{
+			bool valueRecived = false;
+			if (this.socket == null) return valueRecived;
+			if (!this.connected) return valueRecived;
 			
 			lock (socket)
 			{
@@ -584,7 +604,7 @@ namespace sar.Socket
 									foreach (SocketMessage message in newMessages)
 									{
 										this.packetsIn++;
-										if (message.Member == "Me.ID") newClientID = int.Parse(message.Data);
+										if (message.Member == member) valueRecived = true;
 										if (!this.ProcessMessage(message)) this.messagesIn.Add(message);
 										this.lastActivity = DateTime.Now;
 									}
@@ -605,7 +625,7 @@ namespace sar.Socket
 				}
 			}
 			
-			return newClientID;
+			return valueRecived;
 		}
 		
 		private void ServiceOutgoing()
