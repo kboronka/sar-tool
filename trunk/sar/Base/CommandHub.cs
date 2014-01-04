@@ -27,7 +27,8 @@ namespace sar.Base
 		public bool Debug = false;
 		public bool IncludeSVN = false;
 		public bool IncludeSubFolders = true;
-		public bool commandlineActive = false;
+		public bool commandlineActive;
+		
 		internal Dictionary<string, Command> commands = new Dictionary<string, Command>();
 		
 		public CommandHub()
@@ -41,29 +42,23 @@ namespace sar.Base
 			{
 				int exitCode = ConsoleHelper.EXIT_OK;
 				
-				while (!commandlineActive)
+				this.commandlineActive = (args.Length == 0);
+				
+				do
 				{
 					try
 					{
-						if (args.Length == 0)
+						while (args.Length == 0 && commandlineActive)
 						{
-							commandlineActive = false;
-							args = new string[1];
 							ConsoleHelper.Write("> ", ConsoleColor.White);
 							
 							args = StringHelper.ParseString(ConsoleHelper.ReadLine(), " ");
 							args = this.RemoveGlobalArgs(args);
-							
-							if (args.Length == 0)
-							{
-								throw new ArgumentException("too few arguments");
-							}
 						}
-						else
-						{
-							args = this.RemoveGlobalArgs(args);
-							commandlineActive = true;
-						}
+						
+
+						args = this.RemoveGlobalArgs(args);
+
 						
 						string command = args[0].ToLower();
 						if (command[0] == '-' || command[0] == '/')
@@ -79,20 +74,18 @@ namespace sar.Base
 							Progress.UpdateTimer.Enabled = false;
 							args = new string[0];
 						}
+						else
+						{
+							this.commandlineActive = false;
+						}
 					}
 					catch (Exception ex)
 					{
 						try
 						{
-							Progress.UpdateTimer.Enabled = false;
-							ConsoleHelper.WriteException(ex);
-
-							if (this.Debug && commandlineActive)
-							{
-								Thread.Sleep(2000);
-							}
-							
 							args = new string[0];
+							Progress.UpdateTimer.Enabled = false;
+							ConsoleHelper.WriteException(ex);							
 						}
 						catch
 						{
@@ -101,7 +94,7 @@ namespace sar.Base
 						
 						exitCode = ConsoleHelper.EXIT_ERROR;
 					}
-				}
+				} while (this.commandlineActive);
 				
 				ConsoleHelper.Shutdown();
 				return exitCode;
