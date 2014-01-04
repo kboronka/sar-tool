@@ -117,6 +117,17 @@ namespace sar.Socket
 		#region messageQueue
 		
 		private long messageID;
+		
+		public void SetValue(string member, bool data)
+		{
+			this.SetValue(member, data, false);
+		}
+		
+		public void SetValue(string member, bool data, bool global)
+		{
+			this.SetValue(member, data.ToString(), global);
+		}
+		
 		public void SetValue(string member, string data)
 		{
 			this.SetValue(member, data, false);
