@@ -166,5 +166,40 @@ namespace sar.Socket
 		
 		#endregion
 
+		#region logger
+		
+		FileLogger debugLog;
+		FileLogger errorLogger;
+		
+		public FileLogger DebugLog
+		{
+			get { return this.debugLog; }
+			set { this.debugLog = value; }
+		}
+		
+		public FileLogger ErrorLog
+		{
+			get { return this.errorLogger; }
+			set { this.errorLogger = value; }
+		}
+		
+		protected void Log(string line)
+		{
+			if (this.debugLog == null) return;
+			this.debugLog.WriteLine(line);
+		}
+		
+		protected void Log(Exception ex)
+		{
+			if (this.errorLogger == null) return;
+			this.errorLogger.WriteLine(ConsoleHelper.HR);
+			this.errorLogger.WriteLine(DateTime.Now.ToString());
+			this.errorLogger.WriteLine(ex.Message);
+			this.errorLogger.WriteLine(ConsoleHelper.HR);
+			this.errorLogger.WriteLine(ex.StackTrace);
+			this.errorLogger.WriteLine("");
+		}
+		
+		#endregion
 	}
 }

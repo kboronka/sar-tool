@@ -43,18 +43,16 @@ namespace sar.Testing
 		public LocalSocket()
 		{
 			InitializeComponent();
-			server = new SocketServer(8104, Encoding.ASCII);
+			server = new SocketServer(8104, Program.ErrorLog);
 			this.socketServerControl1.Server = server;
 
-			client1 = new SocketClient("localhost", 8104, Encoding.ASCII);
+			client1 = new SocketClient("localhost", 8104, Program.ErrorLog);
 			client1.RegisterCallback("testmember", new SocketValue.DataChangedHandler(this.Client1Update));
 			this.socketMemCacheList1.Client = client1;
-			client1.SendData("ping");
 			
-			client2 = new SocketClient("localhost", 8104, Encoding.ASCII);
+			client2 = new SocketClient("localhost", 8104, Program.ErrorLog);
 			client2.RegisterCallback("testmember", new SocketValue.DataChangedHandler(this.Client2Update));
 			this.socketMemCacheList2.Client = client2;
-			client2.SendData("ping");
 		}
 		
 		void Button1Click(object sender, EventArgs e)
@@ -91,7 +89,7 @@ namespace sar.Testing
 		{
 			if (client3 == null)
 			{
-				client3 = new SocketClient(this.Host.Text, (int)this.Port.Value, Encoding.ASCII);
+				client3 = new SocketClient(this.Host.Text, (int)this.Port.Value, Program.ErrorLog);
 				client3.SendData("ping");
 
 				this.client3Form = new SocketClientForm();
@@ -165,7 +163,7 @@ namespace sar.Testing
 		{
 			if (this.server == null)
 			{
-				server = new SocketServer(8100, Encoding.ASCII);
+				server = new SocketServer(8100, Program.ErrorLog);
 				this.socketServerControl1.Server = server;
 			}
 		}

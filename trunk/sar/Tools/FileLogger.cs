@@ -46,7 +46,7 @@ namespace sar.Tools
 						this.writer.Close();
 					}
 					
-					string path = this.path.Insert(this.path.LastIndexOf('.'), "." + DateTime.Today.ToString(FILETIMESTAMP));
+					string path = DateTime.Today.ToString(FILETIMESTAMP) + "." + this.path;
 					string directory = IO.GetFileDirectory(path);
 					
 					if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);

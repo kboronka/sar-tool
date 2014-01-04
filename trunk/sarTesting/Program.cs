@@ -16,6 +16,8 @@
 using System;
 using System.Windows.Forms;
 
+using sar.Tools;
+
 namespace sar.Testing
 {
 	internal sealed class Program
@@ -28,5 +30,18 @@ namespace sar.Testing
 			Application.Run(new Menu());
 		}
 		
+		private static FileLogger errorlogger;
+		public static FileLogger ErrorLog
+		{
+			get
+			{
+				if (Program.errorlogger == null)
+				{
+					Program.errorlogger = new FileLogger("error.log");
+				}
+				
+				return Program.errorlogger;
+			}
+		}
 	}
 }
