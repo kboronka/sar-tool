@@ -16,11 +16,12 @@
 using System;
 using System.Windows.Forms;
 
+using sar.Base;
 using sar.Tools;
 
 namespace sar.Testing
 {
-	internal sealed class Program
+	internal sealed class Program : Base.Program
 	{
 		[STAThread]
 		private static void Main(string[] args)
@@ -28,20 +29,6 @@ namespace sar.Testing
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new Menu());
-		}
-		
-		private static FileLogger errorlogger;
-		public static FileLogger ErrorLog
-		{
-			get
-			{
-				if (Program.errorlogger == null)
-				{
-					Program.errorlogger = new FileLogger("error.log");
-				}
-				
-				return Program.errorlogger;
-			}
 		}
 	}
 }
