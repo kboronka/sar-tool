@@ -27,7 +27,9 @@ namespace sar.Tools
 		private const string FILETIMESTAMP = "yyyy-MM-dd";
 		public const string ISO8601_TIMESTAMP = "yyyy-MM-ddTHH:mm:ssZ";
 		
-		private string path;
+		private string root;
+		private string filename;
+		
 		private StreamWriter writer;
 		private DateTime today;
 		private bool logTime = true;
@@ -44,10 +46,11 @@ namespace sar.Tools
 					
 					if (this.writer != null)
 					{
+						this.writer.Flush();
 						this.writer.Close();
 					}
 					
-					string path = DateTime.Today.ToString(FILETIMESTAMP) + "." + this.path;
+					string path = this.root + DateTime.Today.ToString(FILETIMESTAMP) + "." + this.filename;
 					string directory = IO.GetFileDirectory(path);
 					
 					if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
@@ -68,32 +71,31 @@ namespace sar.Tools
 		
 		public FileLogger(string filename)
 		{
-			if (String.IsNullOrEmpty(filename))
-			{
-				throw new ArgumentNullException("logging filename not specified");
-			}
+			this.filename = filename;
 			
-			if (filename[filename.Length - 1] == '\\')
-			{
-				filename = filename.Substring(0, this.path.Length - 1);
-			}
+			// no filename
+			if (String.IsNullOrEmpty(filename)) this.filename = AssemblyInfo.Name + ".log";
 			
-			if (filename.IndexOf('.') == -1)
-			{
-				filename += ".log";
-			}
-			
-			this.path = ApplicationInfo.CommonDataDirectory + filename;
+			// no file extension
+			if (this.filename.IndexOf('.') == -1) this.filename += ".log";
+
+			// root = C:\ProgramData\Company\Product
+			this.root = ApplicationInfo.CommonDataDirectory;
 		}
 		
 		public void WriteLine(Exception ex)
 		{
+			bool logTimeSetting = this.logTime;
+			
+			this.logTime = false;
+			
 			this.WriteLine(ConsoleHelper.HR);
 			this.WriteLine("Time: " + DateTime.Now.ToString());
 			this.WriteLine("Error: " + ex.Message);
 			this.WriteLine(ConsoleHelper.HR);
 			this.WriteLine(ex.StackTrace);
 			this.WriteLine("");
+			this.logTime = logTimeSetting;
 		}
 		
 		public void WriteLine(string text, DateTime timestamp)
