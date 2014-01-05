@@ -30,6 +30,7 @@ namespace sar.Tools
 		private string path;
 		private StreamWriter writer;
 		private DateTime today;
+		private bool logTime = true;
 		
 		#region properties
 		
@@ -58,6 +59,11 @@ namespace sar.Tools
 			}
 		}
 		
+		private bool LogTime
+		{
+			set { this.logTime = value; }
+		}
+		
 		#endregion
 		
 		public FileLogger(string filename)
@@ -80,11 +86,22 @@ namespace sar.Tools
 			this.path = ApplicationInfo.CommonDataDirectory + filename;
 		}
 		
+		public void WriteLine(Exception ex)
+		{
+			this.WriteLine(ConsoleHelper.HR);
+			this.WriteLine("Time: " + DateTime.Now.ToString());
+			this.WriteLine("Error: " + ex.Message);
+			this.WriteLine(ConsoleHelper.HR);
+			this.WriteLine(ex.StackTrace);
+			this.WriteLine("");
+		}
+		
 		public void WriteLine(string text, DateTime timestamp)
 		{
 			lock (this.LogWriter)
 			{
-				this.LogWriter.WriteLine(timestamp.ToString(TIMESTAMP) + "\t" + text);
+				if (this.logTime) text = timestamp.ToString(TIMESTAMP) + "\t" + text;
+				this.LogWriter.WriteLine(text);
 				this.LogWriter.Flush();
 			}
 		}
