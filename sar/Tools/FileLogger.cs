@@ -62,7 +62,7 @@ namespace sar.Tools
 			}
 		}
 		
-		private bool LogTime
+		public bool LogTime
 		{
 			set { this.logTime = value; }
 		}
