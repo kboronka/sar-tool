@@ -25,6 +25,8 @@ namespace sar.Controls
 		private string caption;
 		private bool status;
 		
+		#region properties
+		
 		public string Caption
 		{
 			get { return this.caption; }
@@ -45,6 +47,8 @@ namespace sar.Controls
 			}
 		}
 		
+		#endregion
+
 		public BooleanIndicator()
 		{
 			this.caption = "booleanIndicator";

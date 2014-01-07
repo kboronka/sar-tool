@@ -29,6 +29,8 @@ namespace sar.Controls
 	{
 		private SocketServer server;
 
+		#region properties
+		
 		[Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public SocketServer Server
 		{
@@ -57,7 +59,9 @@ namespace sar.Controls
 		{
 			InitializeComponent();
 		}
-		
+
+		#endregion
+
 		private void ClientsChanged(object sender, EventArgs e)
 		{
 			this.Invoke((MethodInvoker) delegate
