@@ -29,6 +29,8 @@ namespace sar.Controls
 		private SocketClient client;
 		private Dictionary<string, SocketValue> memCache;
 		
+		#region Properties
+
 		[Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public SocketServer Server
 		{
@@ -88,6 +90,8 @@ namespace sar.Controls
 			}
 		}
 		
+		#endregion
+
 		public SocketMemCacheList()
 		{
 			this.Columns.Add("Member", -2, HorizontalAlignment.Left);
