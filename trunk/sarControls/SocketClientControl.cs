@@ -35,22 +35,29 @@ namespace sar.Controls
 			get { return this.client; }
 			set
 			{
-				if (this.client != null)
+				try
 				{
-					this.client.MessageSent -= new EventHandler(this.MessageSent);
-					this.client.MessageRecived -= new EventHandler(this.MessageRecived);
-					this.client.ConnectionChange -= new EventHandler(this.Connected);
-					this.connected.Status = false;
+					if (this.client != null)
+					{
+						this.client.MessageSent -= new EventHandler(this.MessageSent);
+						this.client.MessageRecived -= new EventHandler(this.MessageRecived);
+						this.client.ConnectionChange -= new EventHandler(this.Connected);
+						this.connected.Status = false;
+					}
+					
+					this.client = value;
+					
+					if (this.client != null)
+					{
+						this.client.MessageSent += new EventHandler(this.MessageSent);
+						this.client.MessageRecived += new EventHandler(this.MessageRecived);
+						this.client.ConnectionChange += new EventHandler(this.Connected);
+						this.connected.Status = this.client.Connected;
+					}
 				}
-				
-				this.client = value;
-				
-				if (this.client != null)
+				catch
 				{
-					this.client.MessageSent += new EventHandler(this.MessageSent);
-					this.client.MessageRecived += new EventHandler(this.MessageRecived);
-					this.client.ConnectionChange += new EventHandler(this.Connected);
-					this.connected.Status = this.client.Connected;
+					
 				}
 			}
 		}

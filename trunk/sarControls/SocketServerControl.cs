@@ -37,20 +37,27 @@ namespace sar.Controls
 			get { return this.server; }
 			set
 			{
-				if (this.server != null)
+				try
 				{
-					this.server.NewClient -= new EventHandler(this.ClientsChanged);
-					this.server.ClientLost -= new EventHandler(this.ClientsChanged);
-					socketMemCacheList1.Server = null;
+					if (this.server != null)
+					{
+						this.server.NewClient -= new EventHandler(this.ClientsChanged);
+						this.server.ClientLost -= new EventHandler(this.ClientsChanged);
+						socketMemCacheList1.Server = null;
+					}
+					
+					this.server = value;
+					
+					if (this.server != null)
+					{
+						this.server.NewClient += new EventHandler(this.ClientsChanged);
+						this.server.ClientLost += new EventHandler(this.ClientsChanged);
+						socketMemCacheList1.Server = this.server;
+					}
 				}
-				
-				this.server = value;
-				
-				if (this.server != null)
+				catch
 				{
-					this.server.NewClient += new EventHandler(this.ClientsChanged);
-					this.server.ClientLost += new EventHandler(this.ClientsChanged);
-					socketMemCacheList1.Server = this.server;
+					
 				}
 			}
 		}
