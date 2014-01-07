@@ -41,7 +41,9 @@
 	if errorlevel 1 goto BuildFailed
 
 	copy sar\bin\%CONFIG%\*.exe release\*.exe
+	copy sar\bin\%CONFIG%\*.pdb release\*.pdb
 	copy sarControls\bin\%CONFIG%\sarControls.dll release\sarControls.dll
+	copy sarControls\bin\%CONFIG%\sarControls.pdb release\sarControls.pdb
 	
 	copy license.txt release\license.txt
 	%SAR% -sky.gen SkyUpdate.info release\sar.exe https://sar-tool.googlecode.com/svn/trunk/release/sar.exe
