@@ -37,18 +37,25 @@ namespace sar.Controls
 			get { return this.server; }
 			set
 			{
-				if (this.server != null)
+				try
 				{
-					this.server.DataChanged -= new SocketValue.DataChangedHandler(this.DataChanged);
-					this.MemCache = null;
+					if (this.server != null)
+					{
+						this.server.DataChanged -= new SocketValue.DataChangedHandler(this.DataChanged);
+						this.MemCache = null;
+					}
+					
+					this.server = value;
+					
+					if (this.server != null)
+					{
+						this.server.DataChanged += new SocketValue.DataChangedHandler(this.DataChanged);
+						this.MemCache = this.server.MemCache;
+					}
 				}
-				
-				this.server = value;
-				
-				if (this.server != null)
+				catch
 				{
-					this.server.DataChanged += new SocketValue.DataChangedHandler(this.DataChanged);
-					this.MemCache = this.server.MemCache;
+					
 				}
 			}
 		}
@@ -59,18 +66,25 @@ namespace sar.Controls
 			get { return this.client; }
 			set
 			{
-				if (this.client != null)
+				try
 				{
-					this.client.DataChanged -= new SocketValue.DataChangedHandler(this.DataChanged);
-					this.MemCache = null;
+					if (this.client != null)
+					{
+						this.client.DataChanged -= new SocketValue.DataChangedHandler(this.DataChanged);
+						this.MemCache = null;
+					}
+					
+					this.client = value;
+					
+					if (this.client != null)
+					{
+						this.client.DataChanged += new SocketValue.DataChangedHandler(this.DataChanged);
+						this.MemCache = this.client.MemCache;
+					}
 				}
-				
-				this.client = value;
-				
-				if (this.client != null)
+				catch
 				{
-					this.client.DataChanged += new SocketValue.DataChangedHandler(this.DataChanged);
-					this.MemCache = this.client.MemCache;
+					
 				}
 			}
 		}
@@ -80,13 +94,20 @@ namespace sar.Controls
 		{
 			set
 			{
-				if (value == null)
+				try
 				{
-					this.memCache = new Dictionary<string, SocketValue>();
+					if (value == null)
+					{
+						this.memCache = new Dictionary<string, SocketValue>();
+					}
+					
+					this.memCache = value;
+					this.InitializeList();
 				}
-				
-				this.memCache = value;
-				this.InitializeList();
+				catch
+				{
+					
+				}
 			}
 		}
 		
