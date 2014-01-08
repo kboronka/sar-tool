@@ -74,7 +74,7 @@ namespace sar.Socket
 		{
 			try
 			{
-				this.Set("Server.Clients", this.clients.Count.ToString());
+				this.Set("Host.Clients", this.clients.Count.ToString());
 				
 				if (NewClient != null)
 				{
@@ -96,7 +96,7 @@ namespace sar.Socket
 		{
 			try
 			{
-				this.Set("Server.Clients", this.clients.Count.ToString());
+				this.Set("Host.Clients", this.clients.Count.ToString());
 				
 				if (ClientLost != null)
 				{
@@ -169,11 +169,11 @@ namespace sar.Socket
 			this.serviceListenerTimer = new Timer(this.ServiceListenerTick, null, 1, Timeout.Infinite);
 			this.serviceClientsTimer = new Timer(this.ServiceClientsTick, null, 1, Timeout.Infinite);
 			this.pingTimer = new Timer(this.Ping, null, 1000, Timeout.Infinite);
-			this.Store("Server.Version", AssemblyInfo.SarVersion);
-			this.Store("Server.Port", this.port.ToString());
-			this.Store("Server.Clients", this.clients.Count.ToString());
-			this.Store("Application.Product", AssemblyInfo.Product);
-			this.Store("Application.Version", AssemblyInfo.Version);
+			this.Store("Host.Version", AssemblyInfo.SarVersion);
+			this.Store("Host.Port", this.port.ToString());
+			this.Store("Host.Clients", this.clients.Count.ToString());
+			this.Store("Host.Application.Product", AssemblyInfo.Product);
+			this.Store("Host.Application.Version", AssemblyInfo.Version);
 		}
 		
 		#endregion
@@ -237,11 +237,6 @@ namespace sar.Socket
 			{
 				switch (message.Command.ToLower())
 				{
-					case "ping":
-						client.SendData("echo", client.ID);
-						break;
-						
-						
 					case "set":
 						this.Store(message);
 						
@@ -386,8 +381,7 @@ namespace sar.Socket
 			}
 			catch (Exception ex)
 			{
-				System.Diagnostics.Debug.WriteLine(ex.Message);
-				System.Diagnostics.Debug.WriteLine(ex.StackTrace);
+				this.ErrorLog.WriteLine(ex);
 			}
 			finally
 			{
