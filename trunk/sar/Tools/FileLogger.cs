@@ -32,7 +32,7 @@ namespace sar.Tools
 		
 		private StreamWriter writer;
 		private DateTime today;
-		private bool logTime = true;
+		private bool logTime;
 		
 		#region properties
 		
@@ -69,18 +69,49 @@ namespace sar.Tools
 		
 		#endregion
 		
+		
+		public FileLogger(string filename, bool logTimstamp)
+		{
+			try
+			{
+				this.filename = filename;
+				this.logTime = logTimstamp;
+				
+				// no filename
+				if (String.IsNullOrEmpty(filename)) this.filename = AssemblyInfo.Name + ".log";
+				
+				// no file extension
+				if (this.filename.IndexOf('.') == -1) this.filename += ".log";
+
+				// root = C:\ProgramData\Company\Product
+				this.root = ApplicationInfo.CommonDataDirectory;
+			}
+			catch
+			{
+				
+			}
+		}
+		
 		public FileLogger(string filename)
 		{
-			this.filename = filename;
-			
-			// no filename
-			if (String.IsNullOrEmpty(filename)) this.filename = AssemblyInfo.Name + ".log";
-			
-			// no file extension
-			if (this.filename.IndexOf('.') == -1) this.filename += ".log";
+			try
+			{
+				this.filename = filename;
+				this.logTime = true;
+				
+				// no filename
+				if (String.IsNullOrEmpty(filename)) this.filename = AssemblyInfo.Name + ".log";
+				
+				// no file extension
+				if (this.filename.IndexOf('.') == -1) this.filename += ".log";
 
-			// root = C:\ProgramData\Company\Product
-			this.root = ApplicationInfo.CommonDataDirectory;
+				// root = C:\ProgramData\Company\Product
+				this.root = ApplicationInfo.CommonDataDirectory;
+			}
+			catch
+			{
+				
+			}
 		}
 		
 		public void WriteLine(Exception ex)
