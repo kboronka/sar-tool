@@ -42,8 +42,6 @@ namespace sar.Socket
 		private long packetsOut;
 		private SocketServer parent;
 		
-		private Exception lastError;
-		
 		#region properties
 		
 		public bool HasRequest
@@ -126,14 +124,9 @@ namespace sar.Socket
 			get { return this.memCache; }
 		}
 		
-		private Exception LastError
+		private bool HasParent
 		{
-			set
-			{
-				System.Diagnostics.Debug.WriteLine(value.Message);
-				System.Diagnostics.Debug.WriteLine(value.StackTrace);
-				this.lastError = value;
-			}
+			get { return (this.parent != null); }
 		}
 		
 		#endregion
@@ -161,7 +154,7 @@ namespace sar.Socket
 			}
 			catch (Exception ex)
 			{
-				this.LastError = ex;
+				this.ErrorLog.WriteLine(ex);
 			}
 		}
 
@@ -182,7 +175,7 @@ namespace sar.Socket
 			}
 			catch (Exception ex)
 			{
-				this.LastError = ex;
+				this.ErrorLog.WriteLine(ex);
 			}
 		}
 
@@ -203,7 +196,7 @@ namespace sar.Socket
 			}
 			catch (Exception ex)
 			{
-				this.LastError = ex;
+				this.ErrorLog.WriteLine(ex);
 			}
 		}
 
@@ -286,6 +279,7 @@ namespace sar.Socket
 			this.serviceConnectionTimer = new Timer(this.ServiceConnectionTick, null, 10, Timeout.Infinite);
 			this.serviceTimer = new Timer(this.ServiceTick, null, 100, Timeout.Infinite);
 			this.heartbeatTimer = new Timer(this.HeartbeatTick, null, 200, Timeout.Infinite);
+			this.pingTimer = new Timer(this.Ping, null, 50, Timeout.Infinite);
 		}
 		
 		public SocketClient(string hostname, int port, FileLogger errorLog)
@@ -301,6 +295,7 @@ namespace sar.Socket
 			this.serviceConnectionTimer = new Timer(this.ServiceConnectionTick, null, 10, Timeout.Infinite);
 			this.serviceTimer = new Timer(this.ServiceTick, null, 100, Timeout.Infinite);
 			this.heartbeatTimer = new Timer(this.HeartbeatTick, null, 200, Timeout.Infinite);
+			this.pingTimer = new Timer(this.Ping, null, 50, Timeout.Infinite);
 		}
 		
 		#endregion
@@ -352,7 +347,7 @@ namespace sar.Socket
 			}
 			catch (Exception ex)
 			{
-				this.LastError = ex;
+				this.ErrorLog.WriteLine(ex);
 			}
 			finally
 			{
@@ -364,7 +359,7 @@ namespace sar.Socket
 		public void Connect()
 		{
 			if (this.connected) return;
-			if (this.parent != null) return;
+			if (this.HasParent) return;
 			if (string.IsNullOrEmpty(this.hostname)) return;
 			this.initilized = false;
 			
@@ -429,12 +424,6 @@ namespace sar.Socket
 		{
 			if (message != null)
 			{
-				if (this.parent != null)
-				{
-					// if client is attached to a server, then the server should respond
-					return false;
-				}
-				
 				switch (message.Command)
 				{
 					case "startup":
@@ -442,18 +431,25 @@ namespace sar.Socket
 						return true;
 					case "heartbeat":
 						return true;
+					case "echo":
+						this.PingReciveEcho(message);
+						return true;
 					case "ping":
-						this.SendData("echo", message.FromID);
-						this.OnMessageRecived(message);
+						this.PingSendEcho(message);
 						return true;
 					case "set":
 						this.Store(message);
 						this.OnMessageRecived(message);
 						return (message.ToID == this.ID);
 					case "get":
+						if (this.HasParent) return false;	// allow parent to respond to "get" commands
 						this.SendData("set", message.Member, this.GetValue(message.Member), message.FromID);
 						this.OnMessageRecived(message);
 						return true;
+					case "get-all":
+						if (this.HasParent) return false;	// allow parent to respond to "get" commands
+						return true;
+						break;
 					default:
 						this.OnMessageRecived(message);
 						break;
@@ -532,7 +528,7 @@ namespace sar.Socket
 			}
 			catch (Exception ex)
 			{
-				this.LastError = ex;
+				this.ErrorLog.WriteLine(ex);
 			}
 			finally
 			{
@@ -556,7 +552,7 @@ namespace sar.Socket
 				if (stream == null) return false;
 				
 				lock (socket)
-				{					
+				{
 					lock (stream)
 					{
 						if (socket.Available > 0)
@@ -598,7 +594,7 @@ namespace sar.Socket
 												}
 												catch (Exception ex)
 												{
-													this.LastError = ex;
+													this.ErrorLog.WriteLine(ex);
 												}
 											}
 										}
@@ -722,7 +718,7 @@ namespace sar.Socket
 			}
 			catch (Exception ex)
 			{
-				this.LastError = ex;
+				this.ErrorLog.WriteLine(ex);
 			}
 			finally
 			{
@@ -747,8 +743,7 @@ namespace sar.Socket
 			}
 			catch (Exception ex)
 			{
-				System.Diagnostics.Debug.WriteLine(ex.Message);
-				System.Diagnostics.Debug.WriteLine(ex.StackTrace);
+				this.ErrorLog.WriteLine(ex);
 			}
 			finally
 			{
@@ -758,6 +753,75 @@ namespace sar.Socket
 
 		#endregion
 		
+		#region pingLoop
+		
+		private System.Threading.Timer pingTimer;
+		private int lastPingID;
+		private Stopwatch pingStopWatch;
+		
+		private void Ping(Object state)
+		{
+			try
+			{
+				if (pingStopWatch == null)
+				{
+					pingStopWatch = new Stopwatch();
+					pingStopWatch.Start();
+				}
+				
+				this.SendData("ping", (++lastPingID).ToString(), pingStopWatch.ElapsedMilliseconds.ToString(), this.ID);
+			}
+			catch (Exception ex)
+			{
+				ErrorLog.WriteLine(ex);
+			}
+			finally
+			{
+				if (this.parent == null)
+				{
+					this.pingTimer.Change(10000, Timeout.Infinite);
+				}
+			}
+		}
+
+		private void PingSendEcho(SocketMessage message)
+		{
+			try
+			{
+				this.SendData("echo", message.Member, message.Data, message.FromID);
+			}
+			catch (Exception ex)
+			{
+				ErrorLog.WriteLine(ex);
+			}
+		}
+		
+		private void PingReciveEcho(SocketMessage message)
+		{
+			try
+			{
+				if (pingStopWatch == null) return;
+				
+				long pingTime = long.Parse(message.Data);
+				int pingID = int.Parse(message.Member);
+				long pingDuration = this.pingStopWatch.ElapsedMilliseconds - pingTime;
+
+				if (pingID == this.lastPingID)
+				{
+					this.Store("Me.Ping", pingDuration.ToString());
+				}
+			}
+			catch (Exception ex)
+			{
+				ErrorLog.WriteLine(ex);
+			}
+			finally
+			{
+				this.pingTimer.Change(500, Timeout.Infinite);
+			}
+		}
+		
+		#endregion
 		#endregion
 	}
 }
