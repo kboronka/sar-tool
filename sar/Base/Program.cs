@@ -28,12 +28,7 @@ namespace sar.Base
 		{
 			get
 			{
-				if (Program.errorLog == null)
-				{
-					Program.errorLog = new FileLogger("error.log");
-					Program.errorLog.LogTime = false;
-				}
-				
+				if (Program.errorLog == null) Program.errorLog = new FileLogger("error.log", false);
 				return Program.errorLog;
 			}
 		}
@@ -43,12 +38,7 @@ namespace sar.Base
 		{
 			get
 			{
-				if (Program.debugLog == null)
-				{
-					Program.debugLog = new FileLogger("debug.log");
-					Program.errorLog.LogTime = true;
-				}
-				
+				if (Program.debugLog == null)Program.debugLog = new FileLogger("debug.log", true);
 				return Program.debugLog;
 			}
 		}
