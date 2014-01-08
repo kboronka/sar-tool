@@ -43,16 +43,16 @@ namespace sar.Testing
 		public LocalSocket()
 		{
 			InitializeComponent();
-			server = new SocketServer(8104, Program.ErrorLog);
+			server = new SocketServer(8104, Program.ErrorLog, Program.DebugLog);
 			this.socketServerControl1.Server = server;
 
-			client1 = new SocketClient("localhost", 8104, Program.ErrorLog);
+			client1 = new SocketClient("localhost", 8104, Program.ErrorLog, Program.DebugLog);
 			client1.RegisterCallback("testmember", new SocketValue.DataChangedHandler(this.Client1Update));
 			this.socketMemCacheList1.Client = client1;
 			
-			client2 = new SocketClient("localhost", 8104, Program.ErrorLog);
-			client2.RegisterCallback("testmember", new SocketValue.DataChangedHandler(this.Client2Update));
-			this.socketMemCacheList2.Client = client2;
+			//client2 = new SocketClient("localhost", 8104, Program.ErrorLog, Program.DebugLog);
+			//client2.RegisterCallback("testmember", new SocketValue.DataChangedHandler(this.Client2Update));
+			//this.socketMemCacheList2.Client = client2;
 		}
 		
 		void Button1Click(object sender, EventArgs e)
@@ -89,7 +89,7 @@ namespace sar.Testing
 		{
 			if (client3 == null)
 			{
-				client3 = new SocketClient(this.Host.Text, (int)this.Port.Value, Program.ErrorLog);
+				client3 = new SocketClient(this.Host.Text, (int)this.Port.Value, Program.ErrorLog, Program.DebugLog);
 				client3.SendData("ping");
 
 				this.client3Form = new SocketClientForm();
@@ -163,7 +163,7 @@ namespace sar.Testing
 		{
 			if (this.server == null)
 			{
-				server = new SocketServer(8100, Program.ErrorLog);
+				server = new SocketServer(8104, Program.ErrorLog, Program.DebugLog);
 				this.socketServerControl1.Server = server;
 			}
 		}
