@@ -197,7 +197,7 @@ namespace sar.Socket
 		#region methods
 		
 		public void Shutdown()
-		{			
+		{
 			lock (this.listener)
 			{
 				this.listener.Stop();

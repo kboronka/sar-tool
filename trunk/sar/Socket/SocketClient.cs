@@ -299,8 +299,6 @@ namespace sar.Socket
 				{
 					messagesOut.Add(message);
 				}
-				
-				this.Log("queued out: " + message.Command);
 			}
 			catch (Exception ex)
 			{
@@ -343,8 +341,6 @@ namespace sar.Socket
 		{
 			if (message != null)
 			{
-				this.Log("recived: " + message.Command);
-				
 				switch (message.Command)
 				{
 					case "startup":
@@ -476,7 +472,7 @@ namespace sar.Socket
 				this.socket = new TcpClient(this.hostname, this.port);
 				this.stream = this.socket.GetStream();
 				
-				this.connected = true;
+				//this.connected = true;
 				this.Log(connectionAttempt.ToString() + ": " + " Socket Open");
 				
 				Stopwatch timeout = new Stopwatch();
@@ -501,7 +497,7 @@ namespace sar.Socket
 				this.Log(connectionAttempt.ToString() + ": " + " Initilized");
 				this.Log(connectionAttempt.ToString() + ": " + " Connected --> " + this.id.ToString());
 
-				this.OnConnectionChange(this.connected && this.initilized);
+				this.OnConnectionChange(this.initilized);
 			}
 			catch (Exception ex)
 			{
@@ -527,11 +523,7 @@ namespace sar.Socket
 			{
 				try
 				{
-					if (this.connected)
-					{
-						this.ServiceIncoming();
-					}
-					
+					this.ServiceIncoming();
 					Thread.Sleep(1);
 				}
 				catch (Exception ex)
@@ -564,8 +556,6 @@ namespace sar.Socket
 								byte[] packetBytes = new byte[socket.Available];
 								int packetSize = stream.Read(packetBytes, 0, packetBytes.Length);
 								string packetString = this.encoding.GetString(packetBytes, 0, packetSize);
-								
-								this.Log("recived: " + packetString);
 								
 								if (!String.IsNullOrEmpty(packetString))
 								{
@@ -621,15 +611,15 @@ namespace sar.Socket
 					}
 				}
 			}
-			catch (ObjectDisposedException ex)
+			catch (ObjectDisposedException)
 			{
-				this.Log(ex);
+				//this.Log(ex);
 				// The NetworkStream is closed.
 				//this.Disconnect();
 			}
-			catch (IOException ex)
+			catch (IOException)
 			{
-				this.Log(ex);
+				//this.Log(ex);
 				// The underlying Socket is closed.
 				//this.Disconnect();
 			}
@@ -707,7 +697,6 @@ namespace sar.Socket
 				}
 
 				// write data to socket
-				this.Log("send attempt: " + packetString);
 				byte[] packetBytes = this.encoding.GetBytes(packetString.ToString());
 				lock (socket)
 				{
@@ -717,7 +706,6 @@ namespace sar.Socket
 					}
 				}
 
-				this.Log("send complete: " + packetString);
 				this.packetsOut += messageQueue.Count;
 			}
 			catch (System.IO.IOException)

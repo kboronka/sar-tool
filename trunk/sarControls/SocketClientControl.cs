@@ -39,8 +39,6 @@ namespace sar.Controls
 				{
 					if (this.client != null)
 					{
-						this.client.MessageSent -= new EventHandler(this.MessageSent);
-						this.client.MessageRecived -= new EventHandler(this.MessageRecived);
 						this.client.ConnectionChange -= new EventHandler(this.Connected);
 						this.connected.Status = false;
 					}
@@ -49,8 +47,6 @@ namespace sar.Controls
 					
 					if (this.client != null)
 					{
-						this.client.MessageSent += new EventHandler(this.MessageSent);
-						this.client.MessageRecived += new EventHandler(this.MessageRecived);
 						this.client.ConnectionChange += new EventHandler(this.Connected);
 						this.connected.Status = this.client.Connected;
 					}

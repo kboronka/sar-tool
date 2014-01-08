@@ -36,7 +36,7 @@ namespace sar.Testing
 		{
 			InitializeComponent();
 
-			client1 = new SocketClient("10.240.14.8", 8111, Program.ErrorLog);
+			client1 = new SocketClient("10.240.14.8", 8111, Program.ErrorLog, Program.DebugLog);
 			this.socketMemCacheList1.Client = client1;
 			this.socketClientControl1.Client = client1;
 			client1.SendData("ping");

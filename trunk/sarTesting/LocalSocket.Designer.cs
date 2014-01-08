@@ -30,35 +30,24 @@ namespace sar.Testing
 		{
 			if (disposing)
 			{
-				if (components != null) {
-					components.Dispose();
-				}
-				
-				if (this.server != null)
+				try
 				{
-					this.server.Shutdown();
-					server = null;
-					this.socketServerControl1.Server = null;
+					if (this.client1 != null) this.client1.Stop();
+					if (this.client2 != null) this.client2.Stop();
+					if (this.client3 != null) this.client3.Stop();
+					if (this.server != null) this.server.Stop();
 				}
-				
-				if (this.client1 != null)
+				catch
 				{
-					this.client1.Disconnect();
-					this.client1 = null;
-				}
-				
-				if (this.client2 != null)
-				{
-					this.client2.Disconnect();
-					this.client2 = null;
-				}
-				
-				if (this.client3 != null)
-				{
-					this.client3.Disconnect();
-					this.client3 = null;
+					
 				}
 			}
+			
+			if (disposing)
+			{
+				if (components != null) components.Dispose();
+			}
+			
 			base.Dispose(disposing);
 		}
 		
@@ -93,7 +82,7 @@ namespace sar.Testing
 			// 
 			// button1
 			// 
-			this.button1.Location = new System.Drawing.Point(630, 325);
+			this.button1.Location = new System.Drawing.Point(834, 323);
 			this.button1.Name = "button1";
 			this.button1.Size = new System.Drawing.Size(75, 23);
 			this.button1.TabIndex = 2;
@@ -103,7 +92,7 @@ namespace sar.Testing
 			// 
 			// button2
 			// 
-			this.button2.Location = new System.Drawing.Point(630, 348);
+			this.button2.Location = new System.Drawing.Point(834, 346);
 			this.button2.Name = "button2";
 			this.button2.Size = new System.Drawing.Size(75, 23);
 			this.button2.TabIndex = 3;
@@ -116,7 +105,6 @@ namespace sar.Testing
 			this.socketServerControl1.BackColor = System.Drawing.SystemColors.WindowFrame;
 			this.socketServerControl1.Location = new System.Drawing.Point(12, 12);
 			this.socketServerControl1.Name = "socketServerControl1";
-			this.socketServerControl1.Server = null;
 			this.socketServerControl1.Size = new System.Drawing.Size(381, 306);
 			this.socketServerControl1.TabIndex = 4;
 			// 
@@ -177,9 +165,9 @@ namespace sar.Testing
 			// 
 			// Set
 			// 
-			this.Set.Location = new System.Drawing.Point(846, 325);
+			this.Set.Location = new System.Drawing.Point(1200, 330);
 			this.Set.Name = "Set";
-			this.Set.Size = new System.Drawing.Size(75, 25);
+			this.Set.Size = new System.Drawing.Size(75, 23);
 			this.Set.TabIndex = 10;
 			this.Set.Text = "Set All";
 			this.Set.UseVisualStyleBackColor = true;
@@ -187,7 +175,7 @@ namespace sar.Testing
 			// 
 			// TestMember
 			// 
-			this.TestMember.Location = new System.Drawing.Point(711, 325);
+			this.TestMember.Location = new System.Drawing.Point(1065, 332);
 			this.TestMember.Name = "TestMember";
 			this.TestMember.Size = new System.Drawing.Size(129, 20);
 			this.TestMember.TabIndex = 11;
@@ -220,7 +208,7 @@ namespace sar.Testing
 			// 
 			// Set_C1
 			// 
-			this.Set_C1.Location = new System.Drawing.Point(927, 325);
+			this.Set_C1.Location = new System.Drawing.Point(1281, 330);
 			this.Set_C1.Name = "Set_C1";
 			this.Set_C1.Size = new System.Drawing.Size(75, 23);
 			this.Set_C1.TabIndex = 15;
@@ -230,7 +218,7 @@ namespace sar.Testing
 			// 
 			// Set_C2
 			// 
-			this.Set_C2.Location = new System.Drawing.Point(927, 353);
+			this.Set_C2.Location = new System.Drawing.Point(1281, 358);
 			this.Set_C2.Name = "Set_C2";
 			this.Set_C2.Size = new System.Drawing.Size(75, 23);
 			this.Set_C2.TabIndex = 16;
@@ -240,26 +228,22 @@ namespace sar.Testing
 			// 
 			// socketMemCacheList1
 			// 
-			this.socketMemCacheList1.Client = null;
 			this.socketMemCacheList1.FullRowSelect = true;
 			this.socketMemCacheList1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
 			this.socketMemCacheList1.Location = new System.Drawing.Point(410, 13);
 			this.socketMemCacheList1.Name = "socketMemCacheList1";
-			this.socketMemCacheList1.Server = null;
-			this.socketMemCacheList1.Size = new System.Drawing.Size(295, 306);
+			this.socketMemCacheList1.Size = new System.Drawing.Size(499, 306);
 			this.socketMemCacheList1.TabIndex = 17;
 			this.socketMemCacheList1.UseCompatibleStateImageBehavior = false;
 			this.socketMemCacheList1.View = System.Windows.Forms.View.Details;
 			// 
 			// socketMemCacheList2
 			// 
-			this.socketMemCacheList2.Client = null;
 			this.socketMemCacheList2.FullRowSelect = true;
 			this.socketMemCacheList2.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-			this.socketMemCacheList2.Location = new System.Drawing.Point(711, 13);
+			this.socketMemCacheList2.Location = new System.Drawing.Point(916, 12);
 			this.socketMemCacheList2.Name = "socketMemCacheList2";
-			this.socketMemCacheList2.Server = null;
-			this.socketMemCacheList2.Size = new System.Drawing.Size(295, 306);
+			this.socketMemCacheList2.Size = new System.Drawing.Size(443, 306);
 			this.socketMemCacheList2.TabIndex = 18;
 			this.socketMemCacheList2.UseCompatibleStateImageBehavior = false;
 			this.socketMemCacheList2.View = System.Windows.Forms.View.Details;
@@ -284,11 +268,11 @@ namespace sar.Testing
 			this.StartServer.UseVisualStyleBackColor = true;
 			this.StartServer.Click += new System.EventHandler(this.StartServerClick);
 			// 
-			// MainForm
+			// LocalSocket
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1011, 467);
+			this.ClientSize = new System.Drawing.Size(1368, 467);
 			this.Controls.Add(this.StartServer);
 			this.Controls.Add(this.StopServer);
 			this.Controls.Add(this.socketMemCacheList2);
@@ -308,7 +292,7 @@ namespace sar.Testing
 			this.Controls.Add(this.socketServerControl1);
 			this.Controls.Add(this.button2);
 			this.Controls.Add(this.button1);
-			this.Name = "MainForm";
+			this.Name = "LocalSocket";
 			this.Text = "sar.Testing";
 			((System.ComponentModel.ISupportInitialize)(this.Port)).EndInit();
 			this.ResumeLayout(false);

@@ -14,6 +14,7 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -28,6 +29,7 @@ namespace sar.Controls
 		private SocketServer server;
 		private SocketClient client;
 		private Dictionary<string, SocketValue> memCache;
+		private ListViewColumnSorter columnSorter;
 		
 		#region Properties
 
@@ -52,6 +54,8 @@ namespace sar.Controls
 						this.server.DataChanged += new SocketValue.DataChangedHandler(this.DataChanged);
 						this.MemCache = this.server.MemCache;
 					}
+					
+					this.Enabled = (this.server != null);
 				}
 				catch
 				{
@@ -70,6 +74,7 @@ namespace sar.Controls
 				{
 					if (this.client != null)
 					{
+						this.client.ConnectionChange -= new EventHandler(this.OnConnectChange);
 						this.client.DataChanged -= new SocketValue.DataChangedHandler(this.DataChanged);
 						this.MemCache = null;
 					}
@@ -78,8 +83,10 @@ namespace sar.Controls
 					
 					if (this.client != null)
 					{
+						this.client.ConnectionChange += new EventHandler(this.OnConnectChange);
 						this.client.DataChanged += new SocketValue.DataChangedHandler(this.DataChanged);
 						this.MemCache = this.client.MemCache;
+						this.Enabled = this.client.Connected;
 					}
 				}
 				catch
@@ -115,10 +122,12 @@ namespace sar.Controls
 
 		public SocketMemCacheList()
 		{
+			this.columnSorter = new ListViewColumnSorter();
 			this.Columns.Add("Member", -2, HorizontalAlignment.Left);
 			this.Columns.Add("Value", -2, HorizontalAlignment.Left);
 			this.Columns.Add("Timestamp", -2, HorizontalAlignment.Left);
 			this.Columns.Add("Source", -2, HorizontalAlignment.Left);
+			this.ListViewItemSorter = this.columnSorter;
 			this.HeaderStyle = ColumnHeaderStyle.Nonclickable;
 			this.FullRowSelect = true;
 			this.View = View.Details;
@@ -155,6 +164,14 @@ namespace sar.Controls
 			}
 		}
 		
+		private void OnConnectChange(object sender, EventArgs e)
+		{
+			bool connected = (bool)sender;
+			if (this.Enabled == connected) return;
+			
+			this.Invoke((MethodInvoker) delegate { this.Enabled = connected; } );
+		}
+		
 		private void DataChanged(SocketValue data)
 		{
 			if (this.memCache == null) return;
@@ -189,5 +206,72 @@ namespace sar.Controls
 			            	this.EndUpdate();
 			            });
 		}
+	}
+
+	public class ListViewColumnSorter : IComparer
+	{
+		private int ColumnToSort;
+		private SortOrder OrderOfSort;
+
+		private CaseInsensitiveComparer ObjectCompare;
+
+
+		public ListViewColumnSorter()
+		{
+			ColumnToSort = 0;
+			OrderOfSort = SortOrder.Ascending;
+			ObjectCompare = new CaseInsensitiveComparer();
+		}
+
+		public int Compare(object x, object y)
+		{
+			int compareResult;
+			ListViewItem listviewX, listviewY;
+
+			// Cast the objects to be compared to ListViewItem objects
+			listviewX = (ListViewItem)x;
+			listviewY = (ListViewItem)y;
+
+			// Compare the two items
+			compareResult = ObjectCompare.Compare(listviewX.SubItems[ColumnToSort].Text,listviewY.SubItems[ColumnToSort].Text);
+			
+			if (OrderOfSort == SortOrder.Ascending)
+			{
+				return compareResult;
+			}
+			else if (OrderOfSort == SortOrder.Descending)
+			{
+				return (-compareResult);
+			}
+			else
+			{
+				return 0;
+			}
+		}
+		
+		public int SortColumn
+		{
+			set
+			{
+				ColumnToSort = value;
+			}
+			get
+			{
+				return ColumnToSort;
+			}
+		}
+
+		public SortOrder Order
+		{
+			set
+			{
+				OrderOfSort = value;
+			}
+			get
+			{
+				return OrderOfSort;
+			}
+		}
+		
 	}
 }
