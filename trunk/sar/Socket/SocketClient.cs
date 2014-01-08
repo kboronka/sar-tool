@@ -552,8 +552,11 @@ namespace sar.Socket
 		{
 			try
 			{
+				if (socket == null) return false;
+				if (stream == null) return false;
+				
 				lock (socket)
-				{
+				{					
 					lock (stream)
 					{
 						if (socket.Available > 0)
@@ -639,6 +642,9 @@ namespace sar.Socket
 		{
 			try
 			{
+				if (socket == null) return;
+				if (stream == null) return;
+				
 				lock (socket)
 				{
 					lock (messagesOut)
