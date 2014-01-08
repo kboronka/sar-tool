@@ -16,6 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -147,33 +148,48 @@ namespace sar.Socket
 		
 		#region constructor
 		
-		public SocketServer(int port)
+		public SocketServer(int port, ErrorLogger errorLog, FileLogger debugLog) : base(errorLog, debugLog)
 		{
-			this.port = port;
-			this.StartServer(this.port);
-		}
-		
-		public SocketServer(int port, FileLogger errorLog)
-		{
-			this.ErrorLog = errorLog;
 			this.port = port;
 			this.StartServer(this.port);
 		}
 		
 		private void StartServer(int port)
 		{
-			this.encoding = Encoding.ASCII;
-			this.clients = new List<SocketClient>();
-			this.listener = new TcpListener(IPAddress.Any, this.port);
-			this.listener.Start();
-			this.serviceListenerTimer = new Timer(this.ServiceListenerTick, null, 1, Timeout.Infinite);
-			this.serviceClientsTimer = new Timer(this.ServiceClientsTick, null, 1, Timeout.Infinite);
-			this.pingTimer = new Timer(this.Ping, null, 1000, Timeout.Infinite);
-			this.Store("Host.Version", AssemblyInfo.SarVersion);
-			this.Store("Host.Port", this.port.ToString());
-			this.Store("Host.Clients", this.clients.Count.ToString());
-			this.Store("Host.Application.Product", AssemblyInfo.Product);
-			this.Store("Host.Application.Version", AssemblyInfo.Version);
+			try
+			{
+				this.encoding = Encoding.ASCII;
+				this.clients = new List<SocketClient>();
+				this.listener = new TcpListener(IPAddress.Any, this.port);
+				this.listener.Start();
+				this.serviceListenerTimer = new Timer(this.ServiceListenerTick, null, 1, Timeout.Infinite);
+				this.serviceClientsTimer = new Timer(this.ServiceClientsTick, null, 1, Timeout.Infinite);
+				this.pingTimer = new Timer(this.Ping, null, 1000, Timeout.Infinite);
+				this.Store("Host.Version", AssemblyInfo.SarVersion);
+				this.Store("Host.Port", this.port.ToString());
+				this.Store("Host.Clients", this.clients.Count.ToString());
+				this.Store("Host.Application.Product", AssemblyInfo.Product);
+				this.Store("Host.Application.Version", AssemblyInfo.Version);
+			}
+			catch (Exception ex)
+			{
+				this.Log(ex);
+			}
+		}
+		
+		public override void Stop()
+		{
+			try
+			{
+				this.serviceListenerTimer.Dispose();
+				this.serviceClientsTimer.Dispose();
+				this.pingTimer.Dispose();
+				this.Shutdown();
+			}
+			catch (Exception ex)
+			{
+				this.Log(ex);
+			}
 		}
 		
 		#endregion
@@ -181,7 +197,7 @@ namespace sar.Socket
 		#region methods
 		
 		public void Shutdown()
-		{
+		{			
 			lock (this.listener)
 			{
 				this.listener.Stop();
@@ -191,11 +207,13 @@ namespace sar.Socket
 			{
 				foreach (SocketClient client in this.clients)
 				{
-					client.Disconnect();
+					client.Stop();
 				}
 				
 				this.clients = new List<SocketClient>();
 			}
+			
+			//this.Stop();
 		}
 		
 		public void Set(string member, string data)
@@ -289,7 +307,7 @@ namespace sar.Socket
 				{
 					if (this.listener.Pending())
 					{
-						SocketClient client = new SocketClient(this, this.listener.AcceptTcpClient(), ++this.lastClientID, this.ErrorLog);
+						SocketClient client = new SocketClient(this, this.listener.AcceptTcpClient(), ++this.lastClientID, this.ErrorLog, this.DebugLog);
 						this.clients.Add(client);
 						this.OnNewClient(client);
 					}
@@ -333,8 +351,10 @@ namespace sar.Socket
 					{
 						if (!client.Connected)
 						{
+							client.Stop();
 							this.clients.Remove(client);
 							OnClientLost(client);
+
 							break;
 						}
 						
@@ -381,7 +401,7 @@ namespace sar.Socket
 			}
 			catch (Exception ex)
 			{
-				this.ErrorLog.WriteLine(ex);
+				this.Log(ex);
 			}
 			finally
 			{
@@ -392,5 +412,11 @@ namespace sar.Socket
 		#endregion
 		
 		#endregion
+		
+		
+		public override string ToString()
+		{
+			return "server";
+		}
 	}
 }

@@ -18,12 +18,14 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
+using System.Timers;
 
 namespace sar.Tools
 {
 	public class FileLogger
 	{
-		private const string TIMESTAMP = "yyyy/MM/dd HH:mm:ss.fff";
+		private const string DATETIMESTAMP = "yyyy/MM/dd HH:mm:ss.fff";
+		private const string TIMESTAMP = "HH:mm:ss.fff";
 		private const string FILETIMESTAMP = "yyyy-MM-dd";
 		public const string ISO8601_TIMESTAMP = "yyyy-MM-ddTHH:mm:ssZ";
 		
@@ -33,42 +35,13 @@ namespace sar.Tools
 		private StreamWriter writer;
 		private DateTime today;
 		private bool logTime;
+		private System.Timers.Timer flushTimer;
 		
 		#region properties
 		
-		private StreamWriter LogWriter
-		{
-			get
-			{
-				if (this.today == null || (DateTime.Today != this.today) || (this.writer == null))
-				{
-					this.today = DateTime.Today;
-					
-					if (this.writer != null)
-					{
-						this.writer.Flush();
-						this.writer.Close();
-					}
-					
-					string path = this.root + DateTime.Today.ToString(FILETIMESTAMP) + "." + this.filename;
-					string directory = IO.GetFileDirectory(path);
-					
-					if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
-					
-					this.writer = new StreamWriter(path, true);
-				}
-				
-				return this.writer;
-			}
-		}
-		
-		public bool LogTime
-		{
-			set { this.logTime = value; }
-		}
+		public bool LogTime { set { this.logTime = value; } }
 		
 		#endregion
-		
 		
 		public FileLogger(string filename, bool logTimstamp)
 		{
@@ -85,63 +58,58 @@ namespace sar.Tools
 
 				// root = C:\ProgramData\Company\Product
 				this.root = ApplicationInfo.CommonDataDirectory;
+				if (!Directory.Exists(this.root)) Directory.CreateDirectory(this.root);
+				string path = this.root + DateTime.Today.ToString(FILETIMESTAMP) + "." + this.filename;
+				this.writer = new StreamWriter(path, true);
+				
+				flushTimer = new System.Timers.Timer(1000);
+				flushTimer.Enabled = false;
+				flushTimer.Elapsed += new ElapsedEventHandler(OnFlushTick);
+				
+				this.WriteLine(ConsoleHelper.HR);
 			}
 			catch
 			{
 				
 			}
-		}
-		
-		public FileLogger(string filename)
-		{
-			try
-			{
-				this.filename = filename;
-				this.logTime = true;
-				
-				// no filename
-				if (String.IsNullOrEmpty(filename)) this.filename = AssemblyInfo.Name + ".log";
-				
-				// no file extension
-				if (this.filename.IndexOf('.') == -1) this.filename += ".log";
-
-				// root = C:\ProgramData\Company\Product
-				this.root = ApplicationInfo.CommonDataDirectory;
-			}
-			catch
-			{
-				
-			}
-		}
-		
-		public void WriteLine(Exception ex)
-		{
-			bool logTimeSetting = this.logTime;
-			
-			this.logTime = false;
-			
-			this.WriteLine(ConsoleHelper.HR);
-			this.WriteLine("Time: " + DateTime.Now.ToString());
-			this.WriteLine("Error: " + ex.Message);
-			this.WriteLine(ConsoleHelper.HR);
-			this.WriteLine(ex.StackTrace);
-			this.WriteLine("");
-			this.logTime = logTimeSetting;
 		}
 		
 		public void WriteLine(string text, DateTime timestamp)
 		{
-			lock (this.LogWriter)
+			lock (this.root)
 			{
-				if (this.logTime) text = timestamp.ToString(TIMESTAMP) + "\t" + text;
-				this.LogWriter.WriteLine(text);
-				this.LogWriter.Flush();
+				if (this.writer == null) return;
+				
+				lock (this.writer)
+				{
+					if (this.today == null || (DateTime.Today != this.today))
+					{
+						this.writer.Flush();
+						this.writer.Close();
+						string path = this.root + DateTime.Today.ToString(FILETIMESTAMP) + "." + this.filename;
+						this.writer = new StreamWriter(path, true);
+						this.today = DateTime.Today;
+					}
+					
+					if (this.logTime) text = timestamp.ToString(TIMESTAMP) + "\t" + text;
+					this.writer.WriteLine(text);
+					this.flushTimer.Enabled = true;
+				}
 			}
 		}
 		
 		public void WriteLine(string text)
 		{
 			WriteLine(text, DateTime.Now);
+		}
+		
+		
+		private void OnFlushTick(object source, ElapsedEventArgs e)
+		{
+			lock (this.writer)
+			{
+				this.writer.Flush();
+			}
 		}
 	}
 }

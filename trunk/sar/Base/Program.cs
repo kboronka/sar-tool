@@ -23,12 +23,12 @@ namespace sar.Base
 	{
 		#region logger
 		
-		private static FileLogger errorLog;
-		public static FileLogger ErrorLog
+		private static ErrorLogger errorLog;
+		public static ErrorLogger ErrorLog
 		{
 			get
 			{
-				if (Program.errorLog == null) Program.errorLog = new FileLogger("error.log", false);
+				if (Program.errorLog == null) Program.errorLog = new ErrorLogger("error.log");
 				return Program.errorLog;
 			}
 		}
@@ -47,7 +47,7 @@ namespace sar.Base
 		{
 			try
 			{
-				Program.ErrorLog.WriteLine(ex);
+				Program.ErrorLog.Write(ex);
 			}
 			catch
 			{
