@@ -119,6 +119,7 @@
     <Compile Include="Tools\ApplicationInfo.cs" />
     <Compile Include="Tools\AssemblyInfo.cs" />
     <Compile Include="Tools\ConsoleHelper.cs" />
+    <Compile Include="Tools\ErrorLogger.cs" />
     <Compile Include="Tools\ExceptionHandler.cs" />
     <Compile Include="Tools\ExceptionHandler.Designer.cs">
       <DependentUpon>ExceptionHandler.cs</DependentUpon>

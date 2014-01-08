@@ -27,9 +27,13 @@ namespace sar.Socket
 {
 	public abstract class SocketMemCache
 	{
-		public SocketMemCache()
+		public SocketMemCache(ErrorLogger errorLog, FileLogger debugLog)
 		{
+			this.errorLogger = errorLog;
+			this.debugLog = debugLog;
 		}
+		
+		public abstract void Stop();
 		
 		#region memcache
 		public abstract long ID
@@ -169,24 +173,24 @@ namespace sar.Socket
 		#region logger
 		
 		FileLogger debugLog;
-		FileLogger errorLogger;
+		ErrorLogger errorLogger;
 		
 		public FileLogger DebugLog
 		{
 			get { return this.debugLog; }
-			set { this.debugLog = value; }
+			private set { this.debugLog = value; }
 		}
 		
-		public FileLogger ErrorLog
+		public ErrorLogger ErrorLog
 		{
 			get { return this.errorLogger; }
-			set { this.errorLogger = value; }
+			private set { this.errorLogger = value; }
 		}
 		
 		protected void Log(string line)
 		{
 			if (this.debugLog == null) return;
-			this.debugLog.WriteLine(line);
+			this.debugLog.WriteLine(this.ToString() + ": " + line);
 		}
 		
 		protected void Log(Exception ex)
