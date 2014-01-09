@@ -150,21 +150,18 @@ namespace sar.Socket
 		
 		public SocketServer(int port, ErrorLogger errorLog, FileLogger debugLog) : base(errorLog, debugLog)
 		{
-			this.port = port;
-			this.StartServer(this.port);
-		}
-		
-		private void StartServer(int port)
-		{
 			try
 			{
 				this.encoding = Encoding.ASCII;
+				this.port = port;
 				this.clients = new List<SocketClient>();
 				
 				this.listenerLoopThread = new Thread(this.ListenerLoop);
 				this.listenerLoopThread.Start();
 				
-				this.serviceClientsTimer = new Timer(this.ServiceClientsTick, null, 1, Timeout.Infinite);
+				this.clientsLoopThread = new Thread(this.ClientsLoop);
+				this.clientsLoopThread.Start();
+				
 				this.Store("Host.Version", AssemblyInfo.SarVersion);
 				this.Store("Host.Port", this.port.ToString());
 				this.Store("Host.Clients", this.clients.Count.ToString());
@@ -183,9 +180,9 @@ namespace sar.Socket
 			{
 				this.listenerLoopShutdown = true;
 				if (this.listenerLoopThread.IsAlive) this.listenerLoopThread.Join();
-				
-				this.serviceClientsTimer.Dispose();
-				this.Shutdown();
+
+				this.clientsLoopShutdown = true;
+				if (this.clientsLoopThread.IsAlive) this.clientsLoopThread.Join();
 			}
 			catch (Exception ex)
 			{
@@ -196,26 +193,6 @@ namespace sar.Socket
 		#endregion
 		
 		#region methods
-		
-		public void Shutdown()
-		{
-			lock (this.listener)
-			{
-				this.listener.Stop();
-			}
-			
-			lock (this.clients)
-			{
-				foreach (SocketClient client in this.clients)
-				{
-					client.Stop();
-				}
-				
-				this.clients = new List<SocketClient>();
-			}
-			
-			//this.Stop();
-		}
 		
 		public void Set(string member, string data)
 		{
@@ -333,9 +310,9 @@ namespace sar.Socket
 			{
 				this.listener.Stop();
 			}
-			catch
+			catch (Exception ex)
 			{
-				
+				this.Log(ex);
 			}
 			
 			this.listener = null;
@@ -358,7 +335,47 @@ namespace sar.Socket
 		
 		#region clients
 		
-		private System.Threading.Timer serviceClientsTimer;
+		private Thread clientsLoopThread;
+		private bool clientsLoopShutdown = false;
+		
+		private void ClientsLoop()
+		{
+			Thread.Sleep(100);
+
+			while (!clientsLoopShutdown)
+			{
+				try
+				{
+					this.ServiceClients();
+
+					Thread.Sleep(10);
+				}
+				catch (Exception ex)
+				{
+					this.Log(ex);
+					Thread.Sleep(5000);
+				}
+			}
+			
+			
+			// shutdown clients
+			try
+			{
+				lock (this.clients)
+				{
+					foreach (SocketClient client in this.clients)
+					{
+						client.Stop();
+					}
+					
+					this.clients.Clear();
+				}
+			}
+			catch (Exception ex)
+			{
+				this.Log(ex);
+			}
+		}
 
 		private void ServiceClients()
 		{
@@ -387,22 +404,6 @@ namespace sar.Socket
 			catch (Exception ex)
 			{
 				this.Log(ex);
-			}
-		}
-		
-		private void ServiceClientsTick(Object state)
-		{
-			try
-			{
-				this.ServiceClients();
-			}
-			catch (Exception ex)
-			{
-				this.Log(ex);
-			}
-			finally
-			{
-				this.serviceClientsTimer.Change(10, Timeout.Infinite );
 			}
 		}
 		
