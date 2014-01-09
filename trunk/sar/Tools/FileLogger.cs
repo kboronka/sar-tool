@@ -62,13 +62,26 @@ namespace sar.Tools
 				if (!Directory.Exists(this.root)) Directory.CreateDirectory(this.root);
 				
 				string path = this.root + DateTime.Today.ToString(FILETIMESTAMP) + "." + this.filename;
-				if (File.Exists(path)) this.printSeperator = false;
+				if (!File.Exists(path)) this.printSeperator = false;
 				
 				this.writer = new StreamWriter(path, true);
 				
 				flushTimer = new System.Timers.Timer(1000);
 				flushTimer.Enabled = false;
 				flushTimer.Elapsed += new ElapsedEventHandler(OnFlushTick);
+			}
+			catch
+			{
+				
+			}
+		}
+		
+		~FileLogger()
+		{
+			try
+			{
+				this.writer.Flush();
+				this.writer.Close();
 			}
 			catch
 			{
@@ -90,7 +103,7 @@ namespace sar.Tools
 						this.writer.Close();
 						
 						string path = this.root + DateTime.Today.ToString(FILETIMESTAMP) + "." + this.filename;
-						if (File.Exists(path)) this.printSeperator = false;
+						if (!File.Exists(path)) this.printSeperator = false;
 						
 						this.writer = new StreamWriter(path, true);
 						this.today = DateTime.Today;
@@ -110,7 +123,7 @@ namespace sar.Tools
 		{
 			WriteLine(text, DateTime.Now);
 		}
-	
+		
 		private void OnFlushTick(object source, ElapsedEventArgs e)
 		{
 			lock (this.writer)
@@ -118,5 +131,6 @@ namespace sar.Tools
 				this.writer.Flush();
 			}
 		}
+
 	}
 }
