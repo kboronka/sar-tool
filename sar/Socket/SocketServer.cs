@@ -160,9 +160,10 @@ namespace sar.Socket
 			{
 				this.encoding = Encoding.ASCII;
 				this.clients = new List<SocketClient>();
-				this.listener = new TcpListener(IPAddress.Any, this.port);
-				this.listener.Start();
-				this.serviceListenerTimer = new Timer(this.ServiceListenerTick, null, 1, Timeout.Infinite);
+				
+				this.listenerLoopThread = new Thread(this.ListenerLoop);
+				this.listenerLoopThread.Start();
+				
 				this.serviceClientsTimer = new Timer(this.ServiceClientsTick, null, 1, Timeout.Infinite);
 				this.Store("Host.Version", AssemblyInfo.SarVersion);
 				this.Store("Host.Port", this.port.ToString());
@@ -180,7 +181,9 @@ namespace sar.Socket
 		{
 			try
 			{
-				this.serviceListenerTimer.Dispose();
+				this.listenerLoopShutdown = true;
+				if (this.listenerLoopThread.IsAlive) this.listenerLoopThread.Join();
+				
 				this.serviceClientsTimer.Dispose();
 				this.Shutdown();
 			}
@@ -294,42 +297,60 @@ namespace sar.Socket
 		#region service
 		
 		#region listners
+		private Thread listenerLoopThread;
+		private bool listenerLoopShutdown = false;
 		
-		private System.Threading.Timer serviceListenerTimer;
-		
-		private void ServiceListener()
+		private void ListenerLoop()
 		{
-			try
+			//Thread.Sleep(100);
+
+			while (!listenerLoopShutdown)
 			{
-				lock (this.listener)
+				try
 				{
-					if (this.listener.Pending())
+					if (this.listener == null)
 					{
-						SocketClient client = new SocketClient(this, this.listener.AcceptTcpClient(), ++this.lastClientID, this.ErrorLog, this.DebugLog);
-						this.clients.Add(client);
-						this.OnNewClient(client);
+						this.listener = new TcpListener(IPAddress.Any, this.port);
+						this.listener.Start();
 					}
+					else
+					{
+						this.ServiceListener();
+					}
+					
+					Thread.Sleep(10);
+				}
+				catch (Exception ex)
+				{
+					this.Log(ex);
+					Thread.Sleep(5000);
 				}
 			}
-			catch (Exception ex)
-			{
-				this.Log(ex);
-			}
-		}
-		
-		private void ServiceListenerTick(Object state)
-		{
+			
+			
+			// shutdown listner
 			try
 			{
-				this.ServiceListener();
+				this.listener.Stop();
 			}
-			catch (Exception ex)
+			catch
 			{
-				this.Log(ex);
+				
 			}
-			finally
+			
+			this.listener = null;
+		}
+
+		private void ServiceListener()
+		{
+			lock (this.listener)
 			{
-				this.serviceListenerTimer.Change(10, Timeout.Infinite );
+				if (this.listener.Pending())
+				{
+					SocketClient client = new SocketClient(this, this.listener.AcceptTcpClient(), ++this.lastClientID, this.ErrorLog, this.DebugLog);
+					this.clients.Add(client);
+					this.OnNewClient(client);
+				}
 			}
 		}
 		
@@ -387,7 +408,7 @@ namespace sar.Socket
 		
 		#endregion
 		
-		#endregion	
+		#endregion
 		
 		public override string ToString()
 		{
