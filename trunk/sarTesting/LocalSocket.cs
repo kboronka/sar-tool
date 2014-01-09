@@ -50,9 +50,9 @@ namespace sar.Testing
 			client1.RegisterCallback("testmember", new SocketValue.DataChangedHandler(this.Client1Update));
 			this.socketMemCacheList1.Client = client1;
 			
-			//client2 = new SocketClient("localhost", 8104, Program.ErrorLog, Program.DebugLog);
-			//client2.RegisterCallback("testmember", new SocketValue.DataChangedHandler(this.Client2Update));
-			//this.socketMemCacheList2.Client = client2;
+			client2 = new SocketClient("localhost", 8104, Program.ErrorLog, Program.DebugLog);
+			client2.RegisterCallback("testmember", new SocketValue.DataChangedHandler(this.Client2Update));
+			this.socketMemCacheList2.Client = client2;
 		}
 		
 		void Button1Click(object sender, EventArgs e)
@@ -172,7 +172,7 @@ namespace sar.Testing
 		{
 			if (this.server != null)
 			{
-				this.server.Shutdown();
+				this.server.Stop();
 				server = null;
 				this.socketServerControl1.Server = null;
 			}
