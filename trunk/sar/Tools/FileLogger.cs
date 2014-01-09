@@ -36,6 +36,7 @@ namespace sar.Tools
 		private DateTime today;
 		private bool logTime;
 		private System.Timers.Timer flushTimer;
+		private bool printSeperator = true;
 		
 		#region properties
 		
@@ -59,14 +60,15 @@ namespace sar.Tools
 				// root = C:\ProgramData\Company\Product
 				this.root = ApplicationInfo.CommonDataDirectory;
 				if (!Directory.Exists(this.root)) Directory.CreateDirectory(this.root);
+				
 				string path = this.root + DateTime.Today.ToString(FILETIMESTAMP) + "." + this.filename;
+				if (File.Exists(path)) this.printSeperator = false;
+				
 				this.writer = new StreamWriter(path, true);
 				
 				flushTimer = new System.Timers.Timer(1000);
 				flushTimer.Enabled = false;
 				flushTimer.Elapsed += new ElapsedEventHandler(OnFlushTick);
-				
-				this.WriteLine(ConsoleHelper.HR);
 			}
 			catch
 			{
@@ -86,14 +88,20 @@ namespace sar.Tools
 					{
 						this.writer.Flush();
 						this.writer.Close();
+						
 						string path = this.root + DateTime.Today.ToString(FILETIMESTAMP) + "." + this.filename;
+						if (File.Exists(path)) this.printSeperator = false;
+						
 						this.writer = new StreamWriter(path, true);
 						this.today = DateTime.Today;
 					}
 					
+					if (this.printSeperator) this.writer.WriteLine(ConsoleHelper.HR);
 					if (this.logTime) text = timestamp.ToString(TIMESTAMP) + "\t" + text;
 					this.writer.WriteLine(text);
+					
 					this.flushTimer.Enabled = true;
+					this.printSeperator = false;
 				}
 			}
 		}
@@ -102,8 +110,7 @@ namespace sar.Tools
 		{
 			WriteLine(text, DateTime.Now);
 		}
-		
-		
+	
 		private void OnFlushTick(object source, ElapsedEventArgs e)
 		{
 			lock (this.writer)
