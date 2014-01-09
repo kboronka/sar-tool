@@ -164,7 +164,6 @@ namespace sar.Socket
 				this.listener.Start();
 				this.serviceListenerTimer = new Timer(this.ServiceListenerTick, null, 1, Timeout.Infinite);
 				this.serviceClientsTimer = new Timer(this.ServiceClientsTick, null, 1, Timeout.Infinite);
-				this.pingTimer = new Timer(this.Ping, null, 1000, Timeout.Infinite);
 				this.Store("Host.Version", AssemblyInfo.SarVersion);
 				this.Store("Host.Port", this.port.ToString());
 				this.Store("Host.Clients", this.clients.Count.ToString());
@@ -183,7 +182,6 @@ namespace sar.Socket
 			{
 				this.serviceListenerTimer.Dispose();
 				this.serviceClientsTimer.Dispose();
-				this.pingTimer.Dispose();
 				this.Shutdown();
 			}
 			catch (Exception ex)
@@ -389,30 +387,7 @@ namespace sar.Socket
 		
 		#endregion
 		
-		#region pingLoop
-		
-		private System.Threading.Timer pingTimer;
-
-		private void Ping(Object state)
-		{
-			try
-			{
-				this.Broadcast("ping", "", "");
-			}
-			catch (Exception ex)
-			{
-				this.Log(ex);
-			}
-			finally
-			{
-				//this.pingTimer.Change(1000, Timeout.Infinite );
-			}
-		}
-
-		#endregion
-		
-		#endregion
-		
+		#endregion	
 		
 		public override string ToString()
 		{
