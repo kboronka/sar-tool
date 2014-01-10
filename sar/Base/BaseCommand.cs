@@ -23,6 +23,7 @@ namespace sar.Base
 	public abstract class Command
 	{
 		private string usage;
+		
 		private List<string> examples;
 		private string name;
 		
