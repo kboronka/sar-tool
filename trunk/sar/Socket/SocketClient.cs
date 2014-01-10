@@ -256,7 +256,7 @@ namespace sar.Socket
 			this.outgoingLoopThread.Start();
 			this.pingLoopThread.Start();
 		}
-			
+		
 		public override void Stop()
 		{
 			try
@@ -499,10 +499,15 @@ namespace sar.Socket
 
 				this.OnConnectionChange(this.initilized);
 			}
-			catch (Exception ex)
+			catch (System.Net.Sockets.SocketException)
 			{
 				this.Disconnect();
+				this.socket = null;
+			}
+			catch (Exception ex)
+			{
 				this.Log(ex);
+				this.Disconnect();
 				this.socket = null;
 			}
 		}
