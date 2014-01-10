@@ -196,12 +196,7 @@ namespace sar.Socket
 		protected void Log(Exception ex)
 		{
 			if (this.errorLogger == null) return;
-			this.errorLogger.WriteLine(ConsoleHelper.HR);
-			this.errorLogger.WriteLine(DateTime.Now.ToString());
-			this.errorLogger.WriteLine(ex.Message);
-			this.errorLogger.WriteLine(ConsoleHelper.HR);
-			this.errorLogger.WriteLine(ex.StackTrace);
-			this.errorLogger.WriteLine("");
+			this.errorLogger.Write(ex);
 		}
 		
 		#endregion
