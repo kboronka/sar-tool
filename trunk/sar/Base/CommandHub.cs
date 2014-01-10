@@ -18,11 +18,14 @@ using System.Collections.Generic;
 using System.Threading;
 
 using sar.Tools;
+using sar.Commands;
 
 namespace sar.Base
 {
 	public abstract class CommandHub
 	{
+		protected List<Command> commandList;
+		
 		public bool NoWarning = false;
 		public bool Debug = false;
 		public bool IncludeSVN = false;
@@ -33,7 +36,11 @@ namespace sar.Base
 		
 		public CommandHub()
 		{
-			
+			this.commandList = new List<Command>();
+			this.commandList.AddRange(new Command[] {
+			                          	new Help(this),
+			                          	new Delay(this)
+			                          });
 		}
 		
 		public int ProcessCommands(string[] args)
@@ -85,7 +92,7 @@ namespace sar.Base
 						{
 							args = new string[0];
 							Progress.UpdateTimer.Enabled = false;
-							ConsoleHelper.WriteException(ex);							
+							ConsoleHelper.WriteException(ex);
 						}
 						catch
 						{

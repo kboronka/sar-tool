@@ -24,44 +24,41 @@ namespace sar.Tools
 {
 	public class CommandHub : Base.CommandHub
 	{
-		private List<Command> allCommands;
 		public CommandHub() : base()
 		{
 			// load all command modules
-			this.allCommands = new List<Command>() {
-				new Help(this),
-				new BuildCHM(this),
-				new BuildNSIS(this),
-				new BuildSLN(this),
-				new CodeReIndent(this),
-				new CodeClean(this),
-				new AssemblyInfoVersion(this),
-				new Kill(this),
-				new AppShutdownWait(this),
-				new LabviewVersion(this),
-				new VboxManage(this),
-				new FileBackup(this),
-				new FileSearchAndReplace(this),
-				new FileTimestamp(this),
-				new FileEncode(this),
-				new FileFind(this),
-				new FileDestory(this),
-				new FileRemoveDirectory(this),
-				new FileBsdHeader(this),
-				new FileMirror(this),
-				new FileCopy(this),
-				new FileLock(this),
-				new DirectoryTimestamp(this),
-				new WindowsLogin(this),
-				new WindowsMapDrive(this),
-				new WindowsRearm(this),
-				new WindowsRestart(this),
-				new NetListAddaptors(this),
-				new SkyUpdaterUpdate(this),
-				new SkyUpdaterGenerate(this),
-				new SkyUpdaterAdd(this),
-				new Delay(this)
-			};
+			base.commandList.AddRange(new Command[] {
+			                          	new BuildCHM(this),
+			                          	new BuildNSIS(this),
+			                          	new BuildSLN(this),
+			                          	new CodeReIndent(this),
+			                          	new CodeClean(this),
+			                          	new AssemblyInfoVersion(this),
+			                          	new Kill(this),
+			                          	new AppShutdownWait(this),
+			                          	new LabviewVersion(this),
+			                          	new VboxManage(this),
+			                          	new FileBackup(this),
+			                          	new FileSearchAndReplace(this),
+			                          	new FileTimestamp(this),
+			                          	new FileEncode(this),
+			                          	new FileFind(this),
+			                          	new FileDestory(this),
+			                          	new FileRemoveDirectory(this),
+			                          	new FileBsdHeader(this),
+			                          	new FileMirror(this),
+			                          	new FileCopy(this),
+			                          	new FileLock(this),
+			                          	new DirectoryTimestamp(this),
+			                          	new WindowsLogin(this),
+			                          	new WindowsMapDrive(this),
+			                          	new WindowsRearm(this),
+			                          	new WindowsRestart(this),
+			                          	new NetListAddaptors(this),
+			                          	new SkyUpdaterUpdate(this),
+			                          	new SkyUpdaterGenerate(this),
+			                          	new SkyUpdaterAdd(this)
+			                          });
 		}
 	}
 }
