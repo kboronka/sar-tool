@@ -37,7 +37,7 @@ namespace sar.Tools
 			form.ShowDialog();
 		}
 		
-		private static Exception GetInnerException(Exception ex)
+		public static Exception GetInnerException(Exception ex)
 		{
 			while (ex.InnerException != null)
 			{
