@@ -177,10 +177,17 @@ namespace sar.Controls
 		{
 			lock (this.controlLock)
 			{
-				bool connected = (bool)sender;
-				if (this.Enabled == connected) return;
-				
-				this.Invoke((MethodInvoker) delegate { this.Enabled = connected; } );
+				try
+				{
+					bool connected = (bool)sender;
+					if (this.Enabled == connected) return;
+					
+					this.Invoke((MethodInvoker) delegate { this.Enabled = connected; } );
+				}
+				catch
+				{
+					
+				}
 			}
 		}
 		
@@ -188,8 +195,15 @@ namespace sar.Controls
 		{
 			lock (this.controlLock)
 			{
-				if (this.memCache == null) return;
-				this.updatesAvailable = true;
+				try
+				{
+					if (this.memCache == null) return;
+					this.updatesAvailable = true;
+				}
+				catch
+				{
+					
+				}
 			}
 		}
 
@@ -205,105 +219,110 @@ namespace sar.Controls
 					this.updatesAvailable = false;
 				}
 			}
-			catch (Exception ex)
+			catch
 			{
-				System.Diagnostics.Debug.WriteLine(ex.Message);
-				throw ex;
+				
 			}
 		}
 		
 		private void UpdateList()
 		{
-			this.Invoke((MethodInvoker) delegate {
-			            	ListViewHelper.EnableDoubleBuffer(this);
-			            	this.BeginUpdate();
-			            	this.Items.Clear();
-			            	
-			            	foreach (KeyValuePair<string, SocketValue> entry in this.memCache)
-			            	{
-			            		ListViewItem newItem = new ListViewItem(entry.Value.Name);
-			            		newItem.Name = entry.Value.Name;
-			            		newItem.SubItems.Add(entry.Value.Data);
-			            		newItem.SubItems.Add(entry.Value.Timestamp.ToString());
-			            		newItem.SubItems.Add(entry.Value.SourceID.ToString());
-			            		this.Items.Add(newItem);
-			            	}
-			            	
-			            	
-			            	this.Columns[0].Width = -2;
-			            	this.Columns[1].Width = -2;
-			            	this.Columns[2].Width = -2;
-			            	this.Columns[3].Width = -2;
-			            	this.EndUpdate();
-			            	ListViewHelper.DisableDoubleBuffer(this);
-			            });
-		}
-	}
-
-	public class ListViewColumnSorter : IComparer
-	{
-		private int ColumnToSort;
-		private SortOrder OrderOfSort;
-
-		private CaseInsensitiveComparer ObjectCompare;
-
-
-		public ListViewColumnSorter()
-		{
-			ColumnToSort = 0;
-			OrderOfSort = SortOrder.Ascending;
-			ObjectCompare = new CaseInsensitiveComparer();
+			try
+			{
+				this.Invoke((MethodInvoker) delegate {
+				            	ListViewHelper.EnableDoubleBuffer(this);
+				            	this.BeginUpdate();
+				            	this.Items.Clear();
+				            	
+				            	foreach (KeyValuePair<string, SocketValue> entry in this.memCache)
+				            	{
+				            		ListViewItem newItem = new ListViewItem(entry.Value.Name);
+				            		newItem.Name = entry.Value.Name;
+				            		newItem.SubItems.Add(entry.Value.Data);
+				            		newItem.SubItems.Add(entry.Value.Timestamp.ToString());
+				            		newItem.SubItems.Add(entry.Value.SourceID.ToString());
+				            		this.Items.Add(newItem);
+				            	}
+				            	
+				            	
+				            	this.Columns[0].Width = -2;
+				            	this.Columns[1].Width = -2;
+				            	this.Columns[2].Width = -2;
+				            	this.Columns[3].Width = -2;
+				            	this.EndUpdate();
+				            	ListViewHelper.DisableDoubleBuffer(this);
+				            });
+			}
+			catch
+			{
+				
+			}
 		}
 
-		public int Compare(object x, object y)
+		public class ListViewColumnSorter : IComparer
 		{
-			int compareResult;
-			ListViewItem listviewX, listviewY;
+			private int ColumnToSort;
+			private SortOrder OrderOfSort;
 
-			// Cast the objects to be compared to ListViewItem objects
-			listviewX = (ListViewItem)x;
-			listviewY = (ListViewItem)y;
+			private CaseInsensitiveComparer ObjectCompare;
 
-			// Compare the two items
-			compareResult = ObjectCompare.Compare(listviewX.SubItems[ColumnToSort].Text,listviewY.SubItems[ColumnToSort].Text);
+
+			public ListViewColumnSorter()
+			{
+				ColumnToSort = 0;
+				OrderOfSort = SortOrder.Ascending;
+				ObjectCompare = new CaseInsensitiveComparer();
+			}
+
+			public int Compare(object x, object y)
+			{
+				int compareResult;
+				ListViewItem listviewX, listviewY;
+
+				// Cast the objects to be compared to ListViewItem objects
+				listviewX = (ListViewItem)x;
+				listviewY = (ListViewItem)y;
+
+				// Compare the two items
+				compareResult = ObjectCompare.Compare(listviewX.SubItems[ColumnToSort].Text,listviewY.SubItems[ColumnToSort].Text);
+				
+				if (OrderOfSort == SortOrder.Ascending)
+				{
+					return compareResult;
+				}
+				else if (OrderOfSort == SortOrder.Descending)
+				{
+					return (-compareResult);
+				}
+				else
+				{
+					return 0;
+				}
+			}
 			
-			if (OrderOfSort == SortOrder.Ascending)
+			public int SortColumn
 			{
-				return compareResult;
+				set
+				{
+					ColumnToSort = value;
+				}
+				get
+				{
+					return ColumnToSort;
+				}
 			}
-			else if (OrderOfSort == SortOrder.Descending)
-			{
-				return (-compareResult);
-			}
-			else
-			{
-				return 0;
-			}
-		}
-		
-		public int SortColumn
-		{
-			set
-			{
-				ColumnToSort = value;
-			}
-			get
-			{
-				return ColumnToSort;
-			}
-		}
 
-		public SortOrder Order
-		{
-			set
+			public SortOrder Order
 			{
-				OrderOfSort = value;
+				set
+				{
+					OrderOfSort = value;
+				}
+				get
+				{
+					return OrderOfSort;
+				}
 			}
-			get
-			{
-				return OrderOfSort;
-			}
+			
 		}
-		
 	}
-}
