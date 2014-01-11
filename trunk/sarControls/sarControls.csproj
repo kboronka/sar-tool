@@ -63,6 +63,7 @@
     <Compile Include="BooleanIndicator.Designer.cs">
       <DependentUpon>BooleanIndicator.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helper\ListViewHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SocketClientControl.cs" />
     <Compile Include="SocketClientControl.Designer.cs">
@@ -90,6 +91,9 @@
     <EmbeddedResource Include="SocketServerControl.resx">
       <DependentUpon>SocketServerControl.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Helper" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

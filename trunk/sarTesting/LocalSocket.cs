@@ -105,6 +105,7 @@ namespace sar.Testing
 		void SetClick(object sender, EventArgs e)
 		{
 			this.client1.SetValue("testmember", TestMember.Text, true);
+			this.client1.SetValue("testmember" + Guid.NewGuid().ToString(), TestMember.Text, true);
 		}
 		
 		void GetClick(object sender, EventArgs e)
