@@ -18,6 +18,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Timers;
 using System.Windows.Forms;
 
 using sar.Socket;
@@ -30,6 +31,10 @@ namespace sar.Controls
 		private SocketClient client;
 		private Dictionary<string, SocketValue> memCache;
 		private ListViewColumnSorter columnSorter;
+		
+		private string controlLock = "thread lock";
+		private bool updatesAvailable = true;
+		private System.Timers.Timer updateTimer;
 		
 		#region Properties
 
@@ -131,6 +136,10 @@ namespace sar.Controls
 			this.HeaderStyle = ColumnHeaderStyle.Nonclickable;
 			this.FullRowSelect = true;
 			this.View = View.Details;
+			
+			this.updateTimer = new System.Timers.Timer(500);
+			this.updateTimer.Enabled = true;
+			this.updateTimer.Elapsed += new ElapsedEventHandler(this.UpdateTick);
 		}
 		
 		private void InitializeList()
@@ -166,44 +175,67 @@ namespace sar.Controls
 		
 		private void OnConnectChange(object sender, EventArgs e)
 		{
-			bool connected = (bool)sender;
-			if (this.Enabled == connected) return;
-			
-			this.Invoke((MethodInvoker) delegate { this.Enabled = connected; } );
+			lock (this.controlLock)
+			{
+				bool connected = (bool)sender;
+				if (this.Enabled == connected) return;
+				
+				this.Invoke((MethodInvoker) delegate { this.Enabled = connected; } );
+			}
 		}
 		
 		private void DataChanged(SocketValue data)
 		{
-			if (this.memCache == null) return;
-			
-			this.Invoke((MethodInvoker) delegate
-			            {
-			            	this.BeginUpdate();
+			lock (this.controlLock)
+			{
+				if (this.memCache == null) return;
+				this.updatesAvailable = true;
+			}
+		}
 
-			            	if (this.Items.ContainsKey(data.Name))
+		private void UpdateTick(object source, ElapsedEventArgs e)
+		{
+			try
+			{
+				if (this.memCache == null) return;
+				
+				if (this.updatesAvailable)
+				{
+					this.UpdateList();
+					this.updatesAvailable = false;
+				}
+			}
+			catch (Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine(ex.Message);
+				throw ex;
+			}
+		}
+		
+		private void UpdateList()
+		{
+			this.Invoke((MethodInvoker) delegate {
+			            	ListViewHelper.EnableDoubleBuffer(this);
+			            	this.BeginUpdate();
+			            	this.Items.Clear();
+			            	
+			            	foreach (KeyValuePair<string, SocketValue> entry in this.memCache)
 			            	{
-			            		ListViewItem[] existingItems = this.Items.Find(data.Name, true);
-			            		ListViewItem existingItem = existingItems[0];
-			            		existingItem.SubItems[0].Text = data.Name;
-			            		existingItem.SubItems[1].Text = data.Data;
-			            		existingItem.SubItems[2].Text = data.Timestamp.ToString();
-			            		existingItem.SubItems[3].Text = data.SourceID.ToString();
-			            	}
-			            	else
-			            	{
-			            		ListViewItem newItem = new ListViewItem(data.Name);
-			            		newItem.Name = data.Name;
-			            		newItem.SubItems.Add(data.Data);
-			            		newItem.SubItems.Add(data.Timestamp.ToString());
-			            		newItem.SubItems.Add(data.SourceID.ToString());
+			            		ListViewItem newItem = new ListViewItem(entry.Value.Name);
+			            		newItem.Name = entry.Value.Name;
+			            		newItem.SubItems.Add(entry.Value.Data);
+			            		newItem.SubItems.Add(entry.Value.Timestamp.ToString());
+			            		newItem.SubItems.Add(entry.Value.SourceID.ToString());
 			            		this.Items.Add(newItem);
 			            	}
+			            	
 			            	
 			            	this.Columns[0].Width = -2;
 			            	this.Columns[1].Width = -2;
 			            	this.Columns[2].Width = -2;
 			            	this.Columns[3].Width = -2;
 			            	this.EndUpdate();
+			            	ListViewHelper.DisableDoubleBuffer(this);
 			            });
 		}
 	}
