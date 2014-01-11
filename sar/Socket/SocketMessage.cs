@@ -94,7 +94,7 @@ namespace sar.Socket
 			this.data = data.Data;
 			this.fromID = data.SourceID;
 			this.toID = destinationID;
-			this.timestamp = data.Timestamp;			
+			this.timestamp = data.Timestamp;
 		}
 		
 		public SocketMessage(XML.Reader reader)

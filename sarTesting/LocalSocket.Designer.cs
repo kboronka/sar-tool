@@ -137,23 +137,23 @@ namespace sar.Testing
 			// 
 			this.Port.Location = new System.Drawing.Point(529, 420);
 			this.Port.Maximum = new decimal(new int[] {
-			                                	8200,
-			                                	0,
-			                                	0,
-			                                	0});
+									8200,
+									0,
+									0,
+									0});
 			this.Port.Minimum = new decimal(new int[] {
-			                                	8100,
-			                                	0,
-			                                	0,
-			                                	0});
+									8100,
+									0,
+									0,
+									0});
 			this.Port.Name = "Port";
 			this.Port.Size = new System.Drawing.Size(62, 20);
 			this.Port.TabIndex = 8;
 			this.Port.Value = new decimal(new int[] {
-			                              	8100,
-			                              	0,
-			                              	0,
-			                              	0});
+									8100,
+									0,
+									0,
+									0});
 			// 
 			// label3
 			// 
@@ -184,7 +184,7 @@ namespace sar.Testing
 			// 
 			this.Client1Member.Location = new System.Drawing.Point(410, 330);
 			this.Client1Member.Name = "Client1Member";
-			this.Client1Member.Size = new System.Drawing.Size(149, 16);
+			this.Client1Member.Size = new System.Drawing.Size(418, 16);
 			this.Client1Member.TabIndex = 12;
 			this.Client1Member.Text = "Client 1: ";
 			// 
@@ -192,7 +192,7 @@ namespace sar.Testing
 			// 
 			this.Client2Member.Location = new System.Drawing.Point(410, 346);
 			this.Client2Member.Name = "Client2Member";
-			this.Client2Member.Size = new System.Drawing.Size(149, 16);
+			this.Client2Member.Size = new System.Drawing.Size(418, 16);
 			this.Client2Member.TabIndex = 13;
 			this.Client2Member.Text = "Client 2: ";
 			// 

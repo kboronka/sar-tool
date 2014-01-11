@@ -37,8 +37,9 @@ namespace sar.Socket
 		{
 			this.name = name;
 			this.data = "";
-			this.timestamp = DateTime.Now;
-			this.lastUpdate = DateTime.Now;
+			this.timestamp = new DateTime(2001, 1, 1);
+			this.lastUpdate = new DateTime(2001, 1, 1);
+			this.sourceID = 0;		
 		}
 		
 		#region properties
@@ -53,25 +54,24 @@ namespace sar.Socket
 			set
 			{
 				this.lastUpdate = DateTime.Now;
-				
-				if(this.data != value)
+				if (this.data != value)
 				{
-					this.data = value;
 					this.timestamp = DateTime.Now;
-					OnDataChange(this);
+					this.data = value;
 				}
+				
+				OnDataChange(this);
 			}
 			get { return this.data; }
 		}
 		
 		public DateTime Timestamp
 		{
-			set { this.timestamp = value; }
 			get { return this.timestamp; }
 		}
 		
 		public DateTime LastUpdate
-		{
+		{	
 			get { return lastUpdate; }
 		}
 		
@@ -122,9 +122,9 @@ namespace sar.Socket
 
 		#endregion
 		
-        public override string ToString()
-        {
-            return this.data;
-        }
+		public override string ToString()
+		{
+			return this.data;
+		}
 	}
 }
