@@ -20,10 +20,7 @@ namespace sar.Tools
 {
 	public class ApplicationInfo
 	{
-		private static string localDataDirectory;
 		private static string commonDataDirectory;
-		private static string currentDirectory;
-		
 		public static string CommonDataDirectory
 		{
 			get
@@ -52,6 +49,7 @@ namespace sar.Tools
 			}
 		}
 
+		private static string localDataDirectory;
 		public static string DataDirectory
 		{
 			get
@@ -80,6 +78,8 @@ namespace sar.Tools
 			}
 		}
 
+
+		private static string currentDirectory;
 		public static string CurrentDirectory
 		{
 			get
@@ -92,5 +92,18 @@ namespace sar.Tools
 			}
 		}
 		
+		private static applicationPath;
+		public static string ApplicationPath
+		{
+			get
+			{
+				if (string.IsNullOrEmpty(applicationPath))
+				{
+					applicationPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+				}
+				
+				return applicationPath;
+			}
+		}
 	}
 }
