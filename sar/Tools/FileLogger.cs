@@ -40,7 +40,11 @@ namespace sar.Tools
 		
 		#region properties
 		
-		public bool LogTime { set { this.logTime = value; } }
+		public bool LogTime
+		{
+			get { return this.logTime; }
+			set { this.logTime = value; }
+		}
 		
 		#endregion
 		

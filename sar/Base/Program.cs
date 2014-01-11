@@ -21,6 +21,16 @@ namespace sar.Base
 {
 	public abstract class Program
 	{
+		public static void LogInfo()
+		{
+			bool logTimestamps = Program.DebugLog.LogTime;
+			Program.DebugLog.LogTime = false;
+			Program.DebugLog.WriteLine(AssemblyInfo.Name + " v" + AssemblyInfo.Version);
+			Program.DebugLog.WriteLine(ApplicationInfo.ApplicationPath);
+			Program.DebugLog.WriteLine(ConsoleHelper.HR);
+			Program.DebugLog.LogTime = logTimestamps;
+		}
+		
 		public static string LogFilename;
 		
 		#region logger

@@ -92,7 +92,7 @@ namespace sar.Tools
 			}
 		}
 		
-		private static applicationPath;
+		private static string applicationPath;
 		public static string ApplicationPath
 		{
 			get
