@@ -73,8 +73,8 @@ namespace sar.Testing
 			this.Get = new System.Windows.Forms.Button();
 			this.Set_C1 = new System.Windows.Forms.Button();
 			this.Set_C2 = new System.Windows.Forms.Button();
-			this.socketMemCacheList1 = new sar.Controls.SocketMemCacheList();
-			this.socketMemCacheList2 = new sar.Controls.SocketMemCacheList();
+			this.socketMemCacheList1 = new sar.Controls.SocketMemCacheList(Program.ErrorLog, Program.DebugLog);
+			this.socketMemCacheList2 = new sar.Controls.SocketMemCacheList(Program.ErrorLog, Program.DebugLog);
 			this.StopServer = new System.Windows.Forms.Button();
 			this.StartServer = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.Port)).BeginInit();
