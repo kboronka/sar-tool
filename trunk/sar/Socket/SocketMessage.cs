@@ -131,11 +131,21 @@ namespace sar.Socket
 			writer.WriteAttributeString("id", this.id);
 			writer.WriteAttributeString("command", this.command);
 			writer.WriteAttributeString("member", this.member);
-			writer.WriteAttributeString("len", this.data.Length);
 			writer.WriteAttributeString("from", this.fromID);
 			writer.WriteAttributeString("to", this.toID);
 			writer.WriteAttributeString("timestamp", this.timestamp);
-			writer.WriteValue(this.data);
+			
+			if (String.IsNullOrEmpty(this.data))
+			{
+				writer.WriteAttributeString("len", 0);
+				writer.WriteValue("");
+			}
+			else
+			{
+				writer.WriteAttributeString("len", this.data.Length);
+				writer.WriteValue(this.data);
+			}
+			
 			writer.WriteEndElement();		// SocketMessage
 		}
 	}
