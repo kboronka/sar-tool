@@ -47,7 +47,7 @@ namespace sar.Controls
 		private void InitializeComponent()
 		{
 			this.ActiveConnections = new System.Windows.Forms.Label();
-			this.socketMemCacheList1 = new sar.Controls.SocketMemCacheList();
+			this.socketMemCacheList1 = new sar.Controls.SocketMemCacheList(null, null);
 			this.SuspendLayout();
 			// 
 			// ActiveConnections

@@ -17,10 +17,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Timers;
 using System.Windows.Forms;
 
+using sar.Tools;
 using sar.Socket;
 
 namespace sar.Controls
@@ -35,6 +37,8 @@ namespace sar.Controls
 		private string controlLock = "thread lock";
 		private bool updatesAvailable = true;
 		private System.Timers.Timer updateTimer;
+		private ErrorLogger errorLog;
+		private FileLogger debugLog;
 		
 		#region Properties
 
@@ -125,7 +129,21 @@ namespace sar.Controls
 		
 		#endregion
 
+		#region constructors
+		
+		public SocketMemCacheList(ErrorLogger errorLog, FileLogger debugLog)
+		{
+			this.errorLog = errorLog;
+			this.debugLog = debugLog;
+			this.InitilizeControl();
+		}
+		
 		public SocketMemCacheList()
+		{
+			this.InitilizeControl();
+		}
+		
+		private void InitilizeControl()
 		{
 			this.columnSorter = new ListViewColumnSorter();
 			this.Columns.Add("Member", -2, HorizontalAlignment.Left);
@@ -137,10 +155,12 @@ namespace sar.Controls
 			this.FullRowSelect = true;
 			this.View = View.Details;
 			
-			this.updateTimer = new System.Timers.Timer(500);
+			this.updateTimer = new System.Timers.Timer(5000);
 			this.updateTimer.Enabled = true;
 			this.updateTimer.Elapsed += new ElapsedEventHandler(this.UpdateTick);
 		}
+		
+		#endregion
 		
 		private void InitializeList()
 		{
@@ -167,9 +187,9 @@ namespace sar.Controls
 				this.Columns[3].Width = -2;
 				this.EndUpdate();
 			}
-			catch
+			catch (Exception ex)
 			{
-				
+				if (this.errorLog != null) this.errorLog.Write(ex);
 			}
 		}
 		
@@ -184,9 +204,9 @@ namespace sar.Controls
 					
 					this.Invoke((MethodInvoker) delegate { this.Enabled = connected; } );
 				}
-				catch
+				catch (Exception ex)
 				{
-					
+					if (this.errorLog != null) this.errorLog.Write(ex);
 				}
 			}
 		}
@@ -200,9 +220,9 @@ namespace sar.Controls
 					if (this.memCache == null) return;
 					this.updatesAvailable = true;
 				}
-				catch
+				catch (Exception ex)
 				{
-					
+					if (this.errorLog != null) this.errorLog.Write(ex);
 				}
 			}
 		}
@@ -219,9 +239,9 @@ namespace sar.Controls
 					this.updatesAvailable = false;
 				}
 			}
-			catch
+			catch (Exception ex)
 			{
-				
+				if (this.errorLog != null) this.errorLog.Write(ex);
 			}
 		}
 		
@@ -229,6 +249,9 @@ namespace sar.Controls
 		{
 			try
 			{
+				Stopwatch timer = new Stopwatch();
+				timer.Start();
+				
 				this.Invoke((MethodInvoker) delegate {
 				            	ListViewHelper.EnableDoubleBuffer(this);
 				            	this.BeginUpdate();
@@ -252,77 +275,81 @@ namespace sar.Controls
 				            	this.EndUpdate();
 				            	ListViewHelper.DisableDoubleBuffer(this);
 				            });
+
+				timer.Stop();
+				if (this.debugLog != null) this.debugLog.WriteLine("UpdateList() time: " + timer.ElapsedMilliseconds.ToString());
 			}
-			catch
+			catch (Exception ex)
 			{
-				
+				if (this.errorLog != null) this.errorLog.Write(ex);
 			}
-		}
-
-		public class ListViewColumnSorter : IComparer
-		{
-			private int ColumnToSort;
-			private SortOrder OrderOfSort;
-
-			private CaseInsensitiveComparer ObjectCompare;
-
-
-			public ListViewColumnSorter()
-			{
-				ColumnToSort = 0;
-				OrderOfSort = SortOrder.Ascending;
-				ObjectCompare = new CaseInsensitiveComparer();
-			}
-
-			public int Compare(object x, object y)
-			{
-				int compareResult;
-				ListViewItem listviewX, listviewY;
-
-				// Cast the objects to be compared to ListViewItem objects
-				listviewX = (ListViewItem)x;
-				listviewY = (ListViewItem)y;
-
-				// Compare the two items
-				compareResult = ObjectCompare.Compare(listviewX.SubItems[ColumnToSort].Text,listviewY.SubItems[ColumnToSort].Text);
-				
-				if (OrderOfSort == SortOrder.Ascending)
-				{
-					return compareResult;
-				}
-				else if (OrderOfSort == SortOrder.Descending)
-				{
-					return (-compareResult);
-				}
-				else
-				{
-					return 0;
-				}
-			}
-			
-			public int SortColumn
-			{
-				set
-				{
-					ColumnToSort = value;
-				}
-				get
-				{
-					return ColumnToSort;
-				}
-			}
-
-			public SortOrder Order
-			{
-				set
-				{
-					OrderOfSort = value;
-				}
-				get
-				{
-					return OrderOfSort;
-				}
-			}
-			
 		}
 	}
+	
+	public class ListViewColumnSorter : IComparer
+	{
+		private int ColumnToSort;
+		private SortOrder OrderOfSort;
+
+		private CaseInsensitiveComparer ObjectCompare;
+
+
+		public ListViewColumnSorter()
+		{
+			ColumnToSort = 0;
+			OrderOfSort = SortOrder.Ascending;
+			ObjectCompare = new CaseInsensitiveComparer();
+		}
+
+		public int Compare(object x, object y)
+		{
+			int compareResult;
+			ListViewItem listviewX, listviewY;
+
+			// Cast the objects to be compared to ListViewItem objects
+			listviewX = (ListViewItem)x;
+			listviewY = (ListViewItem)y;
+
+			// Compare the two items
+			compareResult = ObjectCompare.Compare(listviewX.SubItems[ColumnToSort].Text,listviewY.SubItems[ColumnToSort].Text);
+			
+			if (OrderOfSort == SortOrder.Ascending)
+			{
+				return compareResult;
+			}
+			else if (OrderOfSort == SortOrder.Descending)
+			{
+				return (-compareResult);
+			}
+			else
+			{
+				return 0;
+			}
+		}
+		
+		public int SortColumn
+		{
+			set
+			{
+				ColumnToSort = value;
+			}
+			get
+			{
+				return ColumnToSort;
+			}
+		}
+
+		public SortOrder Order
+		{
+			set
+			{
+				OrderOfSort = value;
+			}
+			get
+			{
+				return OrderOfSort;
+			}
+		}
+		
+	}
+}
