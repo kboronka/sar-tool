@@ -80,15 +80,9 @@ namespace sar.Commands
 							changes += IO.SearchAndReplaceInFile(file, @"(End Sub|End Function)\r*\n\r*\n[\r\n]+(\s*)(\S)", "$1\r\n\r\n$2$3");
 
 							// one space between #Region start and first line
-							//changes += IO.SearchAndReplaceInFile(file, @"(#Region[^(\r|\n)]*)\r*\n{1}([\t]|[\S])", @"abc\r\n\r\n$2");					
 							changes += IO.SearchAndReplaceInFile(file, @"(#Region[^(\r|\n)]*)\r*\n([\t]|[\S])", "$1\r\n\r\n$2");					
 							changes += IO.SearchAndReplaceInFile(file, @"(#Region[^(\r|\n)]*)\r*\n\r*\n\r*\n", "$1\r\n\r\n");
-							 
-							 
-							 //changes += IO.SearchAndReplaceInFile(file, @"#Region\s*[""]([^""]*)[""][\r*\n]{1}(\t*[^\r\n])", @"#Region ""$1""\r\n\r\n$2");
-							 
-							//changes += IO.SearchAndReplaceInFile(file, @"(#Region[^\r*\n]*)[\r*\n]{1}([\t]|[\S])", "$1\r\n\r\n$2");
-							//changes += IO.SearchAndReplaceInFile(file, @"(#Region[^\r*\n]*)[\r*\n]{3,}([\t]|[\S])", "$1\r\n\r\n$2");
+							
 							break;
 						default:
 							break;
