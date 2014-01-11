@@ -21,7 +21,7 @@ namespace sar.Base
 {
 	public abstract class Program
 	{
-		protected static string logFilename;
+		public static string LogFilename;
 		
 		#region logger
 		
@@ -30,8 +30,8 @@ namespace sar.Base
 		{
 			get
 			{
-				if (String.IsNullOrEmpty(Program.logFilename)) Program.logFilename = "log";
-				if (Program.errorLog == null) Program.errorLog = new ErrorLogger("error." + Program.logFilename);
+				if (String.IsNullOrEmpty(Program.LogFilename)) Program.LogFilename = "log";
+				if (Program.errorLog == null) Program.errorLog = new ErrorLogger("error." + Program.LogFilename);
 				return Program.errorLog;
 			}
 		}
@@ -41,8 +41,8 @@ namespace sar.Base
 		{
 			get
 			{
-				if (String.IsNullOrEmpty(Program.logFilename)) Program.logFilename = "log";
-				if (Program.debugLog == null)Program.debugLog = new FileLogger("debug." + Program.logFilename, true);
+				if (String.IsNullOrEmpty(Program.LogFilename)) Program.LogFilename = "log";
+				if (Program.debugLog == null)Program.debugLog = new FileLogger("debug." + Program.LogFilename, true);
 				return Program.debugLog;
 			}
 		}
