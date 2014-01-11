@@ -63,9 +63,6 @@ namespace sar.Socket
 			if (!this.memCache.ContainsKey(member))
 			{
 				this.memCache[member] = new SocketValue(member);
-				this.memCache[member].Data = "";
-				this.memCache[member].SourceID = 0;
-				this.memCache[member].Timestamp = new DateTime(2001, 1, 1);
 				this.memCache[member].DataChanged += new SocketValue.DataChangedHandler(this.OnMemCacheChanged);
 			}
 			
@@ -81,7 +78,6 @@ namespace sar.Socket
 				if (MemberExists(member))
 				{
 					this.memCache[member].SourceID = message.FromID;
-					this.memCache[member].Timestamp = message.Timestamp;
 					this.memCache[member].Data = message.Data;
 				}
 			}
@@ -94,7 +90,6 @@ namespace sar.Socket
 				if (MemberExists(member))
 				{
 					this.memCache[member].SourceID = this.ID;
-					this.memCache[member].Timestamp = DateTime.Now;
 					this.memCache[member].Data = data;
 				}
 			}
@@ -112,6 +107,16 @@ namespace sar.Socket
 		public string GetValue(string member)
 		{
 			return this.Get(member).Data;
+		}
+		
+		public DateTime GetTimestamp(string member)
+		{
+			return this.Get(member).Timestamp;
+		}
+		
+		public DateTime GetLastUpdate(string member)
+		{
+			return this.Get(member).LastUpdate;
 		}
 		
 		protected abstract void OnMemCacheChanged(SocketValue data);

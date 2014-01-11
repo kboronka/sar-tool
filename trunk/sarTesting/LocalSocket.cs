@@ -109,15 +109,15 @@ namespace sar.Testing
 		
 		void GetClick(object sender, EventArgs e)
 		{
-			if (this.client1 != null) this.Client1Member.Text = "Client1: " + this.client1.GetValue("testmember");
-			if (this.client2 != null) this.Client2Member.Text = "Client2: " + this.client2.GetValue("testmember");
+			if (this.client1 != null) this.Client1Member.Text = "Client1: " + this.client1.GetValue("testmember") + " - " + this.client1.GetLastUpdate("testmember").ToString(XML.DATETIME_LONG);
+			if (this.client2 != null) this.Client2Member.Text = "Client2: " + this.client2.GetValue("testmember") + " - " + this.client2.GetLastUpdate("testmember").ToString(XML.DATETIME_LONG);
 		}
 		
 		private void Client1Update(SocketValue data)
 		{
 			this.Invoke((MethodInvoker) delegate
 			            {
-			            	this.Client1Member.Text = "Client1: " + data.Data;
+			            	this.Client1Member.Text = "Client1: " + data.Data  + " - " + data.LastUpdate.ToString(XML.DATETIME_LONG);
 			            });
 			
 		}
@@ -126,7 +126,7 @@ namespace sar.Testing
 		{
 			this.Invoke((MethodInvoker) delegate
 			            {
-			            	this.Client2Member.Text = "Client2: " + data.Data;
+			            	this.Client2Member.Text = "Client2: " + data.Data + " - " + data.LastUpdate.ToString(XML.DATETIME_LONG);
 			            });
 			
 		}
