@@ -14,7 +14,9 @@
  */
 
 using System;
+using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace sar.Tools
 {
@@ -24,7 +26,7 @@ namespace sar.Tools
 		public static string CommonDataDirectory
 		{
 			get
-			{	
+			{
 				if (string.IsNullOrEmpty(ApplicationInfo.commonDataDirectory))
 				{
 					string root = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
@@ -35,7 +37,7 @@ namespace sar.Tools
 						throw new ArgumentNullException("Product name not specified in AssemblyInfo");
 
 					if (!String.IsNullOrEmpty(company))
-						root += "\\" + company;						
+						root += "\\" + company;
 					
 					root += "\\" + product + "\\";
 					
@@ -64,7 +66,7 @@ namespace sar.Tools
 						throw new ArgumentNullException("Product name not specified in AssemblyInfo");
 
 					if (!String.IsNullOrEmpty(company))
-						root += "\\" + company;						
+						root += "\\" + company;
 					
 					root += "\\" + product + "\\";
 					
@@ -103,6 +105,55 @@ namespace sar.Tools
 				}
 				
 				return applicationPath;
+			}
+		}
+		
+		[DllImport("kernel32.dll", SetLastError = true, CallingConvention = CallingConvention.Winapi)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool IsWow64Process(
+			[In] IntPtr hProcess,
+			[Out] out bool wow64Process
+		);
+
+		private static bool isWow64;
+		private static bool isWow64completed;
+		public static bool IsWow64
+		{
+			get
+			{
+				if (!isWow64completed)
+				{
+					if (IntPtr.Size == 8)
+					{
+						isWow64 = true;
+					}
+					else
+					{
+						if ((Environment.OSVersion.Version.Major == 5 && Environment.OSVersion.Version.Minor >= 1) || Environment.OSVersion.Version.Major >= 6)
+						{
+							using (Process p = Process.GetCurrentProcess())
+							{
+								bool retVal;
+								if (!IsWow64Process(p.Handle, out retVal))
+								{
+									isWow64 = false;
+								}
+								else
+								{
+									isWow64 = retVal;
+								}
+							}
+						}
+						else
+						{
+							isWow64 = false;
+						}
+					}
+					
+					isWow64completed = true;
+				}
+				
+				return isWow64;
 			}
 		}
 	}
