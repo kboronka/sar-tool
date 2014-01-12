@@ -320,7 +320,7 @@ namespace sar.Tools
 		{
 			ThreadStart runDelegate = delegate()
 			{
-				ConsoleHelper.Run(filename, arguments);
+				ConsoleHelper.TryRun(filename, arguments);
 			};
 			
 			Thread runThread = new Thread(runDelegate);
