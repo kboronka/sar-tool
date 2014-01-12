@@ -140,7 +140,7 @@ namespace sar.Tools
 			ConsoleHelper.WriteLine("  " + AssemblyInfo.Copyright);
 			
 			ConsoleHelper.DebugWriteLine("warning: this is a debug version\n");
-		}		
+		}
 		
 		public static void DebugWriteLine(string text)
 		{
@@ -240,7 +240,7 @@ namespace sar.Tools
 				return ConsoleHelper.EXIT_ERROR;
 			}
 		}
-				
+		
 		public static int Run(string filename, string arguments)
 		{
 			string output;
@@ -259,7 +259,7 @@ namespace sar.Tools
 				return ConsoleHelper.EXIT_ERROR;
 			}
 		}
-				
+		
 		public static int Run(string filename, string arguments, out string output)
 		{
 			string error;
@@ -318,16 +318,13 @@ namespace sar.Tools
 		
 		public static void Start(string filename, string arguments)
 		{
-			arguments = StringHelper.TrimWhiteSpace(arguments);
-			ConsoleHelper.DebugWriteLine(filename + " " + arguments);
+			ThreadStart runDelegate = delegate()
+			{
+				ConsoleHelper.Run(filename, arguments);
+			};
 			
-			Process shell = new Process();
-			shell.StartInfo.FileName = filename;
-			shell.StartInfo.Arguments = arguments;
-			shell.StartInfo.UseShellExecute = false;
-			shell.StartInfo.RedirectStandardOutput = true;
-			shell.StartInfo.RedirectStandardError = true;
-			shell.Start();
+			Thread runThread = new Thread(runDelegate);
+			runThread.Start();
 		}
 		
 		public static void StartAs(string filename, string arguments, string username, string password)
@@ -396,6 +393,23 @@ namespace sar.Tools
 			} while (found);
 		}
 		
+		public static void WaitForProcess_Start(string processName)
+		{
+			WaitForProcess_Start(processName, -1);
+		}
+		
+		public static bool WaitForProcess_Start(string processName, int timeout)
+		{
+			Stopwatch timer = new Stopwatch();
+			timer.Start();
+			
+			while (!IsProcessRunning(processName) && (!(timer.ElapsedMilliseconds > timeout) || timeout == -1))
+			{
+				Thread.Sleep(10);
+			};
+			
+			return !(timer.ElapsedMilliseconds > timeout);
+		}
 		
 		public static void WaitForProcess_Shutdown(string processName)
 		{
