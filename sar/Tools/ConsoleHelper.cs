@@ -450,7 +450,6 @@ namespace sar.Tools
 			backgroundThread.Abort();
 		}
 		
-		
 		public static Color ChangeColorBrightness(Color color, float correctionFactor)
 		{
 			float red = (float)color.R;
