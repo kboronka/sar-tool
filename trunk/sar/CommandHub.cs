@@ -50,6 +50,7 @@ namespace sar.Tools
 			                          	new FileCopy(this),
 			                          	new FileLock(this),
 			                          	new DirectoryTimestamp(this),
+			                          	new WindowsAutoLogin(this),
 			                          	new WindowsLogin(this),
 			                          	new WindowsMapDrive(this),
 			                          	new WindowsRearm(this),
