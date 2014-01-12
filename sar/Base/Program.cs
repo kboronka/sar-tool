@@ -26,8 +26,11 @@ namespace sar.Base
 			bool logTimestamps = Program.DebugLog.LogTime;
 			Program.DebugLog.LogTime = false;
 			Program.DebugLog.WriteLine(AssemblyInfo.Name + " v" + AssemblyInfo.Version);
-			Program.DebugLog.WriteLine(ApplicationInfo.ApplicationPath);
+			Program.DebugLog.WriteLine("Path = " + ApplicationInfo.ApplicationPath);
+			Program.DebugLog.WriteLine("Environment.UserInteractive = " + Environment.UserInteractive.ToString());
+			Program.DebugLog.WriteLine("Username = " + System.Security.Principal.WindowsIdentity.GetCurrent().Name);
 			Program.DebugLog.WriteLine(ConsoleHelper.HR);
+			
 			Program.DebugLog.LogTime = logTimestamps;
 		}
 		
