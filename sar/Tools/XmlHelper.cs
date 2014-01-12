@@ -101,7 +101,7 @@ namespace sar.Tools
 				try
 				{
 					string attributeValue = this.reader.GetAttribute(name);
-					return DateTime.ParseExact(attributeValue, XML.TIME_LONG, DateTimeFormatInfo.InvariantInfo).TimeOfDay;
+					return DateTime.ParseExact(attributeValue, XML.TIME, DateTimeFormatInfo.InvariantInfo).TimeOfDay;
 				}
 				catch
 				{
