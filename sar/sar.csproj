@@ -99,6 +99,7 @@
     <Compile Include="Commands\SkyUpdaterAdd.cs" />
     <Compile Include="Commands\SkyUpdaterGenerate.cs" />
     <Compile Include="Commands\SkyUpdaterUpdate.cs" />
+    <Compile Include="Commands\WindowsAutoLogin.cs" />
     <Compile Include="Commands\WindowsLogin.cs" />
     <Compile Include="Commands\Kill.cs" />
     <Compile Include="Commands\LabviewVersion.cs" />
