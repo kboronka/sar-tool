@@ -313,7 +313,7 @@ namespace sar.Tools
 		
 		public static void Start(string filename)
 		{
-			Run(filename, "");
+			Start(filename, "");
 		}
 		
 		public static void Start(string filename, string arguments)
