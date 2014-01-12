@@ -150,6 +150,7 @@ namespace sar.Tools
 						}
 					}
 					
+					ConsoleHelper.DebugWriteLine("Wow64 = " + isWow64.ToString());
 					isWow64completed = true;
 				}
 				
