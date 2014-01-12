@@ -99,7 +99,7 @@ namespace sar.Tools
 			{
 				if (string.IsNullOrEmpty(applicationPath))
 				{
-					applicationPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+					applicationPath = System.Reflection.Assembly.GetEntryAssembly().Location;
 				}
 				
 				return applicationPath;
