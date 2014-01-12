@@ -253,35 +253,41 @@ namespace sar.Controls
 				timer.Start();
 				
 				this.Invoke((MethodInvoker) delegate {
-				            	ListViewHelper.EnableDoubleBuffer(this);
-				            	this.BeginUpdate();
-				            	this.Items.Clear();
-				            	
-				            	foreach (KeyValuePair<string, SocketValue> entry in this.memCache)
+				            	try
 				            	{
-				            		ListViewItem newItem = new ListViewItem(entry.Value.Name);
-				            		newItem.Name = entry.Value.Name;
-				            		newItem.SubItems.Add(entry.Value.Data);
-				            		newItem.SubItems.Add(entry.Value.Timestamp.ToString());
-				            		newItem.SubItems.Add(entry.Value.SourceID.ToString());
-				            		this.Items.Add(newItem);
+				            		ListViewHelper.EnableDoubleBuffer(this);
+				            		this.BeginUpdate();
+				            		this.Items.Clear();
+				            		
+				            		foreach (KeyValuePair<string, SocketValue> entry in this.memCache)
+				            		{
+				            			ListViewItem newItem = new ListViewItem(entry.Value.Name);
+				            			newItem.Name = entry.Value.Name;
+				            			newItem.SubItems.Add(entry.Value.Data);
+				            			newItem.SubItems.Add(entry.Value.Timestamp.ToString());
+				            			newItem.SubItems.Add(entry.Value.SourceID.ToString());
+				            			this.Items.Add(newItem);
+				            		}
+				            		
+				            		
+				            		this.Columns[0].Width = -2;
+				            		this.Columns[1].Width = -2;
+				            		this.Columns[2].Width = -2;
+				            		this.Columns[3].Width = -2;
+				            		this.EndUpdate();
+				            		ListViewHelper.DisableDoubleBuffer(this);
 				            	}
-				            	
-				            	
-				            	this.Columns[0].Width = -2;
-				            	this.Columns[1].Width = -2;
-				            	this.Columns[2].Width = -2;
-				            	this.Columns[3].Width = -2;
-				            	this.EndUpdate();
-				            	ListViewHelper.DisableDoubleBuffer(this);
+				            	catch (Exception ex)
+				            	{
+				            		if (this.errorLog != null) this.errorLog.Write(ex);
+				            	}
 				            });
 
 				timer.Stop();
 				if (this.debugLog != null) this.debugLog.WriteLine("UpdateList() time: " + timer.ElapsedMilliseconds.ToString());
 			}
-			catch (Exception ex)
+			catch
 			{
-				if (this.errorLog != null) this.errorLog.Write(ex);
 			}
 		}
 	}
