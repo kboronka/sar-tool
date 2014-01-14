@@ -311,6 +311,7 @@ namespace sar.Tools
 			return shell.ExitCode;
 		}
 		
+		
 		public static void Start(string filename)
 		{
 			Start(filename, "");
@@ -318,28 +319,39 @@ namespace sar.Tools
 		
 		public static void Start(string filename, string arguments)
 		{
-			ThreadStart startBackgroundDelegate = delegate()
-			{
-				ConsoleHelper.StartBackground(filename, arguments);
-			};
+			string error;
+			string output;
 			
-			Thread runThread = new Thread(startBackgroundDelegate);
-			runThread.Start();
+			Start(filename, arguments, out output, out error);
 		}
 		
-		private static void StartBackground(string filename, string arguments)
+		public static int Start(string filename, string arguments, out string output, out string error)
 		{
-			ThreadStart runDelegate = delegate()
-			{
-				ConsoleHelper.TryRun(filename, arguments);
-			};
+			arguments = StringHelper.TrimWhiteSpace(arguments);
+
+			ConsoleHelper.DebugWriteLine(filename + " " + arguments);
 			
-			Thread runThread = new Thread(runDelegate);
-			runThread.Start();
-			Thread.Sleep(1000);
-			runThread.Abort();
+			Process shell = new Process();
+			shell.StartInfo.FileName = filename;
+			shell.StartInfo.Arguments = arguments;
+			shell.StartInfo.UseShellExecute = false;
+			shell.StartInfo.RedirectStandardOutput = true;
+			shell.StartInfo.RedirectStandardError = true;
+
+			shell.Start();
+			output = shell.StandardOutput.ReadToEnd();
+			error = shell.StandardError.ReadToEnd();
+			
+			//shell.WaitForExit();
+			
+			if (!String.IsNullOrEmpty(error))
+			{
+				ConsoleHelper.DebugWriteLine("error: " + error + " " + arguments);
+			}
+			
+			return shell.ExitCode;
 		}
-		
+
 		public static void StartAs(string filename, string arguments, string username, string password)
 		{
 			StartAs(filename, arguments, System.Environment.MachineName, username, password);
