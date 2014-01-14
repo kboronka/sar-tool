@@ -319,37 +319,14 @@ namespace sar.Tools
 		
 		public static void Start(string filename, string arguments)
 		{
-			string error;
-			string output;
-			
-			Start(filename, arguments, out output, out error);
-		}
-		
-		public static int Start(string filename, string arguments, out string output, out string error)
-		{
 			arguments = StringHelper.TrimWhiteSpace(arguments);
 
 			ConsoleHelper.DebugWriteLine(filename + " " + arguments);
 			
-			Process shell = new Process();
-			shell.StartInfo.FileName = filename;
-			shell.StartInfo.Arguments = arguments;
-			shell.StartInfo.UseShellExecute = false;
-			shell.StartInfo.RedirectStandardOutput = true;
-			shell.StartInfo.RedirectStandardError = true;
-
-			shell.Start();
-			output = shell.StandardOutput.ReadToEnd();
-			error = shell.StandardError.ReadToEnd();
-			
-			//shell.WaitForExit();
-			
-			if (!String.IsNullOrEmpty(error))
-			{
-				ConsoleHelper.DebugWriteLine("error: " + error + " " + arguments);
-			}
-			
-			return shell.ExitCode;
+			ProcessStartInfo info = new ProcessStartInfo();
+			info.FileName = filename;
+			info.Arguments = arguments;
+			Process.Start(info);
 		}
 
 		public static void StartAs(string filename, string arguments, string username, string password)
