@@ -318,6 +318,17 @@ namespace sar.Tools
 		
 		public static void Start(string filename, string arguments)
 		{
+			ThreadStart startBackgroundDelegate = delegate()
+			{
+				ConsoleHelper.StartBackground(filename, arguments);
+			};
+			
+			Thread runThread = new Thread(startBackgroundDelegate);
+			runThread.Start();
+		}
+		
+		private static void StartBackground(string filename, string arguments)
+		{
 			ThreadStart runDelegate = delegate()
 			{
 				ConsoleHelper.TryRun(filename, arguments);
@@ -325,6 +336,8 @@ namespace sar.Tools
 			
 			Thread runThread = new Thread(runDelegate);
 			runThread.Start();
+			Thread.Sleep(1000);
+			runThread.Abort();
 		}
 		
 		public static void StartAs(string filename, string arguments, string username, string password)
