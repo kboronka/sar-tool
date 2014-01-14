@@ -339,39 +339,46 @@ namespace sar.Socket
 		
 		private bool ProcessMessage(SocketMessage message)
 		{
-			if (message != null)
+			try
 			{
-				switch (message.Command)
+				if (message != null)
 				{
-					case "startup":
-						this.initilized = true;
-						return true;
-					case "echo":
-						this.PingReciveEcho(message);
-						return true;
-					case "ping":
-						this.PingSendEcho(message);
-						return true;
-					case "set":
-						this.Store(message);
-						//this.OnMessageRecived(message);
-						return (message.ToID == this.ID);
-					case "get":
-						if (this.IsHost) return false;	// allow parent to respond to "get" commands
-						this.SendData("set", message.Member, this.GetValue(message.Member), message.FromID);
-						//this.OnMessageRecived(message);
-						return true;
-					case "get-all":
-						if (this.IsHost) return false;	// allow parent to respond to "get" commands
-						return true;
-					default:
-						//this.OnMessageRecived(message);
-						break;
+					switch (message.Command)
+					{
+						case "startup":
+							this.initilized = true;
+							return true;
+						case "echo":
+							this.PingReciveEcho(message);
+							return true;
+						case "ping":
+							this.PingSendEcho(message);
+							return true;
+						case "set":
+							this.Store(message);
+							//this.OnMessageRecived(message);
+							return (message.ToID == this.ID);
+						case "get":
+							if (this.IsHost) return false;	// allow parent to respond to "get" commands
+							this.SendData("set", message.Member, this.GetValue(message.Member), message.FromID);
+							//this.OnMessageRecived(message);
+							return true;
+						case "get-all":
+							if (this.IsHost) return false;	// allow parent to respond to "get" commands
+							return true;
+						default:
+							//this.OnMessageRecived(message);
+							break;
+					}
+					
+					return false;
 				}
-				
-				return false;
 			}
-			
+			catch
+			{
+				
+			}
+
 			return true;
 		}
 		
@@ -545,8 +552,6 @@ namespace sar.Socket
 		{
 			try
 			{
-				List<SocketMessage> messageQueue = new List<SocketMessage>();
-				
 				if (socket == null) return;
 				if (stream == null) return;
 				
@@ -581,7 +586,17 @@ namespace sar.Socket
 																switch (reader.Name)
 																{
 																	case "SocketMessage":
-																		messageQueue.Add(new SocketMessage(reader));
+																		this.packetsIn++;
+																		SocketMessage message = new SocketMessage(reader);
+																		
+																		if (!this.ProcessMessage(message))
+																		{
+																			lock (this.messagesIn)
+																			{
+																				this.messagesIn.Add(message);
+																			}
+																		}
+																		
 																		break;
 																	default:
 																		break;
@@ -599,19 +614,6 @@ namespace sar.Socket
 									}
 								}
 							}
-						}
-					}
-				}
-				
-				
-				foreach (SocketMessage message in messageQueue)
-				{
-					this.packetsIn++;
-					if (!this.ProcessMessage(message))
-					{
-						lock (this.messagesIn)
-						{
-							this.messagesIn.Add(message);
 						}
 					}
 				}
