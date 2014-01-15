@@ -589,12 +589,9 @@ namespace sar.Socket
 																		this.packetsIn++;
 																		SocketMessage message = new SocketMessage(reader);
 																		
-																		if (!this.ProcessMessage(message))
+																		if (!this.ProcessMessage(message) && this.IsHost)
 																		{
-																			lock (this.messagesIn)
-																			{
-																				this.messagesIn.Add(message);
-																			}
+																			this.parent.ProcessMessage(this, message);
 																		}
 																		
 																		break;
