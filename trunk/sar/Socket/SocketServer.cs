@@ -157,9 +157,11 @@ namespace sar.Socket
 				this.clients = new List<SocketClient>();
 				
 				this.listenerLoopThread = new Thread(this.ListenerLoop);
+				this.listenerLoopThread.IsBackground = true;
 				this.listenerLoopThread.Start();
 				
 				this.clientsLoopThread = new Thread(this.ClientsLoop);
+				this.clientsLoopThread.IsBackground = true;
 				this.clientsLoopThread.Start();
 				
 				this.Store("Host.Version", AssemblyInfo.SarVersion);
@@ -173,6 +175,12 @@ namespace sar.Socket
 				this.Log(ex);
 			}
 		}
+		
+		~SocketServer()
+		{
+			this.Stop();
+		}
+			
 		
 		public override void Stop()
 		{
