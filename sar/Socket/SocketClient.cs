@@ -197,6 +197,11 @@ namespace sar.Socket
 				this.outgoingLoopThread = new Thread(this.OutgoingLoop);
 				this.incomingLoopThread = new Thread(this.IncomingLoop);
 				this.pingLoopThread = new Thread(this.PingLoop);
+
+				this.connectionLoopThread.IsBackground = true;
+				this.outgoingLoopThread.IsBackground = true;
+				this.incomingLoopThread.IsBackground = true;
+				this.pingLoopThread.IsBackground = true;
 				
 				this.Log("Host Constructor");
 
@@ -251,10 +256,20 @@ namespace sar.Socket
 			this.incomingLoopThread = new Thread(this.IncomingLoop);
 			this.pingLoopThread = new Thread(this.PingLoop);
 			
+			this.connectionLoopThread.IsBackground = true;
+			this.outgoingLoopThread.IsBackground = true;
+			this.incomingLoopThread.IsBackground = true;
+			this.pingLoopThread.IsBackground = true;
+			
 			this.connectionLoopThread.Start();
 			this.incomingLoopThread.Start();
 			this.outgoingLoopThread.Start();
 			this.pingLoopThread.Start();
+		}
+		
+		~SocketClient()
+		{
+			this.Stop();
 		}
 		
 		public override void Stop()
