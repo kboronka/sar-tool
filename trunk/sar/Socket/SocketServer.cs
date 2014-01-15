@@ -227,7 +227,7 @@ namespace sar.Socket
 			// FIXME... execute a broadcast
 		}
 		
-		private void ProcessMessage(SocketClient client, SocketMessage message)
+		internal void ProcessMessage(SocketClient client, SocketMessage message)
 		{
 			if (message != null)
 			{
@@ -266,6 +266,8 @@ namespace sar.Socket
 					default:
 						break;
 				}
+				
+				message = null;
 			}
 		}
 		
