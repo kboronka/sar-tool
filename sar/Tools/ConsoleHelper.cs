@@ -287,8 +287,6 @@ namespace sar.Tools
 		public static int Run(string filename, string arguments, out string output, out string error)
 		{
 			arguments = StringHelper.TrimWhiteSpace(arguments);
-
-			ConsoleHelper.DebugWriteLine(filename + " " + arguments);
 			
 			Process shell = new Process();
 			shell.StartInfo.FileName = filename;
@@ -296,7 +294,6 @@ namespace sar.Tools
 			shell.StartInfo.UseShellExecute = false;
 			shell.StartInfo.RedirectStandardOutput = true;
 			shell.StartInfo.RedirectStandardError = true;
-			//shell.StartInfo.RedirectStandardInput = true;
 			shell.Start();
 			output = shell.StandardOutput.ReadToEnd();
 			error = shell.StandardError.ReadToEnd();
@@ -321,8 +318,6 @@ namespace sar.Tools
 		{
 			arguments = StringHelper.TrimWhiteSpace(arguments);
 
-			ConsoleHelper.DebugWriteLine(filename + " " + arguments);
-			
 			ProcessStartInfo info = new ProcessStartInfo();
 			info.FileName = filename;
 			info.Arguments = arguments;
