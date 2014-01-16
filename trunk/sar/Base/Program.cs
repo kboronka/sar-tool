@@ -71,6 +71,7 @@ namespace sar.Base
 		{
 			try
 			{
+				Program.Log(ex.GetType().ToString() + ": " + ex.Message);
 				Program.ErrorLog.Write(ex);
 			}
 			catch
