@@ -46,6 +46,7 @@ namespace sar.Tools
 			get { return filename; }
 		}
 		
+		// TODO: use xml helper
 		public SkyUpdaterFile(XmlReader reader)
 		{
 			if (reader.NodeType != XmlNodeType.Element || reader.Name != "File")
@@ -80,6 +81,7 @@ namespace sar.Tools
 			this.url = url;
 		}
 		
+		//TODO: use xml helper
 		public void Serialize(XmlWriter writer)
 		{
 			writer.WriteStartElement("File");
