@@ -93,7 +93,7 @@ namespace sar.Tools
 					
 				}
 
-				return new DateTime(2001, 1, 1);			
+				return new DateTime(2001, 1, 1);
 			}
 			
 			public TimeSpan GetAttributeTimeSpan(string name)
@@ -117,6 +117,67 @@ namespace sar.Tools
 				{
 					string attributeValue = GetAttributeString(name);
 					return long.Parse(attributeValue);
+				}
+				catch
+				{
+					
+				}
+				
+				return 0;
+			}
+			
+			public string GetValueString()
+			{
+				try
+				{
+					reader.Read();
+					//TODO: add some error checking to verify element type
+					return reader.Value;
+				}
+				catch
+				{
+					
+				}
+				
+				return "";
+			}
+			
+			public DateTime GetValueTimestamp()
+			{
+				try
+				{
+					string value = this.GetValueString();
+					return DateTime.ParseExact(value, XML.DATETIME_LONG, DateTimeFormatInfo.InvariantInfo);
+				}
+				catch
+				{
+					
+				}
+
+				return new DateTime(2001, 1, 1);
+			}
+			
+			public TimeSpan GetValueTimeSpan()
+			{
+				try
+				{
+					string value = this.GetValueString();
+					return DateTime.ParseExact(value, XML.TIME, DateTimeFormatInfo.InvariantInfo).TimeOfDay;
+				}
+				catch
+				{
+					
+				}
+
+				return new TimeSpan(0, 0, 0);
+			}
+
+			public long GetValueLong()
+			{
+				try
+				{
+					string value = this.GetValueString();
+					return long.Parse(value);
 				}
 				catch
 				{
@@ -207,6 +268,34 @@ namespace sar.Tools
 			{
 				string attributeValue = value.ToString();
 				this.WriteAttributeString(name, attributeValue);
+			}
+			
+			public void WriteElement(string element, string value)
+			{
+				if (String.IsNullOrEmpty(value)) return;
+				if (String.IsNullOrEmpty(element)) return;
+				
+				this.WriteStartElement(element);
+				this.WriteValue(value);
+				this.WriteEndElement();
+			}	
+
+			public void WriteElement(string element, DateTime value)
+			{
+				string elementValue = value.ToString(XML.DATETIME_LONG);
+				this.WriteElement(element, elementValue);
+			}	
+
+			public void WriteElement(string element, TimeSpan value)
+			{
+				string elementValue = value.ToString();
+				this.WriteElement(element, elementValue);
+			}				
+
+			public void WriteElement(string element, long value)
+			{
+				string elementValue = value.ToString();
+				this.WriteElement(element, elementValue);
 			}
 			
 			public void WriteValue(string value)
