@@ -19,6 +19,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
 using System.Timers;
+using System.Threading;
 
 namespace sar.Tools
 {
@@ -35,7 +36,6 @@ namespace sar.Tools
 		private StreamWriter writer;
 		private DateTime today;
 		private bool logTime;
-		private System.Timers.Timer flushTimer;
 		private bool printSeperator = true;
 		
 		#region properties
@@ -70,9 +70,9 @@ namespace sar.Tools
 				
 				this.writer = new StreamWriter(path, true);
 				
-				flushTimer = new System.Timers.Timer(1000);
-				flushTimer.Enabled = false;
-				flushTimer.Elapsed += new ElapsedEventHandler(OnFlushTick);
+				this.fileFlush = new Thread(FlushLoop);
+				this.fileFlush.IsBackground = true;
+				this.fileFlush.Start();
 			}
 			catch
 			{
@@ -86,6 +86,7 @@ namespace sar.Tools
 			{
 				this.writer.Flush();
 				this.writer.Close();
+				flushLoopShutdown = true;
 			}
 			catch
 			{
@@ -128,13 +129,41 @@ namespace sar.Tools
 			WriteLine(text, DateTime.Now);
 		}
 		
-		private void OnFlushTick(object source, ElapsedEventArgs e)
+		#region service
+		
+		#region flush
+		
+		private Thread fileFlush;
+		private bool flushLoopShutdown;
+		
+		private void FlushLoop()
+		{
+			Thread.Sleep(1000);
+			
+			while (!flushLoopShutdown)
+			{
+				try
+				{
+					this.FlushFile();
+					Thread.Sleep(500);
+				}
+				catch
+				{
+					Thread.Sleep(5000);
+				}
+			}
+		}
+
+		private void FlushFile()
 		{
 			lock (this.writer)
 			{
 				this.writer.Flush();
 			}
 		}
-
+		
+		#endregion
+		
+		#endregion
 	}
 }
