@@ -48,7 +48,7 @@ namespace sar.Testing
 			this.label2 = new System.Windows.Forms.Label();
 			this.Host = new System.Windows.Forms.TextBox();
 			this.Connect3 = new System.Windows.Forms.Button();
-			this.socketMemCacheList1 = new sar.Controls.SocketMemCacheList(Program.ErrorLog, Program.DebugLog);
+			this.socketMemCacheList1 = new sar.Controls.SocketMemCacheList();
 			this.socketClientControl1 = new sar.Controls.SocketClientControl();
 			((System.ComponentModel.ISupportInitialize)(this.Port)).BeginInit();
 			this.SuspendLayout();
