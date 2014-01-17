@@ -21,6 +21,8 @@ namespace sar.Base
 {
 	public abstract class Program
 	{
+		#region logger
+
 		public static void LogInfo()
 		{
 			try
@@ -43,8 +45,24 @@ namespace sar.Base
 		
 		public static string LogFilename;
 		
-		#region logger
-		
+		public static void FlushLogs()
+		{
+			errorLog.FlushFile();
+			debugLog.FlushFile();
+		}
+
+		protected static void LogUnhandledException(object sender, UnhandledExceptionEventArgs e)
+		{
+			try
+			{
+				Program.Log((Exception)e.ExceptionObject);
+			}
+			catch
+			{
+				
+			}
+		}
+
 		private static ErrorLogger errorLog;
 		public static ErrorLogger ErrorLog
 		{
@@ -73,6 +91,7 @@ namespace sar.Base
 			{
 				Program.Log(ex.GetType().ToString() + ": " + ex.Message);
 				Program.ErrorLog.Write(ex);
+				Program.FlushLogs();
 			}
 			catch
 			{
