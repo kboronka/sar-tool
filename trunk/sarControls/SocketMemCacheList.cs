@@ -217,7 +217,14 @@ namespace sar.Controls
 					bool connected = (bool)sender;
 					if (this.Enabled == connected) return;
 					
-					this.Invoke((MethodInvoker) delegate { this.Enabled = connected; } );
+					if (InvokeRequired)
+					{
+						this.Invoke((MethodInvoker) delegate { this.Enabled = connected; } );
+					}
+					else
+					{
+						this.Enabled = connected;
+					}
 				}
 				catch (Exception ex)
 				{
