@@ -60,7 +60,7 @@ namespace sar.Commands
 				string destinationFile = destinationPath + filename;
 
 				if (!Directory.Exists(StringHelper.TrimEnd(destinationPath))) Directory.CreateDirectory(StringHelper.TrimEnd(destinationPath));
-				if (!File.Exists(destinationFile)) File.Copy(sourceFile, destinationFile);
+				if (!File.Exists(destinationFile)) IO.CopyFile(sourceFile, destinationFile);
 			}
 
 			ConsoleHelper.WriteLine(files.Count.ToString() + " file" + ((files.Count != 1) ? "s" : "") + " mirrored", ConsoleColor.DarkYellow);
