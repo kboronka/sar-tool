@@ -127,16 +127,24 @@ namespace sar.Controls
 			}
 		}
 		
+		[Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+		public ErrorLogger ErrorLog
+		{
+			get { return errorLog; }
+			set { errorLog = value; }
+		}
+
+		[Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+		public FileLogger DebugLog
+		{
+			get { return debugLog; }
+			set { debugLog = value; }
+		}
+		
+		
 		#endregion
 
 		#region constructors
-		
-		public SocketMemCacheList(ErrorLogger errorLog, FileLogger debugLog)
-		{
-			this.errorLog = errorLog;
-			this.debugLog = debugLog;
-			this.InitilizeControl();
-		}
 		
 		public SocketMemCacheList()
 		{
@@ -145,19 +153,26 @@ namespace sar.Controls
 		
 		private void InitilizeControl()
 		{
-			this.columnSorter = new ListViewColumnSorter();
-			this.Columns.Add("Member", -2, HorizontalAlignment.Left);
-			this.Columns.Add("Value", -2, HorizontalAlignment.Left);
-			this.Columns.Add("Timestamp", -2, HorizontalAlignment.Left);
-			this.Columns.Add("Source", -2, HorizontalAlignment.Left);
-			this.ListViewItemSorter = this.columnSorter;
-			this.HeaderStyle = ColumnHeaderStyle.Nonclickable;
-			this.FullRowSelect = true;
-			this.View = View.Details;
-			
-			this.updateTimer = new System.Timers.Timer(5000);
-			this.updateTimer.Enabled = true;
-			this.updateTimer.Elapsed += new ElapsedEventHandler(this.UpdateTick);
+			try
+			{
+				this.columnSorter = new ListViewColumnSorter();
+				this.Columns.Add("Member", -2, HorizontalAlignment.Left);
+				this.Columns.Add("Value", -2, HorizontalAlignment.Left);
+				this.Columns.Add("Timestamp", -2, HorizontalAlignment.Left);
+				this.Columns.Add("Source", -2, HorizontalAlignment.Left);
+				this.ListViewItemSorter = this.columnSorter;
+				this.HeaderStyle = ColumnHeaderStyle.Nonclickable;
+				this.FullRowSelect = true;
+				this.View = View.Details;
+				
+				this.updateTimer = new System.Timers.Timer(5000);
+				this.updateTimer.Enabled = true;
+				this.updateTimer.Elapsed += new ElapsedEventHandler(this.UpdateTick);
+			}
+			catch
+			{
+				
+			}
 		}
 		
 		#endregion
@@ -252,42 +267,52 @@ namespace sar.Controls
 				Stopwatch timer = new Stopwatch();
 				timer.Start();
 				
-				this.Invoke((MethodInvoker) delegate {
-				            	try
-				            	{
-				            		ListViewHelper.EnableDoubleBuffer(this);
-				            		this.BeginUpdate();
-				            		this.Items.Clear();
-				            		
-				            		foreach (KeyValuePair<string, SocketValue> entry in this.memCache)
-				            		{
-				            			ListViewItem newItem = new ListViewItem(entry.Value.Name);
-				            			newItem.Name = entry.Value.Name;
-				            			newItem.SubItems.Add(entry.Value.Data);
-				            			newItem.SubItems.Add(entry.Value.Timestamp.ToString());
-				            			newItem.SubItems.Add(entry.Value.SourceID.ToString());
-				            			this.Items.Add(newItem);
-				            		}
-				            		
-				            		
-				            		this.Columns[0].Width = -2;
-				            		this.Columns[1].Width = -2;
-				            		this.Columns[2].Width = -2;
-				            		this.Columns[3].Width = -2;
-				            		this.EndUpdate();
-				            		ListViewHelper.DisableDoubleBuffer(this);
-				            	}
-				            	catch (Exception ex)
-				            	{
-				            		if (this.errorLog != null) this.errorLog.Write(ex);
-				            	}
-				            });
+				if (InvokeRequired)
+				{
+					this.Invoke((MethodInvoker) delegate { this.UpdateListInner(); });
+				}
+				else
+				{
+					this.UpdateListInner();
+				}
 
 				timer.Stop();
 				if (this.debugLog != null) this.debugLog.WriteLine("UpdateList() time: " + timer.ElapsedMilliseconds.ToString());
 			}
 			catch
 			{
+			}
+		}
+		
+		private void UpdateListInner()
+		{
+			try
+			{
+				ListViewHelper.EnableDoubleBuffer(this);
+				this.BeginUpdate();
+				this.Items.Clear();
+				
+				foreach (KeyValuePair<string, SocketValue> entry in this.memCache)
+				{
+					ListViewItem newItem = new ListViewItem(entry.Value.Name);
+					newItem.Name = entry.Value.Name;
+					newItem.SubItems.Add(entry.Value.Data);
+					newItem.SubItems.Add(entry.Value.Timestamp.ToString());
+					newItem.SubItems.Add(entry.Value.SourceID.ToString());
+					this.Items.Add(newItem);
+				}
+				
+				
+				this.Columns[0].Width = -2;
+				this.Columns[1].Width = -2;
+				this.Columns[2].Width = -2;
+				this.Columns[3].Width = -2;
+				this.EndUpdate();
+				ListViewHelper.DisableDoubleBuffer(this);
+			}
+			catch (Exception ex)
+			{
+				if (this.errorLog != null) this.errorLog.Write(ex);
 			}
 		}
 	}
