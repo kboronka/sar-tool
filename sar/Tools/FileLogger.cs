@@ -117,8 +117,6 @@ namespace sar.Tools
 					if (this.printSeperator) this.writer.WriteLine(ConsoleHelper.HR);
 					if (this.logTime) text = timestamp.ToString(TIMESTAMP) + "\t" + text;
 					this.writer.WriteLine(text);
-					
-					this.flushTimer.Enabled = true;
 					this.printSeperator = false;
 				}
 			}

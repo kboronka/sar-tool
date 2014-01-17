@@ -77,7 +77,7 @@ namespace sar.Commands
 						{
 							if (!Directory.Exists(backupRoot)) Directory.CreateDirectory(backupRoot);
 							if (File.Exists(backupFile)) File.Delete(backupFile);
-							CopyFile(file, backupFile);
+							IO.CopyFile(file, backupFile);
 						}
 						catch (Exception ex)
 						{

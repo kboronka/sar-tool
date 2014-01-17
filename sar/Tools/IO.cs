@@ -561,6 +561,34 @@ namespace sar.Tools
 			return oldestFile;
 		}
 		
+		public static void CopyFile(string sourcePath, string destinationPath)
+		{
+			if (File.Exists(destinationPath))
+			{
+				FileInfo toFile = new FileInfo(destinationPath);
+				if (toFile.IsReadOnly) toFile.IsReadOnly = false;
+			}
+
+			FileInfo sourceFile = new FileInfo(sourcePath);
+			sourceFile.CopyTo(destinationPath, true);
+
+			FileInfo destinationFile = new FileInfo(destinationPath);
+			if (destinationFile.IsReadOnly)
+			{
+				destinationFile.IsReadOnly = false;
+				destinationFile.CreationTime = sourceFile.CreationTime;
+				destinationFile.LastWriteTime = sourceFile.LastWriteTime;
+				destinationFile.LastAccessTime = sourceFile.LastAccessTime;
+				destinationFile.IsReadOnly = true;
+			}
+			else
+			{
+				destinationFile.CreationTime = sourceFile.CreationTime;
+				destinationFile.LastWriteTime = sourceFile.LastWriteTime;
+				destinationFile.LastAccessTime = sourceFile.LastAccessTime;
+			}
+		}
+		
 		public static void CopyFile(string path)
 		{
 			IO.CopyFile(path, -1);
