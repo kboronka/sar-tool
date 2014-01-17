@@ -72,6 +72,7 @@ namespace sar.Tools
 				
 				this.fileFlush = new Thread(FlushLoop);
 				this.fileFlush.IsBackground = true;
+				this.fileFlush.Priority = ThreadPriority.Lowest;
 				this.fileFlush.Start();
 			}
 			catch
@@ -84,6 +85,7 @@ namespace sar.Tools
 		{
 			try
 			{
+				this.writer.WriteLine("disposing file logger");
 				this.writer.Flush();
 				this.writer.Close();
 				flushLoopShutdown = true;
@@ -152,7 +154,7 @@ namespace sar.Tools
 			}
 		}
 
-		private void FlushFile()
+		internal void FlushFile()
 		{
 			lock (this.writer)
 			{

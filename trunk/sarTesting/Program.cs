@@ -26,9 +26,16 @@ namespace sar.Testing
 		[STAThread]
 		private static void Main(string[] args)
 		{
+			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(LogUnhandledException);
+			
+			Program.LogInfo();
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new Menu());
+			Program.Log("throwing error");
+			throw new ApplicationException("unhandled exception");
+			Program.Log("shutting down");
+			Application.Exit();
 		}
 	}
 }
