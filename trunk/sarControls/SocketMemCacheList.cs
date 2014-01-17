@@ -284,7 +284,7 @@ namespace sar.Controls
 				}
 
 				timer.Stop();
-				if (this.debugLog != null) this.debugLog.WriteLine("UpdateList() time: " + timer.ElapsedMilliseconds.ToString());
+				if (this.debugLog != null) this.debugLog.WriteLine(this.Name + " - UpdateList() time: " + timer.ElapsedMilliseconds.ToString());
 			}
 			catch
 			{
