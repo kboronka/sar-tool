@@ -48,12 +48,16 @@ namespace sar.Testing
 
 			client1 = new SocketClient("localhost", 8104, Program.ErrorLog, Program.DebugLog);
 			client1.RegisterCallback("testmember", new SocketValue.DataChangedHandler(this.Client1Update));
+			this.socketMemCacheList1.ErrorLog = Program.ErrorLog;
+			this.socketMemCacheList1.DebugLog = Program.DebugLog;
 			this.socketMemCacheList1.Client = client1;
 			
 			client2 = new SocketClient("localhost", 8104, Program.ErrorLog, Program.DebugLog);
 			client2.RegisterCallback("testmember", new SocketValue.DataChangedHandler(this.Client2Update));
+			this.socketMemCacheList2.ErrorLog = Program.ErrorLog;
+			this.socketMemCacheList2.DebugLog = Program.DebugLog;			
 			this.socketMemCacheList2.Client = client2;
-		}
+		}	
 		
 		void Button1Click(object sender, EventArgs e)
 		{
