@@ -27,6 +27,8 @@ namespace sar.Controls
 		
 		#region properties
 		
+		[Category("Extended Options")]
+        [Description("Text displayed")]
 		public string Caption
 		{
 			get { return this.caption; }
@@ -37,6 +39,8 @@ namespace sar.Controls
 			}
 		}
 		
+		[Category("Extended Options")]
+        [Description("On/Off state")]		
 		public bool Status
 		{
 			get { return this.status; }
