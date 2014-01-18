@@ -630,15 +630,17 @@ namespace sar.Socket
 			if (firstIndex == -1)
 			{
 				// flush garbage
-				this.Log("flushing: \n" + bufferIn);
+				this.Log("buffer flushing: \n" + bufferIn);
 				bufferIn = "";
+				this.Log("buffer flushed: \n" + bufferIn);
 				return "";
 			}
 			else if (firstIndex != 0)
 			{
 				// flush garbage
-				this.Log("flushing: \n" + bufferIn.Substring(0, firstIndex));
+				this.Log("buffer flushing: \n" + bufferIn.Substring(0, firstIndex));
 				bufferIn = bufferIn.Substring(firstIndex);
+				this.Log("buffer flushed: \n" + bufferIn);
 				return "";
 			}
 			else if (string.IsNullOrEmpty(appname))
@@ -649,14 +651,16 @@ namespace sar.Socket
 			else if (secondIndex > closingIndex)
 			{
 				// second packet found, closing packet not found
-				this.Log("closing bracket not found: \n" + bufferIn);
+				this.Log("closing element not found");
+				this.Log("buffer flushing: \n" + bufferIn);
 				bufferIn = bufferIn.Substring(secondIndex);
+				this.Log("buffer flushed: \n" + bufferIn);
 				return "";
 			}
 			else if (closingIndex == -1)
 			{
 				// closing packet not found... wait for next incoming packet
-				this.Log("closing bracket not found: \n" + bufferIn);
+				this.Log("closing element not found: \n" + bufferIn);
 				return "";
 			}
 			
