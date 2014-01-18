@@ -344,7 +344,6 @@ namespace sar.Tools
 			shell.StartInfo.RedirectStandardError = true;
 			shell.Start();
 			return shell;
-			//Process.Start(filename, arguments, username, StringHelper.MakeSecureString(password), domain);
 		}
 		
 		public static Process FindProcess(string processName)
