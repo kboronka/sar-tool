@@ -34,8 +34,8 @@ namespace sar.Testing
 			Application.Run(new Menu());
 			Program.Log("throwing error");
 			throw new ApplicationException("unhandled exception");
-			Program.Log("shutting down");
-			Application.Exit();
+			// Program.Log("shutting down");
+			// Application.Exit();
 		}
 	}
 }
