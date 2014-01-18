@@ -47,8 +47,15 @@ namespace sar.Base
 		
 		public static void FlushLogs()
 		{
-			errorLog.FlushFile();
-			debugLog.FlushFile();
+			try
+			{
+				errorLog.FlushFile();
+				debugLog.FlushFile();
+			}
+			catch
+			{
+				
+			}
 		}
 
 		protected static void LogUnhandledException(object sender, UnhandledExceptionEventArgs e)
