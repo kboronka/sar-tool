@@ -547,13 +547,13 @@ namespace sar.Socket
 			Thread.Sleep(0);
 			this.Log(this.ID.ToString() +  ": " + "Incoming Loop Started");
 			
+			string incomingBuffer = "";			
 			while (!incomingLoopShutdown)
 			{
-				string incomingBuffer = "";
 				try
 				{
 					incomingBuffer += this.ReadIncomingPacket();
-					this.ProcessIncomingBuffer(ref incomingBuffer);
+						this.ProcessIncomingBuffer(ref incomingBuffer);
 					Thread.Sleep(1);
 				}
 				catch (Exception ex)
@@ -619,7 +619,8 @@ namespace sar.Socket
 			
 			Match match = Regex.Match(bufferIn, @"\<[\?]xml version=[^\s]*[\s]encoding=[^\?]*[\?]\>\r*\n\<([^\s]*)\sversion=.*\>");
 			string appname = "";
-			if (match.Success && match.Groups.Count >= 2)
+			
+			if (match.Success && match.Groups.Count == 2)
 			{
 				appname = "</" + match.Groups[1].Value + ">";
 				closingIndex = bufferIn.IndexOf(appname, firstIndex);
@@ -648,11 +649,13 @@ namespace sar.Socket
 				this.Log("appname missing: \n" + bufferIn);
 				return "";
 			}
-			else if (secondIndex > closingIndex)
+			else if (closingIndex > secondIndex)
 			{
 				// second packet found, closing packet not found
 				this.Log("secondIndex > closingIndex");
-				this.Log("appname = " + appname);
+				this.Log("firstIndex = " + firstIndex.ToString());
+				this.Log("secondIndex = " + secondIndex.ToString());
+				this.Log("closingIndex = " + closingIndex.ToString());
 				this.Log("buffer flushing: \n" + bufferIn);
 				bufferIn = bufferIn.Substring(secondIndex);
 				this.Log("buffer flushed: \n" + bufferIn);
