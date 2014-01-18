@@ -30,7 +30,7 @@ namespace sar.Controls
 			{
 				int size = value * -15;
 				
-				RegistryKey windowMetricsKey = Registry.LocalMachine.OpenSubKey(@"HKEY_CURRENT_USER\Control Panel\Desktop\WindowMetrics\", true);
+				RegistryKey windowMetricsKey = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop\WindowMetrics\", true);
 
 				if (windowMetricsKey == null) throw new KeyNotFoundException("WindowMetrics key was not found");
 
