@@ -84,6 +84,14 @@ namespace sar.Tools
 			return false;
 		}
 		
+		public static bool IsFileReadOnly(string path)
+		{
+			if (!File.Exists(path)) throw new FileNotFoundException("file " + path + " not found");
+			
+			System.IO.FileInfo info = new System.IO.FileInfo(path);
+			return (System.IO.FileAttributes.ReadOnly == info.Attributes);
+		}
+		
 		public static List<string> GetAllDirectories(string root)
 		{
 			List<string> directories = new List<string>();
