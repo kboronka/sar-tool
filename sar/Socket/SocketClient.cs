@@ -19,6 +19,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml;
 
@@ -548,9 +549,11 @@ namespace sar.Socket
 			
 			while (!incomingLoopShutdown)
 			{
+				string incomingBuffer = "";
 				try
 				{
-					this.ServiceIncoming();
+					incomingBuffer += this.ReadIncomingPacket();
+					this.ProcessIncomingBuffer(ref incomingBuffer);
 					Thread.Sleep(1);
 				}
 				catch (Exception ex)
@@ -563,12 +566,12 @@ namespace sar.Socket
 			this.Log(this.ID.ToString() +  ": " + "Incoming Loop Shutdown Gracefully");
 		}
 		
-		private void ServiceIncoming()
+		private string ReadIncomingPacket()
 		{
 			try
 			{
-				if (socket == null) return;
-				if (stream == null) return;
+				if (socket == null) return "";
+				if (stream == null) return "";
 				
 				lock (socket)
 				{
@@ -580,65 +583,21 @@ namespace sar.Socket
 							{
 								byte[] packetBytes = new byte[socket.Available];
 								int packetSize = stream.Read(packetBytes, 0, packetBytes.Length);
-								string packetString = this.encoding.GetString(packetBytes, 0, packetSize);
-								
-								if (!String.IsNullOrEmpty(packetString))
-								{
-									foreach (string rawString in packetString.Split(new string[] { "<?xml version=\"1.0\" encoding=\"utf-16\"?>" }, StringSplitOptions.None))
-									{
-										if (!String.IsNullOrEmpty(rawString))
-										{
-											using (StringReader sr = new StringReader(rawString))
-											{
-												try
-												{
-													using (XML.Reader reader = new XML.Reader(sr))
-													{
-														while (reader.Read())
-														{
-															if (reader.NodeType == XmlNodeType.Element)
-															{
-																switch (reader.Name)
-																{
-																	case "SocketMessage":
-																		this.packetsIn++;
-																		SocketMessage message = new SocketMessage(reader);
-																		
-																		if (!this.ProcessMessage(message) && this.IsHost)
-																		{
-																			this.parent.ProcessMessage(this, message);
-																		}
-																		
-																		break;
-																	default:
-																		break;
-																}
-															}
-														}
-													}
-												}
-												catch (Exception ex)
-												{
-													this.Log(ex);
-												}
-											}
-										}
-									}
-								}
+								return this.encoding.GetString(packetBytes, 0, packetSize);
 							}
 						}
 					}
 				}
 			}
-			catch (ObjectDisposedException)
+			catch (ObjectDisposedException ex)
 			{
-				//this.Log(ex);
+				this.Log(ex);
 				// The NetworkStream is closed.
 				//this.Disconnect();
 			}
-			catch (IOException)
+			catch (IOException ex)
 			{
-				//this.Log(ex);
+				this.Log(ex);
 				// The underlying Socket is closed.
 				//this.Disconnect();
 			}
@@ -647,7 +606,115 @@ namespace sar.Socket
 				this.Log(ex);
 			}
 			
-			return;
+			return "";
+		}
+		
+		private string ExtractPacket(ref string bufferIn)
+		{
+			if (String.IsNullOrEmpty(bufferIn)) return null;
+			
+			int firstIndex = bufferIn.IndexOf("<?xml");
+			int secondIndex = bufferIn.IndexOf("<?xml", firstIndex + 1);
+			int closingIndex = -1;
+			
+			Match match = Regex.Match(bufferIn, @"\<[\?]xml version=[^\s]*[\s]encoding=[^\?]*[\?]\>\r*\n\<([^\s]*)\sversion=.*\>");
+			string appname = "";
+			if (match.Success && match.Groups.Count == 2)
+			{
+				appname = "</" + match.Groups[1].Value + ">";
+				closingIndex = bufferIn.IndexOf(appname, firstIndex);
+			}
+			
+
+			// error checking
+			if (firstIndex == -1)
+			{
+				// flush garbage
+				this.Log("flushing: \n" + bufferIn);
+				bufferIn = "";
+				return "";
+			}
+			else if (firstIndex != 0)
+			{
+				// flush garbage
+				this.Log("flushing: \n" + bufferIn.Substring(0, firstIndex));
+				bufferIn = bufferIn.Substring(firstIndex);
+				return "";
+			}
+			else if (string.IsNullOrEmpty(appname))
+			{
+				this.Log("appname missing: \n" + bufferIn);
+				return "";
+			}
+			else if (secondIndex > closingIndex)
+			{
+				// second packet found, closing packet not found
+				this.Log("closing bracket not found: \n" + bufferIn);
+				bufferIn = bufferIn.Substring(secondIndex);
+				return "";
+			}
+			else if (closingIndex == -1)
+			{
+				// closing packet not found... wait for next incoming packet
+				this.Log("closing bracket not found: \n" + bufferIn);
+				return "";
+			}
+			
+			
+			string packetString = bufferIn.Substring(firstIndex, closingIndex - firstIndex + appname.Length);
+			//this.Log("bufferIn: \n" + bufferIn);
+			//this.Log("extracted packet: \n" + packetString);
+			bufferIn = bufferIn.Substring(closingIndex + appname.Length);
+			//this.Log("bufferOut: \n" + bufferIn);
+			
+			return packetString;
+		}
+		
+		private void ProcessIncomingBuffer(ref string bufferIn)
+		{
+			try
+			{
+				string packetIn = ExtractPacket(ref bufferIn);
+				if (String.IsNullOrEmpty(packetIn)) return;
+
+				using (StringReader sr = new StringReader(packetIn))
+				{
+					using (XML.Reader reader = new XML.Reader(sr))
+					{
+						while (reader.Read())
+						{
+							if (reader.NodeType == XmlNodeType.Element)
+							{
+								switch (reader.Name)
+								{
+									case "SocketMessage":
+										this.packetsIn++;
+										SocketMessage message = new SocketMessage(reader);
+										
+										if (!this.ProcessMessage(message) && this.IsHost)
+										{
+											this.parent.ProcessMessage(this, message);
+										}
+										
+										break;
+									default:
+										break;
+								}
+							}
+						}
+					}
+				}
+			}
+			catch (System.Xml.XmlException ex)
+			{
+				this.Log("bufferIn: /n" + bufferIn);
+				this.Log(ex);
+			}
+			catch (Exception ex)
+			{
+				this.Log("bufferIn: /n" + bufferIn);
+				this.Log(ex);
+			}
 		}
 		
 		#endregion
