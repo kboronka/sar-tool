@@ -547,13 +547,13 @@ namespace sar.Socket
 			Thread.Sleep(0);
 			this.Log(this.ID.ToString() +  ": " + "Incoming Loop Started");
 			
-			string incomingBuffer = "";			
+			string incomingBuffer = "";
 			while (!incomingLoopShutdown)
 			{
 				try
 				{
 					incomingBuffer += this.ReadIncomingPacket();
-						this.ProcessIncomingBuffer(ref incomingBuffer);
+					this.ProcessIncomingBuffer(ref incomingBuffer);
 					Thread.Sleep(1);
 				}
 				catch (Exception ex)
@@ -649,10 +649,10 @@ namespace sar.Socket
 				this.Log("appname missing: \n" + bufferIn);
 				return "";
 			}
-			else if (closingIndex > secondIndex)
+			else if (secondIndex != -1 && closingIndex > secondIndex)
 			{
 				// second packet found, closing packet not found
-				this.Log("secondIndex > closingIndex");
+				this.Log("closingIndex > secondIndex");
 				this.Log("firstIndex = " + firstIndex.ToString());
 				this.Log("secondIndex = " + secondIndex.ToString());
 				this.Log("closingIndex = " + closingIndex.ToString());
@@ -682,48 +682,35 @@ namespace sar.Socket
 		
 		private void ProcessIncomingBuffer(ref string bufferIn)
 		{
-			try
-			{
-				string packetIn = ExtractPacket(ref bufferIn);
-				if (String.IsNullOrEmpty(packetIn)) return;
+			string packetIn = ExtractPacket(ref bufferIn);
+			if (String.IsNullOrEmpty(packetIn)) return;
 
-				using (StringReader sr = new StringReader(packetIn))
+			using (StringReader sr = new StringReader(packetIn))
+			{
+				using (XML.Reader reader = new XML.Reader(sr))
 				{
-					using (XML.Reader reader = new XML.Reader(sr))
+					while (reader.Read())
 					{
-						while (reader.Read())
+						if (reader.NodeType == XmlNodeType.Element)
 						{
-							if (reader.NodeType == XmlNodeType.Element)
+							switch (reader.Name)
 							{
-								switch (reader.Name)
-								{
-									case "SocketMessage":
-										this.packetsIn++;
-										SocketMessage message = new SocketMessage(reader);
-										
-										if (!this.ProcessMessage(message) && this.IsHost)
-										{
-											this.parent.ProcessMessage(this, message);
-										}
-										
-										break;
-									default:
-										break;
-								}
+								case "SocketMessage":
+									this.packetsIn++;
+									SocketMessage message = new SocketMessage(reader);
+									
+									if (!this.ProcessMessage(message) && this.IsHost)
+									{
+										this.parent.ProcessMessage(this, message);
+									}
+									
+									break;
+								default:
+									break;
 							}
 						}
 					}
 				}
-			}
-			catch (System.Xml.XmlException ex)
-			{
-				this.Log("bufferIn: /n" + bufferIn);
-				this.Log(ex);
-			}
-			catch (Exception ex)
-			{
-				this.Log("bufferIn: /n" + bufferIn);
-				this.Log(ex);
 			}
 		}
 		
