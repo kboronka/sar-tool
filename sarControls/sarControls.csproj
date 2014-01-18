@@ -74,6 +74,7 @@
     <Compile Include="SocketServerControl.Designer.cs">
       <DependentUpon>SocketServerControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="WindowsSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\sar\sar.csproj">
