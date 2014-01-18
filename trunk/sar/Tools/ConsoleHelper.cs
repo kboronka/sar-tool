@@ -309,19 +309,19 @@ namespace sar.Tools
 		}
 		
 		
-		public static void Start(string filename)
+		public static Process Start(string filename)
 		{
-			Start(filename, "");
+			return Start(filename, "");
 		}
 		
-		public static void Start(string filename, string arguments)
+		public static Process Start(string filename, string arguments)
 		{
 			arguments = StringHelper.TrimWhiteSpace(arguments);
 
 			ProcessStartInfo info = new ProcessStartInfo();
 			info.FileName = filename;
 			info.Arguments = arguments;
-			Process.Start(info);
+			return Process.Start(info);
 		}
 
 		public static void StartAs(string filename, string arguments, string username, string password)
