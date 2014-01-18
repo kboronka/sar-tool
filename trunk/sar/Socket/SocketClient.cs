@@ -619,7 +619,7 @@ namespace sar.Socket
 			
 			Match match = Regex.Match(bufferIn, @"\<[\?]xml version=[^\s]*[\s]encoding=[^\?]*[\?]\>\r*\n\<([^\s]*)\sversion=.*\>");
 			string appname = "";
-			if (match.Success && match.Groups.Count == 2)
+			if (match.Success && match.Groups.Count >= 2)
 			{
 				appname = "</" + match.Groups[1].Value + ">";
 				closingIndex = bufferIn.IndexOf(appname, firstIndex);
@@ -651,7 +651,8 @@ namespace sar.Socket
 			else if (secondIndex > closingIndex)
 			{
 				// second packet found, closing packet not found
-				this.Log("closing element not found");
+				this.Log("secondIndex > closingIndex");
+				this.Log("appname = " + appname);
 				this.Log("buffer flushing: \n" + bufferIn);
 				bufferIn = bufferIn.Substring(secondIndex);
 				this.Log("buffer flushed: \n" + bufferIn);
@@ -660,6 +661,8 @@ namespace sar.Socket
 			else if (closingIndex == -1)
 			{
 				// closing packet not found... wait for next incoming packet
+				this.Log("closingIndex == -1");
+				this.Log("appname = " + appname);
 				this.Log("closing element not found: \n" + bufferIn);
 				return "";
 			}
