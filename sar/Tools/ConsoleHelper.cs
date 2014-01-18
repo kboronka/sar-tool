@@ -324,12 +324,12 @@ namespace sar.Tools
 			return Process.Start(info);
 		}
 
-		public static void StartAs(string filename, string arguments, string username, string password)
+		public static Process StartAs(string filename, string arguments, string username, string password)
 		{
-			StartAs(filename, arguments, System.Environment.MachineName, username, password);
+			return StartAs(filename, arguments, System.Environment.MachineName, username, password);
 		}
 		
-		public static void StartAs(string filename, string arguments, string domain, string username, string password)
+		public static Process StartAs(string filename, string arguments, string domain, string username, string password)
 		{
 			//ServiceHelper.ImpersonateUser(username, domain, password);
 			arguments = StringHelper.TrimWhiteSpace(arguments);
@@ -343,6 +343,7 @@ namespace sar.Tools
 			shell.StartInfo.RedirectStandardOutput = true;
 			shell.StartInfo.RedirectStandardError = true;
 			shell.Start();
+			return shell;
 			//Process.Start(filename, arguments, username, StringHelper.MakeSecureString(password), domain);
 		}
 		
