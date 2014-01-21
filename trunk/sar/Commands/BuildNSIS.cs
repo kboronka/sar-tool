@@ -60,7 +60,7 @@ namespace sar.Commands
 			
 			string output;
 			int exitcode = ConsoleHelper.Run(exePath, arguments, out output);
-			IO.Encode(filepath, originalEncoding);
+			//IO.Encode(filepath, originalEncoding);
 			
 			if (exitcode != 0)
 			{
