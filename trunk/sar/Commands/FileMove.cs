@@ -1,4 +1,4 @@
-/* Copyright (C) 2014 Kevin Boronka
+﻿/* Copyright (C) 2014 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -22,11 +22,11 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class FileBackup : Command
+	public class FileMove : Command
 	{
-		public FileBackup(Base.CommandHub parent) : base(parent, "File - Backup",
-		                           new List<string> { "file.backup", "f.bk", "file.mirror", "f.m", "file.copy", "f.c" },
-		                           @"-file.backup [filepath/pattern] [destination]",
+		public FileMove(Base.CommandHub parent) : base(parent, "File - Move",
+		                           new List<string> { "file.move", "f.move" },
+		                           @"-file.move [filepath/pattern] [destination]",
 		                           new List<string> { "-file.backup backup.zip \"c:\\backups\\\"" })
 		{
 		}
@@ -70,7 +70,7 @@ namespace sar.Commands
 						string backupRoot = IO.GetRoot(backupFile);
 
 						
-						Progress.Message = "Coping " + fileRelativePath;
+						Progress.Message = "Moving " + fileRelativePath;
 						counter++;
 						
 						try
@@ -78,6 +78,7 @@ namespace sar.Commands
 							if (!Directory.Exists(backupRoot)) Directory.CreateDirectory(backupRoot);
 							if (File.Exists(backupFile)) File.Delete(backupFile);
 							IO.CopyFile(file, backupFile);
+							File.Delete(file);
 						}
 						catch (Exception ex)
 						{
@@ -87,7 +88,7 @@ namespace sar.Commands
 				}
 			}
 			
-			ConsoleHelper.WriteLine(counter.ToString() + " File" + ((counter != 1) ? "s" : "") + " Copied", ConsoleColor.DarkYellow);
+			ConsoleHelper.WriteLine(counter.ToString() + " File" + ((counter != 1) ? "s" : "") + " Moved", ConsoleColor.DarkYellow);
 			return ConsoleHelper.EXIT_OK;
 		}
 	}
