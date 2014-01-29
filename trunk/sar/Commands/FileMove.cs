@@ -25,9 +25,9 @@ namespace sar.Commands
 	public class FileMove : Command
 	{
 		public FileMove(Base.CommandHub parent) : base(parent, "File - Move",
-		                           new List<string> { "file.move", "f.move" },
-		                           @"-file.move [filepath/pattern] [destination]",
-		                           new List<string> { "-file.backup backup.zip \"c:\\backups\\\"" })
+		                                               new List<string> { "file.move", "f.move" },
+		                                               @"-file.move [filepath/pattern] [destination]",
+		                                               new List<string> { "-file.backup backup.zip \"c:\\backups\\\"" })
 		{
 		}
 		
@@ -47,48 +47,56 @@ namespace sar.Commands
 			
 			ConsoleHelper.DebugWriteLine("pattern: " + filePattern);
 			ConsoleHelper.DebugWriteLine("root: " + root);
-			ConsoleHelper.WriteException(throw new FileNotFoundException("unable to find any files that match pattern: \"" + filePattern + "\" in root: \"" + root + "\""));
 			
-			Progress.Message = "Locating Archive Folder";
-			string archivepath = args[2];
-			string archiveroot = Directory.GetCurrentDirectory();
-			ConsoleHelper.DebugWriteLine("args[2]: " + args[2]);
-			archivepath = IO.CheckPath(archiveroot, archivepath);
-			ConsoleHelper.DebugWriteLine("archivepath: " + archivepath);
-			ConsoleHelper.DebugWriteLine("archiveroot: " + archiveroot);
-			if (!Directory.Exists(archiveroot))	Directory.CreateDirectory(archiveroot);
-
-			int counter = 0;
-			foreach (string originalFile in files)
+			if (files.Count == 0)
 			{
-				if (!originalFile.Contains(archivepath))
-				{
-					if (this.commandHub.IncludeSVN || !IO.IsSVN(originalFile))
-					{
-						string fileRelativePath = StringHelper.TrimStart(originalFile, root.Length);
-						string backupFile = archivepath + originalFile.Substring(root.Length);
-						string backupRoot = IO.GetRoot(backupFile);
+				ConsoleHelper.WriteException(new FileNotFoundException("unable to find any files that match pattern: \"" + filePattern + "\" in root: \"" + root + "\""));
+				return ConsoleHelper.EXIT_ERROR;
+			}
+			else
+			{
+				Progress.Message = "Locating Archive Folder";
+				string archivepath = args[2];
+				string archiveroot = Directory.GetCurrentDirectory();
+				ConsoleHelper.DebugWriteLine("args[2]: " + args[2]);
+				archivepath = IO.CheckPath(archiveroot, archivepath);
+				ConsoleHelper.DebugWriteLine("archivepath: " + archivepath);
+				ConsoleHelper.DebugWriteLine("archiveroot: " + archiveroot);
+				if (!Directory.Exists(archiveroot))	Directory.CreateDirectory(archiveroot);
 
-						
-						Progress.Message = "Moving " + fileRelativePath;
-						counter++;
-						
-						try
+				int counter = 0;
+				foreach (string originalFile in files)
+				{
+					if (!originalFile.Contains(archivepath))
+					{
+						if (this.commandHub.IncludeSVN || !IO.IsSVN(originalFile))
 						{
-							if (!Directory.Exists(backupRoot)) Directory.CreateDirectory(backupRoot);
-							if (File.Exists(backupFile)) File.Delete(backupFile);
-							IO.CopyFile(originalFile, backupFile);
-							File.Delete(originalFile);
-						}
-						catch (Exception ex)
-						{
-							ConsoleHelper.WriteLine(ex.Message, ConsoleColor.Red);
+							string fileRelativePath = StringHelper.TrimStart(originalFile, root.Length);
+							string backupFile = archivepath + originalFile.Substring(root.Length);
+							string backupRoot = IO.GetRoot(backupFile);
+
+							
+							Progress.Message = "Moving " + fileRelativePath;
+							counter++;
+							
+							try
+							{
+								if (!Directory.Exists(backupRoot)) Directory.CreateDirectory(backupRoot);
+								if (File.Exists(backupFile)) File.Delete(backupFile);
+								IO.CopyFile(originalFile, backupFile);
+								File.Delete(originalFile);
+							}
+							catch (Exception ex)
+							{
+								ConsoleHelper.WriteLine(ex.Message, ConsoleColor.Red);
+							}
 						}
 					}
 				}
+				
+				ConsoleHelper.WriteLine(counter.ToString() + " File" + ((counter != 1) ? "s" : "") + " Moved", ConsoleColor.DarkYellow);
 			}
 			
-			ConsoleHelper.WriteLine(counter.ToString() + " File" + ((counter != 1) ? "s" : "") + " Moved", ConsoleColor.DarkYellow);
 			return ConsoleHelper.EXIT_OK;
 		}
 	}
