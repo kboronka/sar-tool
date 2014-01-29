@@ -31,6 +31,7 @@ namespace sar.Base
 		public bool IncludeSVN = false;
 		public bool IncludeSubFolders = true;
 		public bool commandlineActive;
+		public bool Loop = false;
 		
 		internal Dictionary<string, Command> commands = new Dictionary<string, Command>();
 		
@@ -77,7 +78,19 @@ namespace sar.Base
 						if (command != "exit")
 						{
 							Progress.UpdateTimer.Enabled = true;
-							exitCode = this.Execute(command, args);
+
+							do
+							{
+								exitCode = this.Execute(command, args);
+								
+								if (this.Loop)
+								{
+									Progress.Message ="Looping";
+									Thread.Sleep(2000);
+								}
+								
+							} while (this.Loop);
+							
 							Progress.UpdateTimer.Enabled = false;
 							args = new string[0];
 						}
@@ -149,11 +162,23 @@ namespace sar.Base
 				throw new ArgumentException("Unknown command");
 			}
 			
-			
+			int exitCode = ConsoleHelper.EXIT_ERROR;
 			Progress.UpdateTimer.Enabled = true;
-			int exitCode = this.commands[command].Execute(args);
-			//int exitCode =  (int)this.commands[command].function.DynamicInvoke(new object[] { args });
+			
+			do
+			{
+				exitCode = this.commands[command].Execute(args);
+				
+				if (this.Loop)
+				{
+					Progress.Message ="Loop Delay";
+					Thread.Sleep(2000);
+				}
+				
+			} while (this.Loop);
+			
 			Progress.UpdateTimer.Enabled = false;
+			
 			return exitCode;
 		}
 		
@@ -188,6 +213,10 @@ namespace sar.Base
 						case "/nosubfolders":
 						case "/nosubs":
 							this.IncludeSubFolders = false;
+							break;
+						case "/l":
+						case "/loop":
+							this.Loop = true;
 							break;
 						default:
 							result.Add(arg);
