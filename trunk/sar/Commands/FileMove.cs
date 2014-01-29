@@ -47,7 +47,7 @@ namespace sar.Commands
 			
 			ConsoleHelper.DebugWriteLine("pattern: " + filePattern);
 			ConsoleHelper.DebugWriteLine("root: " + root);
-			if (files.Count == 0) throw new FileNotFoundException("unable to find any files that match pattern: \"" + filePattern + "\" in root: \"" + root + "\"");
+			ConsoleHelper.WriteException(throw new FileNotFoundException("unable to find any files that match pattern: \"" + filePattern + "\" in root: \"" + root + "\""));
 			
 			Progress.Message = "Locating Archive Folder";
 			string archivepath = args[2];
@@ -59,14 +59,14 @@ namespace sar.Commands
 			if (!Directory.Exists(archiveroot))	Directory.CreateDirectory(archiveroot);
 
 			int counter = 0;
-			foreach (string file in files)
+			foreach (string originalFile in files)
 			{
-				if (!file.Contains(archivepath))
+				if (!originalFile.Contains(archivepath))
 				{
-					if (this.commandHub.IncludeSVN || !IO.IsSVN(file))
+					if (this.commandHub.IncludeSVN || !IO.IsSVN(originalFile))
 					{
-						string fileRelativePath = StringHelper.TrimStart(file, root.Length);
-						string backupFile = archivepath + file.Substring(root.Length);
+						string fileRelativePath = StringHelper.TrimStart(originalFile, root.Length);
+						string backupFile = archivepath + originalFile.Substring(root.Length);
 						string backupRoot = IO.GetRoot(backupFile);
 
 						
@@ -77,8 +77,8 @@ namespace sar.Commands
 						{
 							if (!Directory.Exists(backupRoot)) Directory.CreateDirectory(backupRoot);
 							if (File.Exists(backupFile)) File.Delete(backupFile);
-							IO.CopyFile(file, backupFile);
-							File.Delete(file);
+							IO.CopyFile(originalFile, backupFile);
+							File.Delete(originalFile);
 						}
 						catch (Exception ex)
 						{
