@@ -81,7 +81,15 @@ namespace sar.Base
 
 							do
 							{
-								exitCode = this.Execute(command, args);
+								try
+								{
+									exitCode = this.Execute(command, args);
+								}
+								catch (Exception ex)
+								{
+									if (!this.Loop) throw ex;
+									ConsoleHelper.WriteException(ex);
+								}
 								
 								if (this.Loop)
 								{
@@ -101,17 +109,9 @@ namespace sar.Base
 					}
 					catch (Exception ex)
 					{
-						try
-						{
-							args = new string[0];
-							Progress.UpdateTimer.Enabled = false;
-							ConsoleHelper.WriteException(ex);
-						}
-						catch
-						{
-							
-						}
-						
+						args = new string[0];
+						Progress.UpdateTimer.Enabled = false;
+						ConsoleHelper.WriteException(ex);
 						exitCode = ConsoleHelper.EXIT_ERROR;
 					}
 				} while (this.commandlineActive);
