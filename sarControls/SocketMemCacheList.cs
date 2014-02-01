@@ -202,6 +202,10 @@ namespace sar.Controls
 				this.Columns[3].Width = -2;
 				this.EndUpdate();
 			}
+			catch (System.ObjectDisposedException)
+			{
+				
+			}
 			catch (Exception ex)
 			{
 				if (this.errorLog != null) this.errorLog.Write(ex);
@@ -226,6 +230,10 @@ namespace sar.Controls
 						this.Enabled = connected;
 					}
 				}
+				catch (System.ObjectDisposedException)
+				{
+					
+				}
 				catch (Exception ex)
 				{
 					if (this.errorLog != null) this.errorLog.Write(ex);
@@ -241,6 +249,10 @@ namespace sar.Controls
 				{
 					if (this.memCache == null) return;
 					this.updatesAvailable = true;
+				}
+				catch (System.ObjectDisposedException)
+				{
+					
 				}
 				catch (Exception ex)
 				{
@@ -260,6 +272,10 @@ namespace sar.Controls
 					this.UpdateList();
 					this.updatesAvailable = false;
 				}
+			}
+			catch (System.ObjectDisposedException)
+			{
+				
 			}
 			catch (Exception ex)
 			{
@@ -316,6 +332,10 @@ namespace sar.Controls
 				this.Columns[3].Width = -2;
 				this.EndUpdate();
 				ListViewHelper.DisableDoubleBuffer(this);
+			}
+			catch (System.ObjectDisposedException)
+			{
+				
 			}
 			catch (Exception ex)
 			{
