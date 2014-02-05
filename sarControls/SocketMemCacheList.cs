@@ -287,9 +287,6 @@ namespace sar.Controls
 		{
 			try
 			{
-				Stopwatch timer = new Stopwatch();
-				timer.Start();
-				
 				if (InvokeRequired)
 				{
 					this.Invoke((MethodInvoker) delegate { this.UpdateListInner(); });
@@ -298,9 +295,6 @@ namespace sar.Controls
 				{
 					this.UpdateListInner();
 				}
-
-				timer.Stop();
-				if (this.debugLog != null) this.debugLog.WriteLine(this.Name + " - UpdateList() time: " + timer.ElapsedMilliseconds.ToString());
 			}
 			catch
 			{
