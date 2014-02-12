@@ -46,15 +46,14 @@ namespace sar.Socket
 		
 		public void RegisterCallback(string member, SocketValue.DataChangedHandler handler)
 		{
+			this.Log("RegisterCallback -- " + member);
+			
 			lock(this.memCache)
 			{
-				if (!this.memCache.ContainsKey(member))
+				if (MemberExists(member))
 				{
-					MemberExists(member);
-					//this.SendData("get", member, "");
+					this.memCache[member].DataChanged += handler;
 				}
-				
-				this.memCache[member].DataChanged += handler;
 			}
 		}
 		
