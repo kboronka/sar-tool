@@ -33,8 +33,8 @@ namespace sar.Tools
 			
 			return username;
 		}
-		
-		public static string GetDistinguishedName(string username)
+				
+		public static string GetLDAP(string username)
 		{
 			DirectorySearcher searcher = new DirectorySearcher();
 			searcher.SearchScope = SearchScope.Subtree;
@@ -46,8 +46,7 @@ namespace sar.Tools
 			SearchResult searchResult = searcher.FindOne();
 
 			if (searchResult == null) throw new Exception ("no result found for " + username);
-			
-			return searchResult.Properties["distinguishedName"][0].ToString();
-		}
+			return searchResult.Path;
+		}		
 	}
 }
