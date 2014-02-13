@@ -61,7 +61,7 @@ namespace sar.Socket
 		{
 			if (!this.memCache.ContainsKey(member))
 			{
-				this.memCache[member] = new SocketValue(member);
+				this.memCache[member] = new SocketValue(member, this.errorLogger);
 				this.memCache[member].DataChanged += new SocketValue.DataChangedHandler(this.OnMemCacheChanged);
 			}
 			
