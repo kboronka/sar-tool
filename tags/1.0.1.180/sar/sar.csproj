@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{74862D71-2342-4EAE-8C29-D25F2A195677}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>sar</RootNamespace>
+    <AssemblyName>sar</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SourceAnalysisOverrideSettingsFile>C:\Users\Boronka\AppData\Roaming\ICSharpCode/SharpDevelop3.0\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <NoStdLib>False</NoStdLib>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <StartupObject>sar.Program</StartupObject>
+    <ApplicationIcon>art\sar.ico</ApplicationIcon>
+    <TargetFrameworkProfile />
+    <NoWin32Manifest>False</NoWin32Manifest>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <SignAssembly>False</SignAssembly>
+    <DelaySign>False</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <BaseAddress>4194304</BaseAddress>
+    <FileAlignment>4096</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <Optimize>False</Optimize>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+    <StartAction>Project</StartAction>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>PdbOnly</DebugType>
+    <Optimize>True</Optimize>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <DefineConstants>TRACE</DefineConstants>
+    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Base\BaseCommand.cs" />
+    <Compile Include="Base\CommandHub.cs" />
+    <Compile Include="Base\Configuration.cs" />
+    <Compile Include="Base\Program.cs" />
+    <Compile Include="CommandHub.cs" />
+    <Compile Include="Commands\AppShutdownWait.cs" />
+    <Compile Include="Commands\CodeClean.cs" />
+    <Compile Include="Commands\CodeReIndent.cs" />
+    <Compile Include="Commands\FileBackup.cs" />
+    <Compile Include="Commands\BuildCHM.cs" />
+    <Compile Include="Commands\BuildSLN.cs" />
+    <Compile Include="Commands\BuildNSIS.cs" />
+    <Compile Include="Commands\Delay.cs" />
+    <Compile Include="Commands\DirectoryTimestamp.cs" />
+    <Compile Include="Commands\FileBsdHeader.cs" />
+    <Compile Include="Commands\FileDestory.cs" />
+    <Compile Include="Commands\FileEncode.cs" />
+    <Compile Include="Commands\FileFind.cs" />
+    <Compile Include="Commands\FileLock.cs" />
+    <Compile Include="Commands\FileMove.cs" />
+    <Compile Include="Commands\FileRemoveDirectory.cs" />
+    <Compile Include="Commands\Help.cs" />
+    <Compile Include="Commands\NetListAddaptors.cs" />
+    <Compile Include="Commands\AssemblyInfoVersion.cs" />
+    <Compile Include="Commands\SkyUpdaterAdd.cs" />
+    <Compile Include="Commands\SkyUpdaterGenerate.cs" />
+    <Compile Include="Commands\SkyUpdaterUpdate.cs" />
+    <Compile Include="Commands\WindowsAutoLogin.cs" />
+    <Compile Include="Commands\WindowsLogin.cs" />
+    <Compile Include="Commands\Kill.cs" />
+    <Compile Include="Commands\LabviewVersion.cs" />
+    <Compile Include="Commands\FileSearchAndReplace.cs" />
+    <Compile Include="Commands\FileTimestamp.cs" />
+    <Compile Include="Commands\VboxManage.cs" />
+    <Compile Include="Commands\WindowsMapDrive.cs" />
+    <Compile Include="Commands\WindowsRearm.cs" />
+    <Compile Include="Commands\WindowsRestart.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Socket\SocketClient.cs" />
+    <Compile Include="Socket\SocketMemCache.cs" />
+    <Compile Include="Socket\SocketMessage.cs" />
+    <Compile Include="Socket\SocketServer.cs" />
+    <Compile Include="Socket\SocketValue.cs" />
+    <Compile Include="Tools\ActiveDirectory.cs" />
+    <Compile Include="Tools\ApplicationInfo.cs" />
+    <Compile Include="Tools\AssemblyInfo.cs" />
+    <Compile Include="Tools\ConsoleHelper.cs" />
+    <Compile Include="Tools\ErrorLogger.cs" />
+    <Compile Include="Tools\ExceptionHandler.cs" />
+    <Compile Include="Tools\ExceptionHandler.Designer.cs">
+      <DependentUpon>ExceptionHandler.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\FileLogger.cs" />
+    <Compile Include="Tools\IO.cs" />
+    <Compile Include="Tools\Logger.cs" />
+    <Compile Include="Tools\Logger.Designer.cs">
+      <DependentUpon>Logger.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\NetHelper.cs" />
+    <Compile Include="Tools\Preformance.cs" />
+    <Compile Include="Tools\Progress.cs" />
+    <Compile Include="Tools\ServiceHelper.cs" />
+    <Compile Include="Tools\Shell.cs" />
+    <Compile Include="Tools\SkyUpdater.cs" />
+    <Compile Include="Tools\StringHelper.cs" />
+    <Compile Include="Tools\Subversion.cs" />
+    <Compile Include="Tools\WebHelper.cs" />
+    <Compile Include="Tools\XmlHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Commands" />
+    <Folder Include="Base" />
+    <Folder Include="Socket" />
+    <Folder Include="Tools" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tools\ExceptionHandler.resx">
+      <DependentUpon>ExceptionHandler.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\Logger.resx">
+      <DependentUpon>Logger.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+</Project>
