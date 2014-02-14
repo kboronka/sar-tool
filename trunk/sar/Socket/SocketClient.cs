@@ -601,6 +601,10 @@ namespace sar.Socket
 				// The underlying Socket is closed.
 				//this.Disconnect();
 			}
+			catch (SocketException ex)
+			{
+				
+			}
 			catch (Exception ex)
 			{
 				this.Log(ex);
