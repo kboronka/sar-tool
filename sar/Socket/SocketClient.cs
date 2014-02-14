@@ -668,9 +668,11 @@ namespace sar.Socket
 			else if (closingIndex == -1)
 			{
 				// closing packet not found... wait for next incoming packet
+				/*
 				this.Log("closingIndex == -1");
 				this.Log("appname = " + appname);
 				this.Log("closing element not found: \n" + bufferIn);
+				*/
 				return "";
 			}
 			
