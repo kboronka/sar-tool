@@ -77,7 +77,7 @@ namespace sar.Commands
 
 							// one space between methods
 							//changes += IO.SearchAndReplaceInFile(file, @"(End Sub|End Function)\r*\n([^\n\r])(\S*)\s(?:(?!Class)\w)", "$1\r\n\r\n$2$3");
-							changes += IO.SearchAndReplaceInFile(file, @"(End Sub|End Function)\r*\n([\t*])(\S*\s)((?!Class))", "$1\r\n\r\n$2$3");
+							changes += IO.SearchAndReplaceInFile(file, @"(End Sub|End Function)\r*\n(\t*)(\S\w*\s)((?!Class))", "$1\r\n\r\n$2$3");
 							changes += IO.SearchAndReplaceInFile(file, @"(End Sub|End Function)\r*\n\r*\n[\r\n]+(\s*)(\S)", "$1\r\n\r\n$2$3");
 
 							// one space between #Region start and first line
