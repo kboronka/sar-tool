@@ -86,6 +86,7 @@
     <Compile Include="Commands\Delay.cs" />
     <Compile Include="Commands\DirectoryTimestamp.cs" />
     <Compile Include="Commands\FileBsdHeader.cs" />
+    <Compile Include="Commands\FileDelete.cs" />
     <Compile Include="Commands\FileDestory.cs" />
     <Compile Include="Commands\FileEncode.cs" />
     <Compile Include="Commands\FileFind.cs" />

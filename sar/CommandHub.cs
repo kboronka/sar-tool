@@ -44,6 +44,7 @@ namespace sar.Tools
 			                          	new FileEncode(this),
 			                          	new FileFind(this),
 			                          	new FileDestory(this),
+			                          	new FileDelete(this),
 			                          	new FileRemoveDirectory(this),
 			                          	new FileBsdHeader(this),
 			                          	new FileMove(this),
