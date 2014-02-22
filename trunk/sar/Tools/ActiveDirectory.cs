@@ -61,5 +61,35 @@ namespace sar.Tools
 				return String.Empty;
 			}
 		}
+		
+		public static List<UserPrincipal> GetGroupMembers(string groupName)
+		{
+			List<UserPrincipal> result = new List<UserPrincipal>();
+			
+			PrincipalContext domain = new PrincipalContext(ContextType.Domain);
+			GroupPrincipal group = GroupPrincipal.FindByIdentity(domain, groupName);
+
+			if (group != null)
+			{
+				foreach (UserPrincipal p in group.GetMembers())
+				{
+					if (p.StructuralObjectClass == "user")
+					{
+						result.Add(p);
+					}
+				}
+			}
+			
+			return result;
+		}
+
+		public static string GetDisplayName(string username)
+		{
+			List<string> result = new List<string>();
+			
+			PrincipalContext domain = new PrincipalContext(ContextType.Domain);
+			UserPrincipal user = UserPrincipal.FindByIdentity(domain, username);
+			return user.Name;
+		}		
 	}
 }
