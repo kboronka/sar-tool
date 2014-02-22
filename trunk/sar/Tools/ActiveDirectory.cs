@@ -33,7 +33,7 @@ namespace sar.Tools
 			
 			return username;
 		}
-				
+		
 		public static string GetLDAP(string username)
 		{
 			DirectorySearcher searcher = new DirectorySearcher();
@@ -47,6 +47,19 @@ namespace sar.Tools
 
 			if (searchResult == null) throw new Exception ("no result found for " + username);
 			return searchResult.Path;
-		}		
+		}
+
+		public static string GetProperty(Principal principal, String property)
+		{
+			DirectoryEntry directoryEntry = principal.GetUnderlyingObject() as DirectoryEntry;
+			if (directoryEntry.Properties.Contains(property))
+			{
+				return directoryEntry.Properties[property].Value.ToString();
+			}
+			else
+			{
+				return String.Empty;
+			}
+		}
 	}
 }
