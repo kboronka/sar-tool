@@ -71,10 +71,15 @@ namespace sar.Tools
 				
 				this.writer = new StreamWriter(path, true);
 				
-				this.fileFlush = new Thread(FlushLoop);
+				this.fileFlush = new Thread(this.FlushLoop);
 				this.fileFlush.IsBackground = true;
 				this.fileFlush.Priority = ThreadPriority.Lowest;
 				this.fileFlush.Start();
+				
+				this.deleteOld = new Thread(this.DeleteLoop);
+				this.deleteOld.IsBackground = true;
+				this.deleteOld.Priority = ThreadPriority.Lowest;
+				this.deleteOld.Start();					
 			}
 			catch
 			{
@@ -90,6 +95,7 @@ namespace sar.Tools
 				this.writer.Flush();
 				this.writer.Close();
 				flushLoopShutdown = true;
+				deleteLoopShutdown = true;
 			}
 			catch
 			{
@@ -160,6 +166,54 @@ namespace sar.Tools
 			lock (this.writer)
 			{
 				this.writer.Flush();
+			}
+		}
+		
+		#endregion
+		
+		#region delete old
+		
+		private Thread deleteOld;
+		private bool deleteLoopShutdown;
+		
+		private void DeleteLoop()
+		{
+			Thread.Sleep(10000);
+			
+			while (!deleteLoopShutdown)
+			{
+				try
+				{
+					this.DeleteOldFiles();
+					Thread.Sleep(50000);
+				}
+				catch
+				{
+					Thread.Sleep(5000);
+				}
+			}
+		}
+
+		internal void DeleteOldFiles()
+		{
+			string filePattern = "*." + this.filename;
+			string root = this.root;
+			IO.CheckRootAndPattern(ref root, ref filePattern);
+			List<string> files = IO.GetAllFiles(root, filePattern);
+
+			foreach (string file in files)
+			{
+				try
+				{
+					if (File.GetLastWriteTime(file) < DateTime.Now.AddDays(-3))
+					{
+						File.Delete(file);
+					}
+				}
+				catch
+				{
+					
+				}
 			}
 		}
 		
