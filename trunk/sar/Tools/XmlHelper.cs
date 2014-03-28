@@ -34,6 +34,8 @@ namespace sar.Tools
 		public const string TIME = "HH:mm:ss";
 		public const string TIME_LONG = "HH:mm:ss.fff";
 		
+		public static IFormatProvider NumberFormat = CultureInfo.InvariantCulture.NumberFormat;		
+
 		public class Reader : IDisposable
 		{
 			private XmlReader reader;
