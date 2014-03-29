@@ -282,6 +282,28 @@ namespace sar.Tools
 			return secure;
 		}
 		
+		public static byte[] CombineByteArrays( params byte[][] arrays )
+		{
+			int sum = 0;
+			int offset = 0;
+			
+			foreach (byte[] array in arrays)
+			{
+				sum += array.Length;
+			}
+			
+			byte[] result = new byte[sum];
+
+			
+			foreach ( byte[] array in arrays )
+			{
+				System.Buffer.BlockCopy(array, 0, result, offset, array.Length);
+				offset += array.Length;
+			}
+			
+			return result;
+		}
+		
 		#region environment variable helpers
 		
 		
