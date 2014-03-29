@@ -18,6 +18,7 @@ using System.Windows.Forms;
 
 using sar.Base;
 using sar.Tools;
+using sar.HttpServer;
 
 namespace sar.Testing
 {
@@ -31,6 +32,7 @@ namespace sar.Testing
 			Program.LogInfo();
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
+			HttpServer.HttpServer server = new HttpServer.HttpServer(83);
 			Application.Run(new Menu());
 			Program.Log("throwing error");
 			throw new ApplicationException("unhandled exception");

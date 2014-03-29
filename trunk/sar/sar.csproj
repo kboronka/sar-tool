@@ -109,6 +109,8 @@
     <Compile Include="Commands\WindowsMapDrive.cs" />
     <Compile Include="Commands\WindowsRearm.cs" />
     <Compile Include="Commands\WindowsRestart.cs" />
+    <Compile Include="HttpServer\HttpBase.cs" />
+    <Compile Include="HttpServer\HttpRequest.cs" />
     <Compile Include="HttpServer\HttpServer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
