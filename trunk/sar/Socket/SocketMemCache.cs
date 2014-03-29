@@ -36,6 +36,7 @@ namespace sar.Socket
 		public abstract void Stop();
 		
 		#region memcache
+
 		public abstract long ID
 		{
 			get;
