@@ -14,16 +14,111 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
 
 namespace sar.HttpServer
 {
-	/// <summary>
-	/// Description of HttpServer.
-	/// </summary>
-	public class HttpServer
+	public class HttpServer : HttpBase
 	{
-		public HttpServer()
+		private TcpListener listener;
+		private Encoding encoding;
+		protected int port;
+		
+		#region constructor
+
+		public HttpServer(int port)
 		{
+			this.port = port;
+			this.listenerLoopThread = new Thread(this.ListenerLoop);
+			this.listenerLoopThread.IsBackground = true;
+			this.listenerLoopThread.Start();
 		}
+		
+		~HttpServer()
+		{
+			this.Stop();
+		}
+		
+		public void Stop()
+		{
+			try
+			{
+				this.listenerLoopShutdown = true;
+				if (this.listenerLoopThread.IsAlive) this.listenerLoopThread.Join();
+			}
+			catch (Exception ex)
+			{
+				this.Log(ex);
+			}
+		}
+		
+		#endregion
+		
+		#region service
+		
+		#region listners
+		
+		private Thread listenerLoopThread;
+		private bool listenerLoopShutdown = false;
+		
+		private void ListenerLoop()
+		{
+			while (!listenerLoopShutdown)
+			{
+				try
+				{
+					if (this.listener == null)
+					{
+						this.listener = new TcpListener(IPAddress.Any, this.port);
+						this.listener.Start();
+					}
+					else
+					{
+						this.ServiceListener();
+					}
+					
+					Thread.Sleep(1);
+				}
+				catch (Exception ex)
+				{
+					this.Log(ex);
+					Thread.Sleep(5000);
+				}
+			}
+			
+			
+			// shutdown listner
+			try
+			{
+				this.listener.Stop();
+			}
+			catch (Exception ex)
+			{
+				this.Log(ex);
+			}
+			
+			this.listener = null;
+		}
+
+		private void ServiceListener()
+		{
+			lock (this.listener)
+			{
+				if (this.listener.Pending())
+				{
+					HttpRequest client = new HttpRequest(this, this.listener.AcceptTcpClient());
+				}
+			}
+		}
+		
+		#endregion
+		
+		#endregion
 	}
 }
