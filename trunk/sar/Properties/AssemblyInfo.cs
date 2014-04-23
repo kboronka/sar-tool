@@ -31,7 +31,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("SAR Toolkit")]
-[assembly: AssemblyCopyright("Copyright (c) 2013 Kevin Boronka")]
+[assembly: AssemblyCopyright("Copyright (c) 2012-2014 Kevin Boronka")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
