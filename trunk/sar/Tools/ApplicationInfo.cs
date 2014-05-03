@@ -17,6 +17,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Security.Principal;
 
 namespace sar.Tools
 {
@@ -79,7 +80,6 @@ namespace sar.Tools
 				return ApplicationInfo.localDataDirectory;
 			}
 		}
-
 
 		private static string currentDirectory;
 		public static string CurrentDirectory
@@ -157,5 +157,29 @@ namespace sar.Tools
 				return isWow64;
 			}
 		}
+
+		private static bool hasAdministrativeRight;
+		private static bool hasAdministrativeRightcompleted;		
+		public static bool HasAdministrativeRight
+		{
+			get
+			{
+				if (hasAdministrativeRightcompleted) return hasAdministrativeRight;
+				
+				try
+				{
+					WindowsPrincipal pricipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
+					hasAdministrativeRight = pricipal.IsInRole(WindowsBuiltInRole.Administrator);
+					hasAdministrativeRightcompleted = true;
+					
+					return hasAdministrativeRight;
+				}
+				catch
+				{
+					return false;
+				}
+			}
+		}
+	
 	}
 }

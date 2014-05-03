@@ -95,7 +95,7 @@ namespace sar.Tools
 				
 				return AssemblyInfo.sarVersion;
 			}
-		}		
+		}
 		
 		public static string Copyright
 		{
@@ -109,6 +109,6 @@ namespace sar.Tools
 				
 				return AssemblyInfo.copyright;
 			}
-		}
+		}		
 	}
 }
