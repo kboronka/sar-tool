@@ -32,6 +32,7 @@ namespace sar.Base
 		public bool IncludeSubFolders = true;
 		public bool commandlineActive;
 		public bool Loop = false;
+		public bool RunAsAdministator = false;
 		
 		internal Dictionary<string, Command> commands = new Dictionary<string, Command>();
 		
@@ -218,6 +219,17 @@ namespace sar.Base
 						case "/loop":
 							this.Loop = true;
 							break;
+						case "/admin":
+							this.RunAsAdministator = true;
+							
+							if (!ApplicationInfo.HasAdministrativeRight)
+							{
+								Shell.RunElevated(ApplicationInfo.ApplicationPath, string.Join(" ", args), ApplicationInfo.CurrentDirectory);
+								Environment.Exit(0);
+								return new string[] {};
+							}
+							
+							break;							
 						default:
 							result.Add(arg);
 							break;

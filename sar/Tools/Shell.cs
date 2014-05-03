@@ -14,6 +14,7 @@
  */
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -48,9 +49,14 @@ namespace sar.Tools
 		public static ShellResults Run(string applicationFilePath, string arguments)
 		{
 			return 	Run(applicationFilePath, arguments, Directory.GetCurrentDirectory());
-		}		
+		}
 		
 		public static ShellResults Run(string applicationFilePath, string arguments, string workingDirectory)
+		{
+			return Run(applicationFilePath, arguments, workingDirectory, ApplicationInfo.HasAdministrativeRight);
+		}
+
+		public static ShellResults Run(string applicationFilePath, string arguments, string workingDirectory, bool elevatedRights)
 		{
 			if (String.IsNullOrEmpty(applicationFilePath))
 			{
@@ -88,6 +94,7 @@ namespace sar.Tools
 			
 			Process shell = new Process();
 			shell.StartInfo.FileName = applicationFilePath;
+			if (elevatedRights) shell.StartInfo.Verb = "runas";
 			shell.StartInfo.Arguments = arguments;
 			shell.StartInfo.UseShellExecute = false;
 			shell.StartInfo.RedirectStandardOutput = true;
@@ -96,7 +103,15 @@ namespace sar.Tools
 			shell.StartInfo.CreateNoWindow = true;
 			shell.StartInfo.WorkingDirectory = workingDirectory;
 			
-			shell.Start();
+			try
+			{
+				shell.Start();
+			}
+			catch (Win32Exception)
+			{
+				//Do nothing. the user canceled the UAC window
+			}
+			
 			results.Output = shell.StandardOutput.ReadToEnd();
 			results.Error = shell.StandardError.ReadToEnd();
 			shell.WaitForExit();
@@ -106,5 +121,22 @@ namespace sar.Tools
 			results.ElapsedMilliseconds = applicationExecutionTime.ElapsedMilliseconds;
 			return results;
 		}
+		
+        public static void RunElevated(string fileName, string arguments, string workingDirectory)
+        {
+            ProcessStartInfo processInfo = new ProcessStartInfo();
+            processInfo.Verb = "runas";
+            processInfo.WorkingDirectory = workingDirectory;
+            processInfo.Arguments = arguments;
+            processInfo.FileName = fileName;
+            try
+            {
+                Process.Start(processInfo);
+            }
+            catch (Win32Exception)
+            {
+                //Do nothing. the user canceled the UAC window
+            }
+        }		
 	}
 }
