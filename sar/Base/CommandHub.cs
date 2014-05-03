@@ -219,9 +219,11 @@ namespace sar.Base
 					switch (arg.ToLower())
 					{
 						case "/q":
+						case "/quite":
 							this.NoWarning = true;
 							break;
 						case "/d":
+						case "/debug":
 							this.Debug = true;
 							break;
 						case "/svn":
