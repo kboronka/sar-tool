@@ -35,7 +35,7 @@ namespace sar.Testing
 			HttpServer.HttpServer server = new HttpServer.HttpServer(83);
 			Application.Run(new Menu());
 			Program.Log("throwing error");
-			throw new ApplicationException("unhandled exception");
+			throw new ApplicationException("testing unhandled exception");
 			// Program.Log("shutting down");
 			// Application.Exit();
 		}
