@@ -224,7 +224,21 @@ namespace sar.Base
 							
 							if (!ApplicationInfo.HasAdministrativeRight)
 							{
-								Shell.RunElevated(ApplicationInfo.ApplicationPath, string.Join(" ", args), ApplicationInfo.CurrentDirectory);
+								List<string> newArgs = new List<string>();
+								
+								foreach (string oldArg in args)
+								{
+									if (oldArg.Contains(" "))
+									{
+										newArgs.Add('"' + oldArg + '"');
+									}
+									else
+									{
+										newArgs.Add(oldArg);
+									}
+								}
+								
+								Shell.RunElevated(ApplicationInfo.ApplicationPath, string.Join(" ", newArgs.ToArray()), ApplicationInfo.CurrentDirectory);
 								Environment.Exit(0);
 								return new string[] {};
 							}
