@@ -47,6 +47,7 @@ namespace sar.Commands
 			username = args[1];
 			password = args[2];
 			domain = "";
+			
 			//TODO: split username by '/' to extract domain
 			
 			RegistryKey winLoginKey;
