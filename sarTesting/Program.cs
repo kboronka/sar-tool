@@ -32,7 +32,7 @@ namespace sar.Testing
 			Program.LogInfo();
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			HttpServer.HttpServer server = new HttpServer.HttpServer(83);
+			HttpServer.HttpServer server = new HttpServer.HttpServer(83, @"c:\wwwroot\");
 			Application.Run(new Menu());
 			Program.Log("throwing error");
 			throw new ApplicationException("testing unhandled exception");
