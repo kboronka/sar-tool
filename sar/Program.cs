@@ -49,5 +49,33 @@ namespace sar
 				return ConsoleHelper.EXIT_ERROR;
 			}
 		}
+		
+		#region loging functions
+		
+		public static void Log(Exception ex)
+		{
+			try
+			{
+				sar.Base.Program.Log(ex);
+			}
+			catch
+			{
+				
+			}
+		}
+		
+		public static void Log(string message)
+		{
+			try
+			{
+				sar.Base.Program.Log(message);
+			}
+			catch
+			{
+
+			}
+		}
+		
+		#endregion
 	}
 }
