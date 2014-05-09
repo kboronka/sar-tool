@@ -22,6 +22,8 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
+using sar.Tools;
+
 namespace sar.HttpServer
 {
 	public class HttpServer : HttpBase
@@ -54,7 +56,7 @@ namespace sar.HttpServer
 			}
 			catch (Exception ex)
 			{
-				this.Log(ex);
+				Program.Log(ex);
 			}
 		}
 		
@@ -87,7 +89,7 @@ namespace sar.HttpServer
 				}
 				catch (Exception ex)
 				{
-					this.Log(ex);
+					Program.Log(ex);
 					Thread.Sleep(5000);
 				}
 			}
@@ -100,7 +102,7 @@ namespace sar.HttpServer
 			}
 			catch (Exception ex)
 			{
-				this.Log(ex);
+				Program.Log(ex);
 			}
 			
 			this.listener = null;
