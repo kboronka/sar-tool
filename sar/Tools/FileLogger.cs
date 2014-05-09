@@ -25,7 +25,6 @@ namespace sar.Tools
 {
 	public class FileLogger
 	{
-		//TODO: delete log files older the N days.
 		private const string DATETIMESTAMP = "yyyy/MM/dd HH:mm:ss.fff";
 		private const string TIMESTAMP = "HH:mm:ss.fff";
 		private const string FILETIMESTAMP = "yyyy-MM-dd";
