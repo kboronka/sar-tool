@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -31,12 +32,17 @@ namespace sar.HttpServer
 		private TcpListener listener;
 		private Encoding encoding;
 		protected int port;
+		protected string wwwroot;
 		
 		#region constructor
 
-		public HttpServer(int port)
+		public HttpServer(int port, string wwwroot)
 		{
 			this.port = port;
+			this.wwwroot = wwwroot;
+			
+			if (!Directory.Exists(this.wwwroot)) Directory.CreateDirectory(this.wwwroot);
+			
 			this.listenerLoopThread = new Thread(this.ListenerLoop);
 			this.listenerLoopThread.IsBackground = true;
 			this.listenerLoopThread.Start();
