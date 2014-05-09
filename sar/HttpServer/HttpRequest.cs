@@ -27,35 +27,37 @@ using sar.Tools;
 
 namespace sar.HttpServer
 {
+	public enum HttpMethod {GET, PUT, HEAD};
+	
 	public class HttpRequest : HttpBase
-	{
+	{	
 		private TcpClient socket;
 		private NetworkStream stream;
 		private Encoding encoding;
 		
 		private HttpServer parent;
 
-		private String httpMethod;
-		private String httpUrl;
-		private String httpProtocolVersion;
+		private HttpMethod method;
+		private String url;
+		private String protocolVersion;
 		
 		private bool headerRecived;
 		
 		#region properties
 
-		public string HttpMethod
+		public HttpMethod Method
 		{
-			get { return httpMethod; }
+			get { return method; }
 		}
 
-		public string HttpUrl
+		public string Url
 		{
-			get { return httpUrl; }
+			get { return url; }
 		}
 
-		public string HttpProtocolVersion
+		public string ProtocolVersion
 		{
-			get { return httpProtocolVersion; }
+			get { return protocolVersion; }
 		}
 		
 		#endregion
@@ -88,7 +90,7 @@ namespace sar.HttpServer
 			}
 			catch (Exception ex)
 			{
-				this.Log(ex);
+				Program.Log(ex);
 			}
 		}
 		
@@ -113,13 +115,17 @@ namespace sar.HttpServer
 					byte[] packetBytes = new byte[0] {};
 					buffer = StringHelper.CombineByteArrays(buffer, this.ReadIncomingPacket());
 					
-					this.ProcessIncomingBuffer(ref buffer);
+					if (buffer.Length > 0)
+					{
+						this.ProcessIncomingBuffer(ref buffer);
+					}
+					
 					if (!incomingLoopShutdown) Thread.Sleep(1);
 				}
 				catch (Exception ex)
 				{
 					incomingLoopShutdown = true;
-					this.Log(ex);
+					Program.Log(ex);
 				}
 			}
 			
@@ -145,8 +151,8 @@ namespace sar.HttpServer
 				output.WriteLine("Content-Length: " + contentBytes.Length.ToString());
 				output.WriteLine("Connection: close");
 				output.WriteLine("");
-				output.Flush();	
-								
+				output.Flush();
+				
 				stream.Write(contentBytes, 0, contentBytes.Length);
 				stream.Flush();
 				
@@ -184,13 +190,13 @@ namespace sar.HttpServer
 			}
 			catch (ObjectDisposedException ex)
 			{
-				this.Log(ex);
+				Program.Log(ex);
 				// The NetworkStream is closed.
 				//this.Disconnect();
 			}
 			catch (IOException ex)
 			{
-				this.Log(ex);
+				Program.Log(ex);
 				// The underlying Socket is closed.
 				//this.Disconnect();
 			}
@@ -200,7 +206,7 @@ namespace sar.HttpServer
 			}
 			catch (Exception ex)
 			{
-				this.Log(ex);
+				Program.Log(ex);
 			}
 			
 			return new byte[0] {};
@@ -218,19 +224,60 @@ namespace sar.HttpServer
 		private void ReadHeader(ref byte[] bufferIn)
 		{
 			if (headerRecived) return;
+			Program.Log("Reading Header");
+			
 			string line = "";
+			bool initialLine = true;
 			
 			do
 			{
 				line = ReadLine(ref bufferIn);
+				Program.Log(">> \"" + line + "\"");
 				
-				if (string.IsNullOrEmpty(line))
+				this.headerRecived = string.IsNullOrEmpty(line);
+				if (this.headerRecived) break;
+				
+				// Initial Request Line
+				if (initialLine)
 				{
-					headerRecived = true;
+					string[] initialRequest = line.Split(' ');
+					if (initialRequest.Length != 3) throw new InvalidDataException("the initial request line should contain three fields");
+					
+					switch (initialRequest[0])
+					{
+						case "GET":
+							this.method = HttpMethod.GET;
+							break;
+						case "PUT":
+							this.method = HttpMethod.PUT;
+							break;
+						//TODO: handle the HEAD request type
+						default:
+							throw new InvalidDataException("unknown request type \"" + initialRequest[0] + "\"");
+					}
+					
+					this.url = CleanUrlString(initialRequest[1]);
+					this.protocolVersion = initialRequest[2];
+					initialLine = false;
 				}
 				
-				// TODO: parse header line here
-			} while (!headerRecived || line == "fault");
+				// TODO: parse the remainder of the HTTP request
+				
+			} while (!this.headerRecived || line == "fault");
+		}
+		
+		private string CleanUrlString(string url)
+		{
+			while (url.Contains("%"))
+			{
+				int index = url.LastIndexOf('%');
+				string characterCode = url.Substring(index + 1, 2);
+				char character = (char)Convert.ToInt32(characterCode, 16);
+				
+				url = url.Substring(0, index) + character.ToString() + url.Substring(index + 3);
+			}
+			
+			return url;
 		}
 		
 		private string ReadLine(ref byte[] bufferIn)
@@ -251,7 +298,7 @@ namespace sar.HttpServer
 				}
 			}
 			
-			return "fault";
+			return null;
 		}
 		
 
@@ -323,4 +370,10 @@ namespace sar.HttpServer
 		#endregion
 		
 	}
+
+	public class HttpRequestType
+	{
+		
+	}
+
 }
