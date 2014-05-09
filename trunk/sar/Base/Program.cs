@@ -22,7 +22,35 @@ namespace sar.Base
 	public abstract class Program
 	{
 		#region logger
+		
+		#region members
+		
+		public static string LogFilename;
+		private static ErrorLogger errorLog;
+		private static FileLogger debugLog;
+		
+		#endregion
 
+		public static ErrorLogger ErrorLog
+		{
+			get
+			{
+				if (String.IsNullOrEmpty(Program.LogFilename)) Program.LogFilename = "log";
+				if (Program.errorLog == null) Program.errorLog = new ErrorLogger("error." + Program.LogFilename);
+				return Program.errorLog;
+			}
+		}
+		
+		public static FileLogger DebugLog
+		{
+			get
+			{
+				if (String.IsNullOrEmpty(Program.LogFilename)) Program.LogFilename = "log";
+				if (Program.debugLog == null) Program.debugLog = new FileLogger("debug." + Program.LogFilename, true);
+				return Program.debugLog;
+			}
+		}
+		
 		public static void LogInfo()
 		{
 			try
@@ -42,8 +70,6 @@ namespace sar.Base
 				
 			}
 		}
-		
-		public static string LogFilename;
 		
 		public static void FlushLogs()
 		{
@@ -70,28 +96,6 @@ namespace sar.Base
 			}
 		}
 
-		private static ErrorLogger errorLog;
-		public static ErrorLogger ErrorLog
-		{
-			get
-			{
-				if (String.IsNullOrEmpty(Program.LogFilename)) Program.LogFilename = "log";
-				if (Program.errorLog == null) Program.errorLog = new ErrorLogger("error." + Program.LogFilename);
-				return Program.errorLog;
-			}
-		}
-		
-		private static FileLogger debugLog;
-		public static FileLogger DebugLog
-		{
-			get
-			{
-				if (String.IsNullOrEmpty(Program.LogFilename)) Program.LogFilename = "log";
-				if (Program.debugLog == null)Program.debugLog = new FileLogger("debug." + Program.LogFilename, true);
-				return Program.debugLog;
-			}
-		}
-		
 		public static void Log(Exception ex)
 		{
 			try
@@ -110,7 +114,9 @@ namespace sar.Base
 		{
 			try
 			{
+				#if DEBUG				
 				Program.DebugLog.WriteLine(message);
+				#endif				
 			}
 			catch
 			{
