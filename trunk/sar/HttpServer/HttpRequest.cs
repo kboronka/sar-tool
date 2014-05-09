@@ -30,7 +30,7 @@ namespace sar.HttpServer
 	public enum HttpMethod {GET, PUT, HEAD};
 	
 	public class HttpRequest : HttpBase
-	{	
+	{
 		private TcpClient socket;
 		private NetworkStream stream;
 		private Encoding encoding;
@@ -106,8 +106,8 @@ namespace sar.HttpServer
 
 		private void ServiceRequest()
 		{
+			// Read and parse request
 			byte[] buffer = new byte[0] {};
-			
 			while (!incomingLoopShutdown && !incomingRequestRecived)
 			{
 				try
@@ -129,10 +129,13 @@ namespace sar.HttpServer
 				}
 			}
 			
+
+			// Construct responce
 			// FIXME: send proper responce
-			string result = "";
 			string content = "";
 			string contentType = "text/html";
+			byte[] contentBytes;
+			
 			content += "<html><body><h1>test server</h1>" + "\n";
 			content += "<form method=post action=/form>" + "\n";
 			content += "<input type=text name=foo value=foovalue>" + "\n";
@@ -140,26 +143,36 @@ namespace sar.HttpServer
 			content += "</form>" + "\n";
 			content += "</html>" + "\n";
 			content += "\r\n";
-			byte[] contentBytes = this.encoding.GetBytes(content);
+			contentBytes = this.encoding.GetBytes(content);
+			
+			// Construct responce header
+			string headerOut = "";
+			headerOut += "HTTP/1.0 200 OK" + "\n\r";
+			headerOut += "Content-Type: " + contentType + "\n\r";
+			headerOut += "Content-Length: " + contentBytes.Length.ToString() + "\n\r";
+			headerOut += "Connection: close" + "\n\r";
+			headerOut += "" + "\n\r";
+			contentBytes = StringHelper.CombineByteArrays(Encoding.ASCII.GetBytes(headerOut), contentBytes);
 
+			#if DEBUG
+			string line = ">> ";
+			foreach (byte chr in contentBytes)
+			{
+				line += chr.ToString() + " ";
+				if (chr == 13)
+				{
+					Program.Log(line);
+					line = ">> ";
+				}
+			}
+			#endif
+		
+			// Send responce
 			lock (socket)
 			{
-				StreamWriter output = new StreamWriter(new BufferedStream(socket.GetStream()));
-				
-				output.WriteLine("HTTP/1.0 200 OK");
-				output.WriteLine("Content-Type: " + contentType);
-				output.WriteLine("Content-Length: " + contentBytes.Length.ToString());
-				output.WriteLine("Connection: close");
-				output.WriteLine("");
-				output.Flush();
-				
 				stream.Write(contentBytes, 0, contentBytes.Length);
 				stream.Flush();
-				
-				output = null;
 				stream = null;
-
-				result += "" + "\n";
 				socket.Close();
 			}
 		}
@@ -232,7 +245,7 @@ namespace sar.HttpServer
 			do
 			{
 				line = ReadLine(ref bufferIn);
-				Program.Log(">> \"" + line + "\"");
+				Program.Log("<< \"" + line + "\"");
 				
 				this.headerRecived = string.IsNullOrEmpty(line);
 				if (this.headerRecived) break;
@@ -243,7 +256,7 @@ namespace sar.HttpServer
 					string[] initialRequest = line.Split(' ');
 					if (initialRequest.Length != 3) throw new InvalidDataException("the initial request line should contain three fields");
 					
-					switch (initialRequest[0])
+					switch (initialRequest[0].ToUpper())
 					{
 						case "GET":
 							this.method = HttpMethod.GET;
@@ -251,7 +264,7 @@ namespace sar.HttpServer
 						case "PUT":
 							this.method = HttpMethod.PUT;
 							break;
-						//TODO: handle the HEAD request type
+							//TODO: handle the HEAD request type
 						default:
 							throw new InvalidDataException("unknown request type \"" + initialRequest[0] + "\"");
 					}
@@ -264,20 +277,6 @@ namespace sar.HttpServer
 				// TODO: parse the remainder of the HTTP request
 				
 			} while (!this.headerRecived || line == "fault");
-		}
-		
-		private string CleanUrlString(string url)
-		{
-			while (url.Contains("%"))
-			{
-				int index = url.LastIndexOf('%');
-				string characterCode = url.Substring(index + 1, 2);
-				char character = (char)Convert.ToInt32(characterCode, 16);
-				
-				url = url.Substring(0, index) + character.ToString() + url.Substring(index + 3);
-			}
-			
-			return url;
 		}
 		
 		private string ReadLine(ref byte[] bufferIn)
@@ -301,8 +300,20 @@ namespace sar.HttpServer
 			return null;
 		}
 		
+		private string CleanUrlString(string url)
+		{
+			while (url.Contains("%"))
+			{
+				int index = url.LastIndexOf('%');
+				string characterCode = url.Substring(index + 1, 2);
+				char character = (char)Convert.ToInt32(characterCode, 16);
+				
+				url = url.Substring(0, index) + character.ToString() + url.Substring(index + 3);
+			}
+			
+			return url;
+		}
 
-		
 		/*
 		private void oldServiceRequest()
 		{
@@ -370,10 +381,4 @@ namespace sar.HttpServer
 		#endregion
 		
 	}
-
-	public class HttpRequestType
-	{
-		
-	}
-
 }
