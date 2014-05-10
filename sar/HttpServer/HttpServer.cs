@@ -32,16 +32,30 @@ namespace sar.HttpServer
 		private TcpListener listener;
 		private Encoding encoding;
 		protected int port;
-		protected string wwwroot;
+		protected string root;
+		
+		#region properties
+
+		public string Root
+		{
+			get { return root; }
+		}
+
+		#endregion
 		
 		#region constructor
 
 		public HttpServer(int port, string wwwroot)
 		{
 			this.port = port;
-			this.wwwroot = wwwroot;
+			this.root = wwwroot;
 			
-			if (!Directory.Exists(this.wwwroot)) Directory.CreateDirectory(this.wwwroot);
+			if (this.root.EndsWith("\\"))
+			{
+				this.root = StringHelper.TrimEnd(this.root);
+			}
+			
+			if (!Directory.Exists(this.root)) Directory.CreateDirectory(this.root);
 			
 			this.listenerLoopThread = new Thread(this.ListenerLoop);
 			this.listenerLoopThread.IsBackground = true;
