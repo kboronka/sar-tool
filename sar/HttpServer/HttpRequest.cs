@@ -28,6 +28,7 @@ using sar.Tools;
 namespace sar.HttpServer
 {
 	public enum HttpMethod {GET, PUT, HEAD};
+	public enum HttpStatusCode {OK = 200, FOUND = 302, NOTFOUND = 404, SERVERERROR=500};
 	
 	public class HttpRequest : HttpBase
 	{
@@ -146,13 +147,21 @@ namespace sar.HttpServer
 			contentBytes = this.encoding.GetBytes(content);
 			
 			// Construct responce header
-			string headerOut = "";
-			headerOut += "HTTP/1.0 200 OK" + "\n\r";
-			headerOut += "Content-Type: " + contentType + "\n\r";
-			headerOut += "Content-Length: " + contentBytes.Length.ToString() + "\n\r";
-			headerOut += "Connection: close" + "\n\r";
-			headerOut += "" + "\n\r";
-			contentBytes = StringHelper.CombineByteArrays(Encoding.ASCII.GetBytes(headerOut), contentBytes);
+			string responce = "";
+			HttpStatusCode statusCode = HttpStatusCode.OK;
+			string responcePhrase = Enum.GetName(typeof(HttpStatusCode), statusCode);
+			string version = "HTTP/1.0";
+			
+			string statusLine = version + " " + statusCode.ToString() + " " + responcePhrase + "\n\r";
+			
+			responce += statusLine;
+			if (responce == null)
+				return;
+			responce += "Content-Type: " + contentType + "\n\r";
+			responce += "Content-Length: " + contentBytes.Length.ToString() + "\n\r";
+			responce += "Connection: close" + "\n\r";
+			responce += "" + "\n\r";
+			contentBytes = StringHelper.CombineByteArrays(Encoding.ASCII.GetBytes(responce), contentBytes);
 
 			#if DEBUG
 			string line = ">> ";
@@ -166,7 +175,7 @@ namespace sar.HttpServer
 				}
 			}
 			#endif
-		
+			
 			// Send responce
 			lock (socket)
 			{
@@ -227,22 +236,45 @@ namespace sar.HttpServer
 		
 		private void ProcessIncomingBuffer(ref byte[] bufferIn)
 		{
-			ReadHeader(ref bufferIn);
+			ReadRequest(ref bufferIn);
 			if (!headerRecived) return;
 			
 			// TODO: read binary data from POST
 			incomingRequestRecived = true;
 		}
 		
-		private void ReadHeader(ref byte[] bufferIn)
+		private void ReadRequest(ref byte[] bufferIn)
 		{
 			if (headerRecived) return;
 			Program.Log("Reading Header");
 			
 			string line = "";
-			bool initialLine = true;
 			
-			do
+			// Request Line
+			string requestLine = ReadLine(ref bufferIn);
+			if (string.IsNullOrEmpty(requestLine)) throw new InvalidDataException("request line missing");			
+			Program.Log("<< \"" + requestLine + "\"");
+			
+			string[] initialRequest = line.Split(' ');
+			if (initialRequest.Length != 3) throw new InvalidDataException("the initial request line should contain three fields");
+
+			this.url = CleanUrlString(initialRequest[1]);
+			this.protocolVersion = initialRequest[2];
+			
+			switch (initialRequest[0].ToUpper())
+			{
+				case "GET":
+					this.method = HttpMethod.GET;
+					break;
+				case "PUT":
+					this.method = HttpMethod.PUT;
+					break;
+					//TODO: handle the HEAD request type
+				default:
+					throw new InvalidDataException("unknown request type \"" + initialRequest[0] + "\"");
+			}
+			
+			while (!this.headerRecived)
 			{
 				line = ReadLine(ref bufferIn);
 				Program.Log("<< \"" + line + "\"");
@@ -250,33 +282,14 @@ namespace sar.HttpServer
 				this.headerRecived = string.IsNullOrEmpty(line);
 				if (this.headerRecived) break;
 				
-				// Initial Request Line
-				if (initialLine)
-				{
-					string[] initialRequest = line.Split(' ');
-					if (initialRequest.Length != 3) throw new InvalidDataException("the initial request line should contain three fields");
-					
-					switch (initialRequest[0].ToUpper())
-					{
-						case "GET":
-							this.method = HttpMethod.GET;
-							break;
-						case "PUT":
-							this.method = HttpMethod.PUT;
-							break;
-							//TODO: handle the HEAD request type
-						default:
-							throw new InvalidDataException("unknown request type \"" + initialRequest[0] + "\"");
-					}
-					
-					this.url = CleanUrlString(initialRequest[1]);
-					this.protocolVersion = initialRequest[2];
-					initialLine = false;
-				}
+				// TODO: parse common request Headers
+				// Header format
+				// Name: value
 				
-				// TODO: parse the remainder of the HTTP request
-				
-			} while (!this.headerRecived || line == "fault");
+				// examples:
+				// Host: example.com
+				// User-Agent: chrome v17
+			}
 		}
 		
 		private string ReadLine(ref byte[] bufferIn)
