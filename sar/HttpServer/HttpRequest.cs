@@ -28,7 +28,6 @@ using sar.Tools;
 namespace sar.HttpServer
 {
 	public enum HttpMethod {GET, PUT, HEAD};
-	public enum HttpStatusCode {OK = 200, FOUND = 302, NOTFOUND = 404, SERVERERROR=500};
 	
 	public class HttpRequest : HttpBase
 	{
@@ -59,6 +58,11 @@ namespace sar.HttpServer
 		public string ProtocolVersion
 		{
 			get { return protocolVersion; }
+		}
+		
+		public HttpServer Server
+		{
+			get { return parent; }
 		}
 		
 		#endregion
@@ -109,16 +113,23 @@ namespace sar.HttpServer
 		{
 			// Read and parse request
 			byte[] buffer = new byte[0] {};
+			// TODO: add request timeout
 			while (!incomingLoopShutdown && !incomingRequestRecived)
 			{
 				try
 				{
-					byte[] packetBytes = new byte[0] {};
-					buffer = StringHelper.CombineByteArrays(buffer, this.ReadIncomingPacket());
+					byte[] incomingPacket = this.ReadIncomingPacket();
+					buffer = StringHelper.CombineByteArrays(buffer, incomingPacket);
 					
-					if (buffer.Length > 0)
+					if (buffer.Length > 0 && incomingPacket.Length == 0)
 					{
+						// buffer is complete
 						this.ProcessIncomingBuffer(ref buffer);
+					}
+					else if (incomingPacket.Length != 0)
+					{
+						// wait until entire request is recived
+						Thread.Sleep(50);
 					}
 					
 					if (!incomingLoopShutdown) Thread.Sleep(1);
@@ -130,60 +141,15 @@ namespace sar.HttpServer
 				}
 			}
 			
-
-			// Construct responce
-			// FIXME: send proper responce
-			string content = "";
-			string contentType = "text/html";
-			byte[] contentBytes;
+			HttpResponce responce = new HttpResponce(this, socket);
 			
-			content += "<html><body><h1>test server</h1>" + "\n";
-			content += "<form method=post action=/form>" + "\n";
-			content += "<input type=text name=foo value=foovalue>" + "\n";
-			content += "<input type=submit name=bar value=barvalue>" + "\n";
-			content += "</form>" + "\n";
-			content += "</html>" + "\n";
-			content += "\r\n";
-			contentBytes = this.encoding.GetBytes(content);
-			
-			// Construct responce header
-			string responce = "";
-			HttpStatusCode statusCode = HttpStatusCode.OK;
-			string responcePhrase = Enum.GetName(typeof(HttpStatusCode), statusCode);
-			string version = "HTTP/1.0";
-			
-			string statusLine = version + " " + statusCode.ToString() + " " + responcePhrase + "\n\r";
-			
-			responce += statusLine;
-			if (responce == null)
-				return;
-			responce += "Content-Type: " + contentType + "\n\r";
-			responce += "Content-Length: " + contentBytes.Length.ToString() + "\n\r";
-			responce += "Connection: close" + "\n\r";
-			responce += "" + "\n\r";
-			contentBytes = StringHelper.CombineByteArrays(Encoding.ASCII.GetBytes(responce), contentBytes);
-
-			#if DEBUG
-			string line = ">> ";
-			foreach (byte chr in contentBytes)
-			{
-				line += chr.ToString() + " ";
-				if (chr == 13)
-				{
-					Program.Log(line);
-					line = ">> ";
-				}
-			}
-			#endif
-			
-			// Send responce
 			lock (socket)
 			{
-				stream.Write(contentBytes, 0, contentBytes.Length);
+				stream.Write(responce.Content, 0, responce.Content.Length);
 				stream.Flush();
 				stream = null;
 				socket.Close();
-			}
+			}			
 		}
 		
 		private byte[] ReadIncomingPacket()
@@ -248,14 +214,12 @@ namespace sar.HttpServer
 			if (headerRecived) return;
 			Program.Log("Reading Header");
 			
-			string line = "";
-			
 			// Request Line
 			string requestLine = ReadLine(ref bufferIn);
 			if (string.IsNullOrEmpty(requestLine)) throw new InvalidDataException("request line missing");			
 			Program.Log("<< \"" + requestLine + "\"");
 			
-			string[] initialRequest = line.Split(' ');
+			string[] initialRequest = requestLine.Split(' ');
 			if (initialRequest.Length != 3) throw new InvalidDataException("the initial request line should contain three fields");
 
 			this.url = CleanUrlString(initialRequest[1]);
@@ -274,6 +238,7 @@ namespace sar.HttpServer
 					throw new InvalidDataException("unknown request type \"" + initialRequest[0] + "\"");
 			}
 			
+			string line = "";			
 			while (!this.headerRecived)
 			{
 				line = ReadLine(ref bufferIn);
@@ -327,68 +292,6 @@ namespace sar.HttpServer
 			return url;
 		}
 
-		/*
-		private void oldServiceRequest()
-		{
-			try
-			{
-				ParseRequest();
-				ReadHeaders();
-				
-				if (httpMethod.Equals("GET"))
-				{
-					handleGETRequest();
-				}
-				else if (httpMethod.Equals("POST"))
-				{
-					handlePOSTRequest();
-				}
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine("Exception: " + e.ToString());
-				writeFailure();
-			}
-			
-			
-			outputStream.Flush();
-			inputStream = null;
-			outputStream = null;
-			socket.Close();
-		}
-		 */
-		
-		#endregion
-		
-		#region handle request
-		
-		/*
-		private Thread incomingLoopThread;
-		
-		private void IncomingLoop()
-		{
-			Thread.Sleep(0);
-			string incomingBuffer = "";
-			while (!incomingLoopShutdown)
-			{
-				try
-				{
-					incomingBuffer += this.ReadIncomingPacket();
-					this.ProcessIncomingBuffer(ref incomingBuffer);
-					Thread.Sleep(1);
-				}
-				catch (Exception ex)
-				{
-					this.Log(ex);
-					Thread.Sleep(1000);
-				}
-			}
-			
-			this.Log(this.ID.ToString() +  ": " + "Incoming Loop Shutdown Gracefully");
-		}
-		
-
-		 */
 		#endregion
 		
 		#endregion
