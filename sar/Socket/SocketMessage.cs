@@ -124,7 +124,6 @@ namespace sar.Socket
 		{
 		}
 		
-		
 		public void Serialize(XML.Writer writer)
 		{
 			writer.WriteStartElement("SocketMessage");
