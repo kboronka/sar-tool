@@ -34,6 +34,11 @@ namespace sar
 		{
 			try
 			{
+				/*
+				#if DEBUG
+				args = new string[] { "f.rd", @"c:\work\test\*lck" };
+				#endif
+				*/
 				CommandHub hub = new CommandHub();
 				ConsoleHelper.Start();
 				if (args.Length == 0) ConsoleHelper.ApplicationTitle();
