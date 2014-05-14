@@ -36,7 +36,7 @@ namespace sar
 			{
 				/*
 				#if DEBUG
-				args = new string[] { "f.rd", @"c:\work\test\*lck" };
+				args = new string[] { "f.rd", @"C:\Users\kboronka\Documents\Virtual Machines\caches" };
 				#endif
 				*/
 				CommandHub hub = new CommandHub();
