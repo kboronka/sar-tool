@@ -47,15 +47,13 @@ namespace sar.Commands
 			
 			if (!Directory.Exists(root)) throw new ApplicationException("Directory does not exist");
 
-			
-			// get a list of all folders that match name pattern
 			List<string> foundDirectories = new List<string>();
-			foundDirectories.AddRange(Directory.GetDirectories(root, filePattern));
+			foundDirectories.AddRange(Directory.GetDirectories(root, filePattern, SearchOption.AllDirectories));	
 			
 			if (foundDirectories.Count == 0) throw new ApplicationException("\"" + filePattern + "\" Folders not found in \"" + root + "\"");
 			
 			
-			List<string> directories = new List<string>();
+			List<string> subDirectories = new List<string>();
 			List<string> files = new List<string>();
 			
 			foreach (string directory in foundDirectories)
@@ -66,7 +64,7 @@ namespace sar.Commands
 					ConsoleHelper.WriteLine(StringHelper.TrimStart(subDirectory, root.Length));
 				}
 				
-				directories.AddRange(IO.GetAllDirectories(directory));
+				subDirectories.AddRange(IO.GetAllDirectories(directory));
 				
 				foreach (string file in IO.GetAllFiles(directory))
 				{
@@ -80,13 +78,18 @@ namespace sar.Commands
 
 			if (!this.commandHub.NoWarning)
 			{
-				ConsoleHelper.WriteLine(directories.Count.ToString() + " folders" + ((directories.Count != 1) ? "s" : "") + " found");
-				ConsoleHelper.WriteLine(files.Count.ToString() + " files" + ((directories.Count != 1) ? "s" : "") + " found");
+				ConsoleHelper.WriteLine("");
+				ConsoleHelper.Write("found: ", ConsoleColor.Yellow);
+				ConsoleHelper.WriteLine(foundDirectories.Count.ToString() + " " + ((foundDirectories.Count != 1) ? "directories" : "directory"));
+				ConsoleHelper.Write("containing: ", ConsoleColor.Yellow);
+				ConsoleHelper.WriteLine(subDirectories.Count.ToString() + " " + ((subDirectories.Count != 1) ? "subdirectories" : "subdirectory"));
+				ConsoleHelper.Write("containing: ", ConsoleColor.Yellow);
+				ConsoleHelper.WriteLine(files.Count.ToString() + " " + ((subDirectories.Count != 1) ? "files" : "file"));
 			}
 			
-			if (directories.Count > 0)
+			if (foundDirectories.Count > 0)
 			{
-				if (this.commandHub.NoWarning || ConsoleHelper.Confirm("Destroy " + directories.Count.ToString() + " director" + ((directories.Count != 1) ? "ies" : "y") + "? (y/n)"))
+				if (this.commandHub.NoWarning || ConsoleHelper.Confirm("Delete " + foundDirectories.Count.ToString() + " " + ((foundDirectories.Count != 1) ? "directories" : "directory") + "? (y/n)"))
 				{
 					Progress.Message = "Deleting " + root;
 					
@@ -110,7 +113,7 @@ namespace sar.Commands
 				}
 			}
 			
-			ConsoleHelper.WriteLine(directories.Count.ToString() + " Director" + ((directories.Count != 1) ? "ies" : "y") + " Destroyed", ConsoleColor.DarkYellow);
+			ConsoleHelper.WriteLine(foundDirectories.Count.ToString() + " Director" + ((foundDirectories.Count != 1) ? "ies" : "y") + " deleted", ConsoleColor.DarkYellow);
 			return ConsoleHelper.EXIT_OK;
 		}
 	}
