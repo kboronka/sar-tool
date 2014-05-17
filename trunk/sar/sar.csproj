@@ -130,6 +130,7 @@
       <DependentUpon>ExceptionHandler.cs</DependentUpon>
     </Compile>
     <Compile Include="Tools\FileLogger.cs" />
+    <Compile Include="Tools\HttpHelper.cs" />
     <Compile Include="Tools\IO.cs" />
     <Compile Include="Tools\Logger.cs" />
     <Compile Include="Tools\Logger.Designer.cs">

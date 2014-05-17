@@ -58,26 +58,45 @@ namespace sar.HttpServer
 			this.socket = socket;
 			this.stream = this.socket.GetStream();
 			
-			// FIXME: send proper responce
-			string filePath = this.request.Server.Root + this.request.Url.Replace("/", "\\");
-			if (File.Exists(filePath))
+			try
 			{
-				// TODO: replace with SendFile()
-				this.SendInfo();
+				// FIXME: send proper responce
+				string filePath = this.request.Server.Root + this.request.Url.Replace(@"/", @"\");
+				if (File.Exists(filePath))
+				{
+					this.content = GetFile(filePath);
+				}
+				else if (this.request.Url.ToLower() == @"/info")
+				{
+					this.content = GetInfo();
+				}
+				else
+				{
+					//this.SendInfo();
+					throw new FileNotFoundException("did not find " + filePath);
+				}
 			}
-			else
+			catch (Exception ex)
 			{
-				this.SendInfo();				
+				Program.Log(ex);
+				this.content = GetException(ex);
+				this.ConstructResponce(HttpStatusCode.SERVERERROR);
 			}
 		}
 		
-		private void SendInfo()
+		private byte[] GetFile(string filename)
 		{
+			this.contentType = HttpHelper.GetMimeType(IO.GetFileExtension(filename));
+			
+			return File.ReadAllBytes(filename);
+		}
+		
+		private byte[] GetInfo()
+		{
+			this.contentType = "text/html";
+			
 			// Construct responce
 			string content = "";
-			string contentType = "text/html";
-			byte [] contentBytes;
-			
 			content += "<html><body><h1>test server</h1>" + "<br>\n";
 			content += "Method: " + request.Method.ToString() + "<br>\n";
 			content += "URL: " + request.Url + "<br>\n";
@@ -88,29 +107,53 @@ namespace sar.HttpServer
 			content += "</form>" + "\n";
 			content += "</html>" + "\n";
 			content += "\r\n";
-			contentBytes = this.encoding.GetBytes(content);
+
+			return this.encoding.GetBytes(content);
+		}
+		
+		private byte[] GetException(Exception ex)
+		{
+			this.contentType = "text/html";
+			Exception inner = ExceptionHandler.GetInnerException(ex);
 			
+			string content = "";
+			content += "<html><body><h1>ERROR</h1>" + "<br>\n";
+			content += ConsoleHelper.HR + "<br>\n";
+			content += "Time: " + DateTime.Now.ToString() + "<br>\n";
+			content += "Type: " + inner.GetType().ToString() + "<br>\n";
+			content += "Method: " + request.Method.ToString() + "<br>\n";
+			content += "URL: " + request.Url + "<br>\n";
+			content += "Version: " + request.ProtocolVersion + "<br>\n";			
+			content += "Error: " + inner.Message + "<br>\n";
+			content += ConsoleHelper.HR + "<br>\n";
+			content += "<p>" + inner.StackTrace + "</p><br>\n";
+			content += "</html>" + "\n";
+			content += "\r\n";
+			
+			return this.encoding.GetBytes(content);
+		}
+		
+		private byte[] ConstructResponce(HttpStatusCode status)
+		{
 			// Construct responce header
-			string responce = "";
-			HttpStatusCode statusCode = HttpStatusCode.OK;
-			string responcePhrase = Enum.GetName(typeof(HttpStatusCode), statusCode);
-			string version = "HTTP/1.0";
+
+			// status line
+			string responcePhrase = Enum.GetName(typeof(HttpStatusCode), status);
+			string responce = "HTTP/1.0" + " " + status.ToString() + " " + responcePhrase + "\n\r";
 			
-			string statusLine = version + " " + statusCode.ToString() + " " + responcePhrase + "\n\r";
+			// content details
+			responce += "Content-Type: " + this.contentType + "\n\r";
+			responce += "Content-Length: " + this.content.Length.ToString() + "\n\r";
 			
-			responce += statusLine;
-			if (responce == null)
-				return;
-			responce += "Content-Type: " + contentType + "\n\r";
-			responce += "Content-Length: " + contentBytes.Length.ToString() + "\n\r";
+			// other
 			responce += "Connection: close" + "\n\r";
 			responce += "" + "\n\r";
 			
-			this.content = StringHelper.CombineByteArrays(Encoding.ASCII.GetBytes(responce), contentBytes);
+			this.content = StringHelper.CombineByteArrays(Encoding.ASCII.GetBytes(responce), this.content);
 
 			#if DEBUG
 			string line = ">> ";
-			foreach (byte chr in contentBytes)
+			foreach (byte chr in this.content)
 			{
 				line += chr.ToString() + " ";
 				if (chr == 13)
@@ -119,18 +162,9 @@ namespace sar.HttpServer
 					line = ">> ";
 				}
 			}
+			
+			return this.content;
 			#endif
-			
-			// Send responce
-
 		}
-		
-		/*
-		private string Header()
-		{
-			string header;
-			
-		}
-		 */
 	}
 }
