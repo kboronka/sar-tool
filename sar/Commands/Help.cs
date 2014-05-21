@@ -78,6 +78,37 @@ namespace sar.Commands
 						ConsoleHelper.WriteLine("");
 					}
 				}
+				
+				ConsoleHelper.WriteLine("");
+				ConsoleHelper.WriteLine("\nOptions:", ConsoleColor.White);
+				
+				ConsoleHelper.Write("\t" + "\\");
+				ConsoleHelper.Write("quite", ConsoleColor.Yellow);
+				ConsoleHelper.WriteLine(": no warnings");
+
+				ConsoleHelper.Write("\t" + "\\");
+				ConsoleHelper.Write("debug", ConsoleColor.Yellow);
+				ConsoleHelper.WriteLine(": debug mode - extra feedback");
+				
+				ConsoleHelper.Write("\t" + "\\");
+				ConsoleHelper.Write("svn", ConsoleColor.Yellow);
+				ConsoleHelper.WriteLine(": include svn folders");		
+				
+				ConsoleHelper.Write("\t" + "\\");
+				ConsoleHelper.Write("nosubfolders", ConsoleColor.Yellow);
+				ConsoleHelper.WriteLine(": do not search subfolders");	
+
+				ConsoleHelper.Write("\t" + "\\");
+				ConsoleHelper.Write("loop", ConsoleColor.Yellow);
+				ConsoleHelper.WriteLine(": run command in an endless loop");				
+
+				ConsoleHelper.Write("\t" + "\\");
+				ConsoleHelper.Write("pause", ConsoleColor.Yellow);
+				ConsoleHelper.WriteLine(": pause after command completes");	
+
+				ConsoleHelper.Write("\t" + "\\");
+				ConsoleHelper.Write("admin", ConsoleColor.Yellow);
+				ConsoleHelper.WriteLine(": require elevated rights");				
 			}
 			
 			return ConsoleHelper.EXIT_OK;
