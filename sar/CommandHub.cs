@@ -34,6 +34,7 @@ namespace sar.Tools
 			                          	new CodeReIndent(this),
 			                          	new CodeClean(this),
 			                          	new AssemblyInfoVersion(this),
+			                          	new rdp(this),
 			                          	new Kill(this),
 			                          	new AppShutdownWait(this),
 			                          	new LabviewVersion(this),

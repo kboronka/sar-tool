@@ -96,6 +96,7 @@
     <Compile Include="Commands\Help.cs" />
     <Compile Include="Commands\NetListAddaptors.cs" />
     <Compile Include="Commands\AssemblyInfoVersion.cs" />
+    <Compile Include="Commands\rdp.cs" />
     <Compile Include="Commands\SkyUpdaterAdd.cs" />
     <Compile Include="Commands\SkyUpdaterGenerate.cs" />
     <Compile Include="Commands\SkyUpdaterUpdate.cs" />

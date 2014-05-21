@@ -37,6 +37,7 @@ namespace sar
 				/*
 				#if DEBUG
 				args = new string[] { "f.rd", @"C:\Users\kboronka\Documents\Virtual Machines\caches" };
+				args = new string[] { "rdp", "192.168.171.208", @"atsna\kboronka", "password", @"/pause" };
 				#endif
 				*/
 				CommandHub hub = new CommandHub();
