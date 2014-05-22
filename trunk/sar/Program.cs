@@ -34,12 +34,14 @@ namespace sar
 		{
 			try
 			{
-				/*
+				
 				#if DEBUG
-				args = new string[] { "f.rd", @"C:\Users\kboronka\Documents\Virtual Machines\caches" };
-				args = new string[] { "rdp", "192.168.171.208", @"atsna\kboronka", "password", @"/pause" };
+				args = new string[] { "f.rd", @"C:\Users\kboronka\Documents\Virtual Machines\caches", @"/pause" };
+				args = new string[] { "rdp", "192.168.171.208", @"username", "password", @"/pause" };
+				args = new string[] { "ip.set", "LAN", "dhcp", @"/debug", @"/pause", @"/admin"};
+				args = new string[] { "ip.set", "LAN", "192.168.14.111", @"/debug", @"/pause", @"/admin"};
 				#endif
-				*/
+				
 				CommandHub hub = new CommandHub();
 				ConsoleHelper.Start();
 				if (args.Length == 0) ConsoleHelper.ApplicationTitle();

@@ -57,6 +57,7 @@ namespace sar.Tools
 			                          	new WindowsRearm(this),
 			                          	new WindowsRestart(this),
 			                          	new NetListAddaptors(this),
+			                          	new NetSetIP(this),
 			                          	new SkyUpdaterUpdate(this),
 			                          	new SkyUpdaterGenerate(this),
 			                          	new SkyUpdaterAdd(this)
