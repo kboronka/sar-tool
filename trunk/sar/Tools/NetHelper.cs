@@ -58,16 +58,6 @@ namespace sar.Tools
 			string ipconfig;
 			
 			ConsoleHelper.Run("ipconfig", "/all", out ipconfig);
-			/*
-			info.WorkingCopyRootPath = IO.RegexFindString(result.Output, @"Working Copy Root Path:(.+)\n");
-			info.Repository = IO.RegexFindString(result.Output, "URL:(.+)\n");
-			info.RepositoryRoot = IO.RegexFindString(result.Output, "Repository Root:(.+)\n");
-			info.Revision = int.Parse(IO.RegexFindString(result.Output, "Revision:(.+)\n"));
-			 */
-			//string result = StringHelper.RegexFindString(ipconfig, "adapter (.+):");
-			//ConsoleHelper.DebugWriteLine("result: " +  StringHelper.AddQuotes(result));
-			
-			//string[] split = Regex.Split(ipconfig, "adapter (.+):");
 			
 			string name;
 			int start = 0;
@@ -84,12 +74,12 @@ namespace sar.Tools
 				string infostring = searchstring.Substring(0, end - start);
 				
 				
-				string mediaState = StringHelper.RegexFindString(infostring, "Media State . . . . . . . . . . . : (.+)\n");
-				string physicalAddress = StringHelper.RegexFindString(infostring, "Physical Address. . . . . . . . . : (.+)\n");
-				string DHCP = StringHelper.RegexFindString(infostring, "DHCP Enabled. . . . . . . . . . . :(.+)\n");
-				string ip = StringHelper.RegexFindString(infostring, "IPv4 Address. . . . . . . . . . . : (.+)\n");
-				string mask = StringHelper.RegexFindString(infostring,"Subnet Mask . . . . . . . . . . . : (.+)\n");
-				string gateway = StringHelper.RegexFindString(infostring,"Default Gateway . . . . . . . . . : (.+)\n");
+				string mediaState = 		StringHelper.RegexFindString(infostring, "Media State . . . . . . . . . . . : (.+)\n");
+				string physicalAddress = 	StringHelper.RegexFindString(infostring, "Physical Address. . . . . . . . . : (.+)\n");
+				string DHCP = 				StringHelper.RegexFindString(infostring, "DHCP Enabled. . . . . . . . . . . :(.+)\n");
+				string ip = 				StringHelper.RegexFindString(infostring, "IPv4 Address. . . . . . . . . . . : (.+)\n");
+				string mask = 				StringHelper.RegexFindString(infostring,"Subnet Mask . . . . . . . . . . . : (.+)\n");
+				string gateway = 			StringHelper.RegexFindString(infostring,"Default Gateway . . . . . . . . . : (.+)\n");
 				
 
 				ConsoleHelper.DebugWriteLine("name:\t\t" + StringHelper.AddQuotes(name));
