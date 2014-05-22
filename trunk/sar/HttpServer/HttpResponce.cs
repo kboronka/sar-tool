@@ -162,9 +162,9 @@ namespace sar.HttpServer
 					line = ">> ";
 				}
 			}
-			
-			return this.content;
 			#endif
+
+			return this.content;
 		}
 	}
 }
