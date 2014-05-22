@@ -298,6 +298,8 @@ namespace sar.Tools
 			output = shell.StandardOutput.ReadToEnd();
 			error = shell.StandardError.ReadToEnd();
 			
+			ConsoleHelper.DebugWriteLine(filename+ " " + arguments);
+			
 			shell.WaitForExit();
 			
 			if (!String.IsNullOrEmpty(error))
