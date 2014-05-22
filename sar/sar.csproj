@@ -94,6 +94,7 @@
     <Compile Include="Commands\FileMove.cs" />
     <Compile Include="Commands\FileRemoveDirectory.cs" />
     <Compile Include="Commands\Help.cs" />
+    <Compile Include="Commands\NetSetIP.cs" />
     <Compile Include="Commands\NetListAddaptors.cs" />
     <Compile Include="Commands\AssemblyInfoVersion.cs" />
     <Compile Include="Commands\rdp.cs" />
