@@ -25,9 +25,10 @@ namespace sar.Commands
 	public class NetSetIP : Command
 	{
 		public NetSetIP(Base.CommandHub parent) : base(parent, "Network - Set IP",
-		                                 new List<string> { "net.setip", "ip.set" },
-		                                 @"-ip.set addaptor ip",
-		                                 new List<string> { @"-ip.set LAN dhcp /admin" })
+		                                               new List<string> { "net.setip", "ip.set" },
+		                                               @"-ip.set addaptor ip",
+		                                               new List<string> { @"-ip.set LAN dhcp /admin",
+		                                               	@"-ip.set LAN 192.168.0.11 255.255.255.0 /admin" })
 		{
 		}
 		
@@ -35,18 +36,21 @@ namespace sar.Commands
 		public override int Execute(string[] args)
 		{
 			// sanity check
-			if (args.Length != 3)
+			if (args.Length < 3 || args.Length > 4)
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
 			
 			string addaptor = args[1];
 			string ipaddress = args[2].ToLower();
+			string subnetMask = "";
+			
+			if (ipaddress != "dhcp") subnetMask = args[3];
 			
 			string ipconfig;
 			
 			Progress.Message = "Setting IP address of " + addaptor;
-			int exitcode = ConsoleHelper.Run("netsh", "interface ip set address \"" + addaptor + "\" " + ((ipaddress != "dhcp") ? "static " : "") + ipaddress, out ipconfig);
+			int exitcode = ConsoleHelper.Run("netsh", "interface ip set address \"" + addaptor + "\" " + ((ipaddress != "dhcp") ? "static " : "") + ipaddress + " " + subnetMask, out ipconfig);
 
 			if (exitcode != 0)
 			{
