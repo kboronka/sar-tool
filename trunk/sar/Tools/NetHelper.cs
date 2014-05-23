@@ -55,33 +55,52 @@ namespace sar.Tools
 		public static List<NetworkAdapter> Adapters()
 		{
 			List<NetworkAdapter> adapters = new List<NetworkAdapter>();
+
+			// capture output of ipconfig /all command
 			string ipconfig;
-			
 			ConsoleHelper.Run("ipconfig", "/all", out ipconfig);
 			
 			string name;
 			int start = 0;
 			int end = ipconfig.Length;
+			
 			do
 			{
-				string searchstring = ipconfig.Substring(start + 1);
-				
-				name = StringHelper.RegexFindString(searchstring, "adapter (.+):");
+				name = StringHelper.RegexFindString(ipconfig.Substring(start + 1), "adapter (.+):");
 				start = ipconfig.IndexOf(name + ":", start + 1);
-				name = StringHelper.RegexFindString(searchstring.Substring(2), "adapter (.+):");
-				end = ipconfig.IndexOf(name + ":", start + 1);
+				
+				string next = StringHelper.RegexFindString(ipconfig.Substring(start + 1), "adapter (.+):");
+				end = ipconfig.IndexOf(next + ":", start + 1);
 				if (end < start) end = ipconfig.Length;
-				string infostring = searchstring.Substring(0, end - start);
 				
 				
-				string mediaState = 		StringHelper.RegexFindString(infostring, "Media State . . . . . . . . . . . : (.+)\n");
-				string physicalAddress = 	StringHelper.RegexFindString(infostring, "Physical Address. . . . . . . . . : (.+)\n");
-				string DHCP = 				StringHelper.RegexFindString(infostring, "DHCP Enabled. . . . . . . . . . . :(.+)\n");
-				string ip = 				StringHelper.RegexFindString(infostring, "IPv4 Address. . . . . . . . . . . : (.+)\n");
-				string mask = 				StringHelper.RegexFindString(infostring,"Subnet Mask . . . . . . . . . . . : (.+)\n");
-				string gateway = 			StringHelper.RegexFindString(infostring,"Default Gateway . . . . . . . . . : (.+)\n");
-				
+				string details = ipconfig.Substring(start, end - start);
 
+				string mediaState = 		StringHelper.RegexFindString(details, "Media State . . . . . . . . . . . : (.+)\n");
+				string physicalAddress = 	StringHelper.RegexFindString(details, "Physical Address. . . . . . . . . : (.+)\n");
+				string DHCP = 				StringHelper.RegexFindString(details, "DHCP Enabled. . . . . . . . . . . : (.+)\n");
+				string ip = 				StringHelper.RegexFindString(details, "IPv4 Address. . . . . . . . . . . : (.+)\n");
+				string mask = 				StringHelper.RegexFindString(details, "Subnet Mask . . . . . . . . . . . : (.+)\n");
+				string gateway = 			StringHelper.RegexFindString(details, "Default Gateway . . . . . . . . . : (.+)\n");
+				
+				if (!string.IsNullOrEmpty(ip) && ip.Contains("("))
+				{
+					ip = ip.Substring(0, ip.IndexOf('('));
+				}
+				
+				if (!string.IsNullOrEmpty(name) && !name.StartsWith("isatap") && !name.StartsWith("Teredo Tunneling"))
+				{
+					NetworkAdapter adapter = new NetworkAdapter();
+					adapter.Name = name;
+					adapter.IPAddress = ip;
+					adapter.SubnetMask = mask;
+					adapter.Gateway = gateway;
+					adapter.PhysicalAdddress = physicalAddress;
+					adapter.Connected = (mediaState == "");
+					adapter.DHCP = (DHCP == "Yes");
+					adapters.Add(adapter);
+				}
+				
 				ConsoleHelper.DebugWriteLine("name:\t\t" + StringHelper.AddQuotes(name));
 				ConsoleHelper.DebugWriteLine("mediaState:\t" + StringHelper.AddQuotes(mediaState));
 				ConsoleHelper.DebugWriteLine("MAC:\t\t" + StringHelper.AddQuotes(physicalAddress));
@@ -90,8 +109,6 @@ namespace sar.Tools
 				ConsoleHelper.DebugWriteLine("mask:\t\t" + StringHelper.AddQuotes(mask));
 				ConsoleHelper.DebugWriteLine("gateway:\t" + StringHelper.AddQuotes(gateway));
 				ConsoleHelper.DebugWriteLine(ConsoleHelper.HR);
-
-				
 			} while (!String.IsNullOrEmpty(name));
 
 			
