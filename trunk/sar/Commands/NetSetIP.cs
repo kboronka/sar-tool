@@ -26,7 +26,7 @@ namespace sar.Commands
 	{
 		public NetSetIP(Base.CommandHub parent) : base(parent, "Network - Set IP",
 		                                               new List<string> { "net.setip", "ip.set" },
-		                                               @"-ip.set addaptor ip",
+		                                               @"-ip.set adapters ip",
 		                                               new List<string> { @"-ip.set LAN dhcp /admin",
 		                                               	@"-ip.set LAN 192.168.0.11 255.255.255.0 /admin" })
 		{
@@ -41,7 +41,7 @@ namespace sar.Commands
 				throw new ArgumentException("incorrect number of arguments");
 			}
 			
-			string addaptor = args[1];
+			string adapters = args[1];
 			string ipaddress = args[2].ToLower();
 			string subnetMask = "";
 			
@@ -57,13 +57,13 @@ namespace sar.Commands
 			
 			string ipconfig;
 			
-			Progress.Message = "Setting IP address of " + addaptor;
-			int exitcode = ConsoleHelper.Run("netsh", "interface ip set address \"" + addaptor + "\" " + ((ipaddress != "dhcp") ? "static " : "") + ipaddress + " " + subnetMask, out ipconfig);
+			Progress.Message = "Setting IP address of " + adapters;
+			int exitcode = ConsoleHelper.Run("netsh", "interface ip set address \"" + adapters + "\" " + ((ipaddress != "dhcp") ? "static " : "") + ipaddress + " " + subnetMask, out ipconfig);
 
 			if (exitcode != 0)
 			{
 				ConsoleHelper.DebugWriteLine(ipconfig);
-				ConsoleHelper.WriteLine("setting ip address of " + addaptor + " to " + ipaddress + " has failed", ConsoleColor.DarkYellow);
+				ConsoleHelper.WriteLine("setting ip address of " + adapters + " to " + ipaddress + " has failed", ConsoleColor.DarkYellow);
 				return ConsoleHelper.EXIT_ERROR;
 			}
 			
