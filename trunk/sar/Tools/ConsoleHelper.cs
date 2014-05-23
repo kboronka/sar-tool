@@ -101,12 +101,14 @@ namespace sar.Tools
 		
 		public static void WriteException(Exception ex)
 		{
+			ex = ExceptionHandler.GetInnerException(ex);
+			
 			ConsoleHelper.Write("error: ", ConsoleColor.Red);
 			ConsoleHelper.WriteLine(ex.Message);
 
 			if (ShowDebug)
 			{
-				ConsoleHelper.WriteLine(ex.StackTrace, ConsoleColor.DarkCyan);
+				ConsoleHelper.WriteLine(ExceptionHandler.GetStackTrace(ex), ConsoleColor.DarkCyan);
 			}
 		}
 		
