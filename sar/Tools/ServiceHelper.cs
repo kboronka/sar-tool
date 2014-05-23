@@ -255,7 +255,7 @@ namespace sar.Tools
 			}
 			catch (Exception ex)
 			{
-				throw ex;
+				throw;
 			}
 			finally
 			{
