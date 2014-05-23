@@ -52,9 +52,9 @@ namespace sar.Tools
 			return (found == expected);
 		}
 		
-		public static List<NetworkAddaptor> Adapters()
+		public static List<NetworkAdapter> Adapters()
 		{
-			List<NetworkAddaptor> addaptors = new List<NetworkAddaptor>();
+			List<NetworkAdapter> adapters = new List<NetworkAdapter>();
 			string ipconfig;
 			
 			ConsoleHelper.Run("ipconfig", "/all", out ipconfig);
@@ -95,11 +95,11 @@ namespace sar.Tools
 			} while (!String.IsNullOrEmpty(name));
 
 			
-			return addaptors;
+			return adapters;
 		}
 	}
 	
-	public class NetworkAddaptor
+	public class NetworkAdapter
 	{
 		public string Name { get; set; }
 		public string Description { get; set; }
@@ -109,6 +109,5 @@ namespace sar.Tools
 		public string IPAddress { get; set; }
 		public string SubnetMask { get; set; }
 		public string Gateway { get; set; }
-		
 	}
 }

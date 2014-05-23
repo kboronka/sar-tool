@@ -22,9 +22,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class NetListAddaptors : Command
+	public class NetListAdapters : Command
 	{
-		public NetListAddaptors(Base.CommandHub parent) : base(parent, "Network - List Addaptors",
+		public NetListAdapters(Base.CommandHub parent) : base(parent, "Network - List Adapters",
 		                                 new List<string> { "net.list", "n.l" },
 		                                 @"-net.list",
 		                                 new List<string> { "-net.list" })
@@ -41,7 +41,9 @@ namespace sar.Commands
 			}
 			
 			
-			List<NetworkAddaptor> addaptors = NetHelper.Adapters();
+			List<NetworkAdapter> adapters = NetHelper.Adapters();
+			
+			
 			
 			return ConsoleHelper.EXIT_OK;
 		}
