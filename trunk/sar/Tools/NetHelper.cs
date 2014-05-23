@@ -26,7 +26,7 @@ using sar.Tools;
 
 namespace sar.Tools
 {
-	public class NetHelper
+	public static class NetHelper
 	{
 		public static bool Ping(string ip)
 		{
@@ -52,7 +52,7 @@ namespace sar.Tools
 			return (found == expected);
 		}
 		
-		public static List<NetworkAddaptor> Addaptors()
+		public static List<NetworkAddaptor> Adapters()
 		{
 			List<NetworkAddaptor> addaptors = new List<NetworkAddaptor>();
 			string ipconfig;
