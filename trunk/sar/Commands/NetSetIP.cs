@@ -45,7 +45,15 @@ namespace sar.Commands
 			string ipaddress = args[2].ToLower();
 			string subnetMask = "";
 			
-			if (ipaddress != "dhcp") subnetMask = args[3];
+			if (ipaddress != "dhcp") 
+			{
+				if (args.Length != 4)
+				{
+					throw new ArgumentException("incorrect number of arguments");
+				}
+				
+				subnetMask = args[3];
+			}
 			
 			string ipconfig;
 			
