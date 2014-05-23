@@ -40,7 +40,8 @@ namespace sar.Commands
 				throw new ArgumentException("incorrect number of arguments");
 			}
 			
-			NetHelper.Addaptors();
+			
+			List<NetworkAddaptor> addaptors = NetHelper.Adapters();
 			
 			return ConsoleHelper.EXIT_OK;
 		}
