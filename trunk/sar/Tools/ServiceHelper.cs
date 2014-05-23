@@ -253,7 +253,7 @@ namespace sar.Tools
 					return impersonatedUser;
 				}
 			}
-			catch (Exception ex)
+			catch
 			{
 				throw;
 			}
