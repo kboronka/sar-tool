@@ -89,7 +89,7 @@ namespace sar.Base
 									}
 									catch (Exception ex)
 									{
-										if (!this.Loop) throw ex;
+										if (!this.Loop) throw;
 										ConsoleHelper.WriteException(ex);
 									}
 									
