@@ -25,9 +25,9 @@ namespace sar.Commands
 	public class NetListAdapters : Command
 	{
 		public NetListAdapters(Base.CommandHub parent) : base(parent, "Network - List Adapters",
-		                                 new List<string> { "net.list", "n.l" },
-		                                 @"-net.list",
-		                                 new List<string> { "-net.list" })
+		                                 new List<string> { "ip.config" },
+		                                 @"-ip.config",
+		                                 new List<string> { "-ip.config" })
 		{
 		}
 		
@@ -40,9 +40,20 @@ namespace sar.Commands
 				throw new ArgumentException("incorrect number of arguments");
 			}
 			
-			
-			List<NetworkAdapter> adapters = NetHelper.Adapters();
-			
+			foreach (NetworkAdapter adapter in NetHelper.Adapters())
+			{
+				ConsoleHelper.Write(adapter.Name, ConsoleColor.White);
+				ConsoleHelper.Write(": ");
+				
+				if (adapter.DHCP)
+				{
+					ConsoleHelper.Write("dhcp", ConsoleColor.Yellow);
+					ConsoleHelper.Write(": ");
+				}
+				
+				ConsoleHelper.Write(adapter.IPAddress + " " + adapter.SubnetMask);
+				ConsoleHelper.WriteLine();
+			}
 			
 			
 			return ConsoleHelper.EXIT_OK;
