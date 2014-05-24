@@ -111,10 +111,10 @@
     <Compile Include="Commands\WindowsMapDrive.cs" />
     <Compile Include="Commands\WindowsRearm.cs" />
     <Compile Include="Commands\WindowsRestart.cs" />
-    <Compile Include="HttpServer\HttpBase.cs" />
-    <Compile Include="HttpServer\HttpRequest.cs" />
-    <Compile Include="HttpServer\HttpResponce.cs" />
-    <Compile Include="HttpServer\HttpServer.cs" />
+    <Compile Include="Http\HttpBase.cs" />
+    <Compile Include="Http\HttpRequest.cs" />
+    <Compile Include="Http\HttpResponce.cs" />
+    <Compile Include="Http\HttpServer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Socket\SocketClient.cs" />
@@ -152,7 +152,7 @@
   <ItemGroup>
     <Folder Include="Commands" />
     <Folder Include="Base" />
-    <Folder Include="HttpServer" />
+    <Folder Include="Http" />
     <Folder Include="Socket" />
     <Folder Include="Tools" />
   </ItemGroup>

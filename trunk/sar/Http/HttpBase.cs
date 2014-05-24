@@ -17,7 +17,7 @@ using System;
 
 using sar.Tools;
 
-namespace sar.HttpServer
+namespace sar.Http
 {
 	public class HttpBase
 	{

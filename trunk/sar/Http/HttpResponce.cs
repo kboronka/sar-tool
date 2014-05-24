@@ -25,7 +25,7 @@ using System.Threading;
 
 using sar.Tools;
 
-namespace sar.HttpServer
+namespace sar.Http
 {
 	public enum HttpStatusCode
 	{
