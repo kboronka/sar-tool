@@ -113,10 +113,8 @@ namespace sar.Base
 		public static void Log(string message)
 		{
 			try
-			{
-				#if DEBUG				
+			{		
 				Program.DebugLog.WriteLine(message);
-				#endif				
 			}
 			catch
 			{
