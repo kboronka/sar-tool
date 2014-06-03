@@ -39,5 +39,17 @@ namespace sar.Testing
 			RemoteSocket frm = new RemoteSocket();
 			frm.ShowDialog(this);
 		}
+		
+		void Button1Click(object sender, EventArgs e)
+		{
+			try
+			{		
+				throw new Exception("test");
+			}
+			catch (Exception ex)
+			{
+				Program.Log(ex);
+			}			
+		}
 	}
 }
