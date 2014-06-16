@@ -138,6 +138,7 @@
     <Compile Include="Tools\Logger.Designer.cs">
       <DependentUpon>Logger.cs</DependentUpon>
     </Compile>
+    <Compile Include="Tools\MathHelper.cs" />
     <Compile Include="Tools\NetHelper.cs" />
     <Compile Include="Tools\ObjectHelper.cs" />
     <Compile Include="Tools\Preformance.cs" />
