@@ -126,7 +126,7 @@ namespace sar.Http
 			content += "Version: " + request.ProtocolVersion + "<br>\n";			
 			content += "Error: " + inner.Message + "<br>\n";
 			content += ConsoleHelper.HR + "<br>\n";
-			content += "<p>" + inner.StackTrace + "</p><br>\n";
+			content += "<p>" + ExceptionHandler.GetStackTrace(inner) + "</p><br>\n";
 			content += "</html>" + "\n";
 			content += "\r\n";
 			
