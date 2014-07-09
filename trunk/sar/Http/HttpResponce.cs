@@ -84,11 +84,18 @@ namespace sar.Http
 			}
 		}
 		
-		private byte[] GetFile(string filename)
+		private byte[] GetFile(string filepath)
 		{
-			this.contentType = HttpHelper.GetMimeType(IO.GetFileExtension(filename));
+			string extension = IO.GetFileExtension(filepath).ToLower();
 			
-			return File.ReadAllBytes(filename);
+			this.contentType = HttpHelper.GetMimeType(extension);
+			
+			if (extension == "php")
+			{
+				return GetPHP(filepath);
+			}
+			
+			return File.ReadAllBytes(filepath);
 		}
 		
 		private byte[] GetInfo()
@@ -117,19 +124,21 @@ namespace sar.Http
 			Exception inner = ExceptionHandler.GetInnerException(ex);
 			
 			string content = "";
-			content += "<html><body><h1>ERROR</h1>" + "<br>\n";
-			content += ConsoleHelper.HR + "<br>\n";
-			content += "Time: " + DateTime.Now.ToString() + "<br>\n";
-			content += "Type: " + inner.GetType().ToString() + "<br>\n";
-			content += "Method: " + request.Method.ToString() + "<br>\n";
-			content += "URL: " + request.Url + "<br>\n";
-			content += "Version: " + request.ProtocolVersion + "<br>\n";			
-			content += "Error: " + inner.Message + "<br>\n";
-			content += ConsoleHelper.HR + "<br>\n";
-			content += "<p>" + ExceptionHandler.GetStackTrace(inner) + "</p><br>\n";
+			content += "<html><body><h1>ERROR</h1>\n";
+			content += ConsoleHelper.HR + "\r\n";
+			content += "Time: " + DateTime.Now.ToString() + "\r\n";
+			content += "Type: " + inner.GetType().ToString() + "\r\n";
+			content += "Method: " + request.Method.ToString() + "\r\n";
+			content += "URL: " + request.Url + "\r\n";
+			content += "Version: " + request.ProtocolVersion + "\r\n";
+			content += "Error: " + inner.Message + "\r\n";
+			content += ConsoleHelper.HR + "\r\n";
+			content += "<p>" + ExceptionHandler.GetStackTrace(inner) + "</p>\r\n";
 			content += "</html>" + "\n";
 			content += "\r\n";
 			
+			content = content.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+			content = content.Replace(Environment.NewLine, "<br>" + Environment.NewLine);
 			return this.encoding.GetBytes(content);
 		}
 		
@@ -165,6 +174,32 @@ namespace sar.Http
 			#endif
 
 			return this.content;
+		}
+		
+		private static string phpPath;
+		private byte[] GetPHP(string filepath)
+		{
+			// locate php.exe
+			if (String.IsNullOrEmpty(phpPath))
+			{
+				if (File.Exists(@"c:\php\php.exe"))
+				{
+					phpPath = @"c:\php\php.exe";
+				}
+				else
+				{
+					phpPath = sar.Tools.IO.FindApplication("php.exe");
+				}
+			}
+			
+			if (String.IsNullOrEmpty(phpPath)) throw new ApplicationException("PHP not found");
+
+			string output;
+			string error;
+			
+			ConsoleHelper.Run(phpPath, filepath, out output, out error);
+			// TODO: handle errors
+			return encoding.GetBytes(output);
 		}
 	}
 }

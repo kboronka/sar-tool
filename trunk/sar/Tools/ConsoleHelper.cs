@@ -32,8 +32,10 @@ namespace sar.Tools
 		public const int EXIT_ERROR = 1;
 		
 		private static bool progressVisible = false;
-		private static bool showDebug = false;
+
+		#region static properties
 		
+		private static bool showDebug = false;
 		public static bool ShowDebug
 		{
 			get
@@ -46,6 +48,25 @@ namespace sar.Tools
 			}
 			set { showDebug = value; }
 		}
+		
+		
+		private static bool consoleRunning;
+		private static bool consoleRunningChecked;
+		public static bool ConsoleRunning
+		{
+			get
+			{
+				if (!consoleRunningChecked)
+				{
+					consoleRunning = Console.OpenStandardInput(1) != Stream.Null;
+					consoleRunningChecked = true;
+				}
+				
+				return consoleRunning;
+			}
+		}
+
+		#endregion
 		
 		private static Thread backgroundThread;
 		
@@ -75,7 +96,7 @@ namespace sar.Tools
 		
 		public static void Write(string text, ConsoleColor colour)
 		{
-			if (Environment.UserInteractive)
+			if (Environment.UserInteractive && ConsoleHelper.ConsoleRunning)
 			{
 				Console.ForegroundColor = colour;
 				Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -296,7 +317,9 @@ namespace sar.Tools
 			shell.StartInfo.UseShellExecute = false;
 			shell.StartInfo.RedirectStandardOutput = true;
 			shell.StartInfo.RedirectStandardError = true;
+			shell.StartInfo.CreateNoWindow = true;
 			shell.Start();
+			
 			output = shell.StandardOutput.ReadToEnd();
 			error = shell.StandardError.ReadToEnd();
 			
