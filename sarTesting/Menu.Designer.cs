@@ -49,6 +49,7 @@ namespace sar.Testing
 			this.comboBox1 = new System.Windows.Forms.ComboBox();
 			this.booleanIndicator1 = new sar.Controls.BooleanIndicator();
 			this.button1 = new System.Windows.Forms.Button();
+			this.ConnectToSPS = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -74,7 +75,7 @@ namespace sar.Testing
 			// 
 			// numericUpDown1
 			// 
-			this.numericUpDown1.Location = new System.Drawing.Point(338, 27);
+			this.numericUpDown1.Location = new System.Drawing.Point(338, 10);
 			this.numericUpDown1.Name = "numericUpDown1";
 			this.numericUpDown1.Size = new System.Drawing.Size(120, 20);
 			this.numericUpDown1.TabIndex = 2;
@@ -85,7 +86,7 @@ namespace sar.Testing
 			this.comboBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.comboBox1.FormattingEnabled = true;
 			this.comboBox1.IntegralHeight = false;
-			this.comboBox1.Location = new System.Drawing.Point(234, 53);
+			this.comboBox1.Location = new System.Drawing.Point(234, 36);
 			this.comboBox1.Name = "comboBox1";
 			this.comboBox1.Size = new System.Drawing.Size(224, 32);
 			this.comboBox1.TabIndex = 3;
@@ -94,7 +95,7 @@ namespace sar.Testing
 			// 
 			this.booleanIndicator1.Caption = "booleanIndicator";
 			this.booleanIndicator1.Font = new System.Drawing.Font("Arial", 9.75F);
-			this.booleanIndicator1.Location = new System.Drawing.Point(234, 130);
+			this.booleanIndicator1.Location = new System.Drawing.Point(234, 101);
 			this.booleanIndicator1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.booleanIndicator1.MaximumSize = new System.Drawing.Size(500, 16);
 			this.booleanIndicator1.MinimumSize = new System.Drawing.Size(100, 16);
@@ -113,11 +114,22 @@ namespace sar.Testing
 			this.button1.UseVisualStyleBackColor = true;
 			this.button1.Click += new System.EventHandler(this.Button1Click);
 			// 
+			// ConnectToSPS
+			// 
+			this.ConnectToSPS.Location = new System.Drawing.Point(325, 136);
+			this.ConnectToSPS.Name = "ConnectToSPS";
+			this.ConnectToSPS.Size = new System.Drawing.Size(113, 23);
+			this.ConnectToSPS.TabIndex = 5;
+			this.ConnectToSPS.Text = "ConnectSPS";
+			this.ConnectToSPS.UseVisualStyleBackColor = true;
+			this.ConnectToSPS.Click += new System.EventHandler(this.ConnectToSPSClick);
+			// 
 			// Menu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(507, 235);
+			this.Controls.Add(this.ConnectToSPS);
 			this.Controls.Add(this.booleanIndicator1);
 			this.Controls.Add(this.comboBox1);
 			this.Controls.Add(this.numericUpDown1);
@@ -129,6 +141,7 @@ namespace sar.Testing
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
 			this.ResumeLayout(false);
 		}
+		private System.Windows.Forms.Button ConnectToSPS;
 		private System.Windows.Forms.Button button1;
 		private sar.Controls.BooleanIndicator booleanIndicator1;
 		private System.Windows.Forms.ComboBox comboBox1;

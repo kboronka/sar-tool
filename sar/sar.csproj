@@ -122,6 +122,7 @@
     <Compile Include="Socket\SocketMessage.cs" />
     <Compile Include="Socket\SocketServer.cs" />
     <Compile Include="Socket\SocketValue.cs" />
+    <Compile Include="SPS\Siemens\Adapter.cs" />
     <Compile Include="Tools\ActiveDirectory.cs" />
     <Compile Include="Tools\ApplicationInfo.cs" />
     <Compile Include="Tools\AssemblyInfo.cs" />
@@ -155,7 +156,9 @@
     <Folder Include="Commands" />
     <Folder Include="Base" />
     <Folder Include="Http" />
+    <Folder Include="SPS" />
     <Folder Include="Socket" />
+    <Folder Include="SPS\Siemens" />
     <Folder Include="Tools" />
   </ItemGroup>
   <ItemGroup>

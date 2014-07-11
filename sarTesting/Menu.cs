@@ -17,6 +17,8 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
+using sar.SPS.Siemens;
+
 namespace sar.Testing
 {
 	public partial class Menu : Form
@@ -50,6 +52,13 @@ namespace sar.Testing
 			{
 				Program.Log(ex);
 			}			
+		}
+		
+		void ConnectToSPSClick(object sender, EventArgs e)
+		{
+			// TODO: Implement ConnectToSPSClick
+			Adapter SiemensSPS = new Adapter("10.242.35.166");
+			
 		}
 	}
 }
