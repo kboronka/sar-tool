@@ -774,7 +774,15 @@ namespace sar.Tools
 			ushort upper = (ushort)(u32 >> 16);
 
 			return Combine(Split(upper), Split(lower));
-		}		
+		}
+		
+		public static byte[] SubSet(byte[] source, ushort first, ushort length)
+		{
+			byte[] result = new byte[length];
+			Buffer.BlockCopy(source, first, result, 0, length);
+			
+			return result;
+		}
 		
 		#endregion
 	}
