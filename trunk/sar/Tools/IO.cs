@@ -721,6 +721,8 @@ namespace sar.Tools
 			return (found == expected);
 		}
 		
+		#region byte array helpers
+		
 		public static byte[] Combine(byte[] first, byte[] second)
 		{
 			byte[] result = new byte[first.Length + second.Length];
@@ -758,5 +760,22 @@ namespace sar.Tools
 			
 			return result;
 		}
+
+		public static byte[] Split(ushort u16)
+		{
+			byte lower = (byte)(u16 & 0xff);
+			byte upper = (byte)(u16 >> 8);
+			return new byte[] { upper, lower };
+		}
+
+		public static byte[] Split(uint u32)
+		{
+			ushort lower = (ushort)(u32 & 0xffff);
+			ushort upper = (ushort)(u32 >> 16);
+
+			return Combine(Split(upper), Split(lower));
+		}		
+		
+		#endregion
 	}
 }
