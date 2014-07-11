@@ -720,5 +720,43 @@ namespace sar.Tools
 			
 			return (found == expected);
 		}
+		
+		public static byte[] Combine(byte[] first, byte[] second)
+		{
+			byte[] result = new byte[first.Length + second.Length];
+			Buffer.BlockCopy(first, 0, result, 0, first.Length);
+			Buffer.BlockCopy(second, 0, result, first.Length, second.Length);
+			
+			return result;
+		}
+
+		public static byte[] Combine(byte[] first, byte[] second, byte[] third)
+		{
+			byte[] result = new byte[first.Length + second.Length + third.Length];
+			Buffer.BlockCopy(first, 0, result, 0, first.Length);
+			Buffer.BlockCopy(second, 0, result, first.Length, second.Length);
+			Buffer.BlockCopy(third, 0, result, first.Length + second.Length, third.Length);
+			return result;
+		}
+
+		public static byte[] Combine(params byte[][] arrays)
+		{
+			int size = 0;
+			foreach (byte[] data in arrays)
+			{
+				size += data.Length;
+			}
+			
+			byte[] result = new byte[size];
+			int offset = 0;
+			
+			foreach (byte[] data in arrays)
+			{
+				Buffer.BlockCopy(data, 0, result, offset, data.Length);
+				offset += data.Length;
+			}
+			
+			return result;
+		}
 	}
 }
