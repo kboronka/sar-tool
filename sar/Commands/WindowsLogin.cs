@@ -34,7 +34,7 @@ namespace sar.Commands
 		public override int Execute(string[] args)
 		{
 			// sanity check
-			if (args.Length < 3 || args.Length > 4)
+			if (args.Length < 4 || args.Length > 5)
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
