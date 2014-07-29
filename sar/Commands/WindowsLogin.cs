@@ -25,8 +25,8 @@ namespace sar.Commands
 	public class WindowsLogin : Command
 	{
 		public WindowsLogin(Base.CommandHub parent) : base(parent, "Windows - Login", new List<string> { "windows.login", "win.login", "net.login", "n.login" },
-		                         "-windows.login [ip] [domain/username] [password]",
-		                         new List<string>() { @"-windows.login \\192.168.0.244\temp test testpw" })
+		                         "-windows.login [ip] [domain/username] [password] [persistent]",
+		                         new List<string>() { @"-windows.login \\192.168.0.244\temp test testpw p" })
 		{
 			
 		}
@@ -34,7 +34,7 @@ namespace sar.Commands
 		public override int Execute(string[] args)
 		{
 			// sanity check
-			if (args.Length != 4)
+			if (args.Length < 3 || args.Length > 4)
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
@@ -47,11 +47,17 @@ namespace sar.Commands
 			
 			string userName = args[2];
 			string password = args[3];
+			string persistent = "/PERSISTENT:NO";
+
+			if (args.Length == 4 && args[3] == "p")
+			{
+				persistent = " /PERSISTENT:YES";
+			}
 			
 			int exitcode;
 			
 			exitcode = ConsoleHelper.Run("net", @"use " + uncPath + @" /DELETE");
-			exitcode = ConsoleHelper.Run("net", @"use " + uncPath + @" /USER:" + userName + " " + password + " /PERSISTENT:NO");
+			exitcode = ConsoleHelper.Run("net", @"use " + uncPath + @" /USER:" + userName + " " + password + " " + persistent);
 			
 			if (exitcode != 0)
 			{
