@@ -304,6 +304,18 @@ namespace sar.Tools
 			return result;
 		}
 		
+		public static bool IsNumeric(string s)
+		{
+			float output;
+			return float.TryParse(s, out output);
+		}
+		
+		public static bool IsNumeric(char c)
+		{
+			float output;
+			return float.TryParse(c.ToString(), out output);
+		}		
+		
 		#region environment variable helpers
 		
 		
