@@ -30,21 +30,88 @@ namespace sar.SPS.Siemens
 	public enum Action : byte { Read = 0x4, Write = 0x5, ExchangePDU = 0xF0 };
 	public enum TransportType : byte { Bit = 0x1, Byte = 0x2, Word = 0x4 };
 	
+	public struct Address
+	{
+		public AddressArea AddressArea;
+		public ushort dataBlock;
+		public uint startAddress;
+		public ushort length;
+		
+		public Address(string address)
+		{
+			address = address.ToUpper();
+			
+			if (address.Length >= 1 && address[0] == 'M') this.AddressArea = AddressArea.M;
+			//else if (address.Length >= 1 && address[0] == 'P') this.AddressArea = AddressArea.P;
+			else if (address.Length >= 1 && address[0] == 'I') this.AddressArea = AddressArea.I;
+			else if (address.Length >= 1 && address[0] == 'Q') this.AddressArea = AddressArea.Q;
+			//else if (address.Length >= 1 && address[0] == 'L') this.AddressArea = AddressArea.L;
+			else if (address.Length >= 2 && address.Substring(0, 2) == "DB") this.AddressArea = AddressArea.DB;
+			//else if (address.Length >= 2 && address.Substring(0, 2) == "DI") this.AddressArea = AddressArea.DI;
+			//else if (address.Length >= 2 && address.Substring(0, 2) == "VL") this.AddressArea = AddressArea.VL;
+			else throw new InvalidDataException("Invalid Address");
+			
+			
+			if (this.AddressArea == AddressArea.DB)
+			{
+				address = address.Substring(2);
+				this.dataBlock = ushort.Parse(address.Substring(0, address.IndexOf('.')));
+				address = address.Substring(address.IndexOf('.') + 1);
+				
+				if (address.Substring(0, 2) != "DB") throw new InvalidDataException("Invalid DB Address");
+				address = address.Substring(2);
+				
+			}
+			else
+			{
+				address = address.Substring(1);
+				this.dataBlock = 0;
+			}
+
+			
+			if (address.Length > 1 && address[0] == 'D') this.length = 4 * 8;
+			else if (address.Length > 1 && address[0] == 'W') this.length = 2 * 8;
+			else if (address.Length > 1 && address[0] == 'B') this.length = 1 * 8;
+			else if (address.Length > 1 && this.AddressArea == AddressArea.DB && address[0] == 'X') this.length = 1;
+			else if (address.Length > 1 && this.AddressArea != AddressArea.DB && StringHelper.IsNumeric(address[0])) this.length = 1;
+			else throw new InvalidDataException("Invalid Address Type");
+
+			
+			if (this.length > 1 || this.AddressArea == AddressArea.DB && address[0] == 'X') address = address.Substring(1);
+			
+			double startAddress = double.Parse(address);
+			this.startAddress = (uint)(Math.Floor(startAddress) * 8) + (uint)((startAddress - Math.Floor(startAddress)) * 10);
+			
+			// TODO: handle
+			// TODO: find "."
+			
+			// get byte
+			
+			// get bit offset
+			
+			this.startAddress = 0;
+			
+
+			
+		}
+	};
+	
 	public class Adapter
 	{
 		private string ipAddress;
 		private TcpClient socket;
 		private NetworkStream stream;
+		private bool connected;
 		
 		private static readonly byte[] CONNECT_TO_ADAPTER = 	new byte[] { 0x11, 0xE0, 0x00, 0x00, 0x00, 0x01, 0x00, 0xC0, 0x01, 0x09, 0xC1, 0x02, 0x4B, 0x54, 0xC2, 0x02, 0x03, 0x02 };
-		private static readonly byte[] CONNECTED_TO_ADAPTER =	new byte[] { 0x11, 0xD0, 0x00, 0x01, 0x00, 0x00, 0x00, 0xC0, 0x01, 0x09, 0xC1, 0x02, 0x4B, 0x54, 0xC2, 0x02, 0x03, 0x02 };		
+		private static readonly byte[] CONNECTED_TO_ADAPTER =	new byte[] { 0x11, 0xD0, 0x00, 0x01, 0x00, 0x00, 0x00, 0xC0, 0x01, 0x09, 0xC1, 0x02, 0x4B, 0x54, 0xC2, 0x02, 0x03, 0x02 };
 		private static readonly byte[] EXCHANGE_PDU_PARAMETER =	new byte[] { 0xF0, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0xF0 };
 		private static readonly byte[] TPKT =					new byte[] { 0x03, 0x00, 0x00, 0x1F };
 
 		public Adapter(string ipAddress)
 		{
 			this.ipAddress = ipAddress;
-			this.Connect();
+			connected = this.Connect();
 			//TODO: check if connection is established, handle retrys... possibly use a timed loop
 		}
 		
@@ -65,6 +132,13 @@ namespace sar.SPS.Siemens
 			
 			return responce.SequenceEqual(CONNECTED_TO_ADAPTER);
 		}
+		
+		public int ReadInt(string address)
+		{
+			throw new ApplicationException("function incomplete");
+			return 0;
+		}
+		
 		
 		private byte[] ReadWriteMessage(Action action, AddressArea addressArea, ushort dataBlock, uint startAddress, ushort length)
 		{
@@ -127,7 +201,7 @@ namespace sar.SPS.Siemens
 			
 			// PDU Header (10 bytes)
 			//	constant = 0x32
-			//	type = 0x1			
+			//	type = 0x1
 			//	unknown = 0x0
 			//	unknown = 0x0
 			message = IO.Combine(message, new byte[] { 0x32, 0x1, 0x0, 0x0 });
@@ -136,7 +210,7 @@ namespace sar.SPS.Siemens
 			message = IO.Combine(message, IO.Split(sequenceNumber));
 
 			// parameter size (2 bytes)
-			message = IO.Combine(message, IO.Split(Convert.ToUInt16(parameterCode.Length)));			
+			message = IO.Combine(message, IO.Split(Convert.ToUInt16(parameterCode.Length)));
 			
 			// parameter value size (2 bytes)
 			message = IO.Combine(message, IO.Split(Convert.ToUInt16(parameterValue.Length)));
@@ -146,7 +220,7 @@ namespace sar.SPS.Siemens
 			message = IO.Combine(message, parameterValue);
 
 			EncodeTPKTSize(ref message);
-				
+			
 			return message;
 		}
 		
@@ -162,7 +236,7 @@ namespace sar.SPS.Siemens
 			ushort messageSize = Convert.ToUInt16(message.Length);
 			
 			message[2] = IO.Split(messageSize)[0];
-			message[3] = IO.Split(messageSize)[1];			
+			message[3] = IO.Split(messageSize)[1];
 		}
 		
 		private int ReadInt()
