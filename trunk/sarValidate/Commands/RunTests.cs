@@ -25,9 +25,9 @@ namespace sarValidate.Commands
 	public class RunTests : sar.Base.Command
 	{
 		public RunTests(sar.Base.CommandHub parent) : base(parent, "RunTests",
-		                                              new List<string> { "run", "r" },
-		                                              @"-r",
-		                                              new List<string> { "-r" })
+		                                                   new List<string> { "run", "r" },
+		                                                   @"-r",
+		                                                   new List<string> { "-r" })
 		{
 		}
 		
@@ -41,11 +41,37 @@ namespace sarValidate.Commands
 			
 			Program.Log("RunTests");
 			Progress.Message = "Running Test #1";
+			if (!RunTheTest("Siemens Address", sarValidate.SPS.Tests.CheckAddress, "")) return ConsoleHelper.EXIT_ERROR;
+			
 			Thread.Sleep(1000);
-			Progress.Message = "Running Test #2";			
+			Progress.Message = "Running Test #2";
 			Thread.Sleep(1000);
 			
 			return ConsoleHelper.EXIT_OK;
+		}
+		
+		public bool RunTheTest(string name, Func<string, bool> testMethod, string parameter)
+		{
+			try
+			{
+				bool result = testMethod(parameter);
+				if (result)
+				{
+					ConsoleHelper.WriteLine(name + " passed", ConsoleColor.Green);
+				}
+				else
+				{
+					ConsoleHelper.WriteLine(name + " failed", ConsoleColor.Red);					
+				}
+					
+				return result;
+			}
+			catch (Exception ex)
+			{
+				ConsoleHelper.WriteException(ex);
+				ConsoleHelper.WriteLine(name + " failed", ConsoleColor.Red);		
+				return false;
+			}
 		}
 	}
 }

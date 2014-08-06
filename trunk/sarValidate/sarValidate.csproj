@@ -49,6 +49,7 @@
     <Compile Include="Commands\RunTests.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SPS\SiemensTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\sar\sar.csproj">
@@ -58,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Commands" />
+    <Folder Include="SPS" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
