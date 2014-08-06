@@ -25,6 +25,8 @@ namespace sar.Tools
 {
 	public class StringHelper
 	{
+		public const string TAB = "\t";
+		
 		public static string RegexFindString(string input, string pattern)
 		{
 			Match match = Regex.Match(input, pattern);
