@@ -133,6 +133,16 @@ namespace sar.Tools
 			}
 		}
 		
+		public static void WritePassFail(bool ok)
+		{
+			ConsoleHelper.Write("[", ConsoleColor.White);
+			
+			if (ok) ConsoleHelper.Write("OK", ConsoleColor.DarkGreen);
+			if (!ok) ConsoleHelper.Write("FAIL", ConsoleColor.Red);
+			
+			ConsoleHelper.Write("]", ConsoleColor.White);
+		}
+		
 		public static void ApplicationTitle()
 		{
 			ConsoleHelper.Write(AssemblyInfo.Product + " v" + AssemblyInfo.Version, ConsoleColor.Yellow);
