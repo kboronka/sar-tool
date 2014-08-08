@@ -276,10 +276,15 @@ namespace sar.Tools
 		
 		public static int Run(string filename, string arguments)
 		{
-			string output;
-			return ConsoleHelper.Run(filename, arguments, out output);
+			return Run(filename, arguments, -1);
 		}
 		
+		public static int Run(string filename, string arguments, int timeout)
+		{
+			string output;
+			return ConsoleHelper.Run(filename, arguments, out output, timeout);
+		}
+
 		public static int TryRun(string filename, string arguments, out string output)
 		{
 			try
@@ -295,9 +300,14 @@ namespace sar.Tools
 		
 		public static int Run(string filename, string arguments, out string output)
 		{
+			return Run(filename, arguments, out output, -1);
+		}
+		
+		public static int Run(string filename, string arguments, out string output, int timeout)
+		{
 			string error;
 			
-			int result = ConsoleHelper.Run(filename, arguments, out output, out error);
+			int result = ConsoleHelper.Run(filename, arguments, out output, out error, timeout);
 			output += "\n" + error;
 			
 			return result;
@@ -319,8 +329,14 @@ namespace sar.Tools
 		
 		public static int Run(string filename, string arguments, out string output, out string error)
 		{
+			return Run(filename, arguments, out output, out error, -1);
+		}
+		
+		public static int Run(string filename, string arguments, out string output, out string error, int timeout)
+		{
 			arguments = StringHelper.TrimWhiteSpace(arguments);
-			
+			ConsoleHelper.DebugWriteLine(filename + " " + arguments);
+
 			Process shell = new Process();
 			shell.StartInfo.FileName = filename;
 			shell.StartInfo.Arguments = arguments;
@@ -333,9 +349,9 @@ namespace sar.Tools
 			output = shell.StandardOutput.ReadToEnd();
 			error = shell.StandardError.ReadToEnd();
 			
-			ConsoleHelper.DebugWriteLine(filename+ " " + arguments);
+			bool finished = shell.WaitForExit(timeout);
 			
-			shell.WaitForExit();
+			if (!finished) throw new ApplicationException("Failed To Run " + filename);
 			
 			if (!String.IsNullOrEmpty(error))
 			{
