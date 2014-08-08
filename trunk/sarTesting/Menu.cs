@@ -45,20 +45,25 @@ namespace sar.Testing
 		void Button1Click(object sender, EventArgs e)
 		{
 			try
-			{		
+			{
 				throw new Exception("test");
 			}
 			catch (Exception ex)
 			{
 				Program.Log(ex);
-			}			
+			}
 		}
 		
 		void ConnectToSPSClick(object sender, EventArgs e)
 		{
-			// TODO: Implement ConnectToSPSClick
-			Adapter SiemensSPS = new Adapter("10.242.35.166");
-			
+			try
+			{
+				Adapter SiemensSPS = new Adapter("10.242.35.173");
+			}
+			catch (Exception ex)
+			{
+				sar.Tools.ExceptionHandler.Display(ex);
+			}
 		}
 	}
 }
