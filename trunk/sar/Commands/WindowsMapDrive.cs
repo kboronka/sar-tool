@@ -62,8 +62,8 @@ namespace sar.Commands
 			
 			int exitcode;
 			
-			exitcode = ConsoleHelper.Run("net", @"use " + drive + @": /DELETE", 4000);
-			exitcode = ConsoleHelper.Run("net", @"use " + drive + @": " + uncPath + persistent, 20000);
+			exitcode = ConsoleHelper.Run("net", @"use " + drive + @": /DELETE");
+			exitcode = ConsoleHelper.Run("net", @"use " + drive + @": " + uncPath + persistent);
 			
 			if (exitcode != 0)
 			{
