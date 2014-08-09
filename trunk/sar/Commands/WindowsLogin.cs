@@ -56,7 +56,7 @@ namespace sar.Commands
 			
 			int exitcode;
 			
-			exitcode = ConsoleHelper.Run("net", @"use " + uncPath + @" /DELETE");
+			exitcode = ConsoleHelper.Run("net", @"use " + uncPath + @" /DELETE /y");
 			exitcode = ConsoleHelper.Run("net", @"use " + uncPath + @" /USER:" + userName + " " + password + " " + persistent);
 			
 			if (exitcode != 0)
