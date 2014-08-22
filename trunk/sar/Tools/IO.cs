@@ -406,6 +406,11 @@ namespace sar.Tools
 		
 		public static string FindApplication(string exeName)
 		{
+			return FindApplication(exeName, ".");
+		}
+		
+		public static string FindApplication(string exeName, string folder)
+		{
 			// check application name
 			if (String.IsNullOrEmpty(exeName))
 			{
@@ -425,10 +430,10 @@ namespace sar.Tools
 			}
 			
 			// search in program files folders
-			List<String> files = IO.GetAllFiles(IO.ProgramFilesx86, exeName);
+			List<String> files = IO.GetAllFiles(IO.ProgramFilesx86 + folder + @"\", exeName);
 			if (files.Count == 0)
 			{
-				files = IO.GetAllFiles(IO.ProgramFiles, exeName);
+				files = IO.GetAllFiles(IO.ProgramFiles + folder + @"\", exeName);
 			}
 
 			// unable to locate application
