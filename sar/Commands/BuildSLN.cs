@@ -25,9 +25,9 @@ namespace sar.Commands
 	public class BuildSLN : Command
 	{
 		public BuildSLN(Base.CommandHub parent) : base(parent, "Build - .NET soultion",
-		                         new List<string> { "build.net", "b.net" },
-		                         "-b.net [.net version] [solution_path] [msbuild arguments]",
-		                         new List<string> { "-b.net 3.5 sar.sln /p:Configuration=Release /p:Platform=\"x86\"" })
+		                                               new List<string> { "build.net", "b.net" },
+		                                               "-b.net [.net version] [solution_path] [msbuild arguments]",
+		                                               new List<string> { "-b.net 3.5 sar.sln /p:Configuration=Release /p:Platform=\"x86\"" })
 		{
 			
 		}
@@ -65,51 +65,47 @@ namespace sar.Commands
 			Progress.Message = "Locating Installed .NET versions";
 			string msbuildPath = IO.FindDotNetFolder(netVersion);
 			
-			if (netVersion != "1.1")
+			if (netVersion != "1.1" && soultionPath.EndsWith(".sln"))
 			{
 				msbuildPath += @"\MSBuild.exe";
 			}
-			else if (netVersion == "1.1")
+			else if (netVersion == "1.1" && soultionPath.EndsWith(".vbproj"))
 			{
-				string content = Tools.IO.ReadFileAsUtf8(soultionPath);
-				if (content.Contains(".vbproj"))
-				{
-					msbuildPath += @"\vbc.exe";
-				}
-				else if (content.Contains(".csproj"))
-				{
-					msbuildPath += @"\vbc.exe";
-				}
-				else
-				{
-					throw new ApplicationException("unsupported project type");
-				}
+				msbuildPath += @"\vbc.exe";
 			}
-			
-
-			string arguments = "\"" + soultionPath + "\"";
-			
-			for (int i = 3; i < args.Length; i++)
+			else if (netVersion == "1.1" && soultionPath.EndsWith(".csproj"))
 			{
-				arguments += " " + args[i];
-			}
-			
-			Progress.Message = "Building .NET Solution " + solutionFileName;
-			
-			string output;
-			int exitcode = ConsoleHelper.Run(msbuildPath, arguments, out output);
-			if (exitcode != 0)
-			{
-				ConsoleHelper.DebugWriteLine("exit code: " + exitcode.ToString());
-				ConsoleHelper.WriteLine(output, ConsoleColor.DarkCyan);
-				ConsoleHelper.WriteLine("Build Failed", ConsoleColor.DarkYellow);
-				return exitcode;
+				msbuildPath += @"\vbc.exe";
 			}
 			else
 			{
-				ConsoleHelper.WriteLine("Build Successfully Completed", ConsoleColor.DarkYellow);
-				return ConsoleHelper.EXIT_OK;
+				throw new ApplicationException("unsupported project type");
 			}
+		
+
+		string arguments = "\"" + soultionPath + "\"";
+		
+		for (int i = 3; i < args.Length; i++)
+		{
+			arguments += " " + args[i];
+		}
+		
+		Progress.Message = "Building .NET Solution " + solutionFileName;
+		
+		string output;
+		int exitcode = ConsoleHelper.Run(msbuildPath, arguments, out output);
+		if (exitcode != 0)
+		{
+			ConsoleHelper.DebugWriteLine("exit code: " + exitcode.ToString());
+			ConsoleHelper.WriteLine(output, ConsoleColor.DarkCyan);
+			ConsoleHelper.WriteLine("Build Failed", ConsoleColor.DarkYellow);
+			return exitcode;
+		}
+		else
+		{
+			ConsoleHelper.WriteLine("Build Successfully Completed", ConsoleColor.DarkYellow);
+			return ConsoleHelper.EXIT_OK;
 		}
 	}
+}
 }
