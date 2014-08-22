@@ -35,23 +35,15 @@ namespace sar.Commands
 		public override int Execute(string[] args)
 		{
 			// sanity check
-			if (args.Length < 2)
-			{
-				throw new ArgumentException("too few arguments");
-			}
-
-			// get list of msbuild versions available
-			string netVersion = args[1];
-			Progress.Message = "Locating Installed .NET versions";
-			string msbuildPath = IO.FindDotNetFolder(netVersion) + @"\MSBuild.exe";
-
-			// sanity check
 			if (args.Length < 3)
 			{
 				throw new ArgumentException("too few arguments");
 			}
-			
-			Progress.Message = "Searching";
+
+			// -------------------------------------------------------------------------
+			// find solution file
+			// -------------------------------------------------------------------------
+			Progress.Message = "Searching for soultion file";
 			string filePattern = args[2];
 			string root = Directory.GetCurrentDirectory();
 			IO.CheckRootAndPattern(ref root, ref filePattern);
@@ -65,6 +57,34 @@ namespace sar.Commands
 			
 			// sanity - solution file exists
 			if (!File.Exists(soultionPath)) throw new FileNotFoundException(soultionPath + " solution file not found");
+			
+			// -------------------------------------------------------------------------
+			// get list of msbuild versions available
+			// -------------------------------------------------------------------------
+			string netVersion = args[1];
+			Progress.Message = "Locating Installed .NET versions";
+			string msbuildPath = IO.FindDotNetFolder(netVersion);
+			
+			if (netVersion != "1.1")
+			{
+				msbuildPath += @"\MSBuild.exe";
+			}
+			else if (netVersion == "1.1")
+			{
+				string content = Tools.IO.ReadFileAsUtf8(soultionPath);
+				if (content.Contains(".vbproj"))
+				{
+					msbuildPath += @"\vbc.exe";
+				}
+				else if (content.Contains(".csproj"))
+				{
+					msbuildPath += @"\vbc.exe";
+				}
+				else
+				{
+					throw new ApplicationException("unsupported project type");
+				}
+			}
 			
 
 			string arguments = "\"" + soultionPath + "\"";
