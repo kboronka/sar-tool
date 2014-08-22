@@ -482,8 +482,11 @@ namespace sar.Tools
 			foreach (string path in Directory.GetDirectories(msbuildFolder))
 			{
 				string version = path.Remove(0,path.LastIndexOf('\\')+1).Substring(1,3);
-				string msBuildPath = path + "\\MSBuild.exe";
-				if (File.Exists(msBuildPath))
+				string msBuildPath = path + @"\MSBuild.exe";
+				string vbcBuildPath = path + @"\vbc.exe";
+				string cbcBuildPath = path + @"\cbc.exe";
+				
+				if (File.Exists(msBuildPath) || File.Exists(vbcBuildPath) || File.Exists(cbcBuildPath))
 				{
 					allVersions.Add(version);
 				}
@@ -501,8 +504,11 @@ namespace sar.Tools
 			foreach (string path in Directory.GetDirectories(msbuildFolder))
 			{
 				string version = path.Remove(0,path.LastIndexOf('\\')+1).Substring(1,3);
-				string msBuildPath = path + "\\MSBuild.exe";
-				if (File.Exists(msBuildPath))
+				string msBuildPath = path + @"\MSBuild.exe";
+				string vbcBuildPath = path + @"\vbc.exe";
+				string cbcBuildPath = path + @"\cbc.exe";
+				
+				if (File.Exists(msBuildPath) || File.Exists(vbcBuildPath) || File.Exists(cbcBuildPath))
 				{
 					msBuildFolders.Add(version, path);
 					ConsoleHelper.DebugWriteLine(version + " = " + path);
