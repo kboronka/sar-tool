@@ -69,6 +69,12 @@ namespace sar.Commands
 			{
 				msbuildPath += @"\MSBuild.exe";
 			}
+			else if (netVersion == "1.1" && solutionFileName.EndsWith(".sln"))
+			{
+				string devenv = Tools.IO.FindApplication("devenv.exe", "Microsoft Visual Studio .NET 2003");
+				
+				msbuildPath = devenv;
+			}
 			else if (netVersion == "1.1" && soultionPath.EndsWith(".vbproj"))
 			{
 				msbuildPath += @"\vbc.exe";
