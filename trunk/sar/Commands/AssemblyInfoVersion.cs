@@ -51,6 +51,7 @@ namespace sar.Commands
 
 			string[] versionNumbers = version.Split('.');
 			
+			// TODO: handle no version changes
 			if (versionNumbers.Length != 4)
 			{
 				throw new ArgumentException("incorrect version format");
