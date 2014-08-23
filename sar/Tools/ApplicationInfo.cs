@@ -157,9 +157,28 @@ namespace sar.Tools
 				return isWow64;
 			}
 		}
+		
+		private static OperatingSystem os;
+		public static bool IsWinXPOrHigher
+		{
+			get
+			{
+				if (os == null) os = Environment.OSVersion;
+				return (os.Platform == PlatformID.Win32NT) && ((os.Version.Major > 5) || ((os.Version.Major == 5) && (os.Version.Minor >= 1)));
+			}
+		}
+		
+		public static bool IsWinVistaOrHigher
+		{
+			get
+			{
+				if (os == null) os = Environment.OSVersion;
+				return (os.Platform == PlatformID.Win32NT) && (os.Version.Major >= 6);
+			}
+		}
 
 		private static bool hasAdministrativeRight;
-		private static bool hasAdministrativeRightcompleted;		
+		private static bool hasAdministrativeRightcompleted;
 		public static bool HasAdministrativeRight
 		{
 			get
@@ -180,6 +199,6 @@ namespace sar.Tools
 				}
 			}
 		}
-	
+		
 	}
 }
