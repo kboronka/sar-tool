@@ -74,8 +74,8 @@ namespace sar.Tools
 		{
 			if (Environment.UserInteractive)
 			{
-				bool timerenabled = Progress.UpdateTimer.Enabled;
-				Progress.UpdateTimer.Enabled = false;
+				bool timerenabled = Progress.Enabled;
+				Progress.Enabled = false;
 				
 				if (ConsoleHelper.progressVisible)
 				{
@@ -84,7 +84,7 @@ namespace sar.Tools
 				}
 				
 				Console.Write(text);
-				Progress.UpdateTimer.Enabled = timerenabled;
+				Progress.Enabled = timerenabled;
 			}
 		}
 		
@@ -193,10 +193,10 @@ namespace sar.Tools
 		{
 			if (Environment.UserInteractive)
 			{
-				bool timerenabled = Progress.UpdateTimer.Enabled;
-				Progress.UpdateTimer.Enabled = false;
+				bool timerenabled = Progress.Enabled;
+				Progress.Enabled = false;
 				ConsoleKeyInfo key = Console.ReadKey(true);
-				Progress.UpdateTimer.Enabled = timerenabled;
+				Progress.Enabled = timerenabled;
 				return key;
 			}
 			else
@@ -209,10 +209,10 @@ namespace sar.Tools
 		{
 			if (Environment.UserInteractive)
 			{
-				bool timerenabled = Progress.UpdateTimer.Enabled;
-				Progress.UpdateTimer.Enabled = false;
+				bool timerenabled = Progress.Enabled;
+				Progress.Enabled = false;
 				string line = Console.ReadLine();
-				Progress.UpdateTimer.Enabled = timerenabled;
+				Progress.Enabled = timerenabled;
 				return line;
 			}
 			else
@@ -333,7 +333,7 @@ namespace sar.Tools
 			
 			output = shell.StandardOutput.ReadToEnd();
 			error = shell.StandardError.ReadToEnd();
-						
+			
 			shell.WaitForExit();
 			
 			if (!String.IsNullOrEmpty(error))
@@ -472,15 +472,20 @@ namespace sar.Tools
 		
 		public static void Start()
 		{
-			Progress progressBar = new Progress();
-			backgroundThread = new Thread(new ThreadStart(progressBar.Enable));
+			backgroundThread = new Thread(Progress.Enable);
+			backgroundThread.IsBackground = true;
 			backgroundThread.Start();
 		}
 		
 		public static void Shutdown()
 		{
-			Progress.UpdateTimer.Enabled = false;
-			backgroundThread.Abort();
+			if (backgroundThread != null)
+			{
+				Progress.Disable();
+				backgroundThread.Join();
+				backgroundThread.Abort();					
+				backgroundThread = null;
+			}
 		}
 		
 		public static Color ChangeColorBrightness(Color color, float correctionFactor)
