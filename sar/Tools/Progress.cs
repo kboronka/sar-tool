@@ -15,28 +15,22 @@
 
 using System;
 using System.Timers;
+using System.Threading;
 using sar.Tools;
 
 namespace sar.Tools
 {
 	public class Progress
 	{
-		private static Timer updateTimer;
+		private static bool enabled;
+		private static bool started;
 		private static int i = 0;
 		private static string status = "running";
 		
-		public static Timer UpdateTimer
+		public static bool Enabled
 		{
-			get
-			{
-				if (updateTimer == null)
-				{
-					updateTimer = new Timer();
-					updateTimer.Enabled = false;
-				}
-				
-				return updateTimer;
-			}
+			get { return enabled; }
+			set	{ enabled = value; }
 		}
 		
 		public static String Message
@@ -48,12 +42,7 @@ namespace sar.Tools
 		{
 			try
 			{
-				if (updateTimer.Enabled)
-				{
-					if (++Progress.i >= 6) Progress.i = 0;
-					
-					ConsoleHelper.WriteProgress("\r" + Progress.status + new String('.', i) + new String(' ', 79 - Progress.status.Length - i) + "\r", ConsoleColor.Cyan);
-				}
+
 			}
 			catch
 			{
@@ -61,17 +50,26 @@ namespace sar.Tools
 			}
 		}
 		
-		public void Enable()
+		public static void Enable()
 		{
-			i = 0;
-			if (updateTimer == null)
-			{
-				updateTimer = new Timer();
-				updateTimer.Interval = 100;
-				updateTimer.Elapsed += new ElapsedEventHandler(Update);
-			}
+			started = true;
 			
-			UpdateTimer.Enabled = true;
+			while (started && Tools.ApplicationInfo.IsWinVistaOrHigher)
+			{
+				Thread.Sleep(100);
+				
+				if (enabled)
+				{
+					if (++Progress.i >= 6) Progress.i = 0;
+					
+					ConsoleHelper.WriteProgress("\r" + Progress.status + new String('.', i) + new String(' ', 79 - Progress.status.Length - i) + "\r", ConsoleColor.Cyan);
+				}
+			}
+		}
+		
+		public static void Disable()
+		{
+			started = false;
 		}
 	}
 }

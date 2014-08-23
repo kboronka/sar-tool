@@ -79,7 +79,7 @@ namespace sar.Base
 							// Execute Command
 							if (command != "exit")
 							{
-								Progress.UpdateTimer.Enabled = true;
+								Progress.Enabled = true;
 
 								do
 								{
@@ -101,7 +101,7 @@ namespace sar.Base
 									
 								} while (this.Loop);
 								
-								Progress.UpdateTimer.Enabled = false;
+								Progress.Enabled = false;
 								args = new string[0];
 							}
 							else
@@ -119,7 +119,7 @@ namespace sar.Base
 					catch (Exception ex)
 					{
 						args = new string[0];
-						Progress.UpdateTimer.Enabled = false;
+						Progress.Enabled = false;
 						ConsoleHelper.WriteException(ex);
 						if (this.PauseAfter)
 						{
@@ -136,7 +136,7 @@ namespace sar.Base
 			}
 			catch (Exception ex)
 			{
-				Progress.UpdateTimer.Enabled = false;
+				Progress.Enabled = false;
 				ConsoleHelper.WriteException(ex);
 				Thread.Sleep(2000);
 				
@@ -178,7 +178,7 @@ namespace sar.Base
 			}
 			
 			int exitCode = ConsoleHelper.EXIT_ERROR;
-			Progress.UpdateTimer.Enabled = true;
+			Progress.Enabled = true;
 			
 			do
 			{
@@ -192,7 +192,7 @@ namespace sar.Base
 				
 			} while (this.Loop);
 			
-			Progress.UpdateTimer.Enabled = false;
+			Progress.Enabled = false;
 			
 			return exitCode;
 		}
