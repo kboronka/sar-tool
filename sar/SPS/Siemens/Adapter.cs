@@ -72,7 +72,6 @@ namespace sar.SPS.Siemens
 			return 0;
 		}
 		
-		
 		private byte[] ReadWriteMessage(Action action, Areas addressArea, ushort dataBlock, uint startAddress, ushort length)
 		{
 			byte[] message = new byte[] {(byte)action, 0x1};
