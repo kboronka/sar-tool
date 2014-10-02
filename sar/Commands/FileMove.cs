@@ -39,40 +39,45 @@ namespace sar.Commands
 				throw new ArgumentException("incorrect number of arguments");
 			}
 			
-			Progress.Message = "Searching";
-			string filePattern = args[1];
-			string root = Directory.GetCurrentDirectory();
-			IO.CheckRootAndPattern(ref root, ref filePattern);
-			List<string> files = IO.GetAllFiles(root, filePattern);
+			ConsoleHelper.DebugWriteLine("args[1]: " + args[1]);
+			ConsoleHelper.DebugWriteLine("args[2]: " + args[2]);
 			
-			ConsoleHelper.DebugWriteLine("pattern: " + filePattern);
-			ConsoleHelper.DebugWriteLine("root: " + root);
+			Progress.Message = "Searching";
+			string searchPattern = args[1];
+			string searchRoot = Directory.GetCurrentDirectory();
+			
+			IO.CheckRootAndPattern(ref searchRoot, ref searchPattern);
+			List<string> files = IO.GetAllFiles(searchRoot, searchPattern);
+
+			ConsoleHelper.DebugWriteLine("search pattern: " + searchPattern);
+			ConsoleHelper.DebugWriteLine("search root: " + searchRoot);
 			
 			if (files.Count == 0)
 			{
-				ConsoleHelper.WriteException(new FileNotFoundException("unable to find any files that match pattern: \"" + filePattern + "\" in root: \"" + root + "\""));
+				ConsoleHelper.WriteException(new FileNotFoundException("unable to find any files that match pattern: [" + searchPattern + "]  in root: [" + searchRoot + "]"));
 				return ConsoleHelper.EXIT_ERROR;
 			}
 			else
 			{
 				Progress.Message = "Locating Archive Folder";
-				string archivepath = args[2];
-				string archiveroot = Directory.GetCurrentDirectory();
-				ConsoleHelper.DebugWriteLine("args[2]: " + args[2]);
-				archivepath = IO.CheckPath(archiveroot, archivepath);
-				ConsoleHelper.DebugWriteLine("archivepath: " + archivepath);
-				ConsoleHelper.DebugWriteLine("archiveroot: " + archiveroot);
-				if (!Directory.Exists(archiveroot))	Directory.CreateDirectory(archiveroot);
+				string archiveRoot = args[2];
+				string archivePattern = "*.*";
+				
+				archiveRoot = IO.CheckPath(archiveRoot, "");
+				
+				ConsoleHelper.DebugWriteLine("archivePattern: " + archivePattern);
+				ConsoleHelper.DebugWriteLine("archiveRoot: " + archiveRoot);
+				if (!Directory.Exists(archiveRoot))	Directory.CreateDirectory(archiveRoot);
 
 				int counter = 0;
 				foreach (string originalFile in files)
 				{
-					if (!originalFile.Contains(archivepath))
+					if (!originalFile.Contains(archiveRoot))
 					{
 						if (this.commandHub.IncludeSVN || !IO.IsSVN(originalFile))
 						{
-							string fileRelativePath = StringHelper.TrimStart(originalFile, root.Length);
-							string backupFile = archivepath + originalFile.Substring(root.Length);
+							string fileRelativePath = StringHelper.TrimStart(originalFile, searchRoot.Length);
+							string backupFile = archiveRoot + originalFile.Substring(searchRoot.Length);
 							string backupRoot = IO.GetRoot(backupFile);
 
 							

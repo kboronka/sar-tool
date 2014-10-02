@@ -184,6 +184,8 @@ namespace sar.Tools
 		
 		public static string CheckPath(string root, string path)
 		{
+			if (path.LastIndexOf("\"") != -1) path = path.Substring(0, path.Length - 1);
+			if (root.LastIndexOf("\"") != -1) root = root.Substring(0, root.Length - 1);
 			if (path.LastIndexOf(@"\") == -1) path = @".\" + path;
 			if (path.Substring(path.Length - 1, 1) != @"\") path += @"\";
 			CheckRootAndPattern(ref root, ref path);
@@ -200,7 +202,7 @@ namespace sar.Tools
 			
 			if (!Directory.Exists(root))
 			{
-				throw new FileNotFoundException("root search path does not exist");
+				throw new FileNotFoundException("root search path does not exist [" + root + "]");
 			}
 			
 			List<string> files = new List<string>();

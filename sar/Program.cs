@@ -36,11 +36,13 @@ namespace sar
 			{
 				
 				#if DEBUG
+				/*
 				args = new string[] { "f.rd", @"C:\Users\kboronka\Documents\Virtual Machines\caches", @"/pause" };
 				args = new string[] { "rdp", "192.168.171.208", @"username", "password", @"/pause" };
-				args = new string[] { "ip.set", "LAN", "dhcp", @"/debug", @"/pause", @"/admin"};
-				args = new string[] { "ip.set", "LAN", "192.168.14.111", "255.255.255.0", @"/debug", @"/pause", @"/admin"};
-				args = new string[] { "ip.config", @"/pause"};
+				args = new string[] { "ip.set", "LAN", "dhcp", @"/debug", @"/pause", @"/admin" };
+				args = new string[] { "ip.set", "LAN", "192.168.14.111", "255.255.255.0", @"/debug", @"/pause", @"/admin" };
+				args = new string[] { "ip.config", @"/pause" };
+				*/
 				#endif
 				
 				CommandHub hub = new CommandHub();
