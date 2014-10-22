@@ -47,9 +47,9 @@ namespace sar.Commands
 			
 			string userName = args[2];
 			string password = args[3];
-			string persistent = "/PERSISTENT:NO";
+			string persistent = "/persistent:no";
 
-			if (args.Length >= 4 && (args[3].ToLower() == "p" || args[3].ToLower() == "persistent"))
+			if (args.Length >= 5 && (args[4].ToLower() == "p" || args[4].ToLower() == "persistent"))
 			{
 				persistent = " /savecred /persistent:yes";
 			}
