@@ -49,9 +49,9 @@ namespace sar.Commands
 			string password = args[3];
 			string persistent = "/PERSISTENT:NO";
 
-			if (args.Length == 4 && args[3] == "p")
+			if (args.Length >= 4 && (args[3].ToLower() == "p" || args[3].ToLower() == "persistent"))
 			{
-				persistent = " /PERSISTENT:YES";
+				persistent = " /persistent:yes";
 			}
 			
 			int exitcode;

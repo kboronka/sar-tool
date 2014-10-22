@@ -55,7 +55,7 @@ namespace sar.Commands
 			if (uncPath.Substring(0,2) != @"\\") uncPath = @"\\" + uncPath;
 			
 			string persistent = "";
-			if (args.Length == 4 && args[3] == "p")
+			if (args.Length >= 4 && (args[3].ToLower() == "p" || args[3].ToLower() == "persistent"))
 			{
 				persistent = " /savecred /persistent:yes";
 			}
