@@ -180,7 +180,7 @@ namespace sar.Tools
 			if (ConsoleHelper.ShowDebug)
 			{
 				ConsoleHelper.WriteLine(text, ConsoleColor.Blue);
-			}
+			} 
 		}
 		
 		public static ConsoleKeyInfo ReadKey(string text)
@@ -320,8 +320,13 @@ namespace sar.Tools
 		public static int Run(string filename, string arguments, out string output, out string error)
 		{
 			arguments = StringHelper.TrimWhiteSpace(arguments);
-			ConsoleHelper.DebugWriteLine(filename+ " " + arguments);
-
+			
+			if (ConsoleHelper.ShowDebug)
+			{
+				ConsoleHelper.Write(filename, ConsoleColor.White);
+				ConsoleHelper.WriteLine(" " + arguments, ConsoleColor.Gray);
+			}
+			
 			Process shell = new Process();
 			shell.StartInfo.FileName = filename;
 			shell.StartInfo.Arguments = arguments;
@@ -336,9 +341,10 @@ namespace sar.Tools
 			
 			shell.WaitForExit();
 			
-			if (!String.IsNullOrEmpty(error))
+			if (ConsoleHelper.ShowDebug && !String.IsNullOrEmpty(error))
 			{
-				ConsoleHelper.DebugWriteLine("error: " + error + " " + arguments);
+				ConsoleHelper.Write("error:", ConsoleColor.Red);
+				ConsoleHelper.WriteLine(" " + StringHelper.TrimWhiteSpace(error), ConsoleColor.Gray);
 			}
 			
 			return shell.ExitCode;
