@@ -51,7 +51,7 @@ namespace sar.Commands
 
 			if (args.Length >= 5 && (args[4].ToLower() == "p" || args[4].ToLower() == "persistent"))
 			{
-				persistent = " /savecred";
+				persistent = "/persistent:yes";
 			}
 			
 			int exitcode;
