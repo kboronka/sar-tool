@@ -62,7 +62,12 @@ namespace sar.Commands
 			
 			int exitcode;
 			
-			exitcode = ConsoleHelper.Run("net", @"use " + drive + @": /DELETE /y");
+			
+			if (!MappingExists(drive, uncPath))
+		    {
+		    	exitcode = ConsoleHelper.Run("net", @"use " + drive + @": /DELETE /y");
+		    }
+
 			exitcode = ConsoleHelper.Run("net", @"use " + drive + @": " + uncPath + persistent);
 			
 			if (exitcode != 0)
@@ -73,6 +78,16 @@ namespace sar.Commands
 
 			ConsoleHelper.WriteLine("Login to " + serverAddres + " was successful", ConsoleColor.DarkYellow);
 			return ConsoleHelper.EXIT_OK;
+		}
+		
+		private static bool MappingExists(string drive, string uncPath)
+		{
+			int exitcode;
+			string result = "";
+			
+			exitcode = ConsoleHelper.Run("net", @"use", out result);
+			
+			return result.ToLower().Contains("ok           " + drive.ToLower() + ":        " + uncPath.ToLower());
 		}
 	}
 }
