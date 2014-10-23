@@ -25,8 +25,8 @@ namespace sar.Commands
 	public class WindowsMapDrive : Command
 	{
 		public WindowsMapDrive(Base.CommandHub parent) : base(parent, "Windows - Map Drive", new List<string> { "windows.map", "win.map" },
-		                                "-windows.map [drive letter] [UNC path] [persistent]",
-		                                new List<string>() { @"-windows.map S \\192.168.0.244\temp p" })
+		                                                      "-windows.map [drive letter] [UNC path] [persistent]",
+		                                                      new List<string>() { @"-windows.map S \\192.168.0.244\temp p" })
 		{
 			
 		}
@@ -64,19 +64,23 @@ namespace sar.Commands
 			
 			
 			if (!MappingExists(drive, uncPath))
-		    {
-		    	exitcode = ConsoleHelper.Run("net", @"use " + drive + @": /DELETE /y");
-		    }
-
-			exitcode = ConsoleHelper.Run("net", @"use " + drive + @": " + uncPath + persistent);
-			
-			if (exitcode != 0)
 			{
-				ConsoleHelper.WriteLine("Login to " + serverAddres + " has failed", ConsoleColor.DarkYellow);
-				return ConsoleHelper.EXIT_ERROR;
+				exitcode = ConsoleHelper.Run("net", @"use " + drive + @": /DELETE /y");
+				exitcode = ConsoleHelper.Run("net", @"use " + drive + @": " + uncPath + persistent);
+				
+				if (exitcode != 0)
+				{
+					ConsoleHelper.WriteLine("Mapping of " + drive + "drive has failed", ConsoleColor.DarkYellow);
+					return ConsoleHelper.EXIT_ERROR;
+				}
+				
+				ConsoleHelper.WriteLine("Mapping of " + drive + "drive was successful", ConsoleColor.DarkYellow);
 			}
-
-			ConsoleHelper.WriteLine("Login to " + serverAddres + " was successful", ConsoleColor.DarkYellow);
+			else
+			{
+				ConsoleHelper.WriteLine(drive + "drive is already mapped to " + uncPath, ConsoleColor.DarkYellow);
+			}
+			
 			return ConsoleHelper.EXIT_OK;
 		}
 		
