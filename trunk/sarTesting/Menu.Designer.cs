@@ -50,6 +50,7 @@ namespace sar.Testing
 			this.booleanIndicator1 = new sar.Controls.BooleanIndicator();
 			this.button1 = new System.Windows.Forms.Button();
 			this.ConnectToSPS = new System.Windows.Forms.Button();
+			this.button2 = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -124,11 +125,22 @@ namespace sar.Testing
 			this.ConnectToSPS.UseVisualStyleBackColor = true;
 			this.ConnectToSPS.Click += new System.EventHandler(this.ConnectToSPSClick);
 			// 
+			// button2
+			// 
+			this.button2.Location = new System.Drawing.Point(160, 184);
+			this.button2.Name = "button2";
+			this.button2.Size = new System.Drawing.Size(113, 23);
+			this.button2.TabIndex = 6;
+			this.button2.Text = "Send Email";
+			this.button2.UseVisualStyleBackColor = true;
+			this.button2.Click += new System.EventHandler(this.Button2Click);
+			// 
 			// Menu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(507, 235);
+			this.Controls.Add(this.button2);
 			this.Controls.Add(this.ConnectToSPS);
 			this.Controls.Add(this.booleanIndicator1);
 			this.Controls.Add(this.comboBox1);
@@ -141,6 +153,7 @@ namespace sar.Testing
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
 			this.ResumeLayout(false);
 		}
+		private System.Windows.Forms.Button button2;
 		private System.Windows.Forms.Button ConnectToSPS;
 		private System.Windows.Forms.Button button1;
 		private sar.Controls.BooleanIndicator booleanIndicator1;
