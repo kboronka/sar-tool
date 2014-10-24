@@ -71,6 +71,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Address.cs">
+      <DependentUpon>app.config</DependentUpon>
+    </Compile>
     <Compile Include="Base\BaseCommand.cs" />
     <Compile Include="Base\CommandHub.cs" />
     <Compile Include="Base\Configuration.cs" />
@@ -123,7 +126,7 @@
     <Compile Include="Socket\SocketServer.cs" />
     <Compile Include="Socket\SocketValue.cs" />
     <Compile Include="SPS\Siemens\Adapter.cs" />
-    <Compile Include="SPS\Siemens\Address.cs" />
+    <Compile Include="SPS\Socket.cs" />
     <Compile Include="Tools\ActiveDirectory.cs" />
     <Compile Include="Tools\ApplicationInfo.cs" />
     <Compile Include="Tools\AssemblyInfo.cs" />

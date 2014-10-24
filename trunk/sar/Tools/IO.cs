@@ -789,11 +789,19 @@ namespace sar.Tools
 			return Combine(Split(upper), Split(lower));
 		}
 		
-		public static byte[] SubSet(byte[] source, ushort first, ushort length)
+		public static byte[] SubSet(byte[] source, int first, int length)
 		{
 			byte[] result = new byte[length];
 			Buffer.BlockCopy(source, first, result, 0, length);
 			
+			return result;
+		}
+		
+		
+		public static byte[] SubSetReversed(byte[] source, int first, int length)
+		{
+			byte[] result = SubSet(source, first, length);
+			Array.Reverse(result);
 			return result;
 		}
 		

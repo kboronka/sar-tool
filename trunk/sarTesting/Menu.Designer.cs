@@ -51,6 +51,7 @@ namespace sar.Testing
 			this.button1 = new System.Windows.Forms.Button();
 			this.ConnectToSPS = new System.Windows.Forms.Button();
 			this.button2 = new System.Windows.Forms.Button();
+			this.textBox1 = new System.Windows.Forms.TextBox();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -96,7 +97,7 @@ namespace sar.Testing
 			// 
 			this.booleanIndicator1.Caption = "booleanIndicator";
 			this.booleanIndicator1.Font = new System.Drawing.Font("Arial", 9.75F);
-			this.booleanIndicator1.Location = new System.Drawing.Point(234, 101);
+			this.booleanIndicator1.Location = new System.Drawing.Point(56, 72);
 			this.booleanIndicator1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.booleanIndicator1.MaximumSize = new System.Drawing.Size(500, 16);
 			this.booleanIndicator1.MinimumSize = new System.Drawing.Size(100, 16);
@@ -117,7 +118,7 @@ namespace sar.Testing
 			// 
 			// ConnectToSPS
 			// 
-			this.ConnectToSPS.Location = new System.Drawing.Point(325, 136);
+			this.ConnectToSPS.Location = new System.Drawing.Point(336, 184);
 			this.ConnectToSPS.Name = "ConnectToSPS";
 			this.ConnectToSPS.Size = new System.Drawing.Size(113, 23);
 			this.ConnectToSPS.TabIndex = 5;
@@ -135,11 +136,19 @@ namespace sar.Testing
 			this.button2.UseVisualStyleBackColor = true;
 			this.button2.Click += new System.EventHandler(this.Button2Click);
 			// 
+			// textBox1
+			// 
+			this.textBox1.Location = new System.Drawing.Point(288, 88);
+			this.textBox1.Name = "textBox1";
+			this.textBox1.Size = new System.Drawing.Size(168, 20);
+			this.textBox1.TabIndex = 7;
+			// 
 			// Menu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(507, 235);
+			this.Controls.Add(this.textBox1);
 			this.Controls.Add(this.button2);
 			this.Controls.Add(this.ConnectToSPS);
 			this.Controls.Add(this.booleanIndicator1);
@@ -152,7 +161,9 @@ namespace sar.Testing
 			this.Text = "Menu";
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
 			this.ResumeLayout(false);
+			this.PerformLayout();
 		}
+		private System.Windows.Forms.TextBox textBox1;
 		private System.Windows.Forms.Button button2;
 		private System.Windows.Forms.Button ConnectToSPS;
 		private System.Windows.Forms.Button button1;

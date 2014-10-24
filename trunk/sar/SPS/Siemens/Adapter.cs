@@ -51,6 +51,8 @@ namespace sar.SPS.Siemens
 		
 		private bool Connect()
 		{
+			// TODO: add automatic retry
+
 			// open a TCP connection to S7 via port 102
 			this.socket = new SPSSocket(this.ipAddress, 102);
 
@@ -62,6 +64,8 @@ namespace sar.SPS.Siemens
 			DebugWrite("responce", responce);
 			this.connected = responce.SequenceEqual(CONNECTED_TO_ADAPTER);
 			
+			// TODO: end of automatic retry
+
 			
 			// exchange PDU
 			message = EncodeTPDU(TPKT_PDU, EXCHANGE_PDU_PARAMETER);
@@ -85,7 +89,9 @@ namespace sar.SPS.Siemens
 			byte[] responce = socket.Write(message);
 			DebugWrite("responce", responce);
 			
-			return BitConverter.ToInt16(message, 0);
+			byte[] data = ExtractTPDU(responce);
+			
+			return BitConverter.ToInt16(data, 0);
 		}
 		
 		private byte[] ReadWriteMessage(Action action, Address address)
@@ -212,47 +218,30 @@ namespace sar.SPS.Siemens
 			Debug.WriteLine(line);
 		}
 
-		/*
-Trying to read 16 bytes from FW0.
-PDU header:
-                            0:0x32,0x01,0x00,0x00,0x00,0x00,0x00,0x0E,0x00,0x00,
-
-plen: 14 dlen: 0
-Parameter:
-                            0:0x04,0x01,0x12,0x0A,0x10,0x02,0x00,0x10,0x00,0x00,0x83,0x00,0x00,0x00,
-_daveExchange PDU number: 65537
-IF1 enter _daveExchangeTCP
-send packet: :
-                            0:0x03,0x00,0x00,0x1F,0x02,0xF0,0x80,0x32,0x01,0x00,0x00,0x00,0x01,0x00,0x0E,0x00,
-                            10:0x00,0x04,0x01,0x12,0x0A,0x10,0x02,0x00,0x10,0x00,0x00,0x83,0x00,0x00,0x00,
-readISOpacket: 41 bytes read, 41 needed
-readISOpacket: packet:
-                            0:0x03,0x00,0x00,0x29,0x02,0xF0,0x80,0x32,0x03,0x00,0x00,0x00,0x01,0x00,0x02,0x00,
-                            10:0x14,0x00,0x00,0x04,0x01,0xFF,0x04,0x00,0x80,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-                            20:0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-IF1 _daveExchangeTCP res from read 41
-result of exchange: 0
-PDU header:
-                            0:0x32,0x03,0x00,0x00,0x00,0x01,0x00,0x02,0x00,0x14,0x00,0x00,
-plen: 2 dlen: 20
-Parameter:
-                            0:0x04,0x01,
-Data     :
-                            0:0xFF,0x04,0x00,0x80,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-                            10:0x00,0x00,0x00,0x00,
-Data hdr :
-                            0:0xFF,0x04,0x00,0x80,
-Data     :
-                            0:0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-error: ok
-_daveSetupReceivedPDU() returned: 0=ok
-_daveTestReadResult() returned: 0=ok
-FD0: 0
-FD4: 0
-FD8: 0
-FD12: 0.000000
-Finished.
-		 *
-		 */
+		private byte[] ExtractTPDU(byte[] message)
+		{
+			// PDU
+			byte[] PDU = IO.SubSet(message, 7, 12);
+			int paramLength = BitConverter.ToInt16(IO.SubSetReversed(PDU, 6, 2), 0);
+			int extractDataLength = BitConverter.ToInt16(IO.SubSetReversed(PDU, 8, 2), 0);
+			int errorCode = BitConverter.ToInt16(IO.SubSetReversed(PDU, 10, 2), 0);
+			
+			// parameters
+			byte[] parameters = IO.SubSet(message, 7+12, paramLength);
+			Action action = (Action)parameters[0];
+			int itemsToRead = parameters[1];
+			
+			// extract data
+			byte[] extractData = IO.SubSet(message, 7+12+paramLength, extractDataLength);
+			bool dataValid = (extractData[0] == 0xFF);
+			int dataTransportSize = extractData[1];
+			int lengthInBytes = BitConverter.ToInt16(IO.SubSetReversed(extractData, 2, 2), 0) / 8;
+			
+			// data
+			byte[] data = IO.SubSet(extractData, 4, extractDataLength - 4);
+			Array.Reverse(data);
+			
+			return data;
+		}
 	}
 }
