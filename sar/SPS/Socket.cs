@@ -36,7 +36,7 @@ namespace sar.SPS
 			this.socket.ReceiveTimeout = timeout;
 			byte[] buffer = new byte[this.socket.ReceiveBufferSize];
 			int responceSize = this.socket.Receive(buffer);
-			return IO.SubSet(buffer, 0, Convert.ToByte(responceSize));
+			return IO.SubSet(buffer, 0, responceSize);
 		}
 	}
 }
