@@ -67,6 +67,6 @@ namespace sar.Commands
 
 			ConsoleHelper.WriteLine("Login to " + serverAddres + " was successful", ConsoleColor.DarkYellow);
 			return ConsoleHelper.EXIT_OK;
-		}	
+		}
 	}
 }
