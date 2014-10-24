@@ -61,9 +61,9 @@ namespace sar.SPS.Siemens
 			}
 
 			
-			if (address.Length > 1 && address[0] == 'D') this.length = 4 * 8;
-			else if (address.Length > 1 && address[0] == 'W') this.length = 2 * 8;
-			else if (address.Length > 1 && address[0] == 'B') this.length = 1 * 8;
+			if (address.Length > 1 && address[0] == 'D') this.length = 4;
+			else if (address.Length > 1 && address[0] == 'W') this.length = 2;
+			else if (address.Length > 1 && address[0] == 'B') this.length = 1;
 			else if (address.Length > 1 && this.area == Areas.DB && address[0] == 'X') this.length = 1;
 			else if (address.Length > 1 && this.area != Areas.DB && StringHelper.IsNumeric(address[0])) this.length = 1;
 			else throw new InvalidDataException("Invalid Address Type");
