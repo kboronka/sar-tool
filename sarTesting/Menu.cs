@@ -15,7 +15,11 @@
 
 using System;
 using System.Drawing;
+using System.Net;
+using System.Net.Mail;
 using System.Windows.Forms;
+
+using Outlook = Microsoft.Office.Interop.Outlook;
 
 using sar.SPS.Siemens;
 
@@ -64,6 +68,23 @@ namespace sar.Testing
 			{
 				sar.Tools.ExceptionHandler.Display(ex);
 			}
+		}
+		
+		private void SendOutlookEmail(string recipient, string subject, string message)
+		{
+			Outlook.Application outlook = new Microsoft.Office.Interop.Outlook.Application();
+			Outlook.MailItem mailItem = (Outlook.MailItem)outlook.CreateItem(Outlook.OlItemType.olMailItem);
+			mailItem.Subject = subject;
+			mailItem.To = recipient;
+			mailItem.Body = message;
+			mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
+			mailItem.Display(false);
+			mailItem.Send();
+		}
+		
+		void Button2Click(object sender, EventArgs e)
+		{
+			SendOutlookEmail("kboronka@gmail.com", "Subject", "Body");
 		}
 	}
 }
