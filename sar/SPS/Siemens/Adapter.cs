@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.IO;
-using System.Net.Sockets;
+
 
 using sar.Tools;
 
@@ -32,14 +32,15 @@ namespace sar.SPS.Siemens
 	public class Adapter
 	{
 		private string ipAddress;
-		private TcpClient socket;
-		private NetworkStream stream;
+		private sar.SPS.SPSSocket socket;
+		
 		private bool connected;
 		
 		private static readonly byte[] CONNECT_TO_ADAPTER = 	new byte[] { 0x11, 0xE0, 0x00, 0x00, 0x00, 0x01, 0x00, 0xC0, 0x01, 0x09, 0xC1, 0x02, 0x4B, 0x54, 0xC2, 0x02, 0x03, 0x02 };
 		private static readonly byte[] CONNECTED_TO_ADAPTER =	new byte[] { 0x11, 0xD0, 0x00, 0x01, 0x00, 0x00, 0x00, 0xC0, 0x01, 0x09, 0xC1, 0x02, 0x4B, 0x54, 0xC2, 0x02, 0x03, 0x02 };
 		private static readonly byte[] EXCHANGE_PDU_PARAMETER =	new byte[] { 0xF0, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0xF0 };
 		private static readonly byte[] TPKT =					new byte[] { 0x03, 0x00, 0x00, 0x1F };
+		private static readonly byte[] TPKT_PDU =				new byte[] { 0x03, 0x00, 0x00, 0x19 };
 
 		public Adapter(string ipAddress)
 		{
@@ -51,25 +52,45 @@ namespace sar.SPS.Siemens
 		private bool Connect()
 		{
 			// open a TCP connection to S7 via port 102
-			this.socket = new TcpClient(this.ipAddress, 102);
-			this.stream = this.socket.GetStream();
+			this.socket = new SPSSocket(this.ipAddress, 102);
 
 			// write data to socket
 			byte[] message = IO.Combine(TPKT, CONNECT_TO_ADAPTER);
 			EncodeTPKTSize(ref message);
-			stream.Write(message, 0, message.Length);
-
-			// wait for responce
-			byte[] responce = new byte[22];
-			int responceSize = stream.Read(responce, 0, responce.Length);
+			DebugWrite("connect message", message);
+			byte[] responce = socket.Write(message);
+			DebugWrite("responce", responce);
+			this.connected = responce.SequenceEqual(CONNECTED_TO_ADAPTER);
 			
-			return responce.SequenceEqual(CONNECTED_TO_ADAPTER);
+			
+			// exchange PDU
+			message = EncodeTPDU(TPKT_PDU, EXCHANGE_PDU_PARAMETER);
+			DebugWrite("ExchangePDU", message);
+			responce = socket.Write(message);
+			DebugWrite("responce", responce);
+			
+			return this.connected;
 		}
 		
 		public int ReadInt(string address)
 		{
-			throw new ApplicationException("function incomplete");
-			return 0;
+			Address s7address = new Address(address);
+			// TODO: validate integer type
+			
+			// send read request message
+			byte[] message = ReadWriteMessage(Action.Read, s7address);
+			DebugWrite("ReadWriteMessage", message);
+			message = EncodeTPDU(TPKT, message);
+			DebugWrite("TPDU", message);
+			byte[] responce = socket.Write(message);
+			DebugWrite("responce", responce);
+			
+			return BitConverter.ToInt16(message, 0);
+		}
+		
+		private byte[] ReadWriteMessage(Action action, Address address)
+		{
+			return ReadWriteMessage(action, address.area, address.dataBlock, address.startAddress, address.length);
 		}
 		
 		private byte[] ReadWriteMessage(Action action, Areas addressArea, ushort dataBlock, uint startAddress, ushort length)
@@ -81,9 +102,6 @@ namespace sar.SPS.Siemens
 			
 			// transport type
 			message = IO.Combine(message, new byte[]  { (byte)TransportType.Byte });
-			
-			// transport type
-			message = IO.Combine(message, new byte[]  { (byte)TransportType.Byte });
 
 			// length (bytes)
 			message = IO.Combine(message, IO.Split(length));
@@ -92,14 +110,21 @@ namespace sar.SPS.Siemens
 			if (addressArea != Areas.DB) dataBlock = 0;
 			message = IO.Combine(message, IO.Split(dataBlock));
 
+			// address area
+			message = IO.Combine(message, new byte[]  { (byte)addressArea });
+
 			// start address
-			startAddress = startAddress * 8;
 			message = IO.Combine(message, IO.SubSet(IO.Split(startAddress), 1, 3));
 
 			return message;
 		}
 		
-		private byte[] EncodeTPDU(byte[] parameterCode, byte[] parameterValue)
+		private byte[] EncodeTPDU(byte[] header, byte[] parameterCode)
+		{
+			return 	EncodeTPDU(header, parameterCode, new byte[] {});
+		}
+		
+		private byte[] EncodeTPDU(byte[] header, byte[] parameterCode, byte[] parameterValue)
 		{
 			if (parameterCode.Length < 8) throw new InvalidDataException("incorred parameter code size");
 			if (parameterValue.Length > 32) throw new InvalidDataException("parameter value too large");
@@ -126,7 +151,7 @@ namespace sar.SPS.Siemens
 					throw new InvalidOperationException("unknown action " + action.ToString());
 			}
 
-			byte[] message = TPKT;
+			byte[] message = header;
 			
 			// iso 8073
 			message = IO.Combine(message, new byte[] { 0x2, 0xF0, 0x80 });
@@ -171,9 +196,20 @@ namespace sar.SPS.Siemens
 			message[3] = IO.Split(messageSize)[1];
 		}
 		
-		private int ReadInt()
+		private static void DebugWrite(string title, byte[] data)
 		{
-			return 0;
+			string line = "";
+			string delimiter = "";
+			
+			line += title + " [";
+			foreach (byte b in data)
+			{
+				line += delimiter + b.ToString();
+				delimiter = ", ";
+			}
+			line += "]";
+			
+			Debug.WriteLine(line);
 		}
 
 		/*
