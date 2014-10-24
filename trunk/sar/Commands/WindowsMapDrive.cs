@@ -78,7 +78,7 @@ namespace sar.Commands
 			}
 			else
 			{
-				ConsoleHelper.WriteLine(drive + "drive is already mapped to " + uncPath, ConsoleColor.DarkYellow);
+				ConsoleHelper.WriteLine(drive.ToUpper() + ": drive already mapped to " + uncPath, ConsoleColor.DarkYellow);
 			}
 			
 			return ConsoleHelper.EXIT_OK;
