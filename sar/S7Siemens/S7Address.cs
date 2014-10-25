@@ -18,7 +18,7 @@ using System.IO;
 
 using sar.Tools;
 
-namespace sar.SPS.Siemens
+namespace sar.S7Siemens
 {
 	public enum Areas : byte { P = 0x80, I = 0x81, Q = 0x82, M = 0x83, DB = 0x84, DI = 0x85, L = 0x86, VL = 0x87 };
 	

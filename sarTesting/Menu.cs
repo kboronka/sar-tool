@@ -21,7 +21,7 @@ using System.Windows.Forms;
 
 using Outlook = Microsoft.Office.Interop.Outlook;
 
-using sar.SPS.Siemens;
+using S7 = sar.S7Siemens;
 
 namespace sar.Testing
 {
@@ -62,8 +62,9 @@ namespace sar.Testing
 		{
 			try
 			{
-				Adapter siemensS7 = new Adapter("10.242.217.122");
+				S7.Adapter siemensS7 = new S7.Adapter("10.242.217.122");
 				int test = siemensS7.ReadInt("MW6000");
+				int test2 = siemensS7.ReadInt("DB264.DBB0");
 				textBox1.Text = "MW6000 = " + test.ToString();
 			}
 			catch (Exception ex)

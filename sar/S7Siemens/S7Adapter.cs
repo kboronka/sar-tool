@@ -24,7 +24,7 @@ using sar.Tools;
 
 // specifications: http://tools.ietf.org/html/rfc905
 
-namespace sar.SPS.Siemens
+namespace sar.S7Siemens
 {
 	public enum Action : byte { Read = 0x4, Write = 0x5, ExchangePDU = 0xF0 };
 	public enum TransportType : byte { Bit = 0x1, Byte = 0x2, Word = 0x4 };
@@ -32,7 +32,7 @@ namespace sar.SPS.Siemens
 	public class Adapter
 	{
 		private string ipAddress;
-		private sar.SPS.SimpleSocket socket;
+		private SimpleSocket socket;
 		
 		private bool connected;
 		
