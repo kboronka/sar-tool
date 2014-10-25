@@ -25,7 +25,7 @@ using System.Text;
 
 using sar.Tools;
 
-namespace sar.SPS
+namespace sar.Tools
 {
 	public class SimpleSocket
 	{

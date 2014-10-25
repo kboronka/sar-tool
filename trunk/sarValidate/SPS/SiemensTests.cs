@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 
 using sar.Tools;
-using sar.SPS.Siemens;
+using sar.S7Siemens;
 
 namespace sarValidate.SPS
 {
@@ -46,7 +46,7 @@ namespace sarValidate.SPS
 			ConsoleHelper.WriteLine("Checking legal Siemens addresses", ConsoleColor.White);
 			List<string> legalAddresses	= new List<string> 	{	"M0.0",		"M0.7",		"M1.0",		"M17.7",	"MB7", 		"MW85",		"MD0",		"IB20",		"I22.5",	"QW11",		"DB1.DBX1.5",	"DB40.DBW15",	"DB4.DBB1",		"DB77.DBD84" };
 			List<Areas> legalArea		= new List<Areas>	{	Areas.M,	Areas.M,	Areas.M,	Areas.M,	Areas.M,	Areas.M,	Areas.M,	Areas.I,	Areas.I,	Areas.Q,	Areas.DB,		Areas.DB,		Areas.DB,		Areas.DB };
-			List<int> legalStart		= new List<int> 	{	0*8 + 0,	0*8 + 7,	1*8 + 0,	17*8 + 7,	7*8, 		85 * 8,		0,			20*8,		22*8+5,		11*8,		1*8+5,			15*8+0,			1*8+0,			84*8+0 };
+			List<int> legalStart		= new List<int> 	{	0*8 + 0,	0*8 + 7,	1*8 + 0,	17*8 + 7,	7, 			85,			0,			20,			22*8+5,		11,			1*8+5,			15,				1,				84 };
 			List<int> legalLength		= new List<int> 	{	1,			1,			1,			1,			8, 			16,			32,			8, 			8, 			16,			1,				16,				8,				32 };
 			List<int> legalDB			= new List<int> 	{	0,			0,			0,			0,			0, 			0,			0,			0, 			0, 			0,			1,				40,				4,				77 };
 
