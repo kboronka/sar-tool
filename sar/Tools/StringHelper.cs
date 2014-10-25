@@ -261,7 +261,7 @@ namespace sar.Tools
 			}
 		}
 		
-		public static string MillisectondsToSring(long ms)
+		public static string MillisecondsToString(long ms)
 		{
 			float seconds = (float)ms / 1000f;
 			float minutes = (float)seconds / 60f;
