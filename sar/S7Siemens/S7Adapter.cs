@@ -28,7 +28,7 @@ namespace sar.S7Siemens
 {
 	public enum Action : byte { Read = 0x4, Write = 0x5, ExchangePDU = 0xF0 };
 	public enum TransportType : byte { Bit = 0x1, Byte = 0x2, Word = 0x4 };
-		
+	
 	public class Adapter
 	{
 		private string ipAddress;
@@ -204,18 +204,21 @@ namespace sar.S7Siemens
 		
 		private static void DebugWrite(string title, byte[] data)
 		{
-			string line = "";
-			string delimiter = "";
-			
-			line += title + " [";
-			foreach (byte b in data)
+			if (ConsoleHelper.ShowDebug)
 			{
-				line += delimiter + b.ToString();
-				delimiter = ", ";
+				string line = "";
+				string delimiter = "";
+				
+				line += title + " [";
+				foreach (byte b in data)
+				{
+					line += delimiter + b.ToString();
+					delimiter = ", ";
+				}
+				line += "]";
+				
+				Debug.WriteLine(line);
 			}
-			line += "]";
-			
-			Debug.WriteLine(line);
 		}
 
 		private byte[] ExtractTPDU(byte[] message)
