@@ -12,11 +12,11 @@ using sar.Tools;
 
 namespace sar.SPS
 {
-	public class SPSSocket
+	public class SimpleSocket
 	{
 		System.Net.Sockets.Socket socket;
 		
-		public SPSSocket(string ipAddress, int port)
+		public SimpleSocket(string ipAddress, int port)
 		{
 			IPAddress address = IPAddress.Parse(ipAddress);
 			IPEndPoint remoteEP = new IPEndPoint(address, port);
