@@ -46,37 +46,51 @@ namespace sar.Tools
 		{
 			try
 			{
+				Program.Log("Connecting to " + this.ipAddress + ":" + this.port.ToString());
 				IPAddress address = IPAddress.Parse(this.ipAddress);
 				IPEndPoint remoteEP = new IPEndPoint(address, this.port);
 
-				socket = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
+				socket = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 				socket.Connect(remoteEP);
+
 				connected = socket.Connected;
+				Program.Log("Connected");
 			}
 			catch (Exception ex)
 			{
-				throw ex;
+				Program.Log(ex);
 			}
 		}
 		
 		public void Disconnect()
 		{
-			socket.Disconnect(false);
+			try
+			{
+				Program.Log("Disconnecting");
+				socket.Disconnect(false);
+				socket = null;
+				Program.Log("Disconnected");
+			}
+			catch (Exception ex)
+			{
+				Program.Log(ex);
+			}
+			
 			connected = false;
 		}
 		
 		public byte[] Write(byte[] message)
 		{
+			if (!this.connected) this.Connect();
+
 			try
 			{
-				if (!this.connected) this.Connect();
-				
 				this.socket.Send(message);
 				return Read(800);
 			}
 			catch (Exception ex)
 			{
-				connected = false;
+				this.Disconnect();
 				throw ex;
 			}
 		}
@@ -92,7 +106,7 @@ namespace sar.Tools
 			}
 			catch (Exception ex)
 			{
-				connected = false;
+				this.Disconnect();
 				throw ex;
 			}
 		}
