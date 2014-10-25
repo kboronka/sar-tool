@@ -247,18 +247,6 @@ namespace sar.Tools
 			return "\"" + input + "\"";
 		}
 		
-		public static string MillisecondsToString(long ms)
-		{
-			if (ms < 1500)
-			{
-				return ms.ToString() + " ms";
-			}
-			else
-			{
-				return MillisecondsToSecondsString(ms);
-			}
-		}
-		
 		public static string MillisecondsToSecondsString(long ms)
 		{
 			float sec = (float)ms / 1000f;
@@ -272,6 +260,26 @@ namespace sar.Tools
 				return sec.ToString("0") + " s";
 			}
 		}
+		
+		public static string MillisectondsToSring(long ms)
+		{
+			float seconds = (float)ms / 1000f;
+			float minutes = (float)seconds / 60f;
+			float hours = (float)minutes / 60f;
+			
+			if (seconds < 90)
+			{
+				return MillisecondsToSecondsString(ms);
+			}
+			else if (minutes < 90)
+			{
+				return minutes.ToString("0") + " minutes";
+			}
+			else
+			{
+				return hours.ToString("0.0") + " hours";
+			}
+		}		
 		
 		public static SecureString MakeSecureString(string text)
 		{
