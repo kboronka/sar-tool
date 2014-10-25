@@ -32,7 +32,7 @@ namespace sar.SPS.Siemens
 	public class Adapter
 	{
 		private string ipAddress;
-		private sar.SPS.SPSSocket socket;
+		private sar.SPS.SimpleSocket socket;
 		
 		private bool connected;
 		
@@ -54,7 +54,7 @@ namespace sar.SPS.Siemens
 			// TODO: add automatic retry
 
 			// open a TCP connection to S7 via port 102
-			this.socket = new SPSSocket(this.ipAddress, 102);
+			this.socket = new SimpleSocket(this.ipAddress, 102);
 
 			// write data to socket
 			byte[] message = IO.Combine(TPKT, CONNECT_TO_ADAPTER);

@@ -62,8 +62,8 @@ namespace sar.Testing
 		{
 			try
 			{
-				Adapter SiemensSPS = new Adapter("10.242.217.122");
-				int test = SiemensSPS.ReadInt("MW6000");
+				Adapter siemensS7 = new Adapter("10.242.217.122");
+				int test = siemensS7.ReadInt("MW6000");
 				textBox1.Text = "MW6000 = " + test.ToString();
 			}
 			catch (Exception ex)
