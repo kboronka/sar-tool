@@ -28,6 +28,10 @@ namespace sar.S7Siemens
 		public ushort dataBlock;
 		public uint startAddress;
 		public ushort length;
+		public ushort byteLength;
+
+		public ushort byteAdddress;
+		public ushort bitAddress;
 		
 		public Address(string address)
 		{
@@ -61,9 +65,9 @@ namespace sar.S7Siemens
 			}
 
 			
-			if (address.Length > 1 && address[0] == 'D') this.length = 4;
-			else if (address.Length > 1 && address[0] == 'W') this.length = 2;
-			else if (address.Length > 1 && address[0] == 'B') this.length = 1;
+			if (address.Length > 1 && address[0] == 'D') this.length = 4*8;
+			else if (address.Length > 1 && address[0] == 'W') this.length = 2*8;
+			else if (address.Length > 1 && address[0] == 'B') this.length = 1*8;
 			else if (address.Length > 1 && this.area == Areas.DB && address[0] == 'X') this.length = 1;
 			else if (address.Length > 1 && this.area != Areas.DB && StringHelper.IsNumeric(address[0])) this.length = 1;
 			else throw new InvalidDataException("Invalid Address Type");
@@ -83,7 +87,12 @@ namespace sar.S7Siemens
 			
 
 			double startAddress = double.Parse(address);
-			this.startAddress = (uint)(Math.Floor(startAddress) * 8) + (uint)((startAddress - Math.Floor(startAddress)) * 10);
+			this.byteAdddress = (ushort)Math.Floor(startAddress);
+			this.bitAddress = (ushort)((startAddress - this.byteAdddress) * 10);
+			
+			this.startAddress = (uint)(this.byteAdddress * 8) + this.bitAddress;
+			
+			this.byteLength = (ushort)(this.length / 8);
 		}
 	};
 }

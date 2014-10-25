@@ -96,7 +96,7 @@ namespace sar.S7Siemens
 		
 		private byte[] ReadWriteMessage(Action action, Address address)
 		{
-			return ReadWriteMessage(action, address.area, address.dataBlock, address.startAddress, address.length);
+			return ReadWriteMessage(action, address.area, address.dataBlock, address.startAddress, address.byteLength);
 		}
 		
 		private byte[] ReadWriteMessage(Action action, Areas addressArea, ushort dataBlock, uint startAddress, ushort length)
