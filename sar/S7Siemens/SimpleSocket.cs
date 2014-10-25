@@ -29,29 +29,72 @@ namespace sar.Tools
 {
 	public class SimpleSocket
 	{
-		System.Net.Sockets.Socket socket;
+		private System.Net.Sockets.Socket socket;
+		private bool connected;
+		private string ipAddress;
+		private int port;
 		
 		public SimpleSocket(string ipAddress, int port)
 		{
-			IPAddress address = IPAddress.Parse(ipAddress);
-			IPEndPoint remoteEP = new IPEndPoint(address, port);
+			this.ipAddress = ipAddress;
+			this.port = port;
+			
+			this.Connect();
+		}
+		
+		private void Connect()
+		{
+			try
+			{
+				IPAddress address = IPAddress.Parse(this.ipAddress);
+				IPEndPoint remoteEP = new IPEndPoint(address, this.port);
 
-			socket = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
-			socket.Connect(remoteEP);
+				socket = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
+				socket.Connect(remoteEP);
+				connected = socket.Connected;
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
+		
+		public void Disconnect()
+		{
+			socket.Disconnect(false);
+			connected = false;
 		}
 		
 		public byte[] Write(byte[] message)
 		{
-			this.socket.Send(message);
-			return Read(800);
+			try
+			{
+				if (!this.connected) this.Connect();
+				
+				this.socket.Send(message);
+				return Read(800);
+			}
+			catch (Exception ex)
+			{
+				connected = false;
+				throw ex;
+			}
 		}
 		
 		private byte[] Read(int timeout)
 		{
-			this.socket.ReceiveTimeout = timeout;
-			byte[] buffer = new byte[this.socket.ReceiveBufferSize];
-			int responceSize = this.socket.Receive(buffer);
-			return IO.SubSet(buffer, 0, responceSize);
+			try
+			{
+				this.socket.ReceiveTimeout = timeout;
+				byte[] buffer = new byte[this.socket.ReceiveBufferSize];
+				int responceSize = this.socket.Receive(buffer);
+				return IO.SubSet(buffer, 0, responceSize);
+			}
+			catch (Exception ex)
+			{
+				connected = false;
+				throw ex;
+			}
 		}
 	}
 }
