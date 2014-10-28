@@ -64,6 +64,8 @@ namespace sar.Testing
 			{
 				S7.Adapter siemensS7 = new S7.Adapter("10.242.217.122");
 				int test = siemensS7.ReadInt("MW6000");
+				
+				byte[] data = siemensS7.ReadBytes("MW6600", 8);
 				textBox1.Text = "MW6000 = " + test.ToString();
 			}
 			catch (Exception ex)

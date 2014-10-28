@@ -90,8 +90,31 @@ namespace sar.S7Siemens
 			DebugWrite("responce", responce);
 			
 			byte[] data = ExtractTPDU(responce);
+			DebugWrite("data", data);
 			
 			return BitConverter.ToInt16(data, 0);
+		}
+		
+		public byte[] ReadBytes(string address, ushort bytes)
+		{
+			if (bytes > 200) throw new IndexOutOfRangeException("max bytes = 200");
+			if (bytes < 1) throw new IndexOutOfRangeException("min bytes = 1");
+			
+			Address s7address = new Address(address);	
+			s7address.byteLength = bytes;
+			
+			// send read request message
+			byte[] message = ReadWriteMessage(Action.Read, s7address);
+			DebugWrite("ReadWriteMessage", message);
+			message = EncodeTPDU(TPKT, message);
+			DebugWrite("TPDU", message);
+			byte[] responce = socket.Write(message);
+			DebugWrite("responce", responce);
+			
+			byte[] data = IO.ReverseBytes(ExtractTPDU(responce));
+			DebugWrite("data", data);
+			
+			return data;
 		}
 		
 		private byte[] ReadWriteMessage(Action action, Address address)
