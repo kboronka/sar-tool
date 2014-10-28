@@ -797,6 +797,11 @@ namespace sar.Tools
 			return result;
 		}
 		
+		public static byte[] ReverseBytes(byte[] source)
+		{
+			Array.Reverse(source);
+			return source;
+		}
 		
 		public static byte[] SubSetReversed(byte[] source, int first, int length)
 		{
