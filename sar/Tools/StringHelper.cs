@@ -279,7 +279,7 @@ namespace sar.Tools
 			{
 				return hours.ToString("0.0") + " hours";
 			}
-		}		
+		}
 		
 		public static SecureString MakeSecureString(string text)
 		{
@@ -324,7 +324,45 @@ namespace sar.Tools
 		{
 			float output;
 			return float.TryParse(c.ToString(), out output);
-		}		
+		}
+		
+		public static string[] CsvParser(string csvText)
+		{
+			List<string> columns = new List<string>();
+
+			int last = -1;
+			int current = 0;
+			bool inQuotes = false;
+
+			while(current < csvText.Length)
+			{
+				switch(csvText[current])
+				{
+					case '"':
+						inQuotes = !inQuotes;
+						break;
+					case ',':
+						if (!inQuotes)
+						{
+							columns.Add(csvText.Substring(last + 1, (current - last)).Trim(' ', ','));
+							last = current;
+						}
+						
+						break;
+					default:
+						break;
+				}
+				
+				current++;
+			}
+
+			if (last != csvText.Length - 1)
+			{
+				columns.Add(csvText.Substring(last+1).Trim());
+			}
+
+			return columns.ToArray();
+		}
 		
 		#region environment variable helpers
 		
