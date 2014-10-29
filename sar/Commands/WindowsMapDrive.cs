@@ -70,11 +70,11 @@ namespace sar.Commands
 				
 				if (exitcode != 0)
 				{
-					ConsoleHelper.WriteLine("Mapping of " + drive + "drive has failed", ConsoleColor.DarkYellow);
+					ConsoleHelper.WriteLine("Mapping of " + drive + ": drive has failed", ConsoleColor.DarkYellow);
 					return ConsoleHelper.EXIT_ERROR;
 				}
 				
-				ConsoleHelper.WriteLine("Mapping of " + drive + "drive was successful", ConsoleColor.DarkYellow);
+				ConsoleHelper.WriteLine("Mapping of " + drive + ": drive was successful", ConsoleColor.DarkYellow);
 			}
 			else
 			{
