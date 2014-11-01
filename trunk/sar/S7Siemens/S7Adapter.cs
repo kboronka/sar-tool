@@ -76,28 +76,35 @@ namespace sar.S7Siemens
 			return this.connected;
 		}
 		
-		public int ReadInt(string address)
+		public Int16 ReadINT(string address)
 		{
-			Address s7address = new Address(address);
-			// TODO: validate integer type
-			
-			// send read request message
-			byte[] message = ReadWriteMessage(Action.Read, s7address);
-			DebugWrite("ReadWriteMessage", message);
-			message = EncodeTPDU(TPKT, message);
-			DebugWrite("TPDU", message);
-			byte[] responce = socket.Write(message);
-			DebugWrite("responce", responce);
-			
-			byte[] data = ExtractTPDU(responce);
-			DebugWrite("data", data);
-			
+			byte[] data = ReadBytesRaw(address, 2);
 			return BitConverter.ToInt16(data, 0);
+		}
+
+		public Int32 ReadDINT(string address)
+		{
+			byte[] data = ReadBytesRaw(address, 4);
+			return BitConverter.ToInt32(data, 0);
+		}
+
+		public Single ReadFLOAT(string address)
+		{
+			byte[] data = ReadBytesRaw(address, 4);
+			return BitConverter.ToSingle(data, 0);
 		}
 		
 		public byte[] ReadBytes(string address, ushort bytes)
 		{
-			if (bytes > 200) throw new IndexOutOfRangeException("max bytes = 200");
+			byte[] data = IO.ReverseBytes(ReadBytesRaw(address, bytes));
+			DebugWrite("data", data);
+			
+			return data;
+		}
+		
+		private byte[] ReadBytesRaw(string address, ushort bytes)
+		{
+			if (bytes > 220) throw new IndexOutOfRangeException("max bytes = 220");
 			if (bytes < 1) throw new IndexOutOfRangeException("min bytes = 1");
 			
 			Address s7address = new Address(address);	
@@ -111,11 +118,11 @@ namespace sar.S7Siemens
 			byte[] responce = socket.Write(message);
 			DebugWrite("responce", responce);
 			
-			byte[] data = IO.ReverseBytes(ExtractTPDU(responce));
+			byte[] data = ExtractTPDU(responce);
 			DebugWrite("data", data);
 			
 			return data;
-		}
+		}		
 		
 		private byte[] ReadWriteMessage(Action action, Address address)
 		{
