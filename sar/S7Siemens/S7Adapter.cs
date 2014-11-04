@@ -75,7 +75,13 @@ namespace sar.S7Siemens
 			
 			return this.connected;
 		}
-		
+
+		public bool ReadBit(string address)
+		{
+			byte[] data = ReadBytesRaw(address, 1);
+			return data[0] > 0;
+		}
+
 		public Int16 ReadINT(string address)
 		{
 			byte[] data = ReadBytesRaw(address, 2);
@@ -126,10 +132,10 @@ namespace sar.S7Siemens
 		
 		private byte[] ReadWriteMessage(Action action, Address address)
 		{
-			return ReadWriteMessage(action, address.area, address.dataBlock, address.startAddress, address.byteLength);
+			return ReadWriteMessage(action, address.area, address.dataBlock, address.startAddress, address.byteLength, address.transportType);
 		}
 		
-		private byte[] ReadWriteMessage(Action action, Areas addressArea, ushort dataBlock, uint startAddress, ushort length)
+		private byte[] ReadWriteMessage(Action action, Areas addressArea, ushort dataBlock, uint startAddress, ushort length, TransportType transportType)
 		{
 			byte[] message = new byte[] {(byte)action, 0x1};
 			
@@ -137,7 +143,7 @@ namespace sar.S7Siemens
 			message = IO.Combine(message, new byte[] { 0x12, 0x0A, 0x10 });
 			
 			// transport type
-			message = IO.Combine(message, new byte[]  { (byte)TransportType.Byte });
+			message = IO.Combine(message, new byte[]  { (byte)transportType });
 
 			// length (bytes)
 			message = IO.Combine(message, IO.Split(length));
