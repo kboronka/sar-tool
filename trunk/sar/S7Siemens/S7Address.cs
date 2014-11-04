@@ -32,6 +32,7 @@ namespace sar.S7Siemens
 
 		public ushort byteAdddress;
 		public ushort bitAddress;
+		public TransportType transportType;
 		
 		public Address(string address)
 		{
@@ -72,6 +73,14 @@ namespace sar.S7Siemens
 			else if (address.Length > 1 && this.area != Areas.DB && StringHelper.IsNumeric(address[0])) this.length = 1;
 			else throw new InvalidDataException("Invalid Address Type");
 
+			if (this.length == 1)
+			{
+				this.transportType = TransportType.Bit;
+			}
+			else
+			{
+				this.transportType = TransportType.Byte;
+			}
 			
 			if (this.length > 1 || this.area == Areas.DB && address[0] == 'X') address = address.Substring(1);
 			
@@ -88,7 +97,7 @@ namespace sar.S7Siemens
 
 			double startAddress = double.Parse(address);
 			this.byteAdddress = (ushort)Math.Floor(startAddress);
-			this.bitAddress = (ushort)((startAddress - this.byteAdddress) * 10);
+			this.bitAddress = (ushort)((Math.Round(startAddress - (double)this.byteAdddress, 2)) * 10);
 			
 			this.startAddress = (uint)(this.byteAdddress * 8) + this.bitAddress;
 			
