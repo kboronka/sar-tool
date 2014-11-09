@@ -25,8 +25,9 @@ namespace sar.Commands
 	public class WindowsLogin : Command
 	{
 		public WindowsLogin(Base.CommandHub parent) : base(parent, "Windows - Login", new List<string> { "windows.login", "win.login", "net.login", "n.login" },
-		                         "-windows.login [ip] [domain/username] [password] [persistent]",
-		                         new List<string>() { @"-windows.login \\192.168.0.244\temp test testpw p" })
+		                         "-windows.login [ip] [domain/username] [password] [p|persistent] [ping]",
+		                         new List<string>() { @"-windows.login \\192.168.0.244\temp test testpw p", 
+		                         					  @"-n.login 192.168.0.244 test testpw ping" })
 		{
 			
 		}
