@@ -34,7 +34,7 @@ namespace sar.Commands
 		public override int Execute(string[] args)
 		{
 			// sanity check
-			if (args.Length < 4 || args.Length > 5)
+			if (args.Length < 4)
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
@@ -48,10 +48,23 @@ namespace sar.Commands
 			string userName = args[2];
 			string password = args[3];
 			string persistent = "/persistent:no";
+			
+			string hostName = NetHelper.GetHostName(uncPath);
 
-			if (args.Length >= 5 && (args[4].ToLower() == "p" || args[4].ToLower() == "persistent"))
+			if (args.Length >= 5)
 			{
-				persistent = "/persistent:yes";
+				for (int argIndex = 4; argIndex < args.Length; argIndex++)
+				{
+					string arg = args[argIndex].ToLower();
+					if (arg  == "p" || arg == "persistent")
+					{
+						persistent = "/persistent:yes";
+					}
+					else if (arg == "-ping") 
+					{
+						if (!NetHelper.Ping(hostName)) throw new ApplicationException("Unable to ping " + hostName);
+					}
+				}
 			}
 			
 			int exitcode;
