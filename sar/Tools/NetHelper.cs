@@ -52,6 +52,16 @@ namespace sar.Tools
 			return (found == expected);
 		}
 		
+		public static string GetHostName(string uncPath)
+		{
+			string hostName = uncPath;
+			
+			if (hostName.StartsWith(@"\\")) hostName = hostName.Substring(2);
+			if (hostName.Contains(@"\")) hostName = hostName.Substring(0, hostName.IndexOf(@"\"));
+			    
+			return hostName;
+		}
+		
 		public static List<NetworkAdapter> Adapters()
 		{
 			List<NetworkAdapter> adapters = new List<NetworkAdapter>();
