@@ -31,7 +31,7 @@ namespace sar.Tools
 		public static bool Ping(string ip)
 		{
 			Ping ping = new Ping();
-			PingReply pingReply = ping.Send(ip);
+			PingReply pingReply = ping.Send(ip, 100);
 
 			return (pingReply.Status == IPStatus.Success);
 		}
