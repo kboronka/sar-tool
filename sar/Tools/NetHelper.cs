@@ -28,10 +28,18 @@ namespace sar.Tools
 {
 	public static class NetHelper
 	{
+		public static bool Ping(string ip, int timeout)
+		{
+			Ping ping = new Ping();
+			PingReply pingReply = ping.Send(ip, timeout);
+
+			return (pingReply.Status == IPStatus.Success);
+		}
+		
 		public static bool Ping(string ip)
 		{
 			Ping ping = new Ping();
-			PingReply pingReply = ping.Send(ip, 100);
+			PingReply pingReply = ping.Send(ip);
 
 			return (pingReply.Status == IPStatus.Success);
 		}

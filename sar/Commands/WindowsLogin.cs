@@ -63,7 +63,7 @@ namespace sar.Commands
 					}
 					else if (arg == "-ping") 
 					{
-						if (!NetHelper.Ping(hostName)) throw new ApplicationException("Unable to ping " + hostName);
+						if (!NetHelper.Ping(hostName, 200)) throw new ApplicationException("Unable to ping " + hostName);
 					}
 				}
 			}
