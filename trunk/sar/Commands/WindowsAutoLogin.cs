@@ -26,8 +26,9 @@ namespace sar.Commands
 	public class WindowsAutoLogin : Command
 	{
 		public WindowsAutoLogin(Base.CommandHub parent) : base(parent, "Windows - Set AutoLogin", new List<string> { "windows.autologin", "win.autologin" },
-		                                                       "-windows.autologin [domain/username] [password]",
-		                                                       new List<string>() { @"-windows.login ./Username Password" })
+		                                                       "-windows.autologin [domain\username] [password]",
+		                                                       new List<string>() { @"-windows.login ./Username Password",
+		                                                       	@"-windows.login mydomain\username Password"})
 		{
 			
 		}
