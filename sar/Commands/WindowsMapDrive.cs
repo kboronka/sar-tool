@@ -54,19 +54,34 @@ namespace sar.Commands
 			string uncPath = serverAddres;
 			if (uncPath.Substring(0,2) != @"\\") uncPath = @"\\" + uncPath;
 			
-			string persistent = "";
+			bool persistent = false;
 			if (args.Length >= 4 && (args[3].ToLower() == "p" || args[3].ToLower() == "persistent"))
 			{
-				persistent = " /savecred /persistent:yes";
+				persistent = true;
 			}
 			
+			
+			
+			return ConsoleHelper.EXIT_OK;
+		}
+		
+		public static bool MappingExists(string drive, string uncPath)
+		{
 			int exitcode;
+			string result = "";
 			
+			exitcode = ConsoleHelper.Run("net", @"use", out result);
 			
+			return result.ToLower().Contains("ok           " + drive.ToLower() + ":        " + uncPath.ToLower());
+		}
+		
+		public static int MapDrive(string drive, string uncPath, bool persistent)
+		{
 			if (!MappingExists(drive, uncPath))
 			{
+				int exitcode;
 				exitcode = ConsoleHelper.Run("net", @"use " + drive + @": /DELETE /y");
-				exitcode = ConsoleHelper.Run("net", @"use " + drive + @": " + uncPath + persistent);
+				exitcode = ConsoleHelper.Run("net", @"use " + drive + @": " + uncPath + (persistent ? " /savecred /persistent:yes" : ""));
 				
 				if (exitcode != 0)
 				{
@@ -82,16 +97,6 @@ namespace sar.Commands
 			}
 			
 			return ConsoleHelper.EXIT_OK;
-		}
-		
-		private static bool MappingExists(string drive, string uncPath)
-		{
-			int exitcode;
-			string result = "";
-			
-			exitcode = ConsoleHelper.Run("net", @"use", out result);
-			
-			return result.ToLower().Contains("ok           " + drive.ToLower() + ":        " + uncPath.ToLower());
 		}
 	}
 }
