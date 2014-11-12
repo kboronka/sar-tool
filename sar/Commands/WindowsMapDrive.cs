@@ -52,7 +52,6 @@ namespace sar.Commands
 			Progress.Message = "Logging into " + serverAddres;
 			
 			string uncPath = serverAddres;
-			if (uncPath.Substring(0,2) != @"\\") uncPath = @"\\" + uncPath;
 			
 			bool persistent = false;
 			if (args.Length >= 4 && (args[3].ToLower() == "p" || args[3].ToLower() == "persistent"))
@@ -75,6 +74,8 @@ namespace sar.Commands
 		
 		public static int MapDrive(string drive, string uncPath, bool persistent)
 		{
+			if (uncPath.Substring(0,2) != @"\\") uncPath = @"\\" + uncPath;
+			
 			if (!MappingExists(drive, uncPath))
 			{
 				int exitcode;
