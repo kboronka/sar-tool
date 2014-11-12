@@ -60,9 +60,7 @@ namespace sar.Commands
 				persistent = true;
 			}
 			
-			
-			
-			return ConsoleHelper.EXIT_OK;
+			return MapDrive(drive, uncPath, persistent);
 		}
 		
 		public static bool MappingExists(string drive, string uncPath)
