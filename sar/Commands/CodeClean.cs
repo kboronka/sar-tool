@@ -67,6 +67,9 @@ namespace sar.Commands
 							// fix the "_ '" lines
 							changes += IO.SearchAndReplaceInFile(file, @"[\s]*[_]{1}[\s]*[\n\r][\s]*(')", @" $1");
 							
+							// fix the "_ )" lines
+							changes += IO.SearchAndReplaceInFile(file, @"[\s]*[_]{1}[\s]*[\n\r][\s]*(\))", @" $1");
+
 							// remove empty lines after "Then"
 							changes += IO.SearchAndReplaceInFile(file, @"Then\r*\n\s*\r*\n(\s*)(\S)", "Then\r\n$1$2");
 							
