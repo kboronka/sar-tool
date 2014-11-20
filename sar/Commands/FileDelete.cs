@@ -88,7 +88,7 @@ namespace sar.Commands
 				}
 			}
 			
-			ConsoleHelper.WriteLine(counter.ToString() + " File" + ((counter != 1) ? "s" : "") + " Delete", ConsoleColor.DarkYellow);
+			ConsoleHelper.WriteLine(counter.ToString() + " File" + ((counter != 1) ? "s" : "") + " Deleted", ConsoleColor.DarkYellow);
 			return ConsoleHelper.EXIT_OK;
 		}
 	}
