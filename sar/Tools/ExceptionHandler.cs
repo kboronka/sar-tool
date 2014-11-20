@@ -51,11 +51,12 @@ namespace sar.Tools
 		
 		public static string GetStackTrace(Exception ex)
 		{
+			if (ex.StackTrace == null) return "[StackTrace not available]";
+
 			string result = "";
-			
 			string stackTrace = ex.StackTrace;
 			string regex = @"(\s*)at\s((.?)*)\sin\s((.?)*):line\s([1-9]*)";
-			
+			 
 			
 			string[] lines = stackTrace.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
 			
