@@ -54,6 +54,7 @@ namespace sar.Testing
 			this.textBox1 = new System.Windows.Forms.TextBox();
 			this.textBox2 = new System.Windows.Forms.TextBox();
 			this.readOnlyTextBox1 = new sar.Controls.ReadOnlyTextBox();
+			this.button3 = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -160,15 +161,27 @@ namespace sar.Testing
 			this.readOnlyTextBox1.Multiline = true;
 			this.readOnlyTextBox1.Name = "readOnlyTextBox1";
 			this.readOnlyTextBox1.ReadOnly = true;
+			this.readOnlyTextBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.readOnlyTextBox1.Size = new System.Drawing.Size(304, 120);
 			this.readOnlyTextBox1.TabIndex = 9;
 			this.readOnlyTextBox1.Text = "line 1\r\nline 2";
+			// 
+			// button3
+			// 
+			this.button3.Location = new System.Drawing.Point(328, 224);
+			this.button3.Name = "button3";
+			this.button3.Size = new System.Drawing.Size(113, 23);
+			this.button3.TabIndex = 10;
+			this.button3.Text = "Write to TextBox";
+			this.button3.UseVisualStyleBackColor = true;
+			this.button3.Click += new System.EventHandler(this.Button3Click);
 			// 
 			// Menu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(507, 382);
+			this.Controls.Add(this.button3);
 			this.Controls.Add(this.readOnlyTextBox1);
 			this.Controls.Add(this.textBox2);
 			this.Controls.Add(this.textBox1);
@@ -186,6 +199,7 @@ namespace sar.Testing
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.Button button3;
 		private sar.Controls.ReadOnlyTextBox readOnlyTextBox1;
 		private System.Windows.Forms.TextBox textBox2;
 		private System.Windows.Forms.TextBox textBox1;
