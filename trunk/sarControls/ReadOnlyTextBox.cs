@@ -18,13 +18,39 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 
+using sar.Tools;
+
 namespace sar.Controls
 {
 	public class ReadOnlyTextBox : TextBox
 	{
+		const int EM_LINESCROLL = 0x00B6;
+
 		[DllImport("user32.dll")]
 		static extern bool HideCaret(IntPtr hWnd);
 
+		[DllImport("user32.dll")]
+		static extern int GetScrollPos(IntPtr hWnd, int nBar);
+
+		[DllImport("user32.dll")]
+		static extern int SetScrollPos(IntPtr hWnd, int nBar, int nPos, bool bRedraw);
+		
+		[DllImport("user32.dll")]
+		static extern int SendMessage(IntPtr hWnd, int wMsg, int wParam, int lParam);
+		
+		public override string Text
+		{
+			get { return StringHelper.TrimWhiteSpace(base.Text); }
+			set
+			{
+				int scrollPosition = GetScrollPos(this.Handle, 1);
+				base.Text = value;
+
+				SetScrollPos(this.Handle, 1, scrollPosition, true);
+				SendMessage(this.Handle, EM_LINESCROLL, 0, scrollPosition);
+			}
+		}
+		
 		public ReadOnlyTextBox()
 		{
 			this.ReadOnly = true;

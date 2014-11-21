@@ -91,5 +91,10 @@ namespace sar.Testing
 		{
 			SendOutlookEmail("kboronka@gmail.com", "Subject", "Body");
 		}
+		
+		void Button3Click(object sender, EventArgs e)
+		{
+			this.readOnlyTextBox1.Text = "abc" + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine + DateTime.Now.ToString();
+		}
 	}
 }
