@@ -38,16 +38,27 @@ namespace sar.Controls
 		[DllImport("user32.dll")]
 		static extern int SendMessage(IntPtr hWnd, int wMsg, int wParam, int lParam);
 		
+		[DllImport("user32.dll")]
+		static extern bool LockWindowUpdate(IntPtr hWndLock);
+		
 		public override string Text
 		{
 			get { return StringHelper.TrimWhiteSpace(base.Text); }
 			set
 			{
-				int scrollPosition = GetScrollPos(this.Handle, 1);
-				base.Text = value;
+				try
+				{
+					LockWindowUpdate(this.Handle);
+					int scrollPosition = GetScrollPos(this.Handle, 1);
+					base.Text = value;
 
-				SetScrollPos(this.Handle, 1, scrollPosition, true);
-				SendMessage(this.Handle, EM_LINESCROLL, 0, scrollPosition);
+					SetScrollPos(this.Handle, 1, scrollPosition, true);
+					SendMessage(this.Handle, EM_LINESCROLL, 0, scrollPosition);
+				}
+				finally
+				{
+					LockWindowUpdate(IntPtr.Zero);
+				}
 			}
 		}
 		
