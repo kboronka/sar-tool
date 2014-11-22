@@ -51,42 +51,49 @@ namespace sar.Tools
 		
 		public static string GetStackTrace(Exception ex)
 		{
-			if (ex.StackTrace == null) return "[StackTrace not available]";
-
-			string result = "";
-			string stackTrace = ex.StackTrace;
-			string regex = @"(\s*)at\s((.?)*)\sin\s((.?)*):line\s([1-9]*)";
-			 
-			
-			string[] lines = stackTrace.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
-			
-			foreach (string line in lines)
+			try
 			{
-				MatchCollection regexResults = Regex.Matches(line, regex);
-				if (regexResults.Count == 1 && regexResults[0].Groups.Count == 7)
-				{
-					if (!String.IsNullOrEmpty(result)) result += Environment.NewLine;
-					string method = regexResults[0].Groups[2].Value;
-					string filepath = regexResults[0].Groups[4].Value;
-					string lineNumber = regexResults[0].Groups[6].Value;
+				if (ex.StackTrace == null) return "[StackTrace not available]";
 
-					string filename = IO.GetFilename(filepath);
-					
-					if (method.Contains("."))
+				string result = "";
+				string stackTrace = ex.StackTrace;
+				string regex = @"(\s*)at\s((.?)*)\sin\s((.?)*):line\s([1-9]*)";
+				
+				
+				string[] lines = stackTrace.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+				
+				foreach (string line in lines)
+				{
+					MatchCollection regexResults = Regex.Matches(line, regex);
+					if (regexResults.Count == 1 && regexResults[0].Groups.Count == 7)
 					{
-						method = method.Substring(method.LastIndexOf('.') + 1);
+						if (!String.IsNullOrEmpty(result)) result += Environment.NewLine;
+						string method = regexResults[0].Groups[2].Value;
+						string filepath = regexResults[0].Groups[4].Value;
+						string lineNumber = regexResults[0].Groups[6].Value;
+
+						string filename = IO.GetFilename(filepath);
+						
+						if (method.Contains("."))
+						{
+							method = method.Substring(method.LastIndexOf('.') + 1);
+						}
+						
+						if (method.Contains("("))
+						{
+							method = method.Substring(0, method.LastIndexOf('('));
+						}
+						
+						result += "\t" + method + "() in " + filename + ":line " + lineNumber;
 					}
-					
-					if (method.Contains("("))
-					{
-						method = method.Substring(0, method.LastIndexOf('('));
-					}
-										
-					result += "\t" + method + "() in " + filename + ":line " + lineNumber;
 				}
+				
+				return result;
 			}
-			
-			return result;
+			catch
+			{
+				return "[StackTrace not available]";
+			}
 		}
 	}
 }
