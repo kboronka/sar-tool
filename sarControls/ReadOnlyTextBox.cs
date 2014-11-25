@@ -24,6 +24,7 @@ namespace sar.Controls
 {
 	public class ReadOnlyTextBox : TextBox
 	{
+		#region externals
 		const int EM_LINESCROLL = 0x00B6;
 
 		[DllImport("user32.dll")]
@@ -40,6 +41,8 @@ namespace sar.Controls
 		
 		[DllImport("user32.dll")]
 		static extern bool LockWindowUpdate(IntPtr hWndLock);
+		
+		#endregion
 		
 		public override string Text
 		{
@@ -69,6 +72,10 @@ namespace sar.Controls
 			this.GotFocus += TextBoxGotFocus;
 			this.Cursor = Cursors.Arrow; // mouse cursor like in other controls
 			this.Multiline = true;
+			this.Click += delegate { this.SelectionLength = 0; };
+			this.MouseLeave += delegate { this.SelectionLength = 0; };
+			//this.MouseMove += delegate { this.SelectionLength = 0; };
+			this.DoubleClick += delegate { this.SelectionLength = 0; };
 		}
 
 		private void TextBoxGotFocus(object sender, EventArgs args)
