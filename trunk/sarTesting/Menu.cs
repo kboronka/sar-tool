@@ -55,6 +55,7 @@ namespace sar.Testing
 			catch (Exception ex)
 			{
 				Program.Log(ex);
+				Tools.ExceptionHandler.Display(ex);
 			}
 		}
 		
