@@ -61,6 +61,9 @@ namespace sar.Commands
 					{
 						case "vb":
 							counter++;
+							// fix short line continuations (less than 40 characters)
+							changes += IO.SearchAndReplaceInFile(file, @"[\s]*[_][\s]*[\n\r][\s]*(.{1,45}[\n\r])", @" $1");
+
 							// fix the "_ Then" or _ Handles lines
 							changes += IO.SearchAndReplaceInFile(file, @"[\s]*[_]{1}[\s]*[\n\r][\s]*(Then|Handles)", @" $1");
 
@@ -89,7 +92,7 @@ namespace sar.Commands
 
 							// remove extra white space
 							changes += IO.SearchAndReplaceInFile(file, @"\r*\n\s*\n(\s*)(End|Else|Next|Catch|Finally)", "\r\n$1$2");
-							changes += IO.SearchAndReplaceInFile(file, @"(\r*\n\s*)(Do|Case|If|Else|For|Select|Private Sub|Public Sub|Public Class|Try|Catch)([^\r\n]*)\r*\n\r*\n", "$1$2$3\r\n");
+							changes += IO.SearchAndReplaceInFile(file, @"(\r*\n\s*)(Do|Case|If|Else|For|Select|Private Sub|Public Sub|Private Function|Public Function|Public Class|Try|Catch)([^\r\n]*)\r*\n\r*\n", "$1$2$3\r\n");
 							changes += IO.SearchAndReplaceInFile(file, @"\r*\n(\r*\n\s*)(Loop|End)", "$1$2");
 
 							// one space between methods
