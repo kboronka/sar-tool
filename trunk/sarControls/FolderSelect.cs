@@ -28,16 +28,18 @@ namespace sarControls
 		
 		public string Path
 		{
-			get { return path; }
+			get
+			{
+				if (!string.IsNullOrEmpty(path) && !path.EndsWith(@"\")) path += @"\";
+				return path;
+			}
 			set
 			{
 				if (!string.IsNullOrEmpty(value) && Directory.Exists(value))
 				{
-					path = value;
-					if (!path.EndsWith(@"\")) path += @"\";
+					this.path = value;
+					this.pathTextBox.Text = this.path;
 				}
-
-				this.pathTextBox.Text = path;
 			}
 		}
 		
@@ -84,6 +86,7 @@ namespace sarControls
 			if (this.path != dialog.SelectedPath)
 			{
 				this.path = dialog.SelectedPath;
+				this.pathTextBox.Text = this.path;
 				NotifyValueChanged();
 			}
 		}
