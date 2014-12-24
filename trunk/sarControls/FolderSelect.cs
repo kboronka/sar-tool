@@ -34,6 +34,7 @@ namespace sarControls
 				if (!string.IsNullOrEmpty(value) && Directory.Exists(value))
 				{
 					path = value;
+					if (!path.EndsWith(@"\")) path += @"\";
 				}
 
 				this.pathTextBox.Text = path;
