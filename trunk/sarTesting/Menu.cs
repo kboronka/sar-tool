@@ -18,6 +18,7 @@ using System.Drawing;
 using System.Net;
 using System.Net.Mail;
 using System.Windows.Forms;
+using System.Timers;
 
 using Outlook = Microsoft.Office.Interop.Outlook;
 
@@ -97,5 +98,25 @@ namespace sar.Testing
 		{
 			this.readOnlyTextBox1.Text = "abc" + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine + DateTime.Now.ToString();
 		}
+		
+		#region folder control
+		private System.Timers.Timer resetBooleanTimer = new System.Timers.Timer(1000);
+
+		private void FolderSelect1ValueChanged(object sender, EventArgs e)
+		{
+			this.resetBooleanTimer.Elapsed += new ElapsedEventHandler(this.ResetBooleanTimerTick);
+			this.resetBooleanTimer.Enabled = true;
+			this.folderChanged.Status = true;
+			
+			// TODO: Implement FolderSelect1ValueChanged
+		}
+		
+		private void ResetBooleanTimerTick(object source, ElapsedEventArgs e)
+		{
+			this.resetBooleanTimer.Enabled = false;
+			this.folderChanged.Status = false;
+		}
+		
+		#endregion
 	}
 }

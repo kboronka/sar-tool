@@ -56,6 +56,7 @@ namespace sar.Testing
 			this.readOnlyTextBox1 = new sar.Controls.ReadOnlyTextBox();
 			this.button3 = new System.Windows.Forms.Button();
 			this.folderSelect1 = new sarControls.FolderSelect();
+			this.folderChanged = new sar.Controls.BooleanIndicator();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -181,14 +182,30 @@ namespace sar.Testing
 			// 
 			this.folderSelect1.Location = new System.Drawing.Point(40, 152);
 			this.folderSelect1.Name = "folderSelect1";
+			this.folderSelect1.Path = null;
 			this.folderSelect1.Size = new System.Drawing.Size(430, 24);
 			this.folderSelect1.TabIndex = 11;
+			this.folderSelect1.ValueChanged += new System.EventHandler(this.FolderSelect1ValueChanged);
+			// 
+			// folderChanged
+			// 
+			this.folderChanged.Caption = "folderChanged";
+			this.folderChanged.Font = new System.Drawing.Font("Arial", 9.75F);
+			this.folderChanged.Location = new System.Drawing.Point(40, 136);
+			this.folderChanged.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.folderChanged.MaximumSize = new System.Drawing.Size(500, 16);
+			this.folderChanged.MinimumSize = new System.Drawing.Size(100, 16);
+			this.folderChanged.Name = "folderChanged";
+			this.folderChanged.Size = new System.Drawing.Size(131, 16);
+			this.folderChanged.Status = false;
+			this.folderChanged.TabIndex = 12;
 			// 
 			// Menu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(507, 382);
+			this.Controls.Add(this.folderChanged);
 			this.Controls.Add(this.folderSelect1);
 			this.Controls.Add(this.button3);
 			this.Controls.Add(this.readOnlyTextBox1);
@@ -208,6 +225,7 @@ namespace sar.Testing
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private sar.Controls.BooleanIndicator folderChanged;
 		private sarControls.FolderSelect folderSelect1;
 		private System.Windows.Forms.Button button3;
 		private sar.Controls.ReadOnlyTextBox readOnlyTextBox1;
