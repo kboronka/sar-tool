@@ -63,6 +63,10 @@
     <Compile Include="BooleanIndicator.Designer.cs">
       <DependentUpon>BooleanIndicator.cs</DependentUpon>
     </Compile>
+    <Compile Include="FolderSelect.cs" />
+    <Compile Include="FolderSelect.Designer.cs">
+      <DependentUpon>FolderSelect.cs</DependentUpon>
+    </Compile>
     <Compile Include="Helper\ListViewHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReadOnlyTextBox.cs" />
@@ -86,6 +90,9 @@
   <ItemGroup>
     <EmbeddedResource Include="BooleanIndicator.resx">
       <DependentUpon>BooleanIndicator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FolderSelect.resx">
+      <DependentUpon>FolderSelect.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SocketClientControl.resx">
       <DependentUpon>SocketClientControl.cs</DependentUpon>
