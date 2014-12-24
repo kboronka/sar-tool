@@ -36,15 +36,12 @@ namespace sarControls
 					path = value;
 				}
 
-				if (!string.IsNullOrEmpty(value) && !Directory.Exists(value))
-				{
-
-				}
-
 				this.pathTextBox.Text = path;
 			}
 		}
 		
+		#region constructors
+
 		public FolderSelect()
 		{
 			InitializeComponent();
@@ -56,13 +53,15 @@ namespace sarControls
 			InitializeComponent();
 		}
 		
-		void FolderSelectResize(object sender, EventArgs e)
+		#endregion
+
+		private void FolderSelectResize(object sender, EventArgs e)
 		{
 			this.pathTextBox.Width = this.Width - this.button.Width;
 			this.button.Left = this.Width - this.button.Width;
 		}
 		
-		void ButtonClick(object sender, EventArgs e)
+		private void ButtonClick(object sender, EventArgs e)
 		{
 			FolderBrowserDialog dialog = new FolderBrowserDialog();
 			dialog.ShowNewFolderButton = true;
@@ -81,10 +80,14 @@ namespace sarControls
 				dialog.ShowDialog(owner);
 			}
 			
-			this.Path = dialog.SelectedPath;
+			if (this.path != dialog.SelectedPath)
+			{
+				this.path = dialog.SelectedPath;
+				NotifyValueChanged();
+			}
 		}
 		
-		void PathTextBoxValidating(object sender, CancelEventArgs e)
+		private void PathTextBoxValidating(object sender, CancelEventArgs e)
 		{
 			string pathText = this.pathTextBox.Text;
 			if (!string.IsNullOrEmpty(pathText) && !Directory.Exists(pathText))
@@ -96,17 +99,52 @@ namespace sarControls
 				}
 				else
 				{
+					this.pathTextBox.Text = this.Path;
 					e.Cancel = true;
 				}
 			}
 		}
 		
-		void PathTextBoxValidated(object sender, EventArgs e)
+		private void PathTextBoxValidated(object sender, EventArgs e)
 		{
 			if (!string.IsNullOrEmpty(this.pathTextBox.Text))
 			{
-				this.path = this.pathTextBox.Text;
+				if (this.path != this.pathTextBox.Text)
+				{
+					this.path = this.pathTextBox.Text;
+					NotifyValueChanged();
+				}
 			}
 		}
+		
+		#region ValueChanged
+
+		private EventHandler valueChanged = null;
+		
+		//[Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+		public event EventHandler ValueChanged
+		{
+			add
+			{
+				valueChanged = (EventHandler)Delegate.Combine(valueChanged, value);
+			}
+			remove
+			{
+				valueChanged = (EventHandler)Delegate.Remove(valueChanged, value);
+			}
+		}
+		
+		private void NotifyValueChanged()
+		{
+			try
+			{
+				valueChanged(this, new System.EventArgs());
+			}
+			catch
+			{
+			}
+		}
+
+		#endregion
 	}
 }
