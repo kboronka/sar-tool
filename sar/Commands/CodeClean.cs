@@ -62,47 +62,47 @@ namespace sar.Commands
 						case "vb":
 							counter++;
 							// fix short line continuations (less than 40 characters)
-							changes += IO.SearchAndReplaceInFile(file, @"[\s]*[_][\s]*[\n\r][\s]*(.{1,45}[\n\r])", @" $1");
+							changes += IO.SearchAndReplaceInFile(file, @"[\s]*[_][\s]*[\n\r][\s]*(.{1,45}[\n\r])", @" $1").Matches.Count;
 
 							// fix the "_ Then" or _ Handles lines
-							changes += IO.SearchAndReplaceInFile(file, @"[\s]*[_]{1}[\s]*[\n\r][\s]*(Then|Handles)", @" $1");
+							changes += IO.SearchAndReplaceInFile(file, @"[\s]*[_]{1}[\s]*[\n\r][\s]*(Then|Handles)", @" $1").Matches.Count;
 
 							// fix the "_ '" lines
-							changes += IO.SearchAndReplaceInFile(file, @"[\s]*[_]{1}[\s]*[\n\r][\s]*(')", @" $1");
+							changes += IO.SearchAndReplaceInFile(file, @"[\s]*[_]{1}[\s]*[\n\r][\s]*(')", @" $1").Matches.Count;
 							
 							// fix the "_ )" lines
-							changes += IO.SearchAndReplaceInFile(file, @"[\s]*[_]{1}[\s]*[\n\r][\s]*(\))", @"$1");
+							changes += IO.SearchAndReplaceInFile(file, @"[\s]*[_]{1}[\s]*[\n\r][\s]*(\))", @"$1").Matches.Count;
 
 							// fix the "_ (" lines
-							changes += IO.SearchAndReplaceInFile(file, @"[\s]*[_]{1}[\s]*[\n\r][\s]*(\()", @"$1");
+							changes += IO.SearchAndReplaceInFile(file, @"[\s]*[_]{1}[\s]*[\n\r][\s]*(\()", @"$1").Matches.Count;
 							
 							// fix the "_ =" lines
-							changes += IO.SearchAndReplaceInFile(file, @"[\s]*[_]{1}[\s]*[\n\r][\s]*=[\s]*", @" = ");
+							changes += IO.SearchAndReplaceInFile(file, @"[\s]*[_]{1}[\s]*[\n\r][\s]*=[\s]*", @" = ").Matches.Count;
 
 							// fix the "= _ " lines
-							changes += IO.SearchAndReplaceInFile(file, @"=[\s]*[_]{1}[\s]*[\n\r][\s]*", @"= ");
+							changes += IO.SearchAndReplaceInFile(file, @"=[\s]*[_]{1}[\s]*[\n\r][\s]*", @"= ").Matches.Count;
 
 							// remove empty lines after "Then"
-							changes += IO.SearchAndReplaceInFile(file, @"Then\r*\n\s*\r*\n(\s*)(\S)", "Then\r\n$1$2");
+							changes += IO.SearchAndReplaceInFile(file, @"Then\r*\n\s*\r*\n(\s*)(\S)", "Then\r\n$1$2").Matches.Count;
 							
 							
 								
 							// remove the xml documentation
-							changes += IO.SearchAndReplaceInFile(file, @"[\n\r][\s]*[\']{3}[^\n\r]*", @"");
+							changes += IO.SearchAndReplaceInFile(file, @"[\n\r][\s]*[\']{3}[^\n\r]*", @"").Matches.Count;
 
 							// remove extra white space
-							changes += IO.SearchAndReplaceInFile(file, @"\r*\n\s*\n(\s*)(End|Else|Next|Catch|Finally)", "\r\n$1$2");
-							changes += IO.SearchAndReplaceInFile(file, @"(\r*\n\s*)(Do|Case|If|Else|For|Select|Private Sub|Public Sub|Private Function|Public Function|Public Class|Try|Catch)([^\r\n]*)\r*\n\r*\n", "$1$2$3\r\n");
-							changes += IO.SearchAndReplaceInFile(file, @"\r*\n(\r*\n\s*)(Loop|End)", "$1$2");
+							changes += IO.SearchAndReplaceInFile(file, @"\r*\n\s*\n(\s*)(End|Else|Next|Catch|Finally)", "\r\n$1$2").Matches.Count;
+							changes += IO.SearchAndReplaceInFile(file, @"(\r*\n\s*)(Do|Case|If|Else|For|Select|Private Sub|Public Sub|Private Function|Public Function|Public Class|Try|Catch)([^\r\n]*)\r*\n\r*\n", "$1$2$3\r\n").Matches.Count;
+							changes += IO.SearchAndReplaceInFile(file, @"\r*\n(\r*\n\s*)(Loop|End)", "$1$2").Matches.Count;
 
 							// one space between methods
-							//changes += IO.SearchAndReplaceInFile(file, @"(End Sub|End Function)\r*\n([^\n\r])(\S*)\s(?:(?!Class)\w)", "$1\r\n\r\n$2$3");
-							changes += IO.SearchAndReplaceInFile(file, @"(End Sub|End Function)\r*\n(\t*)(\S\w*\s)((?!Class))", "$1\r\n\r\n$2$3");
-							changes += IO.SearchAndReplaceInFile(file, @"(End Sub|End Function)\r*\n\r*\n[\r\n]+(\s*)(\S)", "$1\r\n\r\n$2$3");
+							//changes += IO.SearchAndReplaceInFile(file, @"(End Sub|End Function)\r*\n([^\n\r])(\S*)\s(?:(?!Class)\w)", "$1\r\n\r\n$2$3").Matches.Count;
+							changes += IO.SearchAndReplaceInFile(file, @"(End Sub|End Function)\r*\n(\t*)(\S\w*\s)((?!Class))", "$1\r\n\r\n$2$3").Matches.Count;
+							changes += IO.SearchAndReplaceInFile(file, @"(End Sub|End Function)\r*\n\r*\n[\r\n]+(\s*)(\S)", "$1\r\n\r\n$2$3").Matches.Count;
 
 							// one space between #Region start and first line
-							changes += IO.SearchAndReplaceInFile(file, @"(#Region[^(\r|\n)]*)\r*\n([\t]*[\S]{1,})", "$1\r\n\r\n$2");					
-							changes += IO.SearchAndReplaceInFile(file, @"(#Region[^(\r|\n)]*)\r*\n(\t*)\r*\n\t*\r*\n", "$1\r\n$2\r\n");
+							changes += IO.SearchAndReplaceInFile(file, @"(#Region[^(\r|\n)]*)\r*\n([\t]*[\S]{1,})", "$1\r\n\r\n$2").Matches.Count;
+							changes += IO.SearchAndReplaceInFile(file, @"(#Region[^(\r|\n)]*)\r*\n(\t*)\r*\n\t*\r*\n", "$1\r\n$2\r\n").Matches.Count;
 							
 							break;
 						default:

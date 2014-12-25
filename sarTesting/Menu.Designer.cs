@@ -113,7 +113,7 @@ namespace sar.Testing
 			// 
 			// button1
 			// 
-			this.button1.Location = new System.Drawing.Point(12, 182);
+			this.button1.Location = new System.Drawing.Point(8, 184);
 			this.button1.Name = "button1";
 			this.button1.Size = new System.Drawing.Size(113, 23);
 			this.button1.TabIndex = 1;
@@ -123,9 +123,9 @@ namespace sar.Testing
 			// 
 			// ConnectToSPS
 			// 
-			this.ConnectToSPS.Location = new System.Drawing.Point(336, 184);
+			this.ConnectToSPS.Location = new System.Drawing.Point(248, 184);
 			this.ConnectToSPS.Name = "ConnectToSPS";
-			this.ConnectToSPS.Size = new System.Drawing.Size(113, 23);
+			this.ConnectToSPS.Size = new System.Drawing.Size(113, 24);
 			this.ConnectToSPS.TabIndex = 5;
 			this.ConnectToSPS.Text = "ConnectSPS";
 			this.ConnectToSPS.UseVisualStyleBackColor = true;
@@ -133,7 +133,7 @@ namespace sar.Testing
 			// 
 			// button2
 			// 
-			this.button2.Location = new System.Drawing.Point(160, 184);
+			this.button2.Location = new System.Drawing.Point(128, 184);
 			this.button2.Name = "button2";
 			this.button2.Size = new System.Drawing.Size(113, 23);
 			this.button2.TabIndex = 6;
@@ -164,13 +164,13 @@ namespace sar.Testing
 			this.readOnlyTextBox1.Name = "readOnlyTextBox1";
 			this.readOnlyTextBox1.ReadOnly = true;
 			this.readOnlyTextBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.readOnlyTextBox1.Size = new System.Drawing.Size(304, 120);
+			this.readOnlyTextBox1.Size = new System.Drawing.Size(144, 120);
 			this.readOnlyTextBox1.TabIndex = 9;
 			this.readOnlyTextBox1.Text = "line 1\r\nline 2";
 			// 
 			// button3
 			// 
-			this.button3.Location = new System.Drawing.Point(328, 224);
+			this.button3.Location = new System.Drawing.Point(248, 208);
 			this.button3.Name = "button3";
 			this.button3.Size = new System.Drawing.Size(113, 23);
 			this.button3.TabIndex = 10;
@@ -204,7 +204,7 @@ namespace sar.Testing
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(507, 382);
+			this.ClientSize = new System.Drawing.Size(482, 382);
 			this.Controls.Add(this.folderChanged);
 			this.Controls.Add(this.folderSelect1);
 			this.Controls.Add(this.button3);

@@ -25,13 +25,13 @@ namespace sar.Commands
 	public class FileSearchAndReplace : Command
 	{
 		public FileSearchAndReplace(Base.CommandHub parent) : base(parent, "File - Search And Replace",
-		                                 new List<string> { "replace", "r" },
-		                                 "-replace <file_search_pattern> <search_text> <replace_text>",
-		                                 new List<string> {
-		                                 	"-r \"AssemblyInfo.cs\" \"0.0.0.0\" \"1.0.0.0\"",
-		                                 	"-r AssemblyInfo.* ((Version)\\(\\\"\\d+\\.\\d+\\.\\d+\\.\\d+\\\"\\)) \"Version(\\\"%VERSION%\\\")\"",
-		                                 	"-r \\sar\\\"AssemblyInfo.cs\" \"0.0.0.0\" \"1.0.0.0\"",
-		                                 })
+		                                                           new List<string> { "replace", "r" },
+		                                                           "-replace <file_search_pattern> <search_text> <replace_text>",
+		                                                           new List<string> {
+		                                                           	"-r \"AssemblyInfo.cs\" \"0.0.0.0\" \"1.0.0.0\"",
+		                                                           	"-r AssemblyInfo.* ((Version)\\(\\\"\\d+\\.\\d+\\.\\d+\\.\\d+\\\"\\)) \"Version(\\\"%VERSION%\\\")\"",
+		                                                           	"-r \\sar\\\"AssemblyInfo.cs\" \"0.0.0.0\" \"1.0.0.0\"",
+		                                                           })
 		{
 			
 		}
@@ -46,28 +46,24 @@ namespace sar.Commands
 			
 			string search = args[2];
 			string replace = args[3];
-
 			string filePattern = args[1];
 			string root = Directory.GetCurrentDirectory();
-			IO.CheckRootAndPattern(ref root, ref filePattern);
-			List<string> files = IO.GetAllFiles(root, filePattern);
 
-			int counter = 0;
+			List<IO.SearchResult> results = IO.SearchAndReplaceInFiles(root, filePattern, search, replace);
+			
+			
+			int files = 0;
 			int changes = 0;
-			foreach (string file in files)
+			foreach (IO.SearchResult result in results)
 			{
-				if (this.commandHub.IncludeSVN || !IO.IsSVN(file))
+				if (result.Matches.Count > 0)
 				{
-					int found = IO.SearchAndReplaceInFile(file, search, replace);
-					if (found > 0)
-					{
-						changes += found;
-						counter++;
-					}
+					files++;
+					changes += result.Matches.Count;
 				}
-			}			
+			}
 
-			ConsoleHelper.WriteLine(changes.ToString() + " replacment" + ((changes != 1) ? "s" : "") + " made in " + counter.ToString() + " file" + ((counter != 1) ? "s" : ""), ConsoleColor.DarkYellow);
+			ConsoleHelper.WriteLine(changes.ToString() + " replacment" + ((changes != 1) ? "s" : "") + " made in " + files.ToString() + " file" + ((files != 1) ? "s" : ""), ConsoleColor.DarkYellow);
 			return ConsoleHelper.EXIT_OK;
 		}
 	}
