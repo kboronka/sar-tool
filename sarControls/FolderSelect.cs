@@ -96,6 +96,9 @@ namespace sarControls
 			string pathText = this.pathTextBox.Text;
 			if (!string.IsNullOrEmpty(pathText) && !Directory.Exists(pathText))
 			{
+				this.pathTextBox.ForeColor = Color.White;
+				this.pathTextBox.BackColor = Color.Red;
+				
 				DialogResult dialogResult = MessageBox.Show("Create folder", "folder does not exist", MessageBoxButtons.YesNo);
 				if(dialogResult == DialogResult.Yes)
 				{
@@ -107,6 +110,9 @@ namespace sarControls
 					e.Cancel = true;
 				}
 			}
+			
+			this.pathTextBox.ForeColor = SystemColors.WindowText;
+			this.pathTextBox.BackColor = SystemColors.Window;
 		}
 		
 		private void PathTextBoxValidated(object sender, EventArgs e)
