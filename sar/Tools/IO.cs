@@ -279,7 +279,14 @@ namespace sar.Tools
 
 			foreach (string file in IO.GetAllFiles(root, filePattern))
 			{
-				if (!IO.IsSVN(file)) results.Add(IO.SearchAndReplaceInFile(file, search, replace));
+				if (!IO.IsSVN(file))
+				{
+					SearchResult result = IO.SearchAndReplaceInFile(file, search, replace);
+					if (result.Matches.Count > 0)
+					{
+						results.Add(result);
+					}
+				}
 			}
 			
 			return results;
@@ -330,7 +337,14 @@ namespace sar.Tools
 
 			foreach (string file in IO.GetAllFiles(root, filePattern))
 			{
-				if (!IO.IsSVN(file)) results.Add(IO.SearchInFile(file, search));
+				if (!IO.IsSVN(file))
+				{
+					SearchResult result = IO.SearchInFile(file, search);
+					if (result.Matches.Count > 0)
+					{
+						results.Add(result);
+					}
+				}
 			}
 			
 			return results;
