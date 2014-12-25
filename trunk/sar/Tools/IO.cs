@@ -262,9 +262,35 @@ namespace sar.Tools
 			
 			return lines;
 		}
+
+		#region searching within files
 		
-		public static int SearchAndReplaceInFile(string path, string search, string replace)
+		public struct SearchResult
 		{
+			public string FilePath;
+			public List<Match> Matches;
+		}
+		
+		public static List<SearchResult> SearchAndReplaceInFiles(string root, string filePattern, string search, string replace)
+		{
+			List<SearchResult> results = new List<SearchResult>();
+			
+			IO.CheckRootAndPattern(ref root, ref filePattern);
+
+			foreach (string file in IO.GetAllFiles(root, filePattern))
+			{
+				if (!IO.IsSVN(file)) results.Add(IO.SearchAndReplaceInFile(file, search, replace));
+			}
+			
+			return results;
+		}
+		
+		public static SearchResult SearchAndReplaceInFile(string path, string search, string replace)
+		{
+			SearchResult result = new SearchResult();
+			result.FilePath = path;
+			result.Matches = new List<Match>();
+			
 			string content = ReadFileAsUtf8(path);
 			
 			string newcontent;
@@ -273,14 +299,15 @@ namespace sar.Tools
 			do
 			{
 				newcontent = lastResult;
+				Match match = Regex.Match(newcontent, search);
 				
-				
-				if (ConsoleHelper.ShowDebug && Regex.Matches(newcontent, search).Count > 0)
+				if (match.Success)
 				{
-					ConsoleHelper.DebugWriteLine("found in " + GetFilename(path) + " @ ln#" + GetLineNumber(newcontent, Regex.Matches(newcontent, search)[0].Index).ToString());
+					if (ConsoleHelper.ShowDebug) ConsoleHelper.DebugWriteLine("found in " + GetFilename(path) + " @ ln#" + GetLineNumber(newcontent, match.Index).ToString());
+					
+					result.Matches.Add(match);
+					lastResult = Regex.Replace(lastResult, search, replace);
 				}
-				
-				lastResult = Regex.Replace(lastResult, search, replace);
 			} while (lastResult != newcontent);
 			
 			
@@ -290,13 +317,45 @@ namespace sar.Tools
 				{
 					writer.Write(newcontent);
 				}
-				
-				return Regex.Matches(content, search).Count;
 			}
 			
-			return 0;
+			return result;
+		}
+
+		public static List<SearchResult> SearchInFiles(string root, string filePattern, string search)
+		{
+			List<SearchResult> results = new List<SearchResult>();
+			
+			IO.CheckRootAndPattern(ref root, ref filePattern);
+
+			foreach (string file in IO.GetAllFiles(root, filePattern))
+			{
+				if (!IO.IsSVN(file)) results.Add(IO.SearchInFile(file, search));
+			}
+			
+			return results;
 		}
 		
+		public static SearchResult SearchInFile(string path, string search)
+		{
+			SearchResult result = new SearchResult();
+			result.FilePath = path;
+			result.Matches = new List<Match>();
+			
+			string content = ReadFileAsUtf8(path);
+			
+			MatchCollection matches = Regex.Matches(content, search);
+			
+			foreach (Match match in matches)
+			{
+				result.Matches.Add(match);
+			}
+			
+			return result;
+		}
+
+		#endregion
+
 		public static Encoding ReadEncoding(string filepath)
 		{
 			if (String.IsNullOrEmpty(filepath))
