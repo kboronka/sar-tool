@@ -118,6 +118,20 @@ namespace sar.Tools
 			return result;
 		}
 		
+		public static string RemoveEmptyLines(string input)
+		{
+			// empty lines
+			input = Regex.Replace(input, @"\n\r*\s*\n\r*", Environment.NewLine);
+			
+			// first line empty
+			input = Regex.Replace(input, @"^\s*\n\r*", "");
+			
+			// last line empty
+			input = Regex.Replace(input, @"\n\r*$", "");
+			
+			return input;
+		}
+		
 		public static string Remove(string input, List<string> words)
 		{
 			string result = input;
