@@ -58,15 +58,9 @@
 	svn copy %REPO%/trunk %REPO%/tags/%VERSION% -m "Tagging the %VERSION% version release of the project"
 	svn update
 	
-	cd lib\skylib-source
-	svn commit -m "sar version %VERSION%"
-	svn update
-	cd BASEPATH
-
 	echo build completed
 	popd
 	exit /b 0
-
 
 :BuildFailed
 	echo build failed
