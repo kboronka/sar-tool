@@ -43,12 +43,11 @@ namespace sar.Http
 		private Encoding encoding;
 
 		private HttpRequest request;
-		private string contentType = "text/html";
-		private byte[] content;
+		private HttpContent content;
 		
 		public byte[] Content
 		{
-			get { return content; }
+			get { return ConstructResponce(HttpStatusCode.OK); }
 		}
 		
 		public HttpResponce(HttpRequest request, TcpClient socket)
@@ -60,20 +59,14 @@ namespace sar.Http
 			
 			try
 			{
-				// FIXME: send proper responce
-				string filePath = this.request.Server.Root + this.request.Url.Replace(@"/", @"\");
-				if (File.Exists(filePath))
-				{
-					this.content = GetFile(filePath);
-				}
-				else if (this.request.Url.ToLower() == @"/info")
+				if (this.request.Url.ToLower() == @"/info")
 				{
 					this.content = GetInfo();
 				}
 				else
 				{
-					//this.SendInfo();
-					throw new FileNotFoundException("did not find " + filePath);
+					HttpContent content = 
+					this.content = HttpContent.Read(this.request.Server, this.request.Url);
 				}
 			}
 			catch (Exception ex)
@@ -84,24 +77,8 @@ namespace sar.Http
 			}
 		}
 		
-		private byte[] GetFile(string filepath)
+		private HttpContent GetInfo()
 		{
-			string extension = IO.GetFileExtension(filepath).ToLower();
-			
-			this.contentType = HttpHelper.GetMimeType(extension);
-			
-			if (extension == "php")
-			{
-				return GetPHP(filepath);
-			}
-			
-			return File.ReadAllBytes(filepath);
-		}
-		
-		private byte[] GetInfo()
-		{
-			this.contentType = "text/html";
-			
 			// Construct responce
 			string content = "";
 			content += "<html><body><h1>test server</h1>" + "<br>\n";
@@ -115,12 +92,11 @@ namespace sar.Http
 			content += "</html>" + "\n";
 			content += "\r\n";
 
-			return this.encoding.GetBytes(content);
+			return new HttpContent(content);
 		}
 		
-		private byte[] GetException(Exception ex)
+		private HttpContent GetException(Exception ex)
 		{
-			this.contentType = "text/html";
 			Exception inner = ExceptionHandler.GetInnerException(ex);
 			
 			string content = "";
@@ -139,7 +115,7 @@ namespace sar.Http
 			
 			content = content.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
 			content = content.Replace(Environment.NewLine, "<br>" + Environment.NewLine);
-			return this.encoding.GetBytes(content);
+			return new HttpContent(content);
 		}
 		
 		private byte[] ConstructResponce(HttpStatusCode status)
@@ -150,19 +126,20 @@ namespace sar.Http
 			string responcePhrase = Enum.GetName(typeof(HttpStatusCode), status);
 			string responce = "HTTP/1.0" + " " + status.ToString() + " " + responcePhrase + "\n\r";
 			
+			byte [] contentBytes = this.content.Render();
 			// content details
-			responce += "Content-Type: " + this.contentType + "\n\r";
-			responce += "Content-Length: " + this.content.Length.ToString() + "\n\r";
+			responce += "Content-Type: " + this.content.ContentType + "\n\r";
+			responce += "Content-Length: " + contentBytes.Length.ToString() + "\n\r";
 			
 			// other
 			responce += "Connection: close" + "\n\r";
 			responce += "" + "\n\r";
 			
-			this.content = StringHelper.CombineByteArrays(Encoding.ASCII.GetBytes(responce), this.content);
+			byte[] result = StringHelper.CombineByteArrays(Encoding.ASCII.GetBytes(responce), contentBytes);
 
 			#if DEBUG
 			string line = ">> ";
-			foreach (byte chr in this.content)
+			foreach (byte chr in result)
 			{
 				line += chr.ToString() + " ";
 				if (chr == 13)
@@ -171,35 +148,10 @@ namespace sar.Http
 					line = ">> ";
 				}
 			}
+			
 			#endif
 
-			return this.content;
-		}
-		
-		private static string phpPath;
-		private byte[] GetPHP(string filepath)
-		{
-			// locate php.exe
-			if (String.IsNullOrEmpty(phpPath))
-			{
-				if (File.Exists(@"c:\php\php.exe"))
-				{
-					phpPath = @"c:\php\php.exe";
-				}
-				else
-				{
-					phpPath = sar.Tools.IO.FindApplication("php.exe");
-				}
-			}
-			
-			if (String.IsNullOrEmpty(phpPath)) throw new ApplicationException("PHP not found");
-
-			string output;
-			string error;
-			
-			ConsoleHelper.Run(phpPath, filepath, out output, out error);
-			// TODO: handle errors
-			return encoding.GetBytes(output);
+			return result;
 		}
 	}
 }
