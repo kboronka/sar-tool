@@ -50,12 +50,10 @@ namespace sar.Http
 		#endregion
 		
 		private byte[] buffer = new byte[0] {};
-		private string filename;
 
 		private HttpEmbeddedResource(string resource)
 		{
-			this.filename = filename;
-			
+			resource = resource.Replace(@"/", @".");
 			Assembly sarAssembly = Assembly.GetExecutingAssembly();
 			string x = sarAssembly.FullName;
 			Stream stream = sarAssembly.GetManifestResourceStream(resource);
