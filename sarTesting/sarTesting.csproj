@@ -91,5 +91,11 @@
       <DependentUpon>SocketClientForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Http" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Http\test.html" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
