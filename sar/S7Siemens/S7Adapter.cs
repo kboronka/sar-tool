@@ -143,7 +143,7 @@ namespace sar.S7Siemens
 			message = IO.Combine(message, new byte[] { 0x12, 0x0A, 0x10 });
 			
 			// transport type
-			message = IO.Combine(message, new byte[]  { (byte)transportType });
+			message = IO.Combine(message, new byte[] { (byte)transportType });
 
 			// length (bytes)
 			message = IO.Combine(message, IO.Split(length));
@@ -153,7 +153,7 @@ namespace sar.S7Siemens
 			message = IO.Combine(message, IO.Split(dataBlock));
 
 			// address area
-			message = IO.Combine(message, new byte[]  { (byte)addressArea });
+			message = IO.Combine(message, new byte[] { (byte)addressArea });
 
 			// start address
 			message = IO.Combine(message, IO.SubSet(IO.Split(startAddress), 1, 3));

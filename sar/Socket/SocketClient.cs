@@ -239,7 +239,7 @@ namespace sar.Socket
 			}
 		}
 		
-		public SocketClient(string hostname, int port, ErrorLogger errorLog, FileLogger debugLog)  : base(errorLog, debugLog)
+		public SocketClient(string hostname, int port, ErrorLogger errorLog, FileLogger debugLog) : base(errorLog, debugLog)
 		{
 			this.Log("Client Constructor");
 
@@ -411,7 +411,7 @@ namespace sar.Socket
 		{
 			if (this.IsHost) Thread.Sleep(250);
 			
-			this.Log(this.ID.ToString() +  ": " + "Connection Loop Started");
+			this.Log(this.ID.ToString() + ": " + "Connection Loop Started");
 
 			while (!connectionLoopShutdown)
 			{
@@ -435,7 +435,7 @@ namespace sar.Socket
 				}
 			}
 			
-			this.Log(this.ID.ToString() +  ": " + "Connection Loop Shutdown Gracefully");
+			this.Log(this.ID.ToString() + ": " + "Connection Loop Shutdown Gracefully");
 		}
 		
 		private void MonitorConnection()
@@ -456,7 +456,7 @@ namespace sar.Socket
 					if( this.socket.Client.Poll(1, SelectMode.SelectRead))
 					{
 						byte[] buff = new byte[1];
-						if(this.socket.Client.Receive(buff,  SocketFlags.Peek) == 0)
+						if(this.socket.Client.Receive(buff, SocketFlags.Peek) == 0)
 						{
 							this.Disconnect();
 						}
@@ -545,7 +545,7 @@ namespace sar.Socket
 		private void IncomingLoop()
 		{
 			Thread.Sleep(0);
-			this.Log(this.ID.ToString() +  ": " + "Incoming Loop Started");
+			this.Log(this.ID.ToString() + ": " + "Incoming Loop Started");
 			
 			string incomingBuffer = "";
 			while (!incomingLoopShutdown)
@@ -563,7 +563,7 @@ namespace sar.Socket
 				}
 			}
 			
-			this.Log(this.ID.ToString() +  ": " + "Incoming Loop Shutdown Gracefully");
+			this.Log(this.ID.ToString() + ": " + "Incoming Loop Shutdown Gracefully");
 		}
 		
 		private string ReadIncomingPacket()
@@ -731,7 +731,7 @@ namespace sar.Socket
 		private void OutgoingLoop()
 		{
 			Thread.Sleep(100);
-			this.Log(this.ID.ToString() +  ": " + "Outgoing Loop Started");
+			this.Log(this.ID.ToString() + ": " + "Outgoing Loop Started");
 			
 			while (!outgoingLoopShutdown)
 			{
@@ -747,7 +747,7 @@ namespace sar.Socket
 				}
 			}
 			
-			this.Log(this.ID.ToString() +  ": " + "Outgoing Loop Shutdown Gracefully");
+			this.Log(this.ID.ToString() + ": " + "Outgoing Loop Shutdown Gracefully");
 		}
 		
 		private void ServiceOutgoing()
@@ -839,7 +839,7 @@ namespace sar.Socket
 		private void PingLoop()
 		{
 			Thread.Sleep(1000);
-			this.Log(this.ID.ToString() +  ": " + "Ping Loop Started");
+			this.Log(this.ID.ToString() + ": " + "Ping Loop Started");
 			pingStopWatch = new Stopwatch();
 			pingStopWatch.Start();
 			
@@ -857,7 +857,7 @@ namespace sar.Socket
 				}
 			}
 			
-			this.Log(this.ID.ToString() +  ": " + "Ping Loop Shutdown Gracefully");
+			this.Log(this.ID.ToString() + ": " + "Ping Loop Shutdown Gracefully");
 		}
 
 		private void Ping()

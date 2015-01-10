@@ -27,11 +27,11 @@ namespace sar.Tools
 	public class SubversionLog : IComparable<SubversionLog>
 	{
 		// http://svnbook.red-bean.com/en/1.5/svn.ref.svn.c.log.html
-		public int Revision  { get; set; }
-		public DateTime Date  { get; set; }
-		public string Message  { get; set; }
-		public string Authour  { get; set; }
-		public svnInfo Repository  { get; set; }
+		public int Revision { get; set; }
+		public DateTime Date { get; set; }
+		public string Message { get; set; }
+		public string Authour { get; set; }
+		public svnInfo Repository { get; set; }
 		
 		public SubversionLog(svnInfo repo, string logEntry)
 		{
@@ -93,12 +93,12 @@ namespace sar.Tools
 	{
 		// http://svnbook.red-bean.com/en/1.6/svn.ref.svn.c.info.html
 		
-		public bool NodeFound  { get; set; }
-		public string WorkingCopyPath  { get; set; }
-		public string WorkingCopyRootPath  { get; set; }
-		public string Repository  { get; set; }
-		public string RepositoryRoot  { get; set; }
-		public int Revision  { get; set; }
+		public bool NodeFound { get; set; }
+		public string WorkingCopyPath { get; set; }
+		public string WorkingCopyRootPath { get; set; }
+		public string Repository { get; set; }
+		public string RepositoryRoot { get; set; }
+		public int Revision { get; set; }
 		
 		private svnInfo()
 		{

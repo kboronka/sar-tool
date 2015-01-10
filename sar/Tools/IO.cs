@@ -768,15 +768,13 @@ namespace sar.Tools
 					inStream.Seek(offset, SeekOrigin.Begin);
 					int bufferLength = buffer.Length, bytesRead;
 					
-					while (length > bufferLength &&
-					       (bytesRead = inStream.Read(buffer, 0, bufferLength)) > 0)
+					while (length > bufferLength && (bytesRead = inStream.Read(buffer, 0, bufferLength)) > 0)
 					{
 						outStream.Write(buffer, 0, bytesRead);
 						length -= bytesRead;
 					}
 					
-					while (length > 0 &&
-					       (bytesRead = inStream.Read(buffer, 0, length)) > 0)
+					while (length > 0 && (bytesRead = inStream.Read(buffer, 0, length)) > 0)
 					{
 						outStream.Write(buffer, 0, bytesRead);
 						length -= bytesRead;
