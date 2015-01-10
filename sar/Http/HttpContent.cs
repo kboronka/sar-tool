@@ -121,6 +121,7 @@ namespace sar.Http
 		
 		byte[] content;
 		string contentType;
+		Dictionary<string, HttpContent> baseContent;
 		
 		private string RenderText(Dictionary<string, HttpContent> baseContent)
 		{
@@ -129,7 +130,7 @@ namespace sar.Http
 
 		public byte[] Render()
 		{
-			return Render(new Dictionary<string, HttpContent>() {});
+			return Render(baseContent);
 		}
 		
 		public byte[] Render(Dictionary<string, HttpContent> baseContent)
@@ -139,16 +140,31 @@ namespace sar.Http
 				string text = Encoding.ASCII.GetString(this.content);
 				
 				// include linked externals
-				MatchCollection matches = Regex.Matches(text, @"<%@ Include:\s*(.*)\s*%>");
+				MatchCollection matches = Regex.Matches(text, @"\<%@ Include:\s*([^@]+)\s*\%\>");
 				if (matches.Count > 0)
 				{
 					foreach (Match match in matches)
 					{
-						string replacmentContent = HttpContent.Read(match.Groups[1].Value, baseContent).RenderText(baseContent);
+						string key = StringHelper.TrimWhiteSpace(match.Groups[1].Value);
+						string replacmentContent = HttpContent.Read(key, baseContent).RenderText(baseContent);
 						text = Regex.Replace(text, match.Groups[0].Value, replacmentContent);
 					}
 				}
 				
+				// include linked externals
+				matches = Regex.Matches(text, @"\<%@ Content:\s*([^@]+)\s*\%\>");
+				if (matches.Count > 0)
+				{
+					foreach (Match match in matches)
+					{
+						string key = StringHelper.TrimWhiteSpace(match.Groups[1].Value);
+						if (baseContent.ContainsKey(key))
+						{
+							HttpContent replacmentContent = baseContent[key];
+							text = Regex.Replace(text, match.Groups[0].Value, replacmentContent.RenderText(baseContent));
+						}
+					}
+				}
 				
 				return Encoding.ASCII.GetBytes(text);
 			}
@@ -163,17 +179,20 @@ namespace sar.Http
 		
 		private HttpContent()
 		{
+			this.baseContent = new Dictionary<string, HttpContent>();
 			this.contentType = "text/plain";
 		}
 		
 		public HttpContent(string content)
 		{
+			this.baseContent = new Dictionary<string, HttpContent>();
 			this.contentType = "text/plain";
 			this.content = Encoding.ASCII.GetBytes(content);
 		}
 
 		private HttpContent(byte[] content, string contentType)
 		{
+			this.baseContent = new Dictionary<string, HttpContent>();
 			this.contentType = contentType;
 			this.content = content;
 		}
@@ -181,6 +200,7 @@ namespace sar.Http
 		
 		public HttpContent(byte[] content, string contentType, Dictionary<string, HttpContent> baseContent)
 		{
+			this.baseContent = baseContent;
 			this.contentType = contentType;
 			this.content = content;
 		}
