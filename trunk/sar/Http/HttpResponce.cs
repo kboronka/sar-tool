@@ -138,6 +138,7 @@ namespace sar.Http
 			byte[] result = StringHelper.CombineByteArrays(Encoding.ASCII.GetBytes(responce), contentBytes);
 
 			#if DEBUG
+			/*
 			string line = ">> ";
 			foreach (byte chr in result)
 			{
@@ -148,7 +149,7 @@ namespace sar.Http
 					line = ">> ";
 				}
 			}
-			
+			*/
 			#endif
 
 			return result;

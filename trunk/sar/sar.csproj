@@ -162,9 +162,12 @@
     <Folder Include="Commands" />
     <Folder Include="Base" />
     <Folder Include="Http" />
-    <Folder Include="Http\libs" />
     <Folder Include="Http\error" />
     <Folder Include="Http\error\views" />
+    <Folder Include="Http\libs" />
+    <Folder Include="Http\libs\css" />
+    <Folder Include="Http\libs\fonts" />
+    <Folder Include="Http\libs\js" />
     <Folder Include="S7Siemens" />
     <Folder Include="Socket" />
     <Folder Include="Tools" />
@@ -179,8 +182,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <EmbeddedResource Include="Http\error\views\display.html" />
+    <EmbeddedResource Include="Http\libs\css\bootstrap-theme.css.map" />
+    <EmbeddedResource Include="Http\libs\css\bootstrap-theme.min.css" />
+    <EmbeddedResource Include="Http\libs\css\bootstrap.css.map" />
+    <EmbeddedResource Include="Http\libs\css\bootstrap.min.css" />
+    <None Include="Http\libs\fonts\glyphicons-halflings-regular.eot" />
+    <None Include="Http\libs\fonts\glyphicons-halflings-regular.svg" />
+    <None Include="Http\libs\fonts\glyphicons-halflings-regular.ttf" />
+    <None Include="Http\libs\fonts\glyphicons-halflings-regular.woff" />
+    <EmbeddedResource Include="Http\libs\js\bootstrap.min.js" />
+    <EmbeddedResource Include="Http\libs\js\jquery-1.11.2.min.js" />
+    <EmbeddedResource Include="Http\libs\js\jquery-2.1.3.min.js" />
+    <EmbeddedResource Include="Http\libs\js\npm.js" />
     <EmbeddedResource Include="Http\libs\layout.css" />
     <EmbeddedResource Include="Http\libs\master.aspx" />
-    <None Include="Http\error\views\display.html" />
   </ItemGroup>
 </Project>
