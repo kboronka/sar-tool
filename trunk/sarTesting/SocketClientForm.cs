@@ -43,7 +43,7 @@ namespace sar.Testing
 		{
 			if (this.client != null && this.client.Connected)
 			{
-				if(MessageBox.Show("Do you want to close the client?", "sarTesting", MessageBoxButtons.YesNo) ==  DialogResult.No)
+				if (MessageBox.Show("Do you want to close the client?", "sarTesting", MessageBoxButtons.YesNo) == DialogResult.No)
 				{
 					e.Cancel = true;
 				}

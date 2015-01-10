@@ -66,7 +66,7 @@ namespace sar.Tools
 			
 			if (hostName.StartsWith(@"\\")) hostName = hostName.Substring(2);
 			if (hostName.Contains(@"\")) hostName = hostName.Substring(0, hostName.IndexOf(@"\"));
-			    
+			
 			return hostName;
 		}
 		
