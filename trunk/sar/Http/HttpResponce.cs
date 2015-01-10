@@ -72,7 +72,7 @@ namespace sar.Http
 			catch (Exception ex)
 			{
 				Program.Log(ex);
-				this.content = GetException(ex);
+				this.content = GetException(ex, HttpStatusCode.SERVERERROR);
 				this.ConstructResponce(HttpStatusCode.SERVERERROR);
 			}
 		}
@@ -95,10 +95,19 @@ namespace sar.Http
 			return new HttpContent(content);
 		}
 		
-		private HttpContent GetException(Exception ex)
+		private HttpContent GetException(Exception ex, HttpStatusCode status)
 		{
 			Exception inner = ExceptionHandler.GetInnerException(ex);
 			
+			Dictionary<string, HttpContent> baseContent = new Dictionary<string, HttpContent>() {};
+			baseContent.Add("Title", new HttpContent(status.ToString()));
+			baseContent.Add("ResponceCode", new HttpContent(((int)status).ToString()));
+			baseContent.Add("ExceptionType", new HttpContent(inner.GetType().ToString()));
+			baseContent.Add("ExceptionMessage", new HttpContent(inner.Message));
+			baseContent.Add("ExceptionStackTrace", new HttpContent(ExceptionHandler.GetStackTrace(inner)));
+
+			return HttpContent.Read("sar.Http.error.views.display.html", baseContent);
+			                                                
 			string content = "";
 			content += "<html><body><h1>ERROR</h1>\n";
 			content += ConsoleHelper.HR + "\r\n";
