@@ -145,7 +145,7 @@ namespace sar.Http
 			
 			lock (socket)
 			{
-				stream.Write(responce.Content, 0, responce.Content.Length);
+				stream.Write(responce.Bytes, 0, responce.Bytes.Length);
 				stream.Flush();
 				stream = null;
 				socket.Close();
