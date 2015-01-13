@@ -44,10 +44,11 @@ namespace sar.Http
 
 		private HttpRequest request;
 		private HttpContent content;
+		public byte[] bytes;
 		
-		public byte[] Content
+		public byte[] Bytes
 		{
-			get { return ConstructResponce(HttpStatusCode.OK); }
+			get { return this.bytes; }
 		}
 		
 		public HttpResponce(HttpRequest request, TcpClient socket)
@@ -65,15 +66,21 @@ namespace sar.Http
 				}
 				else
 				{
-					HttpContent content = 
 					this.content = HttpContent.Read(this.request.Server, this.request.Url);
 				}
+				
+				this.bytes = this.ConstructResponce(HttpStatusCode.OK);
 			}
+			catch (FileNotFoundException ex)
+			{
+				Program.Log(ex);
+				this.content = GetException(ex, HttpStatusCode.NOTFOUND);
+				this.bytes = this.ConstructResponce(HttpStatusCode.SERVERERROR);			}
 			catch (Exception ex)
 			{
 				Program.Log(ex);
 				this.content = GetException(ex, HttpStatusCode.SERVERERROR);
-				this.ConstructResponce(HttpStatusCode.SERVERERROR);
+				this.bytes = this.ConstructResponce(HttpStatusCode.SERVERERROR);
 			}
 		}
 		
@@ -107,24 +114,6 @@ namespace sar.Http
 			baseContent.Add("ExceptionStackTrace", new HttpContent(ExceptionHandler.GetStackTrace(inner)));
 
 			return HttpContent.Read("sar.Http.error.views.display.html", baseContent);
-			                                                
-			string content = "";
-			content += "<html><body><h1>ERROR</h1>\n";
-			content += ConsoleHelper.HR + "\r\n";
-			content += "Time: " + DateTime.Now.ToString() + "\r\n";
-			content += "Type: " + inner.GetType().ToString() + "\r\n";
-			content += "Method: " + request.Method.ToString() + "\r\n";
-			content += "URL: " + request.Url + "\r\n";
-			content += "Version: " + request.ProtocolVersion + "\r\n";
-			content += "Error: " + inner.Message + "\r\n";
-			content += ConsoleHelper.HR + "\r\n";
-			content += "<p>" + ExceptionHandler.GetStackTrace(inner) + "</p>\r\n";
-			content += "</html>" + "\n";
-			content += "\r\n";
-			
-			content = content.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-			content = content.Replace(Environment.NewLine, "<br>" + Environment.NewLine);
-			return new HttpContent(content);
 		}
 		
 		private byte[] ConstructResponce(HttpStatusCode status)
@@ -144,24 +133,7 @@ namespace sar.Http
 			responce += "Connection: close" + "\n\r";
 			responce += "" + "\n\r";
 			
-			byte[] result = StringHelper.CombineByteArrays(Encoding.ASCII.GetBytes(responce), contentBytes);
-
-			#if DEBUG
-			/*
-			string line = ">> ";
-			foreach (byte chr in result)
-			{
-				line += chr.ToString() + " ";
-				if (chr == 13)
-				{
-					Program.Log(line);
-					line = ">> ";
-				}
-			}
-			*/
-			#endif
-
-			return result;
+			return StringHelper.CombineByteArrays(Encoding.ASCII.GetBytes(responce), contentBytes);
 		}
 	}
 }
