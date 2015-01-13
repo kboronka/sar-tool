@@ -21,7 +21,6 @@ namespace sar.Tools
 	public static class HttpHelper
 	{
 
-
 		public static string GetMimeType(string extension)
 		{
 			IDictionary<string, string> mimeTypes = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) {
