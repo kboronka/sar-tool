@@ -85,7 +85,7 @@ namespace sar.S7Siemens
 			if (this.length > 1 || this.area == Areas.DB && address[0] == 'X') address = address.Substring(1);
 			
 			// verify valid address
-			if (!StringHelper.IsNumeric(address)) throw new InvalidDataException("Invalid address location");
+			if (!address.IsNumeric()) throw new InvalidDataException("Invalid address location");
 			
 			// bit address verification
 			if (this.length == 1 && address.IndexOf('.') == -1) throw new InvalidDataException("Invalid bit address location");
