@@ -129,7 +129,7 @@ namespace sar.Tools
 
 			if (ShowDebug)
 			{
-				ConsoleHelper.WriteLine(ExceptionHandler.GetStackTrace(ex), ConsoleColor.DarkCyan);
+				ConsoleHelper.WriteLine(ex.GetStackTrace(), ConsoleColor.DarkCyan);
 			}
 		}
 		

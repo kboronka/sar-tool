@@ -111,6 +111,7 @@
     <Compile Include="Commands\WindowsMapDrive.cs" />
     <Compile Include="Commands\WindowsRearm.cs" />
     <Compile Include="Commands\WindowsRestart.cs" />
+    <Compile Include="Http\error\ErrorController.cs" />
     <Compile Include="Http\HttpBase.cs" />
     <Compile Include="Http\HttpContent.cs" />
     <Compile Include="Http\HttpEmbeddedResource.cs" />
@@ -138,6 +139,7 @@
     <Compile Include="Tools\ExceptionHandler.Designer.cs">
       <DependentUpon>ExceptionHandler.cs</DependentUpon>
     </Compile>
+    <Compile Include="Tools\ExceptionHelper.cs" />
     <Compile Include="Tools\FileLogger.cs" />
     <Compile Include="Tools\HttpHelper.cs" />
     <Compile Include="Tools\IO.cs" />
@@ -183,11 +185,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <EmbeddedResource Include="Http\error\views\display.html" />
+    <EmbeddedResource Include="Http\error\views\Display.html" />
     <EmbeddedResource Include="Http\libs\css\bootstrap-theme.css.map" />
     <EmbeddedResource Include="Http\libs\css\bootstrap-theme.min.css" />
     <EmbeddedResource Include="Http\libs\css\bootstrap.css.map" />
     <EmbeddedResource Include="Http\libs\css\bootstrap.min.css" />
+    <EmbeddedResource Include="Http\libs\css\bootstrap-callouts.min.css" />
+    <EmbeddedResource Include="Http\libs\css\bootstrap-dialog.min.css" />
     <None Include="Http\libs\fonts\glyphicons-halflings-regular.eot" />
     <None Include="Http\libs\fonts\glyphicons-halflings-regular.svg" />
     <None Include="Http\libs\fonts\glyphicons-halflings-regular.ttf" />
@@ -198,5 +202,7 @@
     <EmbeddedResource Include="Http\libs\js\npm.js" />
     <EmbeddedResource Include="Http\libs\layout.css" />
     <EmbeddedResource Include="Http\libs\master.aspx" />
+    <EmbeddedResource Include="Http\libs\js\bootstrap-dialog.min.js" />
+    <EmbeddedResource Include="Http\libs\js\jquery.jeditable.mini.js" />
   </ItemGroup>
 </Project>
