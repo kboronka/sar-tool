@@ -32,7 +32,7 @@ namespace sar.Tools
 			base.WriteLine("Type: " + inner.GetType().ToString());
 			base.WriteLine("Error: " + inner.Message);
 			base.WriteLine(ConsoleHelper.HR);
-			base.WriteLine(ExceptionHandler.GetStackTrace(inner));
+			base.WriteLine(inner.GetStackTrace());
 			base.WriteLine("");
 		}
 	}
