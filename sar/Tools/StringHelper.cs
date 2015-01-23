@@ -23,7 +23,7 @@ using System.Xml;
 
 namespace sar.Tools
 {
-	public class StringHelper
+	public static class StringHelper
 	{
 		public const string TAB = "\t";
 		
@@ -61,7 +61,7 @@ namespace sar.Tools
 			char[] chars = new char[bytes.Length / sizeof(char)];
 			System.Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
 			return new string(chars);
-			*/
+			 */
 			return System.Text.Encoding.UTF8.GetString(bytes);
 		}
 		
@@ -331,18 +331,6 @@ namespace sar.Tools
 			return result;
 		}
 		
-		public static bool IsNumeric(string s)
-		{
-			float output;
-			return float.TryParse(s, out output);
-		}
-		
-		public static bool IsNumeric(char c)
-		{
-			float output;
-			return float.TryParse(c.ToString(), out output);
-		}
-		
 		public static string[] CsvParser(string csvText)
 		{
 			List<string> columns = new List<string>();
@@ -380,6 +368,31 @@ namespace sar.Tools
 
 			return columns.ToArray();
 		}
+
+		#region string extensions
+		
+		public static bool IsNumeric(this char c)
+		{
+			return c.ToString().IsNumeric();
+		}
+		
+		public static bool IsNumeric(this string s)
+		{
+			float output;
+			return float.TryParse(s, out output);
+		}
+
+		public static string ToHTML(this string s)
+		{
+			return Regex.Replace(s, @"\n\r*", @"<br />");
+		}
+		
+		public static bool IsNotNull(this string stringValue)
+		{
+			return (!String.IsNullOrEmpty(stringValue));
+		}
+
+		#endregion
 		
 		#region environment variable helpers
 		
