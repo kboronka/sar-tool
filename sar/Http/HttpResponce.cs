@@ -60,13 +60,17 @@ namespace sar.Http
 			
 			try
 			{
-				if (this.request.Url.ToLower() == @"/info")
+				if (this.request.FullUrl.ToLower() == @"/info")
 				{
 					this.content = GetInfo();
 				}
+				else if (HttpController.ActionExists(this.request))
+				{
+					this.content = HttpController.RequestAction(this.request);
+				}
 				else
 				{
-					this.content = HttpContent.Read(this.request.Server, this.request.Url);
+					this.content = HttpContent.Read(this.request.Server, this.request.FullUrl);
 				}
 				
 				this.bytes = this.ConstructResponce(HttpStatusCode.OK);
@@ -90,7 +94,7 @@ namespace sar.Http
 			string content = "";
 			content += "<html><body><h1>test server</h1>" + "<br>\n";
 			content += "Method: " + request.Method.ToString() + "<br>\n";
-			content += "URL: " + request.Url + "<br>\n";
+			content += "URL: " + request.FullUrl + "<br>\n";
 			content += "Version: " + request.ProtocolVersion + "<br>\n";
 			content += "<form method=post action=/form>" + "<br>\n";
 			content += "<input type=text name=foo value=foovalue>" + "<br>\n";

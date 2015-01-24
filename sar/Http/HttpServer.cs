@@ -30,7 +30,6 @@ namespace sar.Http
 	public class HttpServer : HttpBase
 	{
 		private TcpListener listener;
-		private Encoding encoding;
 		protected int port;
 		protected string root;
 		
@@ -56,6 +55,8 @@ namespace sar.Http
 			}
 			
 			if (!Directory.Exists(this.root)) Directory.CreateDirectory(this.root);
+			
+			HttpController.LoadControllers();
 			
 			this.listenerLoopThread = new Thread(this.ListenerLoop);
 			this.listenerLoopThread.IsBackground = true;

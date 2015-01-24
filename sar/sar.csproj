@@ -115,6 +115,7 @@
     <Compile Include="Http\HttpBase.cs" />
     <Compile Include="Http\HttpContent.cs" />
     <Compile Include="Http\HttpEmbeddedResource.cs" />
+    <Compile Include="Http\HttpController.cs" />
     <Compile Include="Http\HttpRequest.cs" />
     <Compile Include="Http\HttpResponce.cs" />
     <Compile Include="Http\HttpServer.cs" />
