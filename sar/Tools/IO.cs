@@ -426,6 +426,18 @@ namespace sar.Tools
 			return Regex.Split(ReadFile(filepath), "\r\n|\r|\n");
 		}
 		
+		public static void WriteFileLines(string filepath, string[] lines)
+		{
+			List<string> linesList = new List<string>();
+			
+			foreach (string line in lines)
+			{
+				linesList.Add(line);
+			}
+			
+			WriteFileLines(filepath, linesList);
+		}
+		
 		public static void WriteFileLines(string filepath, List<string> lines)
 		{
 			Encoding encoding = Encoding.UTF8;
