@@ -38,7 +38,12 @@ namespace sar.Http
 		private HttpServer parent;
 
 		private HttpMethod method;
-		private String url;
+		
+		private string fullUrl;
+		private string path;
+		private string query;
+		private string reference;
+		
 		private String protocolVersion;
 		
 		private bool headerRecived;
@@ -50,9 +55,19 @@ namespace sar.Http
 			get { return method; }
 		}
 
-		public string Url
+		public string FullUrl
 		{
-			get { return url; }
+			get { return fullUrl; }
+		}
+		
+		public string Path
+		{
+			get { return path; }
+		}
+
+		public string Query
+		{
+			get { return query; }
 		}
 
 		public string ProtocolVersion
@@ -222,7 +237,15 @@ namespace sar.Http
 			string[] initialRequest = requestLine.Split(' ');
 			if (initialRequest.Length != 3) throw new InvalidDataException("the initial request line should contain three fields");
 
-			this.url = CleanUrlString(initialRequest[1]);
+			this.fullUrl = CleanUrlString(initialRequest[1]);
+			string[] url = this.fullUrl.Split('#');
+			this.path = StringHelper.TrimStart(url[0], 1);
+			this.reference = url.Length > 1 ? url[1] : "";
+			
+			url = this.path.Split('?');
+			this.path = url[0];
+			this.query = url.Length > 1 ? url[1] : "";
+				
 			this.protocolVersion = initialRequest[2];
 			
 			switch (initialRequest[0].ToUpper())
