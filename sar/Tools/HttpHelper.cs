@@ -598,9 +598,8 @@ namespace sar.Tools
 			}
 
 			string mime;
-
+			
 			return mimeTypes.TryGetValue(extension, out mime) ? mime : "application/octet-stream";
 		}
-
 	}
 }
