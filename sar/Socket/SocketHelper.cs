@@ -22,7 +22,7 @@ namespace sar.Socket
 {
 	public static class SocketHelper
 	{
-		private static int FindAvailablePort(int firstPort, int lastPort)
+		public static int FindAvailablePort(int firstPort, int lastPort)
 		{
 			IPGlobalProperties properties = IPGlobalProperties.GetIPGlobalProperties();
 			IPEndPoint[] tcpEndPoints = properties.GetActiveTcpListeners();
