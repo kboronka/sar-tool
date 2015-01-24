@@ -39,6 +39,11 @@ namespace sar.Http
 		{
 			get { return root; }
 		}
+		
+		public int Port
+		{
+			get { return port; }
+		}
 
 		#endregion
 		
@@ -49,6 +54,27 @@ namespace sar.Http
 			this.port = port;
 			this.root = wwwroot;
 			
+			this.Start();
+		}
+
+		public HttpServer(string wwwroot)
+		{
+			this.port = sar.Socket.SocketHelper.FindAvailablePort(80, 100);
+			this.root = wwwroot;
+			
+			this.Start();
+		}
+		
+		public HttpServer()
+		{
+			this.port = sar.Socket.SocketHelper.FindAvailablePort(80, 100);
+			this.root = ApplicationInfo.CommonDataDirectory;
+			
+			this.Start();
+		}
+		
+		private void Start()
+		{
 			if (this.root.EndsWith("\\"))
 			{
 				this.root = StringHelper.TrimEnd(this.root);
