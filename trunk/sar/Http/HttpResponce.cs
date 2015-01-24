@@ -74,12 +74,12 @@ namespace sar.Http
 			catch (FileNotFoundException ex)
 			{
 				Program.Log(ex);
-				this.content = GetException(ex, HttpStatusCode.NOTFOUND);
+				this.content = ErrorController.Display(this.request, ex, HttpStatusCode.NOTFOUND);
 				this.bytes = this.ConstructResponce(HttpStatusCode.SERVERERROR);			}
 			catch (Exception ex)
 			{
 				Program.Log(ex);
-				this.content = GetException(ex, HttpStatusCode.SERVERERROR);
+				this.content = ErrorController.Display(this.request, ex, HttpStatusCode.SERVERERROR);
 				this.bytes = this.ConstructResponce(HttpStatusCode.SERVERERROR);
 			}
 		}
@@ -100,20 +100,6 @@ namespace sar.Http
 			content += "\r\n";
 
 			return new HttpContent(content);
-		}
-		
-		private HttpContent GetException(Exception ex, HttpStatusCode status)
-		{
-			Exception inner = ExceptionHandler.GetInnerException(ex);
-			
-			Dictionary<string, HttpContent> baseContent = new Dictionary<string, HttpContent>() {};
-			baseContent.Add("Title", new HttpContent(status.ToString()));
-			baseContent.Add("ResponceCode", new HttpContent(((int)status).ToString()));
-			baseContent.Add("ExceptionType", new HttpContent(inner.GetType().ToString()));
-			baseContent.Add("ExceptionMessage", new HttpContent(inner.Message));
-			baseContent.Add("ExceptionStackTrace", new HttpContent(ExceptionHandler.GetStackTrace(inner)));
-
-			return HttpContent.Read("sar.Http.error.views.display.html", baseContent);
 		}
 		
 		private byte[] ConstructResponce(HttpStatusCode status)
