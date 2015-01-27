@@ -48,6 +48,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Http\Controllers\TestController.cs" />
     <Compile Include="LocalSocket.cs" />
     <Compile Include="LocalSocket.Designer.cs">
       <DependentUpon>LocalSocket.cs</DependentUpon>
@@ -93,9 +94,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Http" />
+    <Folder Include="Http\Controllers" />
+    <Folder Include="Http\Views" />
+    <Folder Include="Http\Views\Test" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Http\test.html" />
+    <None Include="Http\Views\Test\test.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
