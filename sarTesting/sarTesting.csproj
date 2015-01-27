@@ -99,7 +99,7 @@
     <Folder Include="Http\Views\Test" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Http\Views\Test\Test.html" />
+    <EmbeddedResource Include="Http\Views\Test\Test.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
