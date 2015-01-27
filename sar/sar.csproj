@@ -172,6 +172,9 @@
     <Folder Include="Http\libs\css" />
     <Folder Include="Http\libs\fonts" />
     <Folder Include="Http\libs\js" />
+    <Folder Include="Http\Views" />
+    <Folder Include="Http\Views\Error" />
+    <Folder Include="Http\Views\Shared" />
     <Folder Include="S7Siemens" />
     <Folder Include="Socket" />
     <Folder Include="Tools" />
@@ -186,7 +189,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <EmbeddedResource Include="Http\error\views\Display.html" />
     <EmbeddedResource Include="Http\libs\css\bootstrap-theme.css.map" />
     <EmbeddedResource Include="Http\libs\css\bootstrap-theme.min.css" />
     <EmbeddedResource Include="Http\libs\css\bootstrap.css.map" />
@@ -205,5 +207,6 @@
     <EmbeddedResource Include="Http\libs\master.aspx" />
     <EmbeddedResource Include="Http\libs\js\bootstrap-dialog.min.js" />
     <EmbeddedResource Include="Http\libs\js\jquery.jeditable.mini.js" />
+    <None Include="Http\Views\Error\Display.html" />
   </ItemGroup>
 </Project>
