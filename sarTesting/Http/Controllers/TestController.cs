@@ -11,7 +11,8 @@ namespace sar_testing.Http
 	{
 		public static HttpContent Show(HttpRequest request)
 		{
-			return HttpContent.Read("sar_testing.Http.Views.Test.Test.html");
+			return HttpContent.View("Test", "Test.html");
+			//return HttpContent.Read("sar_testing.Http.Views.Test.Test.html");
 		}
 	}
 }
