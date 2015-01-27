@@ -206,6 +206,6 @@
     <EmbeddedResource Include="Http\libs\master.aspx" />
     <EmbeddedResource Include="Http\libs\js\bootstrap-dialog.min.js" />
     <EmbeddedResource Include="Http\libs\js\jquery.jeditable.mini.js" />
-    <None Include="Http\Views\Error\Display.html" />
+    <EmbeddedResource Include="Http\Views\Error\Display.html" />
   </ItemGroup>
 </Project>
