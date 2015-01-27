@@ -111,7 +111,7 @@
     <Compile Include="Commands\WindowsMapDrive.cs" />
     <Compile Include="Commands\WindowsRearm.cs" />
     <Compile Include="Commands\WindowsRestart.cs" />
-    <Compile Include="Http\error\ErrorController.cs" />
+    <Compile Include="Http\Controllers\ErrorController.cs" />
     <Compile Include="Http\HttpBase.cs" />
     <Compile Include="Http\HttpContent.cs" />
     <Compile Include="Http\HttpEmbeddedResource.cs" />
@@ -172,6 +172,7 @@
     <Folder Include="Http\libs\css" />
     <Folder Include="Http\libs\fonts" />
     <Folder Include="Http\libs\js" />
+    <Folder Include="Http\Controllers" />
     <Folder Include="Http\Views" />
     <Folder Include="Http\Views\Error" />
     <Folder Include="Http\Views\Shared" />
