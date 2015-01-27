@@ -66,6 +66,12 @@ namespace sar.Http
 			return true;
 		}
 		
+		public static HttpController GetController(string controller)
+		{
+			if (!controllers.ContainsKey(controller)) throw new FileNotFoundException("controller " + @"""" + controller + @"""" + " not found");
+			return controllers[controller];			
+		}
+		
 		public static HttpContent RequestAction(HttpRequest request)
 		{
 			string[] urlSplit = request.Path.Split('/');
@@ -86,6 +92,16 @@ namespace sar.Http
 		
 		private Type type;
 		private Dictionary<string, MethodInfo> actions;
+		
+		public string FullName
+		{
+			get { return type.FullName; }
+		}
+		
+		public string Name
+		{
+			get { return type.Name; }
+		}
 		
 		public HttpController(Type controller)
 		{
