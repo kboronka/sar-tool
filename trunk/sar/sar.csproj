@@ -166,8 +166,6 @@
     <Folder Include="Commands" />
     <Folder Include="Base" />
     <Folder Include="Http" />
-    <Folder Include="Http\error" />
-    <Folder Include="Http\error\views" />
     <Folder Include="Http\libs" />
     <Folder Include="Http\libs\css" />
     <Folder Include="Http\libs\fonts" />
