@@ -3,13 +3,11 @@ using System;
 
 namespace sar_testing.Http
 {
-	/// <summary>
-	/// Description of TestController.
-	/// </summary>
-	public class TestController
+	public static class TestController
 	{
-		public TestController()
+		public static HttpContent Show(HttpRequest request)
 		{
+			return HttpContent.Read("sar_testing.Http.Views.Test.test.html", lastException);
 		}
 	}
 }
