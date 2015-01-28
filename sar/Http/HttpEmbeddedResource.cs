@@ -62,6 +62,21 @@ namespace sar.Http
 			return Find(resource).Bytes;
 		}
 
+		public static string[] GetAllResources()
+		{
+			Assembly sarAssembly = Assembly.GetExecutingAssembly();
+			Assembly callerAssembly = Assembly.GetEntryAssembly();
+			
+			string[] sarFiles = sarAssembly.GetManifestResourceNames();
+			string[] callerFiles = callerAssembly.GetManifestResourceNames();
+			
+			string[] files = new string[sarFiles.Length + callerFiles.Length];
+			Array.Copy(sarFiles, 0, files, 0, sarFiles.Length);
+			Array.Copy(callerFiles, 0, files, sarFiles.Length, callerFiles.Length);
+			
+			return files;
+		}
+		
 		#endregion
 		
 		private byte[] buffer = new byte[0] {};
@@ -72,6 +87,7 @@ namespace sar.Http
 			Assembly sarAssembly = Assembly.GetExecutingAssembly();
 			string x = sarAssembly.FullName;
 			Stream stream = sarAssembly.GetManifestResourceStream(resource);
+			
 			if (stream != null)
 			{
 				this.buffer = StreamHelper.ReadToEnd(stream);

@@ -131,5 +131,13 @@ namespace sar.Testing
 		}
 		
 		#endregion
+		
+		void Button4Click(object sender, EventArgs e)
+		{
+			foreach (string resource in sar.Http.HttpEmbeddedResource.GetAllResources())
+			{
+				System.Diagnostics.Debug.WriteLine(resource);
+			}
+		}
 	}
 }
