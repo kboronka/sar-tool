@@ -57,6 +57,7 @@ namespace sar.Testing
 			this.button3 = new System.Windows.Forms.Button();
 			this.folderSelect1 = new sarControls.FolderSelect();
 			this.folderChanged = new sar.Controls.BooleanIndicator();
+			this.button4 = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -200,11 +201,22 @@ namespace sar.Testing
 			this.folderChanged.Status = false;
 			this.folderChanged.TabIndex = 12;
 			// 
+			// button4
+			// 
+			this.button4.Location = new System.Drawing.Point(248, 296);
+			this.button4.Name = "button4";
+			this.button4.Size = new System.Drawing.Size(113, 23);
+			this.button4.TabIndex = 13;
+			this.button4.Text = "Send Email";
+			this.button4.UseVisualStyleBackColor = true;
+			this.button4.Click += new System.EventHandler(this.Button4Click);
+			// 
 			// Menu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(482, 382);
+			this.Controls.Add(this.button4);
 			this.Controls.Add(this.folderChanged);
 			this.Controls.Add(this.folderSelect1);
 			this.Controls.Add(this.button3);
@@ -225,6 +237,7 @@ namespace sar.Testing
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.Button button4;
 		private sar.Controls.BooleanIndicator folderChanged;
 		private sarControls.FolderSelect folderSelect1;
 		private System.Windows.Forms.Button button3;
