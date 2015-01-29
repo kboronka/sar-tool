@@ -117,7 +117,7 @@ namespace sar.Http
 			byte [] contentBytes = this.content.Render();
 			// content details
 			responce += "Content-Type: " + this.content.ContentType + "\n\r";
-			responce += "Content-Length: " + contentBytes.Length.ToString() + "\n\r";
+			responce += "Content-Length: " + (contentBytes.Length + 1).ToString() + "\n\r";
 			
 			// other
 			responce += "Connection: close" + "\n\r";
