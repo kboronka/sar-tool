@@ -98,28 +98,6 @@ namespace sar.Tools
 			
 			return input.Substring(0, input.Length - characters);
 		}
-
-		public static string TrimWhiteSpace(string input)
-		{
-			if (input == null)
-			{
-				throw new NullReferenceException("input string is null");
-			}
-			
-			string result = input;
-
-			while (result.StartsWith("\n") || result.StartsWith("\r") || result.StartsWith(" ") || result.StartsWith("\t"))
-			{
-				result = TrimStart(result);
-			}
-			
-			while (result.EndsWith("\n") || result.EndsWith("\r") || result.EndsWith(" ") || result.EndsWith("\t"))
-			{
-				result = TrimEnd(result);
-			}
-			
-			return result;
-		}
 		
 		public static string RemoveEmptyLines(string input)
 		{
@@ -387,11 +365,44 @@ namespace sar.Tools
 			return Regex.Replace(s, @"\n\r*", @"<br />");
 		}
 		
-		public static bool IsNotNull(this string stringValue)
+		public static bool IsNotNull(this string s)
 		{
-			return (!String.IsNullOrEmpty(stringValue));
+			return (!String.IsNullOrEmpty(s));
 		}
+		
+		public static string TrimWhiteSpace(this string input)
+		{
+			if (input == null)
+			{
+				throw new NullReferenceException("input string is null");
+			}
+			
+			string result = input;
 
+			while (result.StartsWith("\n") || result.StartsWith("\r") || result.StartsWith(" ") || result.StartsWith("\t"))
+			{
+				result = TrimStart(result);
+			}
+			
+			while (result.EndsWith("\n") || result.EndsWith("\r") || result.EndsWith(" ") || result.EndsWith("\t"))
+			{
+				result = TrimEnd(result);
+			}
+			
+			return result;
+		}		
+
+		public static int ToInt(this string s)
+		{
+			int output;
+			if (int.TryParse(s, out output))
+			{
+				return output;
+			}
+			
+			return 0;
+		}
+		
 		#endregion
 		
 		#region environment variable helpers
