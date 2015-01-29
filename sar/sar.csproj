@@ -111,6 +111,7 @@
     <Compile Include="Commands\WindowsMapDrive.cs" />
     <Compile Include="Commands\WindowsRearm.cs" />
     <Compile Include="Commands\WindowsRestart.cs" />
+    <Compile Include="Http\Controllers\EchoController.cs" />
     <Compile Include="Http\Controllers\ErrorController.cs" />
     <Compile Include="Http\HttpBase.cs" />
     <Compile Include="Http\HttpContent.cs" />
