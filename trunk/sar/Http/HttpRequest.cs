@@ -27,7 +27,7 @@ using sar.Tools;
 
 namespace sar.Http
 {
-	public enum HttpMethod {GET, PUT, HEAD};
+	public enum HttpMethod {GET, POST, HEAD};
 	
 	public class HttpRequest : HttpBase
 	{
@@ -47,6 +47,11 @@ namespace sar.Http
 		private String protocolVersion;
 		
 		private bool headerRecived;
+		
+		// header
+		private int contentLength;
+		private string contentType;
+		private byte[] data;
 		
 		#region properties
 
@@ -68,6 +73,11 @@ namespace sar.Http
 		public string Query
 		{
 			get { return query; }
+		}
+		
+		public byte[] Data
+		{
+			get { return data; }
 		}
 
 		public string ProtocolVersion
@@ -164,7 +174,7 @@ namespace sar.Http
 				stream.Flush();
 				stream = null;
 				socket.Close();
-			}			
+			}
 		}
 		
 		private byte[] ReadIncomingPacket()
@@ -220,7 +230,7 @@ namespace sar.Http
 			ReadRequest(ref bufferIn);
 			if (!headerRecived) return;
 			
-			// TODO: read binary data from POST
+			ReadData(ref bufferIn);
 			incomingRequestRecived = true;
 		}
 		
@@ -231,7 +241,7 @@ namespace sar.Http
 			
 			// Request Line
 			string requestLine = ReadLine(ref bufferIn);
-			if (string.IsNullOrEmpty(requestLine)) throw new InvalidDataException("request line missing");			
+			if (string.IsNullOrEmpty(requestLine)) throw new InvalidDataException("request line missing");
 			Program.Log("<< \"" + requestLine + "\"");
 			
 			string[] initialRequest = requestLine.Split(' ');
@@ -245,7 +255,7 @@ namespace sar.Http
 			url = this.path.Split('?');
 			this.path = url[0];
 			this.query = url.Length > 1 ? url[1] : "";
-				
+			
 			this.protocolVersion = initialRequest[2];
 			
 			switch (initialRequest[0].ToUpper())
@@ -253,23 +263,30 @@ namespace sar.Http
 				case "GET":
 					this.method = HttpMethod.GET;
 					break;
-				case "PUT":
-					this.method = HttpMethod.PUT;
+				case "POST":
+					this.method = HttpMethod.POST;
 					break;
 					//TODO: handle the HEAD request type
 				default:
 					throw new InvalidDataException("unknown request type \"" + initialRequest[0] + "\"");
 			}
 			
-			string line = "";			
+			string line = "";
 			while (!this.headerRecived)
 			{
 				line = ReadLine(ref bufferIn);
 				Program.Log("<< \"" + line + "\"");
 				
 				this.headerRecived = string.IsNullOrEmpty(line);
-				if (this.headerRecived) break;
 				
+				string[] requestHeader = line.Split(':');
+				
+				switch(requestHeader[0].TrimWhiteSpace())
+				{
+					case "Content-Length":
+						this.contentLength = requestHeader[1].ToInt();
+						break;
+				}
 				// TODO: parse common request Headers
 				// Header format
 				// Name: value
@@ -277,7 +294,19 @@ namespace sar.Http
 				// examples:
 				// Host: example.com
 				// User-Agent: chrome v17
+				if (this.headerRecived) break;
 			}
+		}
+
+		private void ReadData(ref byte[] bufferIn)
+		{
+			if (this.method != HttpMethod.POST) return;
+			
+			this.data = new Byte[this.contentLength];
+			
+			System.Buffer.BlockCopy(bufferIn, 0, this.data, 0, this.contentLength);
+			
+			Program.Log("<<  DATA =  \"" + StringHelper.GetString(this.data) + "\"");
 		}
 		
 		private string ReadLine(ref byte[] bufferIn)

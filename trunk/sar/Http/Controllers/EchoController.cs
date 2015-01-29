@@ -9,7 +9,7 @@ namespace sar.Http
 	{
 		public static HttpContent html(HttpRequest request)
 		{
-			return new HttpContent(request.Query);
+			return new HttpContent(request.Data, "text/html");
 		}
 		
 		public static HttpContent json(HttpRequest request)
