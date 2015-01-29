@@ -217,8 +217,15 @@ namespace sar.Http
 			this.contentType = "text/plain";
 			this.content = Encoding.ASCII.GetBytes(content);
 		}
+		
+		public HttpContent(string content, string contentType)
+		{
+			this.baseContent = new Dictionary<string, HttpContent>();
+			this.contentType = contentType;
+			this.content = Encoding.UTF8.GetBytes(content);
+		}
 
-		private HttpContent(byte[] content, string contentType)
+		public HttpContent(byte[] content, string contentType)
 		{
 			this.baseContent = new Dictionary<string, HttpContent>();
 			this.contentType = contentType;
@@ -231,11 +238,6 @@ namespace sar.Http
 			this.baseContent = baseContent;
 			this.contentType = contentType;
 			this.content = content;
-		}
-		
-		public int Length
-		{
-			get { return this.content.Length; }
 		}
 	}
 }
