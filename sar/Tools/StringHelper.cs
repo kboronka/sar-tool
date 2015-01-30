@@ -403,6 +403,11 @@ namespace sar.Tools
 			return 0;
 		}
 		
+		public static byte[] ToBytes(this string s)
+		{
+			return GetBytes(s);
+		}
+		
 		#endregion
 		
 		#region environment variable helpers
