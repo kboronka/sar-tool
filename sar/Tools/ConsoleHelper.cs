@@ -122,7 +122,7 @@ namespace sar.Tools
 		
 		public static void WriteException(Exception ex)
 		{
-			ex = ExceptionHandler.GetInnerException(ex);
+			ex = ex.GetInner();
 			
 			ConsoleHelper.Write("error: ", ConsoleColor.Red);
 			ConsoleHelper.WriteLine(ex.Message);

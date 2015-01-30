@@ -66,5 +66,15 @@ namespace sar.Tools
 				return "[StackTrace not available]";
 			}
 		}
+
+		public static Exception GetInner(this Exception ex)
+		{
+			while (ex.InnerException != null)
+			{
+				ex = ex.InnerException;
+			}
+			
+			return ex;
+		}
 	}
 }
