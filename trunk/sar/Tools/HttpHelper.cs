@@ -612,7 +612,7 @@ namespace sar.Tools
 			foreach (string key in obj.Keys)
 			{
 				string data = Regex.Replace(obj[key], @"([\/\'\""])", @"\$1");
-				JSON += delimitor + @"""" + key + @""":""" + obj[key] + @"""";
+				JSON += delimitor + @"""" + key + @""":""" + data + @"""";
 				delimitor = ", ";
 			}
 			
