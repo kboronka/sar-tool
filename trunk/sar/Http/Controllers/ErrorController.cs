@@ -25,7 +25,7 @@ namespace sar.Http
 		
 		public static HttpContent Display(HttpRequest request, Exception ex, HttpStatusCode status)
 		{
-			Exception inner = ExceptionHandler.GetInnerException(ex); 
+			Exception inner = ex.GetInner();
 			
 			Dictionary<string, HttpContent> baseContent = new Dictionary<string, HttpContent>() {};
 			baseContent.Add("Title", new HttpContent(status.ToString()));
