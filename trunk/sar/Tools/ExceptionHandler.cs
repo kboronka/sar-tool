@@ -35,18 +35,8 @@ namespace sar.Tools
 		public static void Display(Exception ex)
 		{
 			// temporary
-			ExceptionHandler form = new ExceptionHandler(GetInnerException(ex));
+			ExceptionHandler form = new ExceptionHandler(ex.GetInner());
 			form.ShowDialog();
-		}
-		
-		public static Exception GetInnerException(Exception ex)
-		{
-			while (ex.InnerException != null)
-			{
-				ex = ex.InnerException;
-			}
-			
-			return ex;
 		}
 	}
 }

@@ -25,7 +25,7 @@ namespace sar.Tools
 		
 		public void Write(Exception ex)
 		{
-			Exception inner = ExceptionHandler.GetInnerException(ex);
+			Exception inner = ex.GetInner();
 			
 			base.WriteLine(ConsoleHelper.HR);
 			base.WriteLine("Time: " + DateTime.Now.ToString());
