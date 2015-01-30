@@ -24,6 +24,15 @@ using sar.Tools;
 
 namespace sar.Http
 {
+	public class HttpErrorContent : HttpContent
+	{
+		public HttpErrorContent(Exception ex) : base()
+		{
+			this.content = ex.GetInner().Message.ToBytes();
+			this.contentType = "application/json";
+		}
+	}
+	
 	public class HttpContent
 	{
 		#region static
@@ -47,7 +56,7 @@ namespace sar.Http
 		}
 		
 		public static HttpContent View(string controller, string view)
-		{			
+		{
 			return View(controller, view, new Dictionary<string, HttpContent>() {});
 		}
 		
@@ -147,9 +156,9 @@ namespace sar.Http
 		
 		#endregion
 		
-		byte[] content;
-		string contentType;
-		Dictionary<string, HttpContent> baseContent;
+		protected byte[] content;
+		protected string contentType;
+		protected Dictionary<string, HttpContent> baseContent;
 		
 		private string RenderText(Dictionary<string, HttpContent> baseContent)
 		{
@@ -205,7 +214,7 @@ namespace sar.Http
 			get { return this.contentType; }
 		}
 		
-		private HttpContent()
+		protected HttpContent()
 		{
 			this.baseContent = new Dictionary<string, HttpContent>();
 			this.contentType = "text/plain";

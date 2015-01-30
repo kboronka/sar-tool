@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace sar.Tools
 {
@@ -600,6 +601,24 @@ namespace sar.Tools
 			string mime;
 			
 			return mimeTypes.TryGetValue(extension, out mime) ? mime : "application/octet-stream";
+		}
+		
+		public static string ToJSON(this Dictionary<string, string> obj)
+		{
+			string JSON = "{";
+			string delimitor = "";
+			
+			
+			foreach (string key in obj.Keys)
+			{
+				string data = Regex.Replace(obj[key], @"([\/\'\""])", @"\$1");
+				JSON += delimitor + @"""" + key + @""":""" + obj[key] + @"""";
+				delimitor = ", ";
+			}
+			
+			JSON += "}";
+			
+			return JSON;
 		}
 	}
 }

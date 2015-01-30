@@ -73,7 +73,14 @@ namespace sar.Http
 					this.content = HttpContent.Read(this.request.Server, this.request.FullUrl);
 				}
 				
-				this.bytes = this.ConstructResponce(HttpStatusCode.OK);
+				if (this.content is HttpErrorContent)
+				{
+					this.bytes = this.ConstructResponce(HttpStatusCode.SERVERERROR);
+				}
+				else
+				{
+					this.bytes = this.ConstructResponce(HttpStatusCode.OK);
+				}
 			}
 			catch (FileNotFoundException ex)
 			{
@@ -112,7 +119,7 @@ namespace sar.Http
 
 			// status line
 			string responcePhrase = Enum.GetName(typeof(HttpStatusCode), status);
-			string responce = "HTTP/1.0" + " " + status.ToString() + " " + responcePhrase + "\n\r";
+			string responce = "HTTP/1.0" + " " + ((int)status).ToString() + " " + responcePhrase + "\n\r";
 			
 			byte [] contentBytes = this.content.Render();
 			// content details
