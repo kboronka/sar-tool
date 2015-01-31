@@ -21,12 +21,14 @@ using sar.Tools;
 
 namespace sar_testing.Http
 {
+	[PrimaryController]
 	public static class TestController
 	{
+		[PrimaryView]
 		public static HttpContent Show(HttpRequest request)
 		{
-			return HttpContent.View("Test", "Test.html");
-			//return HttpContent.Read("sar_testing.Http.Views.Test.Test.html");
+			//return HttpContent.View("Test", "Test.html");
+			return HttpContent.Read("sar_testing.Http.Views.Test.Test.html");
 		}
 	}
 }
