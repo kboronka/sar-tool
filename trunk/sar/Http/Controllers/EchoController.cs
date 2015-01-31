@@ -35,7 +35,8 @@ namespace sar.Http
 			{
 				Dictionary<string, string> result = new Dictionary<string, string>();
 				result.Add("request", Encoding.ASCII.GetString(request.Data));
-				result.Add("other", Guid.NewGuid().ToString());
+				result.Add("guid", Guid.NewGuid().ToString());
+				result.Add("html", @"<h1 class=""page-header"">" + request.Data + @"</h1><br/>" );
 				
 				if (result["request"] == "error") throw new ApplicationException("error test");
 				
@@ -44,7 +45,7 @@ namespace sar.Http
 			catch (Exception ex)
 			{
 				return new HttpErrorContent(ex);
-			}
+			}s
 		}
 	}
 }
