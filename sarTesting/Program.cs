@@ -30,6 +30,12 @@ namespace sar.Testing
 			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(LogUnhandledException);
 			
 			Program.LogInfo();
+
+			foreach (string resource in HttpEmbeddedResource.GetAllResources())
+			{
+				System.Diagnostics.Debug.WriteLine(resource);
+			}
+				
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Http.HttpServer server = new Http.HttpServer(83, @"c:\wwwroot\");

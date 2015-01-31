@@ -60,7 +60,11 @@ namespace sar.Http
 			
 			try
 			{
-				if (this.request.FullUrl.ToLower() == @"/info")
+				if (this.request.FullUrl == @"/" && HttpController.Primary != null && HttpController.Primary.PrimaryAction != null)
+				{
+					this.content = HttpController.RequestPrimary(this.request);
+				}
+				else if (this.request.FullUrl.ToLower() == @"/info")
 				{
 					this.content = GetInfo();
 				}

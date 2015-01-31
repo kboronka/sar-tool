@@ -20,12 +20,15 @@ using System.Reflection;
 
 
 namespace sar.Http
-{	
+{
 	public class HttpController
 	{
 		#region static members and methods
 		
 		private static Dictionary<string, HttpController> controllers;
+		private static HttpController primary;
+		
+		public static HttpController Primary { get { return primary; } }
 		
 		public static void LoadControllers()
 		{
@@ -69,7 +72,13 @@ namespace sar.Http
 		public static HttpController GetController(string controller)
 		{
 			if (!controllers.ContainsKey(controller)) throw new FileNotFoundException("controller " + @"""" + controller + @"""" + " not found");
-			return controllers[controller];			
+			return controllers[controller];
+		}
+		
+		public static HttpContent RequestPrimary(HttpRequest request)
+		{
+			object contentObject = HttpController.primary.primaryAction.Invoke(null, new object[] { request });
+			return (HttpContent)contentObject;
 		}
 		
 		public static HttpContent RequestAction(HttpRequest request)
@@ -91,6 +100,7 @@ namespace sar.Http
 		#endregion
 		
 		private Type type;
+		private MethodInfo primaryAction;
 		private Dictionary<string, MethodInfo> actions;
 		
 		public string FullName
@@ -103,18 +113,38 @@ namespace sar.Http
 			get { return type.Name; }
 		}
 		
+		public MethodInfo PrimaryAction
+		{
+			get { return primaryAction; }
+		}
+		
 		public HttpController(Type controller)
 		{
 			this.type = controller;
 			this.actions = new Dictionary<string, MethodInfo>();
+			
+			foreach (object obj in controller.GetCustomAttributes(false))
+			{
+				if (obj is PrimaryController) HttpController.primary = this;
+			}
 			
 			foreach (MethodInfo method in controller.GetMethods())
 			{
 				if (!method.IsSpecialName && method.IsStatic && method.IsPublic && method.ReturnType == typeof(HttpContent) && method.GetParameters().Length == 1 && method.GetParameters()[0].ParameterType == typeof(HttpRequest))
 				{
 					this.actions.Add(method.Name, method);
+					foreach (object obj in method.GetCustomAttributes(false))
+					{
+						if (obj is PrimaryView) this.primaryAction = method;
+					}
 				}
 			}
 		}
 	}
+
+	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+	public class PrimaryView : Attribute { }
+	
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+	public class PrimaryController : Attribute { }
 }
