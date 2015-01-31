@@ -45,7 +45,7 @@ namespace sar.Http
 			catch (Exception ex)
 			{
 				return new HttpErrorContent(ex);
-			}s
+			}
 		}
 	}
 }
