@@ -611,9 +611,20 @@ namespace sar.Tools
 			
 			foreach (string key in obj.Keys)
 			{
-				string data = Regex.Replace(obj[key], @"([\/\'\""])", @"\$1");
+				string data = obj[key];
+				
+				// escape quotes, and solidus
+				data = Regex.Replace(data, @"([\""\/])", @"\$1");
+				
+				// escape other control-characters
+				data = Regex.Replace(data, @"[\n]", @"\n");
+				data = Regex.Replace(data, @"[\r]", @"\r");
+				data = Regex.Replace(data, @"[\t]", @"\t");
+				data = Regex.Replace(data, @"[\b]", @"\b");
+				data = Regex.Replace(data, @"[\f]", @"\f");
+				
 				JSON += delimitor + @"""" + key + @""":""" + data + @"""";
-				delimitor = ", ";
+				delimitor = ", \n";
 			}
 			
 			JSON += "}";
