@@ -286,6 +286,10 @@ namespace sar.Http
 					case "Content-Length":
 						this.contentLength = requestHeader[1].ToInt();
 						break;
+						
+					case "Content-Type":
+						this.contentType = requestHeader[1].TrimWhiteSpace();
+						break;
 				}
 				// TODO: parse common request Headers
 				// Header format
