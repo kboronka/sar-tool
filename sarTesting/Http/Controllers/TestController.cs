@@ -30,5 +30,19 @@ namespace sar_testing.Http
 			//return HttpContent.View("Test", "Test.html");
 			return HttpContent.Read("sar_testing.Http.Views.Test.Test.html");
 		}
+		
+		public static HttpContent UpdateTable(HttpRequest request)
+		{
+			Dictionary<string, string> json = new Dictionary<string, string>();
+			
+			string[] row1 = { "blabla", HttpHelper.LabelSuccess("passed"), Guid.NewGuid().ToString(), "booo" };
+			string[] row2 = { "blabla", HttpHelper.LabelDanger("failed"), Guid.NewGuid().ToString(), "booo" };
+			string[] row3 = { "blabla", HttpHelper.LabelDefault("whatever"), Guid.NewGuid().ToString(), "booo" };
+			                         	
+			string[][] table = { row1, row2, row3 };
+			
+			json.Add("testTabelData", table.ToHTML());
+			return new HttpContent(json);
+		}
 	}
 }
