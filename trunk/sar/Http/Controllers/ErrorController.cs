@@ -19,6 +19,7 @@ using sar.Tools;
 
 namespace sar.Http
 {
+	[SarController]
 	public static class ErrorController
 	{
 		static Dictionary<string, HttpContent> lastException;

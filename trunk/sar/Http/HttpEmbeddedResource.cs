@@ -61,20 +61,37 @@ namespace sar.Http
 		{
 			return Find(resource).Bytes;
 		}
-
-		public static string[] GetAllResources()
+		
+		private static Dictionary<string, Assembly> embeddedFiles;
+		public static Dictionary<string, Assembly> EmbeddedFiles
 		{
-			Assembly sarAssembly = Assembly.GetExecutingAssembly();
-			Assembly callerAssembly = Assembly.GetEntryAssembly();
+			get
+			{
+				if (embeddedFiles == null)
+				{
+					embeddedFiles = new Dictionary<string, Assembly>();
+					foreach (Assembly assembly in AssemblyInfo.Assemblies)
+					{
+						foreach (string resource in assembly.GetManifestResourceNames())
+						{
+							embeddedFiles.Add(resource, assembly);
+						}
+					}
+				}
+				
+				return embeddedFiles;
+			}
+		}
+		
+		public static List<string> GetAllResources()
+		{
+			List<string> keys = new List<string>();
+			foreach(string key in EmbeddedFiles.Keys)
+			{
+				keys.Add(key);
+			}
 			
-			string[] sarFiles = sarAssembly.GetManifestResourceNames();
-			string[] callerFiles = callerAssembly.GetManifestResourceNames();
-			
-			string[] files = new string[sarFiles.Length + callerFiles.Length];
-			Array.Copy(sarFiles, 0, files, 0, sarFiles.Length);
-			Array.Copy(callerFiles, 0, files, sarFiles.Length, callerFiles.Length);
-			
-			return files;
+			return keys;
 		}
 		
 		#endregion
@@ -84,21 +101,11 @@ namespace sar.Http
 		private HttpEmbeddedResource(string resource)
 		{
 			resource = resource.Replace(@"/", @".");
-			Assembly sarAssembly = Assembly.GetExecutingAssembly();
-			string x = sarAssembly.FullName;
-			Stream stream = sarAssembly.GetManifestResourceStream(resource);
+			if (!EmbeddedFiles.ContainsKey(resource)) throw new FileNotFoundException("resource: " + resource + " not found");
 			
-			if (stream != null)
-			{
-				this.buffer = StreamHelper.ReadToEnd(stream);
-			}
-			else
-			{
-				Assembly callerAssembly = Assembly.GetEntryAssembly();
-				x = callerAssembly.FullName;
-				stream = callerAssembly.GetManifestResourceStream(resource);
-				this.buffer = StreamHelper.ReadToEnd(stream);
-			}
+			Assembly assembly = EmbeddedFiles[resource];
+			Stream stream = assembly.GetManifestResourceStream(resource);
+			this.buffer = StreamHelper.ReadToEnd(stream);
 		}
 		
 		public byte[] Bytes

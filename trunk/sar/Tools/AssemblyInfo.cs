@@ -14,6 +14,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 // http://msdn.microsoft.com/en-us/library/system.reflection.assembly.GetEntryAssembly.aspx
@@ -24,12 +25,6 @@ namespace sar.Tools
 	public class AssemblyInfo
 	{
 		private static string name;
-		private static string product;
-		private static string company;
-		private static string version;
-		private static string sarVersion;
-		private static string copyright;
-
 		public static string Name
 		{
 			get
@@ -43,6 +38,7 @@ namespace sar.Tools
 			}
 		}
 		
+		private static string product;
 		public static string Product
 		{
 			get
@@ -57,6 +53,7 @@ namespace sar.Tools
 			}
 		}
 
+		private static string company;
 		public static string Company
 		{
 			get
@@ -71,6 +68,7 @@ namespace sar.Tools
 			}
 		}
 
+		private static string version;
 		public static string Version
 		{
 			get
@@ -84,6 +82,7 @@ namespace sar.Tools
 			}
 		}
 		
+		private static string sarVersion;		
 		public static string SarVersion
 		{
 			get
@@ -97,6 +96,7 @@ namespace sar.Tools
 			}
 		}
 		
+		private static string copyright;
 		public static string Copyright
 		{
 			get
@@ -109,6 +109,32 @@ namespace sar.Tools
 				
 				return AssemblyInfo.copyright;
 			}
-		}		
+		}
+
+		private static List<Assembly> assemblies;
+		public static List<Assembly> Assemblies
+		{
+			get
+			{
+				List<string> locations = new List<string>();
+				if (assemblies == null || assemblies.Count == 0)
+				{
+					assemblies = new List<Assembly>();
+					//assemblies.Add(Assembly.GetExecutingAssembly());
+					assemblies.Add(Assembly.GetEntryAssembly());
+					foreach (AssemblyName assemblyName in Assembly.GetEntryAssembly().GetReferencedAssemblies())
+					{
+						string name = assemblyName.Name;
+						
+						if (!name.StartsWith("System") && !name.StartsWith("mscorlib") && !name.StartsWith("Microsoft."))
+						{
+							assemblies.Add(Assembly.Load(assemblyName));
+						}
+					}
+				}
+				
+				return assemblies;
+			}
+		}
 	}
 }
