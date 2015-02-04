@@ -123,9 +123,12 @@ namespace sar.Http
 			this.type = controller;
 			this.actions = new Dictionary<string, MethodInfo>();
 			
-			foreach (object obj in controller.GetCustomAttributes(false))
+			if (controller.Assembly == Assembly.GetEntryAssembly())
 			{
-				if (obj is PrimaryController) HttpController.primary = this;
+				foreach (object obj in controller.GetCustomAttributes(false))
+				{
+					if (obj is PrimaryController) HttpController.primary = this;
+				}
 			}
 			
 			foreach (MethodInfo method in controller.GetMethods())
