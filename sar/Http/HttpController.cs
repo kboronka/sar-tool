@@ -18,6 +18,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Reflection;
 
+using sar.Tools;
 
 namespace sar.Http
 {
@@ -32,27 +33,26 @@ namespace sar.Http
 		
 		public static void LoadControllers()
 		{
-			foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
-			{
-				if (type.Name.EndsWith("Controller")) HttpController.AddController(type);
-			}
+			controllers = new Dictionary<string, HttpController>();
 			
-			foreach (Type type in Assembly.GetEntryAssembly().GetTypes())
+			foreach (Assembly assembly in AssemblyInfo.Assemblies)
 			{
-				if (type.Name.EndsWith("Controller")) HttpController.AddController(type);
+				foreach (Type type in assembly.GetTypes())
+				{
+					if (type.Name.EndsWith("Controller"))
+					{
+						foreach (object attribute in type.GetCustomAttributes(false))
+						{
+							if (attribute is SarController)
+							{
+								// add the sar controller
+								string controllerName = type.Name.Substring(0, type.Name.Length - "Controller".Length);
+								controllers.Add(controllerName, new HttpController(type));
+							}
+						}
+					}
+				}
 			}
-		}
-		
-		public static void AddController(Type controller)
-		{
-			if (controllers == null)
-			{
-				controllers = new Dictionary<string, HttpController>();
-			}
-			
-			string controllerName = controller.Name.Substring(0, controller.Name.Length - "Controller".Length);
-
-			controllers.Add(controllerName, new HttpController(controller));
 		}
 		
 		public static bool ActionExists(HttpRequest request)
@@ -147,4 +147,9 @@ namespace sar.Http
 	
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 	public class PrimaryController : Attribute { }
+
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+	public class SarController : Attribute { }
+	
+	
 }

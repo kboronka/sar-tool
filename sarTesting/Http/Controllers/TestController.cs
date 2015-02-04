@@ -21,6 +21,7 @@ using sar.Tools;
 
 namespace sar_testing.Http
 {
+	[SarController]
 	[PrimaryController]
 	public static class TestController
 	{

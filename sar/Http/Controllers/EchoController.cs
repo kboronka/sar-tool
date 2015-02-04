@@ -22,6 +22,7 @@ using sar.Tools;
 namespace sar.Http
 {
 	// used for testing ajax calls
+	[SarController]
 	public static class echoController
 	{
 		public static HttpContent html(HttpRequest request)
