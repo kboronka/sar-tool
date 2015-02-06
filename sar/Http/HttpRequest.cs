@@ -237,12 +237,10 @@ namespace sar.Http
 		private void ReadRequest(ref byte[] bufferIn)
 		{
 			if (headerRecived) return;
-			Program.Log("Reading Header");
-			
+		
 			// Request Line
 			string requestLine = ReadLine(ref bufferIn);
 			if (string.IsNullOrEmpty(requestLine)) throw new InvalidDataException("request line missing");
-			Program.Log("<< \"" + requestLine + "\"");
 			
 			string[] initialRequest = requestLine.Split(' ');
 			if (initialRequest.Length != 3) throw new InvalidDataException("the initial request line should contain three fields");

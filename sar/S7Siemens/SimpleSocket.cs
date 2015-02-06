@@ -53,7 +53,6 @@ namespace sar.Tools
 				socket.Connect(remoteEP);
 
 				connected = socket.Connected;
-				Program.Log("Connected");
 			}
 			catch (Exception ex)
 			{
