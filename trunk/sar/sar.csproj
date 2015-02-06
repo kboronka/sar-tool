@@ -172,6 +172,7 @@
     <Folder Include="Http\libs\fonts" />
     <Folder Include="Http\libs\js" />
     <Folder Include="Http\Controllers" />
+    <Folder Include="Http\libs\art" />
     <Folder Include="Http\Views" />
     <Folder Include="Http\Views\Error" />
     <Folder Include="Http\Views\Shared" />
@@ -195,6 +196,7 @@
     <EmbeddedResource Include="Http\libs\css\bootstrap.min.css" />
     <EmbeddedResource Include="Http\libs\css\bootstrap-callouts.min.css" />
     <EmbeddedResource Include="Http\libs\css\bootstrap-dialog.min.css" />
+    <EmbeddedResource Include="Http\libs\art\favicon.ico" />
     <None Include="Http\libs\fonts\glyphicons-halflings-regular.eot" />
     <None Include="Http\libs\fonts\glyphicons-halflings-regular.svg" />
     <None Include="Http\libs\fonts\glyphicons-halflings-regular.ttf" />

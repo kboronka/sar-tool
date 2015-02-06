@@ -123,16 +123,16 @@ namespace sar.Http
 
 			// status line
 			string responcePhrase = Enum.GetName(typeof(HttpStatusCode), status);
-			string responce = "HTTP/1.0" + " " + ((int)status).ToString() + " " + responcePhrase + "\n\r";
+			string responce = "HTTP/1.0" + " " + ((int)status).ToString() + " " + responcePhrase + "\n";
 			
 			byte [] contentBytes = this.content.Render();
 			// content details
-			responce += "Content-Type: " + this.content.ContentType + "\n\r";
-			responce += "Content-Length: " + (contentBytes.Length + 1).ToString() + "\n\r";
+			responce += "Content-Type: " + this.content.ContentType + "\n";
+			responce += "Content-Length: " + (contentBytes.Length).ToString() + "\n";
 			
 			// other
-			responce += "Connection: close" + "\n\r";
-			responce += "" + "\n\r";
+			responce += "Connection: close" + "\n";
+			responce += "" + "\n";
 			
 			return StringHelper.CombineByteArrays(Encoding.ASCII.GetBytes(responce), contentBytes);
 		}

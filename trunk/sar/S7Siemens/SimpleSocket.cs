@@ -46,7 +46,6 @@ namespace sar.Tools
 		{
 			try
 			{
-				Program.Log("Connecting to " + this.ipAddress + ":" + this.port.ToString());
 				IPAddress address = IPAddress.Parse(this.ipAddress);
 				IPEndPoint remoteEP = new IPEndPoint(address, this.port);
 
