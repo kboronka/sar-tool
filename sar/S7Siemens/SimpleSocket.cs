@@ -64,10 +64,8 @@ namespace sar.Tools
 		{
 			try
 			{
-				Program.Log("Disconnecting");
 				socket.Disconnect(false);
 				socket = null;
-				Program.Log("Disconnected");
 			}
 			catch (Exception ex)
 			{
