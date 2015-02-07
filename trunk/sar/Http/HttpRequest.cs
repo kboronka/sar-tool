@@ -273,7 +273,6 @@ namespace sar.Http
 			while (!this.headerRecived)
 			{
 				line = ReadLine(ref bufferIn);
-				Program.Log("<< \"" + line + "\"");
 				
 				this.headerRecived = string.IsNullOrEmpty(line);
 				
@@ -305,10 +304,7 @@ namespace sar.Http
 			if (this.method != HttpMethod.POST) return;
 			
 			this.data = new Byte[this.contentLength];
-			
 			System.Buffer.BlockCopy(bufferIn, 0, this.data, 0, this.contentLength);
-			
-			Program.Log("<<  DATA =  \"" + StringHelper.GetString(this.data) + "\"");
 		}
 		
 		private string ReadLine(ref byte[] bufferIn)
