@@ -27,9 +27,9 @@ namespace sar.Commands
 	public class MSSQL_GenerateScripts : Command
 	{
 		public MSSQL_GenerateScripts(Base.CommandHub parent) : base(parent, "MSSQL - Generate Scripts",
-		                               new List<string> { "mssql-gs" },
-		                               "-mssql-gs [server] [database] [username] [password] [destination]",
-		                               new List<string> { "-mssql-gs 192.168.0.44 TestDB sa root " + @".\databasescripts\".QuoteDouble() })
+		                                                            new List<string> { "mssql-gs" },
+		                                                            "-mssql-gs [server] [database] [username] [password] [destination]",
+		                                                            new List<string> { "-mssql-gs 192.168.0.44 TestDB sa root " + @".\databasescripts\".QuoteDouble() })
 		{
 			
 		}
@@ -58,7 +58,7 @@ namespace sar.Commands
 			using (var connection = new SqlConnection(connectionString.ToString()))
 			{
 				connection.Open();
-					
+				
 				Progress.Message = "Generating Scripts";
 				foreach (DatabaseObject databaseObject in DatabaseObject.GetDatabaseObjects(connection))
 				{
@@ -66,8 +66,12 @@ namespace sar.Commands
 					
 					Progress.Message = "Saving Script " + filename;
 					
-					IO.WriteFile(root + filename, databaseObject.GetCreateScript(connection));
-					objectCounter++;
+					if (databaseObject.Type != "Table")
+					{
+						// TODO: remove Table filter once table generation code is complete
+						IO.WriteFile(root + filename, databaseObject.GetCreateScript(connection));
+						objectCounter++;
+					}
 				}
 				
 				connection.Close();
