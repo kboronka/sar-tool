@@ -14,14 +14,8 @@
  */
 
 using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Threading;
 
-using sar.Commands;
 using sar.Tools;
-
 
 // binary download: https://sar-tool.googlecode.com/svn/trunk/release/sar.exe
 // release download: https://sar-tool.googlecode.com/svn/tags/
@@ -34,7 +28,6 @@ namespace sar
 		{
 			try
 			{
-				
 				#if DEBUG
 				/*
 				args = new string[] { "f.rd", @"C:\Users\kboronka\Documents\Virtual Machines\caches", @"/pause" };
@@ -45,7 +38,7 @@ namespace sar
 				*/
 				#endif
 				
-				CommandHub hub = new CommandHub();
+				var hub = new CommandHub();
 				ConsoleHelper.Start();	
 				if (args.Length == 0) ConsoleHelper.ApplicationTitle();
 				int exitCode = hub.ProcessCommands(args);
@@ -63,6 +56,7 @@ namespace sar
 		
 		#region loging functions
 		
+		// TODO: do we really to Log method or is the base class good enough
 		public static void Log(Exception ex)
 		{
 			try
@@ -71,7 +65,7 @@ namespace sar
 			}
 			catch
 			{
-				
+				// surpress any error
 			}
 		}
 		
@@ -83,7 +77,7 @@ namespace sar
 			}
 			catch
 			{
-
+				// surpress any error
 			}
 		}
 		
