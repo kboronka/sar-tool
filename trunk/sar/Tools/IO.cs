@@ -440,8 +440,6 @@ namespace sar.Tools
 		
 		public static void WriteFileLines(string filepath, List<string> lines)
 		{
-			Encoding encoding = Encoding.UTF8;
-			
 			string newFile = "";
 			string linebreak = "";
 			
@@ -456,11 +454,13 @@ namespace sar.Tools
 		
 		public static void WriteFile(string filepath, string text)
 		{
-			if (!File.Exists(filepath) || newFile != ReadFile(filepath))
+			Encoding encoding = Encoding.UTF8;
+			
+			if (!File.Exists(filepath) || text != ReadFile(filepath))
 			{
 				using (var writter = new StreamWriter(filepath, false, encoding))
 				{
-					writter.Write(newFile);
+					writter.Write(text);
 				}
 			}
 		}
