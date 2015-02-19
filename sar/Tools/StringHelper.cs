@@ -346,8 +346,18 @@ namespace sar.Tools
 
 			return columns.ToArray();
 		}
-
+		
 		#region string extensions
+		
+		public static string QuoteDouble(this string content)
+		{
+			return @"""" + content + @"""";
+		}
+
+		public static string QuoteSingle(this string content)
+		{
+			return @"'" + content + @"'";
+		}
 		
 		public static bool IsNumeric(this char c)
 		{
@@ -390,7 +400,7 @@ namespace sar.Tools
 			}
 			
 			return result;
-		}		
+		}
 
 		public static int ToInt(this string s)
 		{
