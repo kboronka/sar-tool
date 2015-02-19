@@ -451,9 +451,14 @@ namespace sar.Tools
 				linebreak = System.Environment.NewLine;
 			}
 			
+			WriteFile(filepath, newFile);
+		}
+		
+		public static void WriteFile(string filepath, string text)
+		{
 			if (!File.Exists(filepath) || newFile != ReadFile(filepath))
 			{
-				using (StreamWriter writter = new StreamWriter(filepath, false, encoding))
+				using (var writter = new StreamWriter(filepath, false, encoding))
 				{
 					writter.Write(newFile);
 				}
