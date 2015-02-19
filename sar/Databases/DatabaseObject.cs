@@ -20,37 +20,24 @@ namespace sar.Tools
 	{
 		private const string LIST_ALL_OBJECTS = @"SELECT name, type FROM sys.objects WHERE type in ('FN', 'IF', 'P', 'TF', 'TR', 'TT', 'U', 'V')  AND name NOT LIKE 'sp[_]%' AND name NOT LIKE 'fn[_]%' AND name NOT LIKE 'sysdiagrams' ORDER BY type, name";
 		private const string LIST_ALL_OBJECTS_2000 = @"SELECT name, xtype FROM sysobjects WHERE xtype in ('FN', 'IF', 'P', 'TF', 'TR', 'TT', 'U', 'V')  AND name NOT LIKE 'sp[_]%' AND name NOT LIKE 'fn[_]%' AND name NOT LIKE 'sysdiagrams' ORDER BY type, name";
+		
 		#region static
 		
 		public static List<DatabaseObject> GetDatabaseObjects(SqlConnection connection)
 		{
-			List<DatabaseObject> result = new List<DatabaseObject>();
+			var result = new List<DatabaseObject>();
 			
-			using (SqlCommand command = new SqlCommand(LIST_ALL_OBJECTS_2000, connection))
+			using (var command = new SqlCommand(LIST_ALL_OBJECTS_2000, connection))
 			{
-				SqlDataReader reader = command.ExecuteReader();
-				while (reader.Read())
+				using (var reader = command.ExecuteReader())
 				{
-					string name = reader.GetString(0);
-					SqlObjectType type = (SqlObjectType)Enum.Parse(typeof(SqlObjectType), reader.GetString(1));
+					while (reader.Read())
+					{
+						string name = reader.GetString(0);
+						var type = (SqlObjectType)Enum.Parse(typeof(SqlObjectType), reader.GetString(1));
 
-					result.Add(new DatabaseObject(name, type, connection));
-				}
-			}
-			
-			return result;
-		}
-		
-		private static string ReadSQLObject(SqlConnection connection, string objectName)
-		{
-			string result = "";
-			
-			using (SqlCommand command = new SqlCommand("sp_helptext " + objectName.QuoteSingle(), connection))
-			{
-				SqlDataReader reader = command.ExecuteReader();
-				while (reader.Read())
-				{
-					result += reader.GetString(0) + Environment.NewLine;
+						result.Add(new DatabaseObject(name, type));
+					}
 				}
 			}
 			
@@ -63,7 +50,6 @@ namespace sar.Tools
 		
 		private string name;
 		private SqlObjectType type;
-		private string createScript;
 		
 		#endregion
 		
@@ -110,31 +96,40 @@ namespace sar.Tools
 			}
 		}
 
-		public string CreateScript
-		{
-			get { return this.createScript; }
-		}
 		#endregion
 
 		
-		private DatabaseObject(string name, SqlObjectType type, SqlConnection connection)
+		private DatabaseObject(string name, SqlObjectType type)
 		{
 			this.name = name;
 			this.type = type;
-
+		}
+		
+		public string GetCreateScript(SqlConnection connection)
+		{
 			switch (this.type)
 			{
 				case SqlObjectType.TT:
 				case SqlObjectType.U:
 					// TODO: generate table
-					this.createScript = "CREATE TABLE " + name.QuoteSingle();
-					break;
+					return "CREATE TABLE " + name.QuoteSingle();
 
 				default:
-					this.createScript = ReadSQLObject(connection, this.name);
-					break;
+					string result = "";
+					
+					using (var command = new SqlCommand("sp_helptext " + this.name.QuoteSingle(), connection))
+					{
+						using (var reader = command.ExecuteReader())
+						{
+							while (reader.Read())
+							{
+								result += reader.GetString(0);
+							}
+						}
+					}
+					
+					return result.TrimWhiteSpace();
 			}
 		}
-		
 	}
 }
