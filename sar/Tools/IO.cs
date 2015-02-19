@@ -176,6 +176,14 @@ namespace sar.Tools
 			return "";
 		}
 		
+		public static string CheckRoot(string root)
+		{
+			if (root.StartsWith(@"\")) root = Directory.GetCurrentDirectory() + root;
+			if (!root.EndsWith(@"\")) root += @"\";
+			
+			return root;
+		}
+		
 		public static void CheckRootAndPattern(ref string root)
 		{
 			string pattern = "*.*";
