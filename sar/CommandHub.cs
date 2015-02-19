@@ -14,11 +14,9 @@
  */
 
 using System;
-using System.Collections.Generic;
 
 using sar.Base;
 using sar.Commands;
-using sar.Tools;
 
 namespace sar.Tools
 {
@@ -50,6 +48,7 @@ namespace sar.Tools
 			                          	new FileBsdHeader(this),
 			                          	new FileMove(this),
 			                          	new FileLock(this),
+			                          	new MSSQL_GenerateScripts(this),
 			                          	new DirectoryTimestamp(this),
 			                          	new WindowsAutoLogin(this),
 			                          	new WindowsLogin(this),

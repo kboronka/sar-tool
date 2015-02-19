@@ -94,6 +94,7 @@
     <Compile Include="Commands\FileMove.cs" />
     <Compile Include="Commands\FileRemoveDirectory.cs" />
     <Compile Include="Commands\Help.cs" />
+    <Compile Include="Commands\MSSQL-GenerateScripts.cs" />
     <Compile Include="Commands\NetSetIP.cs" />
     <Compile Include="Commands\NetListAddaptors.cs" />
     <Compile Include="Commands\AssemblyInfoVersion.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="Commands\WindowsMapDrive.cs" />
     <Compile Include="Commands\WindowsRearm.cs" />
     <Compile Include="Commands\WindowsRestart.cs" />
+    <Compile Include="Databases\DatabaseObject.cs" />
     <Compile Include="Http\Controllers\EchoController.cs" />
     <Compile Include="Http\Controllers\ErrorController.cs" />
     <Compile Include="Http\HttpBase.cs" />
@@ -132,6 +134,7 @@
     <Compile Include="S7Siemens\S7Adapter.cs" />
     <Compile Include="S7Siemens\S7Address.cs" />
     <Compile Include="S7Siemens\SimpleSocket.cs" />
+    <Compile Include="Databases\MSSQL\Connection.cs" />
     <Compile Include="Tools\ActiveDirectory.cs" />
     <Compile Include="Tools\ApplicationInfo.cs" />
     <Compile Include="Tools\AssemblyInfo.cs" />
@@ -176,6 +179,8 @@
     <Folder Include="Http\Views" />
     <Folder Include="Http\Views\Error" />
     <Folder Include="Http\Views\Shared" />
+    <Folder Include="Databases\MSSQL" />
+    <Folder Include="Databases" />
     <Folder Include="S7Siemens" />
     <Folder Include="Socket" />
     <Folder Include="Tools" />
