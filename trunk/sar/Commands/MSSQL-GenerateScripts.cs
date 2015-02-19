@@ -32,27 +32,30 @@ namespace sar.Commands
 			string database = args[2];
 			string username = args[3];
 			string password = args[4];
-			string path = args[4];
+			string root = args[5];
 			
-
-			string root = Directory.GetCurrentDirectory();
-			IO.CheckRootAndPattern(ref root, ref path);
-
+			root = IO.CheckRoot(root);
+			if (!Directory.Exists(root)) Directory.CreateDirectory(root);
+			
 			var connectionString = new ConnectionString(server, database, username, password);
 			int objectCounter = 0;
 
 			using (var connection = new SqlConnection(connectionString.ToString()))
 			{
+				connection.Open();
+					
 				Progress.Message = "Generating Scripts";
 				foreach (DatabaseObject databaseObject in DatabaseObject.GetDatabaseObjects(connection))
 				{
-					string filename = databaseObject.Name + "." + databaseObject.Type + ".sql";
+					string filename = databaseObject.Type + "." + databaseObject.Name + ".sql";
 					
 					Progress.Message = "Saving Script " + filename;
 					
-					IO.WriteFile(root + filename, databaseObject.CreateScript);
+					IO.WriteFile(root + filename, databaseObject.GetCreateScript(connection));
 					objectCounter++;
 				}
+				
+				connection.Close();
 			}
 			
 			ConsoleHelper.WriteLine("Generated " + objectCounter.ToString() + " Script" + (objectCounter == 1 ? "" : "s"), ConsoleColor.DarkYellow);
