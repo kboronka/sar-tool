@@ -35,6 +35,11 @@ namespace sar.Testing
 			{
 				System.Diagnostics.Debug.WriteLine(resource);
 			}
+			
+			string root = IO.CheckRoot(@".\");
+			root = IO.CheckRoot(@"..\");
+			root = IO.CheckRoot(@"..\..\");
+			root = IO.CheckRoot(@"\");
 				
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
