@@ -183,6 +183,7 @@ namespace sar.Tools
 			if (root.StartsWith(@"\", StringComparison.CurrentCulture)) root = Directory.GetCurrentDirectory() + root;
 			if (!root.EndsWith(@"\", StringComparison.CurrentCulture)) root += @"\";
 			
+			root = root.Replace(@"\.\", @"\");
 			return root;
 		}
 		
