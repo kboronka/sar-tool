@@ -225,6 +225,7 @@ namespace sar.Base
 						case "/d":
 						case "/debug":
 							this.Debug = true;
+							ConsoleHelper.DebugWriteLine("Debug Mode Active");
 							break;
 						case "/svn":
 							this.IncludeSVN = true;
