@@ -58,6 +58,7 @@ namespace sar.Commands
 			var connectionString = new ConnectionString(server, database, username, password);
 			int objectCounter = 0;
 
+			Progress.Message = "Opening SQL Connection";
 			using (var connection = new SqlConnection(connectionString.ToString()))
 			{
 				connection.Open();
