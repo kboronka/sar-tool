@@ -28,8 +28,9 @@ namespace sar.Commands
 	{
 		public MSSQL_GenerateScripts(Base.CommandHub parent) : base(parent, "MSSQL - Generate Scripts",
 		                                                            new List<string> { "mssql-gs" },
-		                                                            "-mssql-gs [server] [database] [username] [password] [destination]",
-		                                                            new List<string> { "-mssql-gs 192.168.0.44 TestDB sa root " + @".\databasescripts\".QuoteDouble() })
+		                                                            "-mssql-gs <server> <database> <username> <password> [destination]",
+		                                                            new List<string> { "-mssql-gs 192.168.0.44 TestDB sa root " + @".\databasescripts\".QuoteDouble(),
+		                                                            	"-mssql-gs 192.168.0.44 TestDB sa root" })
 		{
 			
 		}
@@ -37,7 +38,7 @@ namespace sar.Commands
 		public override int Execute(string[] args)
 		{
 			// sanity check
-			if (args.Length != 6)
+			if (args.Length < 5 || args.Length > 6)
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
@@ -47,7 +48,9 @@ namespace sar.Commands
 			string database = args[2];
 			string username = args[3];
 			string password = args[4];
-			string root = args[5];
+			string root = @".\";
+			
+			if (args.Length == 6) root = args[5];
 			
 			root = IO.CheckRoot(root);
 			if (!Directory.Exists(root)) Directory.CreateDirectory(root);
