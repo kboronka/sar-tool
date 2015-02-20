@@ -211,9 +211,10 @@ namespace sar.Base
 			#endif
 			
 			List<string> result = new List<string>();
-			
+			int count = 0;
 			foreach (string arg in args)
 			{
+				ConsoleHelper.DebugWriteLine("arg[" + count++.ToString() + "] = " + arg);
 				if (arg.Length > 1 && arg.Substring(0, 1) == "/")
 				{
 					switch (arg.ToLower())
