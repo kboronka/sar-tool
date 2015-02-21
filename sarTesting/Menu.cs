@@ -14,9 +14,6 @@
  */
 
 using System;
-using System.Drawing;
-using System.Net;
-using System.Net.Mail;
 using System.Windows.Forms;
 using System.Timers;
 using System.Text;
@@ -26,7 +23,6 @@ using Outlook = Microsoft.Office.Interop.Outlook;
 
 using S7 = sar.S7Siemens;
 using sar.Http;
-using sar.Tools;
 
 namespace sar.Testing
 {
