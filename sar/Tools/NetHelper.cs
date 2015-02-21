@@ -70,6 +70,20 @@ namespace sar.Tools
 			return hostName;
 		}
 		
+		public static string GetLAN_ConnectionName()
+		{
+			NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
+			foreach (NetworkInterface adapter in adapters)
+			{
+				if (adapter.Description.ToLower().Contains("gigabit") || adapter.Description.ToLower().Contains("82579lm"))
+				{
+					return adapter.Name;
+				}
+			}
+			
+			return null;
+		}
+		
 		public static List<NetworkAdapter> Adapters()
 		{
 			List<NetworkAdapter> adapters = new List<NetworkAdapter>();

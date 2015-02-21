@@ -32,13 +32,13 @@ namespace sar
 				/*
 				args = new string[] { "f.rd", @"C:\Users\kboronka\Documents\Virtual Machines\caches", @"/pause" };
 				args = new string[] { "rdp", "192.168.171.208", @"username", "password", @"/pause" };
-				args = new string[] { "ip.set", "LAN", "dhcp", @"/debug", @"/pause", @"/admin" };
-				args = new string[] { "ip.set", "LAN", "192.168.14.111", "255.255.255.0", @"/debug", @"/pause", @"/admin" };
+				args = new string[] { "ip.set", "gigabit", "dhcp", @"/debug", @"/pause", @"/admin" };
+				args = new string[] { "ip.set", "gigabit", "192.168.14.111", "255.255.255.0", @"/debug", @"/pause", @"/admin" };
 				args = new string[] { "ip.config", @"/pause" };
 				args = new string[] { "mssql-gs", "192.168.14.110", "TestDB", "sa", "test123", @"\scripts\", @"/pause" };
 				*/
 				#endif
-						
+
 				var hub = new CommandHub();
 				ConsoleHelper.Start();	
 				if (args.Length == 0) ConsoleHelper.ApplicationTitle();

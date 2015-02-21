@@ -55,14 +55,19 @@ namespace sar.Commands
 				subnetMask = args[3];
 			}
 			
-			string ipconfig;
+			
+			if (adapters == "gigabit" && NetHelper.GetLAN_ConnectionName() != null)
+			{
+				adapters = NetHelper.GetLAN_ConnectionName();
+			}
 			
 			Progress.Message = "Setting IP address of " + adapters;
-			int exitcode = ConsoleHelper.Run("netsh", "interface ip set address \"" + adapters + "\" " + ((ipaddress != "dhcp") ? "static " : "") + ipaddress + " " + subnetMask, out ipconfig);
+			string output;
+			int exitcode = ConsoleHelper.Run("netsh", "interface ip set address \"" + adapters + "\" " + ((ipaddress != "dhcp") ? "static " : "") + ipaddress + " " + subnetMask, out output);
 
 			if (exitcode != 0)
 			{
-				ConsoleHelper.DebugWriteLine(ipconfig);
+				ConsoleHelper.DebugWriteLine(output);
 				ConsoleHelper.WriteLine("setting ip address of " + adapters + " to " + ipaddress + " has failed", ConsoleColor.DarkYellow);
 				return ConsoleHelper.EXIT_ERROR;
 			}
