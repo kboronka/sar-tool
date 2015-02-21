@@ -18,17 +18,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
-using sar.Tools;
 
-namespace sar.Http
+namespace sar.Tools
 {
-	public class HttpEmbeddedResource
+	public class EmbeddedResource
 	{
 		#region static
 
-		private static Dictionary<string, HttpEmbeddedResource> embeddedResources = new Dictionary<string, HttpEmbeddedResource>();
+		private static Dictionary<string, EmbeddedResource> embeddedResources = new Dictionary<string, EmbeddedResource>();
 		
-		private static HttpEmbeddedResource Find(string resource)
+		private static EmbeddedResource Find(string resource)
 		{
 			if (embeddedResources.ContainsKey(resource))
 			{
@@ -36,7 +35,7 @@ namespace sar.Http
 			}
 			else
 			{
-				HttpEmbeddedResource embeddedResource = new HttpEmbeddedResource(resource);
+				EmbeddedResource embeddedResource = new EmbeddedResource(resource);
 				embeddedResources.Add(resource, embeddedResource);
 
 				return embeddedResource;
@@ -98,7 +97,7 @@ namespace sar.Http
 		
 		private byte[] buffer = new byte[0] {};
 
-		private HttpEmbeddedResource(string resource)
+		private EmbeddedResource(string resource)
 		{
 			resource = resource.Replace(@"/", @".");
 			if (!EmbeddedFiles.ContainsKey(resource)) throw new FileNotFoundException("resource: " + resource + " not found");

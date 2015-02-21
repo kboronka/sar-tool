@@ -117,7 +117,6 @@
     <Compile Include="Http\Controllers\ErrorController.cs" />
     <Compile Include="Http\HttpBase.cs" />
     <Compile Include="Http\HttpContent.cs" />
-    <Compile Include="Http\HttpEmbeddedResource.cs" />
     <Compile Include="Http\HttpController.cs" />
     <Compile Include="Http\HttpRequest.cs" />
     <Compile Include="Http\HttpResponce.cs" />
@@ -146,6 +145,7 @@
     </Compile>
     <Compile Include="Tools\ExceptionHelper.cs" />
     <Compile Include="Tools\FileLogger.cs" />
+    <Compile Include="Tools\HttpEmbeddedResource.cs" />
     <Compile Include="Tools\HttpHelper.cs" />
     <Compile Include="Tools\IO.cs" />
     <Compile Include="Tools\Logger.cs" />

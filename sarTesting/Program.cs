@@ -31,7 +31,7 @@ namespace sar.Testing
 			
 			Program.LogInfo();
 
-			foreach (string resource in HttpEmbeddedResource.GetAllResources())
+			foreach (string resource in EmbeddedResource.GetAllResources())
 			{
 				System.Diagnostics.Debug.WriteLine(resource);
 			}
