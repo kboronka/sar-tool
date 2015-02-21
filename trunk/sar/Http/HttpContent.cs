@@ -45,11 +45,11 @@ namespace sar.Http
 			{
 				return HttpContent.Read(filePath);
 			}
-			else if (HttpEmbeddedResource.Contains(request.Substring(1)))
+			else if (EmbeddedResource.Contains(request.Substring(1)))
 			{
 				return HttpContent.Read(request.Substring(1));
 			}
-			else if (filePath.EndsWith("favicon.ico") && HttpEmbeddedResource.Contains("sar.Http.libs.art.favicon.ico"))
+			else if (filePath.EndsWith("favicon.ico") && EmbeddedResource.Contains("sar.Http.libs.art.favicon.ico"))
 			{
 				return HttpContent.Read("sar.Http.libs.art.favicon.ico");
 			}
@@ -86,7 +86,7 @@ namespace sar.Http
 			{
 				return ReadFile(filePath, baseContent);
 			}
-			else if (HttpEmbeddedResource.Contains(filePath))
+			else if (EmbeddedResource.Contains(filePath))
 			{
 				return ReadEmbeddedFile(filePath, baseContent);
 			}
@@ -107,11 +107,11 @@ namespace sar.Http
 		
 		private static HttpContent ReadEmbeddedFile(string resource, Dictionary<string, HttpContent> baseContent)
 		{
-			if (HttpEmbeddedResource.Contains(resource))
+			if (EmbeddedResource.Contains(resource))
 			{
 				string extension = IO.GetFileExtension(resource).ToLower();
 				string contentType = HttpHelper.GetMimeType(extension);
-				byte[] content = HttpEmbeddedResource.Get(resource);
+				byte[] content = EmbeddedResource.Get(resource);
 				
 				return new HttpContent(content, contentType, baseContent);
 			}

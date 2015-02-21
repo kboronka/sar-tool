@@ -22,6 +22,7 @@ using System.Text;
 using Outlook = Microsoft.Office.Interop.Outlook;
 
 using S7 = sar.S7Siemens;
+using sar.Tools;
 using sar.Http;
 
 namespace sar.Testing
@@ -130,7 +131,7 @@ namespace sar.Testing
 		
 		void Button4Click(object sender, EventArgs e)
 		{
-			foreach (string resource in sar.Http.HttpEmbeddedResource.GetAllResources())
+			foreach (string resource in EmbeddedResource.GetAllResources())
 			{
 				System.Diagnostics.Debug.WriteLine(resource);
 			}
