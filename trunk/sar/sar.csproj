@@ -157,6 +157,7 @@
     <Compile Include="Tools\ObjectHelper.cs" />
     <Compile Include="Tools\Preformance.cs" />
     <Compile Include="Tools\Progress.cs" />
+    <Compile Include="Tools\RawPrinterHelper.cs" />
     <Compile Include="Tools\ServiceHelper.cs" />
     <Compile Include="Tools\Shell.cs" />
     <Compile Include="Tools\SkyUpdater.cs" />
