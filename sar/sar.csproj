@@ -145,7 +145,7 @@
     </Compile>
     <Compile Include="Tools\ExceptionHelper.cs" />
     <Compile Include="Tools\FileLogger.cs" />
-    <Compile Include="Tools\HttpEmbeddedResource.cs" />
+    <Compile Include="Tools\EmbeddedResource.cs" />
     <Compile Include="Tools\HttpHelper.cs" />
     <Compile Include="Tools\IO.cs" />
     <Compile Include="Tools\Logger.cs" />
