@@ -16,7 +16,7 @@
 using System;
 using System.Windows.Forms;
 
-using sar.Base;
+using Base=sar.Base;
 using sar.Tools;
 using sar.Http;
 
@@ -29,7 +29,7 @@ namespace sar.Testing
 		{
 			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(LogUnhandledException);
 			
-			Program.LogInfo();
+			Base.Program.LogInfo();
 
 			foreach (string resource in EmbeddedResource.GetAllResources())
 			{
