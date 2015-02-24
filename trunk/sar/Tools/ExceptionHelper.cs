@@ -20,7 +20,7 @@ namespace sar.Tools
 {
 	public static class ExceptionHelper
 	{
-		public static string GetStackTrace(this Exception ex)
+		public static string GetStackTrace(Exception ex)
 		{
 			try
 			{
@@ -67,7 +67,7 @@ namespace sar.Tools
 			}
 		}
 
-		public static Exception GetInner(this Exception ex)
+		public static Exception GetInner(Exception ex)
 		{
 			while (ex.InnerException != null)
 			{

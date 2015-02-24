@@ -29,13 +29,13 @@ namespace sar.Tools
 			this.Text = ex.GetType().ToString();
 			this.details.Text = ex.Message;
 			this.details.Text += Environment.NewLine;
-			this.details.Text += ex.GetStackTrace();
+			this.details.Text += ExceptionHelper.GetStackTrace(ex);
 		}
 		
 		public static void Display(Exception ex)
 		{
 			// temporary
-			ExceptionHandler form = new ExceptionHandler(ex.GetInner());
+			ExceptionHandler form = new ExceptionHandler(ExceptionHelper.GetInner(ex));
 			form.ShowDialog();
 		}
 	}
