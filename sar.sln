@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sarControls", "sarControls\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sarValidate", "sarValidate\sarValidate.csproj", "{C240AC11-57E3-4E06-AC91-6FD4592C41F2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "quickLog", "quickLog\quickLog.csproj", "{1A2E20F1-0940-4E89-ADCD-3F4EF0B96066}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -32,5 +34,9 @@ Global
 		{C240AC11-57E3-4E06-AC91-6FD4592C41F2}.Debug|x86.Build.0 = Debug|Any CPU
 		{C240AC11-57E3-4E06-AC91-6FD4592C41F2}.Release|x86.ActiveCfg = Release|Any CPU
 		{C240AC11-57E3-4E06-AC91-6FD4592C41F2}.Release|x86.Build.0 = Release|Any CPU
+		{1A2E20F1-0940-4E89-ADCD-3F4EF0B96066}.Debug|x86.ActiveCfg = Debug|x86
+		{1A2E20F1-0940-4E89-ADCD-3F4EF0B96066}.Debug|x86.Build.0 = Debug|x86
+		{1A2E20F1-0940-4E89-ADCD-3F4EF0B96066}.Release|x86.ActiveCfg = Release|x86
+		{1A2E20F1-0940-4E89-ADCD-3F4EF0B96066}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 EndGlobal

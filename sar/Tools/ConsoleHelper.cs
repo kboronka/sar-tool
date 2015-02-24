@@ -14,8 +14,6 @@
  */
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -122,14 +120,14 @@ namespace sar.Tools
 		
 		public static void WriteException(Exception ex)
 		{
-			ex = ex.GetInner();
+			ex = ExceptionHelper.GetInner(ex);
 			
 			ConsoleHelper.Write("error: ", ConsoleColor.Red);
 			ConsoleHelper.WriteLine(ex.Message);
 
 			if (ShowDebug)
 			{
-				ConsoleHelper.WriteLine(ex.GetStackTrace(), ConsoleColor.DarkCyan);
+				ConsoleHelper.WriteLine(ExceptionHelper.GetStackTrace(ex), ConsoleColor.DarkCyan);
 			}
 		}
 		

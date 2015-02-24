@@ -25,14 +25,14 @@ namespace sar.Tools
 		
 		public void Write(Exception ex)
 		{
-			Exception inner = ex.GetInner();
+			Exception inner = ExceptionHelper.GetInner(ex);
 			
 			base.WriteLine(ConsoleHelper.HR);
 			base.WriteLine("Time: " + DateTime.Now.ToString());
 			base.WriteLine("Type: " + inner.GetType().ToString());
 			base.WriteLine("Error: " + inner.Message);
 			base.WriteLine(ConsoleHelper.HR);
-			base.WriteLine(inner.GetStackTrace());
+			base.WriteLine(ExceptionHelper.GetStackTrace(inner));
 			base.WriteLine("");
 		}
 	}

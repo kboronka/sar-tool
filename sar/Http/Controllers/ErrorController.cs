@@ -26,7 +26,7 @@ namespace sar.Http
 		
 		public static HttpContent Display(HttpRequest request, Exception ex, HttpStatusCode status)
 		{
-			Exception inner = ex.GetInner();
+			Exception inner = ExceptionHelper.GetInner(ex);
 			
 			Dictionary<string, HttpContent> baseContent = new Dictionary<string, HttpContent>() {};
 			baseContent.Add("Title", new HttpContent(status.ToString()));
@@ -34,7 +34,7 @@ namespace sar.Http
 			baseContent.Add("ExceptionType", new HttpContent(inner.GetType().ToString()));
 			baseContent.Add("RequestURL", new HttpContent(request.FullUrl));
 			baseContent.Add("ExceptionMessage", new HttpContent(inner.Message));
-			baseContent.Add("ExceptionStackTrace", new HttpContent(inner.GetStackTrace().ToHTML()));
+			baseContent.Add("ExceptionStackTrace", new HttpContent(ExceptionHelper.GetStackTrace(ex).ToHTML()));
 			lastException = baseContent;
 			
 			return HttpContent.Read("sar.Http.Views.Error.Display.html", baseContent);
