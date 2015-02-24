@@ -3,7 +3,7 @@
   <PropertyGroup>
     <ProjectGuid>{74862D71-2342-4EAE-8C29-D25F2A195677}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">NET35</Platform>
     <OutputType>Exe</OutputType>
     <RootNamespace>sar</RootNamespace>
     <AssemblyName>sar</AssemblyName>
@@ -23,50 +23,60 @@
     <SignAssembly>False</SignAssembly>
     <DelaySign>False</DelaySign>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
+  <PropertyGroup Condition=" '$(Platform)' == 'NET35' ">
+    <Framework>NET35</Framework>
     <PlatformTarget>x86</PlatformTarget>
     <RegisterForComInterop>False</RegisterForComInterop>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
     <BaseAddress>4194304</BaseAddress>
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'NET20' ">
+    <Framework>NET20</Framework>
+    <PlatformTarget>x86</PlatformTarget>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <BaseAddress>4194304</BaseAddress>
+    <FileAlignment>4096</FileAlignment>
+  </PropertyGroup>  
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug\$(Framework)\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>Full</DebugType>
     <Optimize>False</Optimize>
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+    <DefineConstants>DEBUG;TRACE;$(Framework)</DefineConstants>
     <StartAction>Project</StartAction>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\Release\$(Framework)\</OutputPath>
     <DebugSymbols>False</DebugSymbols>
     <DebugType>PdbOnly</DebugType>
     <Optimize>True</Optimize>
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
-    <DefineConstants>TRACE</DefineConstants>
-    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+    <DefineConstants>TRACE;$(Framework)</DefineConstants>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core">
+    <Reference Include="System.Core" Condition=" '$(Framework)' == 'NET35' ">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Core" Condition=" '$(Framework)' == 'NET20' ">
+      <RequiredTargetFramework>2.0</RequiredTargetFramework>
+    </Reference>	
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.DataSetExtensions">
+    <Reference Include="System.Data.DataSetExtensions" Condition=" '$(Framework)' == 'NET35' ">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.DirectoryServices" />
-    <Reference Include="System.DirectoryServices.AccountManagement">
+    <Reference Include="System.DirectoryServices.AccountManagement" Condition=" '$(Framework)' == 'NET35' ">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq">
+    <Reference Include="System.Xml.Linq" Condition=" '$(Framework)' == 'NET35' ">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
   </ItemGroup>
@@ -134,7 +144,7 @@
     <Compile Include="S7Siemens\S7Address.cs" />
     <Compile Include="S7Siemens\SimpleSocket.cs" />
     <Compile Include="Databases\MSSQL\Connection.cs" />
-    <Compile Include="Tools\ActiveDirectory.cs" />
+    <Compile Include="Tools\ActiveDirectory.cs" Condition=" '$(Framework)' == 'NET35' " />
     <Compile Include="Tools\ApplicationInfo.cs" />
     <Compile Include="Tools\AssemblyInfo.cs" />
     <Compile Include="Tools\ConsoleHelper.cs" />
