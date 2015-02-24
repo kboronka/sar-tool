@@ -34,7 +34,7 @@ namespace sar_testing.Http
 		
 		public static HttpContent UpdateTable(HttpRequest request)
 		{
-			Dictionary<string, string> json = new Dictionary<string, string>();
+			var json = new Dictionary<string, string>();
 			
 			string[] row1 = { "blabla", HttpHelper.LabelSuccess("passed"), Guid.NewGuid().ToString(), "booo" };
 			string[] row2 = { "blabla", HttpHelper.LabelDanger("failed"), Guid.NewGuid().ToString(), "booo" };
