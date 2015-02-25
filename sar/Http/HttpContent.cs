@@ -49,6 +49,10 @@ namespace sar.Http
 			{
 				return HttpContent.Read(request.Substring(1));
 			}
+			else if (filePath.EndsWith("favicon.ico") && server.FavIcon.IsNotNull() && filePath != server.FavIcon)
+			{
+				return HttpContent.Read(server.FavIcon);
+			}			
 			else if (filePath.EndsWith("favicon.ico") && EmbeddedResource.Contains("sar.Http.libs.art.favicon.ico"))
 			{
 				return HttpContent.Read("sar.Http.libs.art.favicon.ico");
