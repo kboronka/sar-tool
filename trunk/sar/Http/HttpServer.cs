@@ -14,13 +14,9 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 
 using sar.Tools;
@@ -161,7 +157,7 @@ namespace sar.Http
 			{
 				if (this.listener.Pending())
 				{
-					HttpRequest client = new HttpRequest(this, this.listener.AcceptTcpClient());
+					var client = new HttpRequest(this, this.listener.AcceptTcpClient());
 				}
 			}
 		}
