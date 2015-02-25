@@ -49,7 +49,7 @@
 	%SAR% -b.net 3.5 %SOLUTION% /p:Configuration=%CONFIG% /p:Platform=\"x86\"
 	if errorlevel 1 goto BuildFailed
 	
-	%SAR% -b.net 2.0 sarQuckLog.sln /p:Configuration=%CONFIG% /p:Platform=\"x86\"
+	%SAR% -b.net 3.5 sarQuckLog.sln /p:Configuration=%CONFIG% /p:Platform=\"x86\"
 	if errorlevel 1 goto BuildFailed
 
 :BuildComplete
