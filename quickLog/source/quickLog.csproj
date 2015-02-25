@@ -38,31 +38,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\sar\Base\Program.cs">
+    <Compile Include="..\..\sar\Base\Program.cs">
       <Link>sar\Program.cs</Link>
     </Compile>
-    <Compile Include="..\sar\Tools\ApplicationInfo.cs">
+    <Compile Include="..\..\sar\Tools\ApplicationInfo.cs">
       <Link>sar\ApplicationInfo.cs</Link>
     </Compile>
-    <Compile Include="..\sar\Tools\AssemblyInfo.cs">
+    <Compile Include="..\..\sar\Tools\AssemblyInfo.cs">
       <Link>sar\AssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\sar\Tools\ConsoleHelper.cs">
+    <Compile Include="..\..\sar\Tools\ConsoleHelper.cs">
       <Link>sar\ConsoleHelper.cs</Link>
     </Compile>
-    <Compile Include="..\sar\Tools\ErrorLogger.cs">
+    <Compile Include="..\..\sar\Tools\ErrorLogger.cs">
       <Link>sar\ErrorLogger.cs</Link>
     </Compile>
-    <Compile Include="..\sar\Tools\ExceptionHelper.cs">
+    <Compile Include="..\..\sar\Tools\ExceptionHelper.cs">
       <Link>sar\ExceptionHelper.cs</Link>
     </Compile>
-    <Compile Include="..\sar\Tools\FileLogger.cs">
+    <Compile Include="..\..\sar\Tools\FileLogger.cs">
       <Link>sar\FileLogger.cs</Link>
     </Compile>
-    <Compile Include="..\sar\Tools\IO.cs">
+    <Compile Include="..\..\sar\Tools\IO.cs">
       <Link>sar\IO.cs</Link>
     </Compile>
-    <Compile Include="..\sar\Tools\Progress.cs">
+    <Compile Include="..\..\sar\Tools\Progress.cs">
       <Link>sar\Progress.cs</Link>
     </Compile>
     <Compile Include="Program.cs" />
