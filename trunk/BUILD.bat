@@ -43,8 +43,10 @@
 	%SAR% -f.del quickLog\source\bin\%CONFIG%\*.* /q /svn
 	
 	echo building binaries
-	%SAR% -b.net 3.5 %SOLUTION% /p:Configuration=%CONFIG% /p:Platform=\"NET35\"
-	%SAR% -b.net 2.0 sarQuckLog.sln /p:Configuration=%CONFIG% /p:Platform=\"NET20\"
+	%SAR% -b.net 3.5 %SOLUTION% /p:Configuration=%CONFIG% /p:Platform=\"x86\"
+	if errorlevel 1 goto BuildFailed
+	
+	%SAR% -b.net 3.5 sarQuckLog.sln /p:Configuration=%CONFIG% /p:Platform=\"x86\"
 	if errorlevel 1 goto BuildFailed
 
 :BuildComplete
