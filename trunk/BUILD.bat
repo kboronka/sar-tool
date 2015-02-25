@@ -29,10 +29,7 @@
 :Build
 	echo "VERSION.MAJOR.MINOR.BUILD".
 	set /p VERSION="> "
-
-	svn cleanup
-	svn update
-
+	
 	%SAR% -f.bsd \sar\*.cs "Kevin Boronka"
 	%SAR% -f.bsd \sarControls\*.cs "Kevin Boronka"
 	%SAR% -f.bsd \sarTesting\*.cs "Kevin Boronka"
@@ -46,12 +43,11 @@
 	%SAR% -f.del quickLog\source\bin\%CONFIG%\*.* /q /svn
 	
 	echo building binaries
-	%SAR% -b.net 3.5 %SOLUTION% /p:Configuration=%CONFIG% /p:Platform=\"x86\"
-	if errorlevel 1 goto BuildFailed
-	
-	%SAR% -b.net 2.0 sarQuckLog.sln /p:Configuration=%CONFIG% /p:Platform=\"x86\"
+	%SAR% -b.net 3.5 %SOLUTION% /p:Configuration=%CONFIG% /p:Platform=\"NET35\"
+	%SAR% -b.net 2.0 sarQuckLog.sln /p:Configuration=%CONFIG% /p:Platform=\"NET20\"
 	if errorlevel 1 goto BuildFailed
 
+:BuildComplete
 :BuildComplete
 	copy sar\bin\%CONFIG%\*.exe release\*.exe
 	copy sar\bin\%CONFIG%\*.pdb release\*.pdb
@@ -61,15 +57,8 @@
 	copy quickLog\source\bin\%CONFIG%\*.exe quickLog\release\*.exe
 	copy quickLog\source\bin\%CONFIG%\*.pdb quickLog\release\*.pdb
 	
-	copy license.txt release\license.txt
-	%SAR% -sky.gen SkyUpdate.info release\sar.exe https://sar-tool.googlecode.com/svn/trunk/release/sar.exe
-	
-	%ZIP% "sar %VERSION%.zip" .\release\*.*
-	svn commit -m "sar version %VERSION%"
-	svn copy %REPO%/trunk %REPO%/tags/%VERSION% -m "Tagging the %VERSION% version release of the project"
-	svn update
-	
 	echo build completed
+	pause
 	popd
 	exit /b 0
 
