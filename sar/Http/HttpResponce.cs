@@ -14,14 +14,10 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
 
 using sar.Tools;
 
@@ -102,19 +98,19 @@ namespace sar.Http
 		private HttpContent GetInfo()
 		{
 			// Construct responce
-			string content = "";
-			content += "<html><body><h1>test server</h1>" + "<br>\n";
-			content += "Method: " + request.Method.ToString() + "<br>\n";
-			content += "URL: " + request.FullUrl + "<br>\n";
-			content += "Version: " + request.ProtocolVersion + "<br>\n";
-			content += "<form method=post action=/form>" + "<br>\n";
-			content += "<input type=text name=foo value=foovalue>" + "<br>\n";
-			content += "<input type=submit name=bar value=barvalue>" + "<br>\n";
-			content += "</form>" + "\n";
-			content += "</html>" + "\n";
-			content += "\r\n";
+			string responce = "";
+			responce += "<html><body><h1>test server</h1>" + "<br>\n";
+			responce += "Method: " + request.Method.ToString() + "<br>\n";
+			responce += "URL: " + request.FullUrl + "<br>\n";
+			responce += "Version: " + request.ProtocolVersion + "<br>\n";
+			responce += "<form method=post action=/form>" + "<br>\n";
+			responce += "<input type=text name=foo value=foovalue>" + "<br>\n";
+			responce += "<input type=submit name=bar value=barvalue>" + "<br>\n";
+			responce += "</form>" + "\n";
+			responce += "</html>" + "\n";
+			responce += "\r\n";
 
-			return new HttpContent(content);
+			return new HttpContent(responce);
 		}
 		
 		private byte[] ConstructResponce(HttpStatusCode status)
