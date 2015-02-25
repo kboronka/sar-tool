@@ -28,6 +28,7 @@ namespace sar.Http
 		private TcpListener listener;
 		protected int port;
 		protected string root;
+		private string favIcon;
 		
 		#region properties
 
@@ -39,6 +40,12 @@ namespace sar.Http
 		public int Port
 		{
 			get { return port; }
+		}
+		
+		public string FavIcon
+		{
+			get { return favIcon; }
+			set { favIcon = value; }
 		}
 
 		#endregion
