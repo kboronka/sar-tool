@@ -168,12 +168,7 @@ namespace sar.Tools
 		{
 			string filename = GetFilename(filepath);
 			
-			if (filename.LastIndexOf(".") != -1)
-			{
-				return filename.Substring(filename.LastIndexOf(".") + 1);
-			}
-			
-			return "";
+			return (filename.LastIndexOf(".", StringComparison.CurrentCulture) != -1) ? filename.Substring(filename.LastIndexOf(".", StringComparison.CurrentCulture) + 1) : "";
 		}
 		
 		public static string CheckRoot(string root)
