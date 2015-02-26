@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <ProjectGuid>{1A2E20F1-0940-4E89-ADCD-3F4EF0B96066}</ProjectGuid>
+    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>quickLog</RootNamespace>
+    <AssemblyName>quickLog</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <Optimize>False</Optimize>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+    <Optimize>True</Optimize>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\sar\Base\Program.cs">
+      <Link>sar\Program.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sar\Tools\ApplicationInfo.cs">
+      <Link>sar\ApplicationInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sar\Tools\AssemblyInfo.cs">
+      <Link>sar\AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sar\Tools\ConsoleHelper.cs">
+      <Link>sar\ConsoleHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sar\Tools\ErrorLogger.cs">
+      <Link>sar\ErrorLogger.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sar\Tools\ExceptionHelper.cs">
+      <Link>sar\ExceptionHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sar\Tools\FileLogger.cs">
+      <Link>sar\FileLogger.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sar\Tools\IO.cs">
+      <Link>sar\IO.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sar\Tools\Progress.cs">
+      <Link>sar\Progress.cs</Link>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="sar\sar.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="sar" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
