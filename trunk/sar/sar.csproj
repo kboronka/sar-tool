@@ -79,6 +79,7 @@
     <Compile Include="Commands\AppShutdownWait.cs" />
     <Compile Include="Commands\CodeClean.cs" />
     <Compile Include="Commands\CodeReIndent.cs" />
+    <Compile Include="Commands\FileOpenFolder.cs" />
     <Compile Include="Commands\FileBackup.cs" />
     <Compile Include="Commands\BuildCHM.cs" />
     <Compile Include="Commands\BuildSLN.cs" />
