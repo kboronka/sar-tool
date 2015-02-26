@@ -178,9 +178,13 @@ namespace sar.Tools
 		
 		public static string CheckRoot(string root)
 		{
-			if (root.StartsWith(@"..\", StringComparison.CurrentCulture)) root = Directory.GetCurrentDirectory() + @"\" + root;
-			if (root.StartsWith(@".\", StringComparison.CurrentCulture)) root = Directory.GetCurrentDirectory() + @"\" + root;
-			if (root.StartsWith(@"\", StringComparison.CurrentCulture)) root = Directory.GetCurrentDirectory() + root;
+			if (!root.StartsWith(@"\\", StringComparison.CurrentCulture))
+			{
+				if (root.StartsWith(@"..\", StringComparison.CurrentCulture)) root = Directory.GetCurrentDirectory() + @"\" + root;
+				if (root.StartsWith(@".\", StringComparison.CurrentCulture)) root = Directory.GetCurrentDirectory() + @"\" + root;
+				if (root.StartsWith(@"\", StringComparison.CurrentCulture)) root = Directory.GetCurrentDirectory() + root;
+			}
+			
 			if (!root.EndsWith(@"\", StringComparison.CurrentCulture)) root += @"\";
 			
 			root = root.Replace(@"\.\", @"\");
