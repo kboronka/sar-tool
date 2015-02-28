@@ -32,8 +32,8 @@ namespace sar.Http
 			string message = inner.Message;
 			
 			message = inner.Message;
-			message += "<br>";
-			message += ExceptionHelper.GetStackTrace(inner).ToHTML();
+			message += Environment.NewLine;
+			message += ExceptionHelper.GetStackTrace(inner);
 			
 			this.content = message.ToBytes();
 			this.contentType = "application/json";
