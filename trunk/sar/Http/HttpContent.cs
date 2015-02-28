@@ -29,9 +29,13 @@ namespace sar.Http
 		public HttpErrorContent(Exception ex) : base()
 		{
 			Exception inner = ExceptionHelper.GetInner(ex);
-			this.content = inner.Message.ToBytes();
-			this.content += "<br>";
-			this.content += ExceptionHelper.GetStackTrace(inner).ToHTML();
+			string message = inner.Message;
+			
+			message = inner.Message;
+			message += "<br>";
+			message += ExceptionHelper.GetStackTrace(inner).ToHTML();
+			
+			this.content = message.ToBytes();
 			this.contentType = "application/json";
 		}
 	}
