@@ -29,6 +29,7 @@ namespace sar
 			try
 			{
 				#if DEBUG
+				
 				/*
 				args = new string[] { "f.rd", @"C:\Users\kboronka\Documents\Virtual Machines\caches", @"/pause" };
 				args = new string[] { "rdp", "192.168.171.208", @"username", "password", @"/pause" };
@@ -37,12 +38,11 @@ namespace sar
 				args = new string[] { "ip.config", @"/pause" };
 				args = new string[] { "mssql-gs", "192.168.14.110", "TestDB", "sa", "test123", @"\scripts\", @"/pause" };
 				args = new string[] { "f.open", "c:\temp" };
+				args = new string[] { "file.open", @"c:\temp", @"/pause" };
 				*/
 				
-				args = new string[] { "file.open", @"c:\temp", @"/pause" };
-								
 				#endif
-
+				
 				var hub = new CommandHub();
 				ConsoleHelper.Start();	
 				if (args.Length == 0) ConsoleHelper.ApplicationTitle();
