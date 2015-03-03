@@ -104,19 +104,24 @@
 		<script src="/sar/Http/libs/js/bootstrap-dialog.min.js" type="text/javascript"></script>
 		
 		<script type="text/javascript">
-			var batchRefereshInterval = setInterval(function(){RefreshTable()}, 5000);
+			var refereshInterval = setInterval(function(){RefreshTable()}, 500);
 			RefreshTable();
 			
 			
 			function RefreshTable()
 			{
+				clearInterval(refereshInterval);
 				var x = jQuery.ajax({
 					url: "/Test/UpdateTable", 
 					type: 'GET',
-					timeout: 1000,					
-					success: function(returnData) { UpdateTable(returnData); },
+					timeout: 10000,					
+					success: function(returnData)
+					{
+						refereshInterval = setInterval(function(){RefreshTable()}, 500);
+						UpdateTable(returnData); 
+					},
 					error: function(req, status, error) {
-						clearInterval(batchRefereshInterval);
+						clearInterval(refereshInterval);
 						if (status === "timeout")
 						{
 							BootstrapDialog.show({ title: 'Connection Timeout', message: 'please refresh page', closable: false });
