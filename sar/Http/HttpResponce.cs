@@ -60,6 +60,10 @@ namespace sar.Http
 				{
 					this.content = HttpController.RequestPrimary(this.request);
 				}
+				else if (this.request.FullUrl.StartsWith(@"/ToPDF", StringComparison.CurrentCulture))
+				{
+					this.content = HttpContent.GetPDF("http://localhost:" + request.Server.Port.ToString() + this.request.FullUrl.Substring(@"/ToPDF".Length));
+				}
 				else if (this.request.FullUrl.ToLower() == @"/info")
 				{
 					this.content = GetInfo();

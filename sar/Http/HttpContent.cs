@@ -171,6 +171,42 @@ namespace sar.Http
 		
 		#endregion
 		
+		#region PDF Convert Tool
+		
+		// documentation: http://wkhtmltopdf.org/usage/wkhtmltopdf.txt
+		private static string pdfWriter;
+		
+		private static string PdfWriter
+		{
+			get
+			{
+				if (string.IsNullOrEmpty(pdfWriter))
+				{
+					pdfWriter = IO.FindApplication("wkhtmltopdf.exe", @"wkhtmltopdf\bin");
+				}
+				
+				return pdfWriter;
+			}
+		}
+		
+		public static HttpContent GetPDF(string url)
+		{
+			if (string.IsNullOrEmpty(PdfWriter)) throw new ApplicationException("PDF output is not supported");
+			
+			string tempfile = ApplicationInfo.DataDirectory + Guid.NewGuid().ToString() + ".pdf";
+			string output = "";
+			
+			int exitCode = ConsoleHelper.Run(PdfWriter, url.QuoteDouble()+ " " + tempfile.QuoteDouble(), out output);
+			
+			
+			HttpContent result = HttpContent.Read(tempfile);
+			File.Delete(tempfile);
+			
+			return result;
+		}
+		
+		#endregion
+
 		protected byte[] content;
 		protected string contentType;
 		protected Dictionary<string, HttpContent> baseContent;
