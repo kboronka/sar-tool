@@ -43,7 +43,7 @@ namespace sar.Testing
 				
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Http.HttpServer server = new Http.HttpServer(83, @"c:\wwwroot\");
+			Http.HttpServer server = new Http.HttpServer(83);
 			Application.Run(new Menu());
 			Program.Log("throwing error");
 			//throw new ApplicationException("testing unhandled exception");
