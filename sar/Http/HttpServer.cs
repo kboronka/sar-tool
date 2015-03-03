@@ -59,6 +59,14 @@ namespace sar.Http
 			
 			this.Start();
 		}
+		
+		public HttpServer(int port)
+		{
+			this.port = port;
+			this.root = ApplicationInfo.CommonDataDirectory;
+			
+			this.Start();
+		}
 
 		public HttpServer(string wwwroot)
 		{
