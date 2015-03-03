@@ -532,10 +532,12 @@ namespace sar.Tools
 			}
 			
 			// search in program files folders
-			List<String> files = IO.GetAllFiles(IO.ProgramFilesx86 + folder + @"\", exeName);
+			var files = new List<string>();
+			
+			if (Directory.Exists(IO.ProgramFilesx86 + folder + @"\")) files = IO.GetAllFiles(IO.ProgramFilesx86 + folder + @"\", exeName);
 			if (files.Count == 0)
 			{
-				files = IO.GetAllFiles(IO.ProgramFiles + folder + @"\", exeName);
+				if (Directory.Exists(IO.ProgramFiles + folder + @"\"))  files = IO.GetAllFiles(IO.ProgramFiles + folder + @"\", exeName);
 			}
 
 			// unable to locate application
