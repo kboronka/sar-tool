@@ -56,6 +56,7 @@ namespace sar.Tools
 			                          	new WindowsMapDrive(this),
 			                          	new WindowsRearm(this),
 			                          	new WindowsRestart(this),
+			                          	new WindowsShellReplacement(this),
 			                          	new NetListAdapters(this),
 			                          	new NetSetIP(this),
 			                          	new SkyUpdaterUpdate(this),
