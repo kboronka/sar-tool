@@ -23,7 +23,7 @@
 	set BASEPATH=%~dp0
 
 :Paths
-	set SAR="release\sar\sar.exe"
+	set SAR="release\sar.exe"
 	set ZIP="%PROGRAMFILES%\7-Zip\7zG.exe" a -tzip
 
 	
