@@ -28,7 +28,7 @@ namespace sar.Tools
 
 				string result = "";
 				string stackTrace = ex.StackTrace;
-				string regex = @"(\s*)at\s((.?)*)\sin\s((.?)*):line\s([0-9]*)";
+				string regex = @"(\s*)at\s((.?)*)\sin\s((.?)*):line\s(\d*)";
 				
 				
 				string[] lines = stackTrace.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);

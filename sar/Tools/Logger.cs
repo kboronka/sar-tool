@@ -25,10 +25,6 @@ namespace sar.Tools
 {
 	public partial class Logger : Form
 	{
-		private const string TIMESTAMP = "HH:mm:ss.fff";
-		private const string FILETIMESTAMP = "yyyy-MM-dd";
-		public const string ISO8601_TIMESTAMP = "yyyy-MM-ddTHH:mm:ssZ";
-		
 		private const int MAXLINES = 100;
 		
 		private bool updateFlag;
@@ -55,7 +51,7 @@ namespace sar.Tools
 					
 					this.today = DateTime.Today;
 					
-					string path = this.path.Insert(this.path.LastIndexOf('.'), "." + this.today.ToString(FILETIMESTAMP));
+					string path = this.path.Insert(this.path.LastIndexOf('.'), "." + this.today.ToString(FileLogger.FILETIMESTAMP));
 					string directory = this.path.Substring(0, this.path.LastIndexOf('\\'));
 					
 					if (!Directory.Exists(directory))
@@ -108,7 +104,7 @@ namespace sar.Tools
 		
 		public void WriteLine(string text, DateTime timestamp)
 		{
-			if (this.logTimestamp) text = timestamp.ToString(TIMESTAMP) + "\t" + text;
+			if (this.logTimestamp) text = timestamp.ToString(FileLogger.TIMESTAMP) + "\t" + text;
 			this.WriteLine(text);
 		}
 		

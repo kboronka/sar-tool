@@ -41,11 +41,20 @@ namespace sar.Testing
 			{
 				sar.Tools.ExceptionHandler.Display(ex);
 			}
+			
+			try
+			{
+				throw new ApplicationException("test");
+			}
+			catch (Exception ex)
+			{
+				textBox3.Text = ExceptionHelper.GetStackTrace(ex);
+			}
 		}
 		
 		void LocalSocketClick(object sender, EventArgs e)
 		{
-			LocalSocket frm = new LocalSocket();
+			var frm = new LocalSocket();
 			frm.ShowDialog(this);
 			frm.Dispose();
 			
@@ -53,7 +62,7 @@ namespace sar.Testing
 		
 		void RemoteSocketClick(object sender, EventArgs e)
 		{
-			RemoteSocket frm = new RemoteSocket();
+			var frm = new RemoteSocket();
 			frm.ShowDialog(this);
 		}
 		
@@ -74,7 +83,7 @@ namespace sar.Testing
 		{
 			try
 			{
-				S7.Adapter siemensS7 = new S7.Adapter("10.242.217.122");
+				var siemensS7 = new S7.Adapter("10.242.217.122");
 				
 				byte[] data = siemensS7.ReadBytes("MW6600", 220);
 				//textBox1.Text = "MW6000 = " + siemensS7.ReadINT("MW6000").ToString();

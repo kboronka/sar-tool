@@ -22,10 +22,10 @@ namespace sar.Tools
 {
 	public class FileLogger
 	{
-		private const string DATETIMESTAMP = "yyyy/MM/dd HH:mm:ss.fff";
-		private const string TIMESTAMP = "HH:mm:ss.fff";
-		private const string FILETIMESTAMP = "yyyy-MM-dd";
-		public const string ISO8601_TIMESTAMP = "yyyy-MM-ddTHH:mm:ssZ";
+		public const string DATETIMESTAMP = "yyyy/MM/dd HH:mm:ss.fff";
+		public const string TIMESTAMP = "HH:mm:ss.fff";
+		public const string FILETIMESTAMP = "yyyy-MM-dd";
+		public const string ISO8601_TIMESTAMP = "yyyy-MM-ddTHH:mm:ss.SSSZ";
 		
 		private string root;
 		private string filename;
