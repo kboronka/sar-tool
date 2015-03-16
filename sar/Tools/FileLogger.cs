@@ -25,7 +25,7 @@ namespace sar.Tools
 		public const string DATETIMESTAMP = "yyyy/MM/dd HH:mm:ss.fff";
 		public const string TIMESTAMP = "HH:mm:ss.fff";
 		public const string FILETIMESTAMP = "yyyy-MM-dd";
-		public const string ISO8601_TIMESTAMP = "yyyy-MM-ddTHH:mm:ss.SSSZ";
+		public const string ISO8601_TIMESTAMP = "yyyy-MM-ddTHH:mm:ss.fff";
 		
 		private string root;
 		private string filename;
