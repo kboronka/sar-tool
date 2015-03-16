@@ -12,12 +12,13 @@
 :DownloadLink
 	:: GoogleCode: https://code.google.com/p/sar-tool/downloads/list
 	:: SourceForge: http://sourceforge.net/projects/sartool/files/
+	:: GitHub: https://github.com/kboronka/sar-tool/trunk
 
 :BuildEnvironment
 	@echo off
 	pushd "%~dp0"
 	set SOLUTION=sar.sln
-	set REPO=https://sar-tool.googlecode.com/svn
+	set REPO=https://github.com/kboronka/sar-tool
 	set CONFIG=Release
 	set BASEPATH=%~dp0
 
