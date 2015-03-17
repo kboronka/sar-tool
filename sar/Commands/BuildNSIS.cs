@@ -44,7 +44,7 @@ namespace sar.Commands
 			Progress.Message = "Searching";
 			string filepath = IO.FindFile(args[1]);
 			string filename = IO.GetFilename(filepath);
-			string exePath = IO.FindApplication("makensis.exe");
+			string exePath = IO.FindApplication("makensis.exe", "NSIS");
 			Encoding originalEncoding = IO.ReadEncoding(filepath);
 			IO.Encode(filepath, Encoding.ASCII);
 			
