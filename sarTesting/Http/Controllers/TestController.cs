@@ -34,15 +34,37 @@ namespace sar_testing.Http
 		
 		public static HttpContent UpdateTable(HttpRequest request)
 		{
-			var json = new Dictionary<string, string>();
+			var json = new Dictionary<string, object>();
 			
 			string[] row1 = { "blabla", HttpHelper.LabelSuccess("passed"), Guid.NewGuid().ToString(), "booo" };
 			string[] row2 = { "blabla", HttpHelper.LabelDanger("failed"), Guid.NewGuid().ToString(), "booo" };
 			string[] row3 = { "blabla", HttpHelper.LabelDefault("whatever"), Guid.NewGuid().ToString(), "booo" };
-			                         	
+			
 			string[][] table = { row1, row2, row3 };
 			
 			json.Add("testTabelData", table.ToHTML());
+			return new HttpContent(json);
+		}
+		
+		public static HttpContent Data(HttpRequest request)
+		{
+			var json = new List<Dictionary<string, object>>();
+			int alternate = 1;
+			
+			var rand = new Random();
+			rand.Next(100,220);
+			
+			int offset = rand.Next(100,220);
+			
+			for (int columnNumber=1; columnNumber<=10; columnNumber++)
+			{
+				if (alternate > 2) alternate = 1;
+				var labelJSON = new Dictionary<string, object>();
+				labelJSON.Add("col1", columnNumber + offset);
+				labelJSON.Add("col2", alternate++);
+				json.Add(labelJSON);
+			}
+			
 			return new HttpContent(json);
 		}
 	}

@@ -278,13 +278,20 @@ namespace sar.Http
 			this.content = Encoding.ASCII.GetBytes(content);
 		}
 		
-		public HttpContent(Dictionary<string, string> json)
+		public HttpContent(Dictionary<string, object> json)
 		{
 			this.baseContent = new Dictionary<string, HttpContent>();
 			this.contentType = "text/plain";
 			this.content = Encoding.ASCII.GetBytes(json.ToJSON());
 		}
 		
+		public HttpContent(List<Dictionary<string, object>> json)
+		{
+			this.baseContent = new Dictionary<string, HttpContent>();
+			this.contentType = "text/plain";
+			this.content = Encoding.ASCII.GetBytes(json.ToJSON());
+		}
+
 		public HttpContent(string content, string contentType)
 		{
 			this.baseContent = new Dictionary<string, HttpContent>();

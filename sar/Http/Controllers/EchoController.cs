@@ -34,7 +34,7 @@ namespace sar.Http
 		{
 			try
 			{
-				Dictionary<string, string> result = new Dictionary<string, string>();
+				var result = new Dictionary<string, object>();
 				result.Add("request", Encoding.ASCII.GetString(request.Data));
 				result.Add("guid", Guid.NewGuid().ToString());
 				result.Add("html", @"<h1 class=""page-header"">" + request.Data + @"</h1><br/>" );

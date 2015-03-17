@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace sar.Tools
@@ -627,7 +628,7 @@ namespace sar.Tools
 				html += @"<tr>";
 				foreach(string col in row)
 				{
-					html += @"<td>" + col + @"</td>";	
+					html += @"<td>" + col + @"</td>";
 				}
 				
 				html += @"</tr>";
@@ -636,7 +637,23 @@ namespace sar.Tools
 			return html;
 		}
 		
-		public static string ToJSON(this Dictionary<string, string> obj)
+		public static string ToJSON(this List<Dictionary<string, object>> obj)
+		{
+			string JSON = "[";
+			string delimitor = "";
+			
+			foreach (Dictionary<string, object> dictionary in obj)
+			{
+				JSON += delimitor;
+				JSON += dictionary.ToJSON();
+				delimitor = ", \n";
+			}
+			
+			JSON += "]";
+			return JSON;
+		}
+
+		public static string ToJSON(this Dictionary<string, object> obj)
 		{
 			string JSON = "{";
 			string delimitor = "";
@@ -644,25 +661,41 @@ namespace sar.Tools
 			
 			foreach (string key in obj.Keys)
 			{
-				string data = obj[key];
+				string data = "error";
 				
-				// escape quotes, and solidus
-				data = Regex.Replace(data, @"([\""\/])", @"\$1");
+				if (obj[key] is String)
+				{
+					data = ((string)obj[key]).ToJSON();
+				}
+				else if (obj[key] is int)
+				{
+					data = ((int)obj[key]).ToString();
+				}
 				
-				// escape other control-characters
-				data = Regex.Replace(data, @"[\n]", @"\n");
-				data = Regex.Replace(data, @"[\r]", @"\r");
-				data = Regex.Replace(data, @"[\t]", @"\t");
-				data = Regex.Replace(data, @"[\b]", @"\b");
-				data = Regex.Replace(data, @"[\f]", @"\f");
-				
-				JSON += delimitor + @"""" + key + @""":""" + data + @"""";
+				JSON += delimitor + @"""" + key + @""":" + data ;
 				delimitor = ", \n";
 			}
 			
 			JSON += "}";
 			
 			return JSON;
+		}
+		
+		public static string ToJSON(this string obj)
+		{
+			string data = obj;
+			
+			// escape quotes, and solidus
+			data = Regex.Replace(data, @"([\""\/])", @"\$1");
+			
+			// escape other control-characters
+			data = Regex.Replace(data, @"[\n]", @"\n");
+			data = Regex.Replace(data, @"[\r]", @"\r");
+			data = Regex.Replace(data, @"[\t]", @"\t");
+			data = Regex.Replace(data, @"[\b]", @"\b");
+			data = Regex.Replace(data, @"[\f]", @"\f");
+			data = @"""" + data + @"""";
+			return data;
 		}
 	}
 }
