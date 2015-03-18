@@ -28,13 +28,28 @@ namespace sar.Http
 		{
 			Exception inner = ExceptionHelper.GetInner(ex);
 			
-			Dictionary<string, HttpContent> baseContent = new Dictionary<string, HttpContent>() {};
+			var baseContent = new Dictionary<string, HttpContent>() {};
 			baseContent.Add("Title", new HttpContent(status.ToString()));
 			baseContent.Add("ResponceCode", new HttpContent(((int)status).ToString()));
 			baseContent.Add("ExceptionType", new HttpContent(inner.GetType().ToString()));
 			baseContent.Add("RequestURL", new HttpContent(request.FullUrl));
 			baseContent.Add("ExceptionMessage", new HttpContent(inner.Message));
-			baseContent.Add("ExceptionStackTrace", new HttpContent(ExceptionHelper.GetStackTrace(ex).ToHTML()));
+			
+			string stackTrace = "";
+			
+			if (inner != ex)
+			{
+				stackTrace += "Outer:" + Environment.NewLine + ExceptionHelper.GetStackTrace(ex);
+				stackTrace += Environment.NewLine;
+				stackTrace += "Inner:" + Environment.NewLine + ExceptionHelper.GetStackTrace(inner);
+			}
+			else
+			{
+				stackTrace += ExceptionHelper.GetStackTrace(ex);
+			}
+			
+			
+			baseContent.Add("ExceptionStackTrace", new HttpContent(stackTrace.ToHTML()));
 			lastException = baseContent;
 			
 			return HttpContent.Read("sar.Http.Views.Error.Display.html", baseContent);
