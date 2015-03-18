@@ -675,6 +675,10 @@ namespace sar.Tools
 				{
 					data = ((DateTime)obj[key]).ToJSON();
 				}				
+				else if (obj[key] is bool)
+				{
+					data = ((bool)obj[key]).ToJSON();
+				}			
 				
 				JSON += delimitor + @"""" + key + @""":" + data ;
 				delimitor = ", \n";
@@ -709,8 +713,13 @@ namespace sar.Tools
 
 		public static string ToJSON(this DateTime obj)
 		{
-			return obj.ToString(FileLogger.ISO8601_TIMESTAMP + "Z");
+			return @"""" + obj.ToString(FileLogger.DATETIMESTAMP) + @"""";
 		}
+		
+		public static string ToJSON(this bool obj)
+		{
+			return obj ? @"true" : @"false";
+		}		
 		
 	}
 }
