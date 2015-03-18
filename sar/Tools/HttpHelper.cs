@@ -673,7 +673,7 @@ namespace sar.Tools
 				}
 				else if (obj[key] is DateTime)
 				{
-					data = ((int)obj[key]).ToJSON();
+					data = ((DateTime)obj[key]).ToJSON();
 				}				
 				
 				JSON += delimitor + @"""" + key + @""":" + data ;
