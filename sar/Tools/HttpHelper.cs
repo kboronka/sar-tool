@@ -147,7 +147,7 @@ namespace sar.Tools
 				{".dxr", "application/x-director"},
 				{".eml", "message/rfc822"},
 				{".emz", "application/octet-stream"},
-				{".eot", "application/octet-stream"},
+				{".eot", "application/vnd.ms-fontobject"},
 				{".eps", "application/postscript"},
 				{".etl", "application/etl"},
 				{".etx", "text/x-setext"},
@@ -586,6 +586,9 @@ namespace sar.Tools
 				{".xwd", "image/x-xwindowdump"},
 				{".z", "application/x-compress"},
 				{".zip", "application/x-zip-compressed"},
+				{".svg", "image/svg+xml"},
+				{".woff", "application/font-woff"},
+				{".woff2", "application/font-woff2"}
 				#endregion
 			};
 			
