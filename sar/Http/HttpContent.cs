@@ -46,15 +46,15 @@ namespace sar.Http
 
 		public static HttpContent Read(HttpServer server, string request)
 		{
-			string filePath = server.Root + request.Replace(@"/", @"\");
+			string filePath = server.Root + @"\" + request.Replace(@"/", @"\");
 			
 			if (File.Exists(filePath))
 			{
 				return HttpContent.Read(filePath);
 			}
-			else if (EmbeddedResource.Contains(request.Substring(1)))
+			else if (EmbeddedResource.Contains(request))
 			{
-				return HttpContent.Read(request.Substring(1));
+				return HttpContent.Read(request);
 			}
 			else if (filePath.EndsWith("favicon.ico") && server.FavIcon.IsNotNull() && filePath != server.FavIcon)
 			{

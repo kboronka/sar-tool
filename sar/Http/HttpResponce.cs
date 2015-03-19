@@ -56,15 +56,18 @@ namespace sar.Http
 			
 			try
 			{
-				if (this.request.FullUrl == @"/" && HttpController.Primary != null && HttpController.Primary.PrimaryAction != null)
+				if (this.request.Path == @"")
 				{
+					if (HttpController.Primary == null) throw new ApplicationException("Primary Controller Not Defined");
+					if (HttpController.Primary.PrimaryAction == null) throw new ApplicationException("Primary Action Not Defined");
+	
 					this.content = HttpController.RequestPrimary(this.request);
 				}
-				else if (this.request.FullUrl.StartsWith(@"/ToPDF", StringComparison.CurrentCulture))
+				else if (this.request.Path.StartsWith(@"/ToPDF", StringComparison.CurrentCulture))
 				{
 					this.content = HttpContent.GetPDF("http://localhost:" + request.Server.Port.ToString() + this.request.FullUrl.Substring(@"/ToPDF".Length));
 				}
-				else if (this.request.FullUrl.ToLower() == @"/info")
+				else if (this.request.Path.ToLower() == @"/info")
 				{
 					this.content = GetInfo();
 				}
@@ -74,7 +77,7 @@ namespace sar.Http
 				}
 				else
 				{
-					this.content = HttpContent.Read(this.request.Server, this.request.FullUrl);
+					this.content = HttpContent.Read(this.request.Server, this.request.Path);
 				}
 				
 				if (this.content is HttpErrorContent)

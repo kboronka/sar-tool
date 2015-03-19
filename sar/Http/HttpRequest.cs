@@ -137,7 +137,7 @@ namespace sar.Http
 		private void ServiceRequest()
 		{
 			// Read and parse request
-			byte[] buffer = new byte[0] {};
+			var buffer = new byte[0] {};
 			// TODO: add request timeout
 			while (!incomingLoopShutdown && !incomingRequestRecived)
 			{
@@ -166,7 +166,7 @@ namespace sar.Http
 				}
 			}
 			
-			HttpResponce responce = new HttpResponce(this, socket);
+			var responce = new HttpResponce(this, socket);
 			
 			lock (socket)
 			{
