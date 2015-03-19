@@ -22,7 +22,6 @@ namespace sar.Tools
 {
 	public static class HttpHelper
 	{
-
 		public static string GetMimeType(string extension)
 		{
 			IDictionary<string, string> mimeTypes = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) {
@@ -681,7 +680,15 @@ namespace sar.Tools
 				else if (obj[key] is bool)
 				{
 					data = ((bool)obj[key]).ToJSON();
-				}			
+				}
+				else if (obj[key] is Dictionary<string, object>)
+				{
+					data = ((Dictionary<string, object>)obj[key]).ToJSON();
+				}
+				else if (obj[key] is List<Dictionary<string, object>>)
+				{
+					data = ((List<Dictionary<string, object>>)obj[key]).ToJSON();
+				}
 				
 				JSON += delimitor + @"""" + key + @""":" + data ;
 				delimitor = ", \n";
