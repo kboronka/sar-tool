@@ -65,7 +65,7 @@ namespace sar.Http
 				}
 				else if (this.request.Path.ToLower().EndsWith(@"-pdf", StringComparison.CurrentCulture))
 				{
-					string url = "http://localhost:" + request.Server.Port.ToString() + this.request.FullUrl.Substring(0, @"-pdf".Length);
+					string url = "http://localhost:" + request.Server.Port.ToString() + this.request.FullUrl;
 					
 					url = url.Replace(this.request.Path, StringHelper.TrimEnd(this.request.Path, 4));
 						
