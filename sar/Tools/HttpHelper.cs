@@ -729,7 +729,7 @@ namespace sar.Tools
 			{
 				JSON += delimitor;
 				JSON += obj.ToJSON();
-				delimitor = ", \n";
+				delimitor = ", ";
 			}
 			
 			JSON += "]";
@@ -745,7 +745,7 @@ namespace sar.Tools
 			{
 				JSON += delimitor;
 				JSON += obj.ToJSON();
-				delimitor = ", \n";
+				delimitor = ", ";
 			}
 			
 			JSON += "]";
@@ -761,7 +761,7 @@ namespace sar.Tools
 			{
 				JSON += delimitor;
 				JSON += obj.ToJSON();
-				delimitor = ", \n";
+				delimitor = ", ";
 			}
 			
 			JSON += "]";
