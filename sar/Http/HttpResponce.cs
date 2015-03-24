@@ -73,7 +73,7 @@ namespace sar.Http
 				}
 				else if (this.request.Path.ToLower() == @"info")
 				{
-					this.content = GetInfo();
+					this.content = HttpController.RequestAction("Debug", "Info", this.request);
 				}
 				else if (HttpController.ActionExists(this.request))
 				{
@@ -104,24 +104,6 @@ namespace sar.Http
 				this.content = ErrorController.Display(this.request, ex, HttpStatusCode.SERVERERROR);
 				this.bytes = this.ConstructResponce(HttpStatusCode.SERVERERROR);
 			}
-		}
-		
-		private HttpContent GetInfo()
-		{
-			// Construct responce
-			string responce = "";
-			responce += "<html><body><h1>test server</h1>" + "<br>\n";
-			responce += "Method: " + request.Method.ToString() + "<br>\n";
-			responce += "URL: " + request.FullUrl + "<br>\n";
-			responce += "Version: " + request.ProtocolVersion + "<br>\n";
-			responce += "<form method=post action=/form>" + "<br>\n";
-			responce += "<input type=text name=foo value=foovalue>" + "<br>\n";
-			responce += "<input type=submit name=bar value=barvalue>" + "<br>\n";
-			responce += "</form>" + "\n";
-			responce += "</html>" + "\n";
-			responce += "\r\n";
-
-			return new HttpContent(responce);
 		}
 		
 		private byte[] ConstructResponce(HttpStatusCode status)

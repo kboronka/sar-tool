@@ -70,20 +70,6 @@ namespace sar.Http
 			}
 		}
 		
-		public static HttpContent View(string controller, string view)
-		{
-			return View(controller, view, new Dictionary<string, HttpContent>() {});
-		}
-		
-		public static HttpContent View(string controller, string view, Dictionary<string, HttpContent> baseContent)
-		{
-			string controllerFullName = HttpController.GetController(controller).FullName;
-			
-			string fileName = Regex.Replace(controllerFullName, @"\." + controller + "Controller", @".Views." + controller + "." + view);
-
-			return Read(fileName, baseContent);
-		}
-		
 		public static HttpContent Read(string filePath)
 		{
 			return Read(filePath, new Dictionary<string, HttpContent>() {});

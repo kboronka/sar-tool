@@ -1,0 +1,22 @@
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Header Info</title>
+
+	<!-- Bootstrap -->
+	<link href="/sar/Http/libs/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+	<div class="container">
+		<h3>Header Info</h3>
+		<pre class="log"><%@ Content:Header %></pre>
+	</div>
+</body>
+	<script type="text/javascript">
+		var req = new XMLHttpRequest();
+		req.open('GET', document.location, false);
+		req.send(null);
+		var headers = req.getAllResponseHeaders().toLowerCase();
+		//alert(headers);
+	</script>
+</html>

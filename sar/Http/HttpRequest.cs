@@ -14,11 +14,7 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -39,6 +35,7 @@ namespace sar.Http
 
 		private HttpMethod method;
 		
+		private string requestText;
 		private string fullUrl;
 		private string path;
 		private string query;
@@ -89,7 +86,7 @@ namespace sar.Http
 		{
 			get { return parent; }
 		}
-		
+				
 		#endregion
 		
 		#region constructor
@@ -227,6 +224,8 @@ namespace sar.Http
 		
 		private void ProcessIncomingBuffer(ref byte[] bufferIn)
 		{
+			requestText += StringHelper.GetString(bufferIn);
+		
 			ReadRequest(ref bufferIn);
 			if (!headerRecived) return;
 			
@@ -346,5 +345,9 @@ namespace sar.Http
 		
 		#endregion
 		
+		public override string ToString()
+		{
+			return this.requestText;
+		} 
 	}
 }

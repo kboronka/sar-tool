@@ -69,12 +69,6 @@ namespace sar.Http
 			return true;
 		}
 		
-		public static HttpController GetController(string controller)
-		{
-			if (!controllers.ContainsKey(controller)) throw new FileNotFoundException("controller " + @"""" + controller + @"""" + " not found");
-			return controllers[controller];
-		}
-		
 		public static HttpContent RequestPrimary(HttpRequest request)
 		{
 			object contentObject = HttpController.primary.primaryAction.Invoke(null, new object[] { request });
@@ -87,6 +81,11 @@ namespace sar.Http
 			string controllerName = urlSplit[0];
 			string actionName = urlSplit[1];
 			
+			return RequestAction(controllerName, actionName, request);
+		}
+
+		public static HttpContent RequestAction(string controllerName, string actionName, HttpRequest request)
+		{
 			if (!controllers.ContainsKey(controllerName)) throw new FileNotFoundException("controller " + @"""" + controllerName + @"""" + " not found");
 			HttpController controller = controllers[controllerName];
 			
