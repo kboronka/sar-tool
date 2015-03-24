@@ -644,9 +644,17 @@ namespace sar.Tools
 			{
 				return ((string)value).ToJSON();
 			}
+			else if (value is string[])
+			{
+				return ((string[])value).ToJSON();
+			}
 			else if (value is int)
 			{
 				return ((int)value).ToJSON();
+			}
+			else if (value is int[])
+			{
+				return ((int[])value).ToJSON();
 			}
 			else if (value is double)
 			{
@@ -655,7 +663,7 @@ namespace sar.Tools
 			else if (value is double[])
 			{
 				return ((double[])value).ToJSON();
-			}						
+			}
 			else if (value is DateTime)
 			{
 				return ((DateTime)value).ToJSON();
@@ -664,9 +672,9 @@ namespace sar.Tools
 			{
 				return ((bool)value).ToJSON();
 			}
-			else if (value is int[])
+			else if (value is bool[])
 			{
-				return ((int[])value).ToJSON();
+				return ((bool[])value).ToJSON();
 			}
 			else if (value is Dictionary<string, object>)
 			{
@@ -710,9 +718,41 @@ namespace sar.Tools
 			
 			JSON += "]";
 			return JSON;
-		}		
+		}
 		
 		public static string ToJSON(this object[] objs)
+		{
+			string JSON = "[";
+			string delimitor = "";
+			
+			foreach (var obj in objs)
+			{
+				JSON += delimitor;
+				JSON += obj.ToJSON();
+				delimitor = ", \n";
+			}
+			
+			JSON += "]";
+			return JSON;
+		}
+		
+		public static string ToJSON(this string[] objs)
+		{
+			string JSON = "[";
+			string delimitor = "";
+			
+			foreach (var obj in objs)
+			{
+				JSON += delimitor;
+				JSON += obj.ToJSON();
+				delimitor = ", \n";
+			}
+			
+			JSON += "]";
+			return JSON;
+		}
+		
+		public static string ToJSON(this bool[] objs)
 		{
 			string JSON = "[";
 			string delimitor = "";
