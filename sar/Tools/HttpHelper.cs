@@ -621,7 +621,6 @@ namespace sar.Tools
 			return  @"<span class=""label label-danger"">" + content + "</span>";
 		}
 		
-		
 		public static string ToHTML(this string[][] tableArray)
 		{
 			string html = "";
@@ -639,6 +638,96 @@ namespace sar.Tools
 			return html;
 		}
 		
+		private static string ToJSON(this object value)
+		{
+			if (value is String)
+			{
+				return ((string)value).ToJSON();
+			}
+			else if (value is int)
+			{
+				return ((int)value).ToJSON();
+			}
+			else if (value is double)
+			{
+				return ((double)value).ToJSON();
+			}
+			else if (value is double[])
+			{
+				return ((double[])value).ToJSON();
+			}						
+			else if (value is DateTime)
+			{
+				return ((DateTime)value).ToJSON();
+			}
+			else if (value is bool)
+			{
+				return ((bool)value).ToJSON();
+			}
+			else if (value is int[])
+			{
+				return ((int[])value).ToJSON();
+			}
+			else if (value is Dictionary<string, object>)
+			{
+				return ((Dictionary<string, object>)value).ToJSON();
+			}
+			else if (value is List<Dictionary<string, object>>)
+			{
+				return ((List<Dictionary<string, object>>)value).ToJSON();
+			}
+
+			return "unknown";
+		}
+
+		public static string ToJSON(this int[] objs)
+		{
+			string JSON = "[";
+			string delimitor = "";
+			
+			foreach (var obj in objs)
+			{
+				JSON += delimitor;
+				JSON += obj.ToJSON();
+				delimitor = ", ";
+			}
+			
+			JSON += "]";
+			return JSON;
+		}
+		
+		public static string ToJSON(this double[] objs)
+		{
+			string JSON = "[";
+			string delimitor = "";
+			
+			foreach (var obj in objs)
+			{
+				JSON += delimitor;
+				JSON += obj.ToJSON();
+				delimitor = ", ";
+			}
+			
+			JSON += "]";
+			return JSON;
+		}		
+		
+		public static string ToJSON(this object[] objs)
+		{
+			string JSON = "[";
+			string delimitor = "";
+			
+			foreach (var obj in objs)
+			{
+				JSON += delimitor;
+				JSON += obj.ToJSON();
+				delimitor = ", \n";
+			}
+			
+			JSON += "]";
+			return JSON;
+		}
+
 		public static string ToJSON(this List<Dictionary<string, object>> obj)
 		{
 			string JSON = "[";
@@ -660,37 +749,10 @@ namespace sar.Tools
 			string JSON = "{";
 			string delimitor = "";
 			
-			
 			foreach (string key in obj.Keys)
 			{
-				string data = "error";
-				
-				if (obj[key] is String)
-				{
-					data = ((string)obj[key]).ToJSON();
-				}
-				else if (obj[key] is int)
-				{
-					data = ((int)obj[key]).ToJSON();
-				}
-				else if (obj[key] is DateTime)
-				{
-					data = ((DateTime)obj[key]).ToJSON();
-				}				
-				else if (obj[key] is bool)
-				{
-					data = ((bool)obj[key]).ToJSON();
-				}
-				else if (obj[key] is Dictionary<string, object>)
-				{
-					data = ((Dictionary<string, object>)obj[key]).ToJSON();
-				}
-				else if (obj[key] is List<Dictionary<string, object>>)
-				{
-					data = ((List<Dictionary<string, object>>)obj[key]).ToJSON();
-				}
-				
-				JSON += delimitor + @"""" + key + @""":" + data ;
+				JSON += delimitor;
+				JSON += @"""" + key + @""":" + obj[key].ToJSON() ;
 				delimitor = ", \n";
 			}
 			
@@ -721,6 +783,11 @@ namespace sar.Tools
 			return obj.ToString();
 		}
 
+		public static string ToJSON(this double obj)
+		{
+			return obj.ToString();
+		}
+
 		public static string ToJSON(this DateTime obj)
 		{
 			return @"""" + obj.ToString(FileLogger.DATETIMESTAMP) + @"""";
@@ -729,7 +796,7 @@ namespace sar.Tools
 		public static string ToJSON(this bool obj)
 		{
 			return obj ? @"true" : @"false";
-		}		
+		}
 		
 	}
 }

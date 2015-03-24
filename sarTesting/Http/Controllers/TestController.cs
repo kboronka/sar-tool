@@ -67,5 +67,13 @@ namespace sar_testing.Http
 			
 			return new HttpContent(json);
 		}
+		
+		public static HttpContent GetIntArrayJSON(HttpRequest request)
+		{
+			var json = new Dictionary<string, object>();
+			json.Add("data", new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 });
+			
+			return new HttpContent(json);
+		}
 	}
 }
