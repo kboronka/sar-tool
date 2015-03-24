@@ -63,11 +63,15 @@ namespace sar.Http
 	
 					this.content = HttpController.RequestPrimary(this.request);
 				}
-				else if (this.request.Path.StartsWith(@"/ToPDF", StringComparison.CurrentCulture))
+				else if (this.request.Path.ToLower().EndsWith(@"-pdf", StringComparison.CurrentCulture))
 				{
-					this.content = HttpContent.GetPDF("http://localhost:" + request.Server.Port.ToString() + this.request.FullUrl.Substring(@"/ToPDF".Length));
+					string url = "http://localhost:" + request.Server.Port.ToString() + this.request.FullUrl.Substring(0, @"-pdf".Length);
+					
+					url = url.Replace(this.request.Path, StringHelper.TrimEnd(this.request.Path, 4));
+						
+					this.content = HttpContent.GetPDF(url);
 				}
-				else if (this.request.Path.ToLower() == @"/info")
+				else if (this.request.Path.ToLower() == @"info")
 				{
 					this.content = GetInfo();
 				}
