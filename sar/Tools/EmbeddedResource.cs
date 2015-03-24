@@ -35,7 +35,7 @@ namespace sar.Tools
 			}
 			else
 			{
-				EmbeddedResource embeddedResource = new EmbeddedResource(resource);
+				var embeddedResource = new EmbeddedResource(resource);
 				embeddedResources.Add(resource, embeddedResource);
 
 				return embeddedResource;
@@ -84,7 +84,7 @@ namespace sar.Tools
 		
 		public static List<string> GetAllResources()
 		{
-			List<string> keys = new List<string>();
+			var keys = new List<string>();
 			foreach(string key in EmbeddedFiles.Keys)
 			{
 				keys.Add(key);
