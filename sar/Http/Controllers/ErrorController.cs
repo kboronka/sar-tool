@@ -39,15 +39,18 @@ namespace sar.Http
 			
 			if (inner != ex)
 			{
-				stackTrace += "Outer:" + Environment.NewLine + ExceptionHelper.GetStackTrace(ex);
+				stackTrace += "<span><strong>Outer:</strong><br>";
+				stackTrace += "<cite>" + ExceptionHelper.GetStackTrace(ex) + "</cite></span>";
 				stackTrace += Environment.NewLine;
-				stackTrace += "Inner:" + Environment.NewLine + ExceptionHelper.GetStackTrace(inner);
+				stackTrace += "<span><strong>Inner:</strong><br>";
+				stackTrace += "<cite>" + ExceptionHelper.GetStackTrace(inner) + "</cite></span>";
 			}
 			else
 			{
-				stackTrace += ExceptionHelper.GetStackTrace(ex);
+				stackTrace += "<cite>" + ExceptionHelper.GetStackTrace(ex) + "</cite>";
 			}
 			
+			stackTrace = stackTrace.Replace("\t", "");
 			
 			baseContent.Add("ExceptionStackTrace", new HttpContent(stackTrace.ToHTML()));
 			lastException = baseContent;

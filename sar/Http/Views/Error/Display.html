@@ -13,21 +13,45 @@
 				background-color: #f1f1f1;
 				margin: 0;
 				font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-				line-height: 2px;
 			}
 			
 			.container { margin: 50px auto 40px auto; width: 600px; text-align: left; }
 			
-			h1 { width: 800px; position:relative; left: -20px; letter-spacing: -1px; line-height: 60px; font-size: 60px; font-weight: 100; margin: 0px 0 50px 0; text-shadow: 0 1px 0 #fff; }
-			p { color: rgba(0, 0, 0, 0.5); margin: 20px 0; line-height: 1.1; }
+			h1 {
+				width: 800px;
+				position:relative;
+				left: -20px;
+				letter-spacing: -1px;
+				line-height: 60px;
+				font-size: 60px;
+				font-weight: 100;
+				margin: 0px 0 15px 0;
+				text-shadow: 0 1px 0 #fff;
+			}
+
+			h2 {
+			    margin-bottom: 5px;
+			    margin-top: 5px;
+			}
+			
+			cite {
+				color: rgba(0, 0, 0, 0.5);
+				margin-left: 20px;
+				line-height: 1.1;
+				display: block;
+			}
+			
+			span{
+				display: table;
+			}
 		</style>
 	</head>
 	<body>
 		<div class="container">
 			<h1><%@ Content:ResponceCode %> : <%@ Content:Title %></h1>
 			<h2><%@ Content:ExceptionType %></h2>
-			<h3><strong>Request: </strong><%@ Content:RequestURL %></h3>
-			<h3><strong>Error: </strong><%@ Content:ExceptionMessage %></h3>
+			<span><strong>Request: </strong><%@ Content:RequestURL %></span>
+			<span><strong>Error: </strong><%@ Content:ExceptionMessage %></span>
 			<p><%@ Content:ExceptionStackTrace %></p>
 		</div>
 	</body>
