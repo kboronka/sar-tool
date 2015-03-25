@@ -14,18 +14,14 @@
  */
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Security;
 using System.Xml;
 
 namespace sar.Tools
 {
-	public class XML
+	public static class XML
 	{
 		public const string DATE = "yyyy-MM-dd";
 		public const string DATETIME = "yyyy-MM-dd HH:mm:ss";
@@ -71,9 +67,7 @@ namespace sar.Tools
 				try
 				{
 					string attributeValue = this.reader.GetAttribute(name);
-					if (String.IsNullOrEmpty(attributeValue)) return "";
-					
-					return this.reader.GetAttribute(name);
+					return (String.IsNullOrEmpty(attributeValue)) ? "" : this.reader.GetAttribute(name);
 				}
 				catch
 				{
@@ -203,7 +197,7 @@ namespace sar.Tools
 			{
 				get
 				{
-					XmlReaderSettings settings = new XmlReaderSettings();
+					var settings = new XmlReaderSettings();
 					settings.CloseInput = true;
 					settings.IgnoreComments = true;
 					settings.IgnoreProcessingInstructions = true;
@@ -326,7 +320,7 @@ namespace sar.Tools
 			{
 				get
 				{
-					XmlWriterSettings settings = new XmlWriterSettings();
+					var settings = new XmlWriterSettings();
 					settings.CloseOutput = true;
 					settings.Encoding = Encoding.UTF8;
 					settings.Indent = true;
