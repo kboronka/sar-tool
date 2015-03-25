@@ -14,7 +14,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.IO;
@@ -113,7 +112,7 @@ namespace sar.S7Siemens
 			if (bytes > 220) throw new IndexOutOfRangeException("max bytes = 220");
 			if (bytes < 1) throw new IndexOutOfRangeException("min bytes = 1");
 			
-			Address s7address = new Address(address);	
+			var s7address = new Address(address);	
 			s7address.byteLength = bytes;
 			
 			// send read request message
@@ -137,7 +136,7 @@ namespace sar.S7Siemens
 		
 		private byte[] ReadWriteMessage(Action action, Areas addressArea, ushort dataBlock, uint startAddress, ushort length, TransportType transportType)
 		{
-			byte[] message = new byte[] {(byte)action, 0x1};
+			var message = new byte[] {(byte)action, 0x1};
 			
 			// item helder
 			message = IO.Combine(message, new byte[] { 0x12, 0x0A, 0x10 });
@@ -171,7 +170,7 @@ namespace sar.S7Siemens
 			if (parameterCode.Length < 8) throw new InvalidDataException("incorred parameter code size");
 			if (parameterValue.Length > 32) throw new InvalidDataException("parameter value too large");
 
-			Action action = (Action)parameterCode[0];
+			var action = (Action)parameterCode[0];
 			ushort sequenceNumber = 0;
 			byte writeSize = 0;
 			
@@ -267,7 +266,7 @@ namespace sar.S7Siemens
 			
 			// parameters
 			byte[] parameters = IO.SubSet(message, 7+12, paramLength);
-			Action action = (Action)parameters[0];
+			var action = (Action)parameters[0];
 			int itemsToRead = parameters[1];
 			
 			// extract data
