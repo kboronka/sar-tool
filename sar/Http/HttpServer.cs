@@ -128,7 +128,8 @@ namespace sar.Http
 		{
 			try
 			{
-				while (reader.Read())
+				string elementName = reader.Name;
+				while (reader.Read() && (reader.NodeType != XmlNodeType.EndElement || reader.Name != elementName))
 				{
 					if (reader.NodeType == XmlNodeType.Element)
 					{
