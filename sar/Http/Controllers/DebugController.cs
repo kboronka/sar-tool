@@ -39,14 +39,14 @@ namespace sar.Http
 			baseContent.Add("Version", new HttpContent(request.ProtocolVersion));
 			baseContent.Add("Data", new HttpContent(data));
 
-			return HttpContent.Read("sar.Http.Views.Debug.Info.html", baseContent);
+			return HttpContent.Read(request.Server, "sar.Http.Views.Debug.Info.html", baseContent);
 		}
 		
 		public static HttpContent Header(HttpRequest request)
 		{
 			var baseContent = new Dictionary<string, HttpContent>() {};
 			baseContent.Add("Header", new HttpContent(request.ToString()));
-			return HttpContent.Read("sar.Http.Views.Debug.Header.html", baseContent);
+			return HttpContent.Read(request.Server, "sar.Http.Views.Debug.Header.html", baseContent);
 		}		
 	}
 }

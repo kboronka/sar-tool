@@ -26,10 +26,19 @@ namespace sar_testing.Http
 	public static class TestController
 	{
 		[PrimaryView]
+		public static HttpContent Test(HttpRequest request)
+		{
+			return HttpController.RequestAction("Test", "Show", request);
+		}
+		
+		public static HttpContent Index(HttpRequest request)
+		{
+			return HttpContent.Read(request, "index.html");
+		}
+
 		public static HttpContent Show(HttpRequest request)
 		{
-			//return HttpContent.View("Test", "Test.html");
-			return HttpContent.Read("sar_testing.Http.Views.Test.Test.html");
+			return HttpContent.Read(request, "sar_testing.Http.Views.Test.Test.html");
 		}
 		
 		public static HttpContent UpdateTable(HttpRequest request)

@@ -44,25 +44,44 @@ namespace sar.Http
 	{
 		#region static
 
+		public static HttpContent Read(HttpRequest request, string requestView)
+		{
+			return Read(request, requestView, new Dictionary<string, HttpContent>() {});
+		}
+		
+		public static HttpContent Read(HttpRequest request, string requestView, Dictionary<string, HttpContent> baseContent)
+		{
+			return Read(request.Server, requestView, baseContent);
+		}
+
 		public static HttpContent Read(HttpServer server, string request)
 		{
+			return Read(server, request, new Dictionary<string, HttpContent>() {});
+		}
+		
+		public static HttpContent Read(HttpServer server, string request, Dictionary<string, HttpContent> baseContent)
+		{
+			request = request.TrimWhiteSpace();
 			string filePath = server.Root + @"\" + request.Replace(@"/", @"\");
 			
 			if (File.Exists(filePath))
 			{
-				return HttpContent.Read(filePath);
+				return HttpContent.ReadFile(filePath, baseContent);
 			}
 			else if (EmbeddedResource.Contains(request))
 			{
-				return HttpContent.Read(request);
+				return HttpContent.ReadEmbeddedFile(request, baseContent);
 			}
-			else if (filePath.EndsWith("favicon.ico") && server.FavIcon.IsNotNull() && filePath != server.FavIcon)
+			else if (filePath.EndsWith("favicon.ico") &&
+			         server.FavIcon.IsNotNull() &&
+			         filePath != server.FavIcon)
 			{
-				return HttpContent.Read(server.FavIcon);
-			}			
-			else if (filePath.EndsWith("favicon.ico") && EmbeddedResource.Contains("sar.Http.libs.art.favicon.ico"))
+				return HttpContent.ReadFile(server.FavIcon, baseContent);
+			}
+			else if (filePath.EndsWith("favicon.ico") &&
+			         EmbeddedResource.Contains("sar.Http.libs.art.favicon.ico"))
 			{
-				return HttpContent.Read("sar.Http.libs.art.favicon.ico");
+				return HttpContent.ReadEmbeddedFile("sar.Http.libs.art.favicon.ico", baseContent);
 			}
 			else
 			{
@@ -70,26 +89,26 @@ namespace sar.Http
 			}
 		}
 		
-		public static HttpContent Read(string filePath)
+		private static HttpContent Read(string request)
 		{
-			return Read(filePath, new Dictionary<string, HttpContent>() {});
+			return Read(request, new Dictionary<string, HttpContent>() {});
 		}
-		
-		public static HttpContent Read(string filePath, Dictionary<string, HttpContent> baseContent)
+				
+		private static HttpContent Read(string request, Dictionary<string, HttpContent> baseContent)
 		{
-			filePath = StringHelper.TrimWhiteSpace(filePath);
+			request = request.TrimWhiteSpace();
 			
-			if (File.Exists(filePath))
+			if (File.Exists(request))
 			{
-				return ReadFile(filePath, baseContent);
+				return HttpContent.ReadFile(request, baseContent);
 			}
-			else if (EmbeddedResource.Contains(filePath))
+			else if (EmbeddedResource.Contains(request))
 			{
-				return ReadEmbeddedFile(filePath, baseContent);
+				return HttpContent.ReadEmbeddedFile(request, baseContent);
 			}
 			else
 			{
-				throw new FileNotFoundException("did not find " + filePath);
+				throw new FileNotFoundException("did not find " + request);
 			}
 		}
 		
@@ -219,7 +238,7 @@ namespace sar.Http
 				{
 					foreach (Match match in matches)
 					{
-						string key = StringHelper.TrimWhiteSpace(match.Groups[1].Value);
+						string key = match.Groups[1].Value.TrimWhiteSpace();
 						string replacmentContent = HttpContent.Read(key, baseContent).RenderText(baseContent);
 						text = Regex.Replace(text, match.Groups[0].Value, replacmentContent);
 					}
@@ -231,7 +250,7 @@ namespace sar.Http
 				{
 					foreach (Match match in matches)
 					{
-						string key = StringHelper.TrimWhiteSpace(match.Groups[1].Value);
+						string key = match.Groups[1].Value.TrimWhiteSpace();
 						if (baseContent.ContainsKey(key))
 						{
 							HttpContent replacmentContent = baseContent[key];

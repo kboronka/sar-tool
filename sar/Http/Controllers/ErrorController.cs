@@ -55,14 +55,14 @@ namespace sar.Http
 			baseContent.Add("ExceptionStackTrace", new HttpContent(stackTrace.ToHTML()));
 			lastException = baseContent;
 			
-			return HttpContent.Read("sar.Http.Views.Error.Display.html", baseContent);
+			return HttpContent.Read(request.Server, "sar.Http.Views.Error.Display.html", baseContent);
 		}
 		
 		[PrimaryView]
 		public static HttpContent ShowLast(HttpRequest request)
 		{
 			if (lastException == null) throw new ApplicationException("This is the first exception");
-			return HttpContent.Read("sar.Http.Views.Error.Display.html", lastException);
+			return HttpContent.Read(request.Server, "sar.Http.Views.Error.Display.html", lastException);
 		}
 	}
 }

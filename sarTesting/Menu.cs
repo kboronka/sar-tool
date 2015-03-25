@@ -35,15 +35,6 @@ namespace sar.Testing
 			
 			try
 			{
-				string layout = Encoding.ASCII.GetString(HttpContent.Read("sar.Http.libs.layout.css").Render());
-			}
-			catch (Exception ex)
-			{
-				sar.Tools.ExceptionHandler.Display(ex);
-			}
-			
-			try
-			{
 				throw new ApplicationException("test");
 			}
 			catch (Exception ex)
