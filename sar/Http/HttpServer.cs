@@ -59,7 +59,7 @@ namespace sar.Http
 		public HttpServer(int port)
 		{
 			this.port = port;
-			this.root = ApplicationInfo.CommonDataDirectory;
+			this.root = ApplicationInfo.CurrentDirectory + @"\views\";
 			
 			this.Start();
 		}
@@ -75,7 +75,7 @@ namespace sar.Http
 		public HttpServer()
 		{
 			this.port = sar.Socket.SocketHelper.FindAvailablePort(80, 100);
-			this.root = ApplicationInfo.CommonDataDirectory;
+			this.root = ApplicationInfo.CurrentDirectory + @"\views\";
 			
 			this.Start();
 		}
