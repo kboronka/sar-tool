@@ -33,6 +33,7 @@
 
 	svn cleanup
 	svn update
+	svn revert
 
 	%SAR% -f.bsd \sar\*.cs "Kevin Boronka"
 	%SAR% -f.bsd \sarControls\*.cs "Kevin Boronka"
@@ -52,8 +53,10 @@
 	
 	%SAR% -b.net 3.5 sarQuckLog.sln /p:Configuration=%CONFIG% /p:Platform=\"x86\"
 	if errorlevel 1 goto BuildFailed
-
+	
+	
 :BuildComplete
+	svn revert
 	copy sar\bin\%CONFIG%\*.exe release\*.exe
 	copy sar\bin\%CONFIG%\*.pdb release\*.pdb
 	copy sarControls\bin\%CONFIG%\sarControls.dll release\sarControls.dll
@@ -63,10 +66,8 @@
 	copy quickLog\source\bin\%CONFIG%\*.pdb quickLog\release\*.pdb
 	
 	copy license.txt release\license.txt
-	
+	svn commit -m "new binaries v%VERSION%"
 	%ZIP% "sar %VERSION%.zip" .\release\*.*
-	svn commit -m "sar version %VERSION%"
-	svn copy %REPO%/trunk %REPO%/tags/%VERSION% -m "Tagging the %VERSION% version release of the project"
 	svn update
 	
 	echo build completed
