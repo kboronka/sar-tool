@@ -76,13 +76,13 @@ namespace sar.Http
 		public HttpServer(XML.Reader reader)
 		{
 			if (reader != null) this.Deserialize(reader);
+			this.Start();
 		}
 				
 		public HttpServer()
 		{
 			this.port = sar.Socket.SocketHelper.FindAvailablePort(80, 100);
 			this.root = ApplicationInfo.CurrentDirectory + @"\views\";
-			
 			this.Start();
 		}
 		
