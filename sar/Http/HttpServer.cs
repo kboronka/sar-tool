@@ -14,6 +14,7 @@
  */
 
 using System;
+using System.Xml;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -72,6 +73,11 @@ namespace sar.Http
 			this.Start();
 		}
 		
+		public HttpServer(XML.Reader reader)
+		{
+			if (reader != null) this.Deserialize(reader);
+		}
+				
 		public HttpServer()
 		{
 			this.port = sar.Socket.SocketHelper.FindAvailablePort(80, 100);
@@ -116,6 +122,44 @@ namespace sar.Http
 		
 		#endregion
 		
+		#region settings
+		
+		private void Deserialize(XML.Reader reader)
+		{
+			try
+			{
+				while (reader.Read())
+				{
+					if (reader.NodeType == XmlNodeType.Element)
+					{
+						switch (reader.Name)
+						{
+							case "port":
+								this.port = (int)reader.GetValueLong();
+								break;
+								
+							case "wwwroot":
+								this.root =  reader.GetValueString();
+								break;
+						}
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Base.Program.Log(ex);
+			}
+		}
+		
+		public void Serialize(XML.Writer writer)
+		{
+			writer.WriteStartElement("http-server");
+			writer.WriteElement("port", this.port);
+			writer.WriteElement("wwwroot", this.root);
+			writer.WriteEndElement();
+		}
+		
+		#endregion		
 		#region service
 		
 		#region listners
