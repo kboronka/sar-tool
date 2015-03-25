@@ -33,7 +33,7 @@
 
 	svn cleanup
 	svn update
-	svn revert -R
+	svn revert -R .
 
 	%SAR% -f.bsd \sar\*.cs "Kevin Boronka"
 	%SAR% -f.bsd \sarControls\*.cs "Kevin Boronka"
@@ -53,7 +53,8 @@
 	
 	%SAR% -b.net 3.5 sarQuckLog.sln /p:Configuration=%CONFIG% /p:Platform=\"x86\"
 	if errorlevel 1 goto BuildFailed
-	svn revert -R
+	svn cleanup
+	svn revert -R .
 	
 :BuildComplete
 	svn revert
