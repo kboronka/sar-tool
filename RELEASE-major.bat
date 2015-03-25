@@ -63,7 +63,6 @@
 	copy quickLog\source\bin\%CONFIG%\*.pdb quickLog\release\*.pdb
 	
 	copy license.txt release\license.txt
-	%SAR% -sky.gen SkyUpdate.info release\sar.exe https://sar-tool.googlecode.com/svn/trunk/release/sar.exe
 	
 	%ZIP% "sar %VERSION%.zip" .\release\*.*
 	svn commit -m "sar version %VERSION%"
