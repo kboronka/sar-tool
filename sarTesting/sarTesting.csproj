@@ -10,6 +10,8 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <AppDesignerFolder>Properties</AppDesignerFolder>
+    <NoWin32Manifest>False</NoWin32Manifest>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -101,5 +103,15 @@
   <ItemGroup>
     <EmbeddedResource Include="Http\Views\Test\Test.html" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Http\Views\index.html" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>mkdir "$(TargetDir)views"
+copy "$(ProjectDir)Http\Views\index.html" "$(TargetDir)views\index.html"
+xcopy  /E /Y "$(ProjectDir)Http\Views\assets\*.*" "$(TargetDir)views\assets\*.*"</PostBuildEvent>
+    <PreBuildEvent>
+</PreBuildEvent>
+  </PropertyGroup>
 </Project>
