@@ -42,11 +42,7 @@ namespace sar.Http
 			get { return port; }
 		}
 		
-		public string FavIcon
-		{
-			get { return favIcon; }
-			set { favIcon = value; }
-		}
+		public string FavIcon { get; set; }
 
 		#endregion
 		
@@ -86,7 +82,7 @@ namespace sar.Http
 		
 		private void Start()
 		{
-			if (this.root.EndsWith("\\"))
+			if (this.root.EndsWith(@"\", StringComparison.Ordinal))
 			{
 				this.root = StringHelper.TrimEnd(this.root);
 			}
