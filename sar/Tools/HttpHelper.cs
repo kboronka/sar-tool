@@ -587,7 +587,8 @@ namespace sar.Tools
 				{".zip", "application/x-zip-compressed"},
 				{".svg", "image/svg+xml"},
 				{".woff", "application/font-woff"},
-				{".woff2", "application/font-woff2"}
+				{".woff2", "application/font-woff2"},
+				{".json", "application/json"}				
 				#endregion
 			};
 			
