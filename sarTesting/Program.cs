@@ -30,11 +30,12 @@ namespace sar.Testing
 			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(LogUnhandledException);
 			
 			Base.Program.LogInfo();
-
-			foreach (string resource in EmbeddedResource.GetAllResources())
-			{
-				System.Diagnostics.Debug.WriteLine(resource);
-			}
+			var server = new Http.HttpServer(83);
+			
+//			foreach (string resource in EmbeddedResource.GetAllResources())
+//			{
+//				System.Diagnostics.Debug.WriteLine(resource);
+//			}
 			
 			string root = IO.CheckRoot(@".\");
 			root = IO.CheckRoot(@"..\");
@@ -43,7 +44,6 @@ namespace sar.Testing
 				
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			var server = new Http.HttpServer(83);
 			Application.Run(new Menu());
 			Base.Program.Log("throwing error");
 			//throw new ApplicationException("testing unhandled exception");
