@@ -83,10 +83,6 @@ namespace sar.Http
 			{
 				return HttpContent.ReadEmbeddedFile("sar.Http.libs.art.favicon.ico", baseContent);
 			}
-			else if (filePath.EndsWith("sar.Http.Views.Error.Display.html", StringComparison.InvariantCulture))
-			{
-				return new HttpContent("error locating error template");
-			}
 			else
 			{
 				throw new FileNotFoundException("did not find " + filePath);

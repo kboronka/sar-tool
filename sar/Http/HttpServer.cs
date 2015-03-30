@@ -170,6 +170,10 @@ namespace sar.Http
 		
 		private void ListenerLoop()
 		{
+			// TODO: cache everything
+			EmbeddedResource.GetAllResources();				
+			Thread.Sleep(300);
+			
 			while (!listenerLoopShutdown)
 			{
 				try
