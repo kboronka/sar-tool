@@ -870,6 +870,18 @@ namespace sar.Tools
 			}
 		}
 		
+		public static bool GetJSON(this string json, string element, bool defaultValue)
+		{
+			try
+			{
+				return GetJSON(json, element) == "true";
+			}
+			catch
+			{
+				return defaultValue;
+			}
+		}		
+		
 		public static DateTime GetJSON(this string json, string element, DateTime defaultValue)
 		{
 			try
