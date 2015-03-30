@@ -15,7 +15,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace sar.Tools
@@ -839,5 +839,47 @@ namespace sar.Tools
 			return obj ? @"true" : @"false";
 		}
 		
+		private static string GetJSON(string json, string element)
+		{
+			var pattern = @"\""" + element + @"\"":([^\,\}]*)";
+			var x = Regex.Match(json, pattern);
+			return x.Groups[1].Value;
+		}
+		
+		public static int GetJSON(this string json, string element, int defaultValue)
+		{
+			try
+			{
+				return int.Parse(GetJSON(json, element));
+			}
+			catch
+			{
+				return defaultValue;
+			}
+		}
+		
+		public static string GetJSON(this string json, string element, string defaultValue)
+		{
+			try
+			{
+				return GetJSON(json, element);
+			}
+			catch
+			{
+				return defaultValue;
+			}
+		}
+		
+		public static DateTime GetJSON(this string json, string element, DateTime defaultValue)
+		{
+			try
+			{
+				return DateTime.ParseExact(GetJSON(json, element), "FileLogger.DATETIMESTAMP", DateTimeFormatInfo.InvariantInfo);
+			}
+			catch
+			{
+				return defaultValue;
+			}
+		}
 	}
 }
