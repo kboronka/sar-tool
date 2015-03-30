@@ -862,7 +862,8 @@ namespace sar.Tools
 		{
 			try
 			{
-				return GetJSON(json, element);
+				string result = GetJSON(json, element);
+				return String.IsNullOrEmpty(result) ? defaultValue : result;
 			}
 			catch
 			{
