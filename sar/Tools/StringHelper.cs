@@ -16,10 +16,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Security;
-using System.Xml;
 
 namespace sar.Tools
 {
@@ -30,27 +28,12 @@ namespace sar.Tools
 		public static string RegexFindString(string input, string pattern)
 		{
 			Match match = Regex.Match(input, pattern);
-			
-			if (match.Success)
-			{
-				if (match.Groups.Count > 1)
-				{
-					return TrimWhiteSpace(match.Groups[1].Value);
-				}
-				else
-				{
-					return TrimWhiteSpace(match.Groups[0].Value);
-				}
-			}
-			else
-			{
-				return null;
-			}
+			return match.Success ? TrimWhiteSpace(match.Groups[(match.Groups.Count > 1) ? 1 : 0].Value) : null;
 		}
 		
 		public static byte[] GetBytes(string input)
 		{
-			byte[] bytes = new byte[input.Length * sizeof(char)];
+			var bytes = new byte[input.Length * sizeof(char)];
 			System.Buffer.BlockCopy(input.ToCharArray(), 0, bytes, 0, bytes.Length);
 			return bytes;
 		}
@@ -62,7 +45,7 @@ namespace sar.Tools
 			System.Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
 			return new string(chars);
 			 */
-			return System.Text.Encoding.UTF8.GetString(bytes);
+			return (bytes == null) ? "" : System.Text.Encoding.UTF8.GetString(bytes);
 		}
 		
 		public static string TrimStart(string input)
@@ -191,7 +174,7 @@ namespace sar.Tools
 			foreach (string word in words)
 			{
 				if (input.ToLower() == word.ToLower()) return true;
-				if (input.ToLower().StartsWith(word.ToLower() + " ")) return true;
+				if (input.ToLower().StartsWith(word.ToLower() + " ", StringComparison.InvariantCulture)) return true;
 			}
 			
 			return false;
@@ -202,7 +185,7 @@ namespace sar.Tools
 			foreach (string word in words)
 			{
 				if (input.ToLower() == word.ToLower()) return true;
-				if (input.ToLower().EndsWith(" " + word.ToLower())) return true;
+				if (input.ToLower().EndsWith(" " + word.ToLower(), StringComparison.InvariantCulture)) return true;
 			}
 			
 			return false;
@@ -278,7 +261,7 @@ namespace sar.Tools
 		
 		public static SecureString MakeSecureString(string text)
 		{
-			SecureString secure = new SecureString();
+			var secure = new SecureString();
 			foreach (char c in text)
 			{
 				secure.AppendChar(c);
@@ -297,7 +280,7 @@ namespace sar.Tools
 				sum += array.Length;
 			}
 			
-			byte[] result = new byte[sum];
+			var result = new byte[sum];
 
 			
 			foreach ( byte[] array in arrays )
@@ -311,7 +294,7 @@ namespace sar.Tools
 		
 		public static string[] CsvParser(string csvText)
 		{
-			List<string> columns = new List<string>();
+			var columns = new List<string>();
 
 			int last = -1;
 			int current = 0;
@@ -389,12 +372,18 @@ namespace sar.Tools
 			
 			string result = input;
 
-			while (result.StartsWith("\n") || result.StartsWith("\r") || result.StartsWith(" ") || result.StartsWith("\t"))
+			while (result.StartsWith("\n", StringComparison.InvariantCulture) || 
+			       result.StartsWith("\r", StringComparison.InvariantCulture) || 
+			       result.StartsWith(" ", StringComparison.InvariantCulture) || 
+			       result.StartsWith("\t", StringComparison.InvariantCulture))
 			{
 				result = TrimStart(result);
 			}
 			
-			while (result.EndsWith("\n") || result.EndsWith("\r") || result.EndsWith(" ") || result.EndsWith("\t"))
+			while (result.EndsWith("\n", StringComparison.InvariantCulture) || 
+			       result.EndsWith("\r", StringComparison.InvariantCulture) || 
+			       result.EndsWith(" ", StringComparison.InvariantCulture) || 
+			       result.EndsWith("\t", StringComparison.InvariantCulture))
 			{
 				result = TrimEnd(result);
 			}
@@ -405,12 +394,7 @@ namespace sar.Tools
 		public static int ToInt(this string s)
 		{
 			int output;
-			if (int.TryParse(s, out output))
-			{
-				return output;
-			}
-			
-			return 0;
+			return (int.TryParse(s, out output)) ? output : 0;
 		}
 		
 		public static byte[] ToBytes(this string s)
