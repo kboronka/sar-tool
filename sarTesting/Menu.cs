@@ -106,7 +106,11 @@ namespace sar.Testing
 		
 		void Button3Click(object sender, EventArgs e)
 		{
-			this.readOnlyTextBox1.Text = "abc" + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine + DateTime.Now.ToString();
+			string test = "";
+			test += "abc" + Environment.NewLine;
+			test += "cccc" + Environment.NewLine;
+			test += DateTime.Now.ToString();
+			this.readOnlyTextBox1.Text = " -- ".AppendPrefixTo(test);
 		}
 		
 		#region folder control

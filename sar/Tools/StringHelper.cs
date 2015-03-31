@@ -270,7 +270,7 @@ namespace sar.Tools
 			return secure;
 		}
 		
-		public static byte[] CombineByteArrays( params byte[][] arrays )
+		public static byte[] CombineByteArrays(params byte[][] arrays )
 		{
 			int sum = 0;
 			int offset = 0;
@@ -400,6 +400,21 @@ namespace sar.Tools
 		public static byte[] ToBytes(this string s)
 		{
 			return GetBytes(s);
+		}
+		
+		public static string AppendPrefixTo(this string prefix, string text)
+		{
+			//string[] lines = text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+			string[] lines = text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+			
+			string result = "";
+			
+			foreach (var line in lines)
+			{
+				result += prefix + line + Environment.NewLine;
+			}
+			
+			return result;
 		}
 		
 		#endregion
