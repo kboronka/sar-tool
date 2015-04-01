@@ -588,7 +588,7 @@ namespace sar.Tools
 				{".svg", "image/svg+xml"},
 				{".woff", "application/font-woff"},
 				{".woff2", "application/font-woff2"},
-				{".json", "application/json"}				
+				{".json", "application/json"}
 				#endregion
 			};
 			
@@ -863,7 +863,22 @@ namespace sar.Tools
 			try
 			{
 				string result = GetJSON(json, element);
-				return String.IsNullOrEmpty(result) ? defaultValue : result;
+				if (String.IsNullOrEmpty(result))
+				{
+					return defaultValue;
+				}
+				if (result.StartsWith(@"""", StringComparison.InvariantCulture) && result.EndsWith(@"""", StringComparison.InvariantCulture))
+				{
+					result = StringHelper.TrimStart(result);
+					result = StringHelper.TrimEnd(result);
+
+					return result;
+				}
+				else
+				{
+					return defaultValue;
+				}
+				
 			}
 			catch
 			{
@@ -881,7 +896,7 @@ namespace sar.Tools
 			{
 				return defaultValue;
 			}
-		}		
+		}
 		
 		public static DateTime GetJSON(this string json, string element, DateTime defaultValue)
 		{
