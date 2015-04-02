@@ -649,6 +649,10 @@ namespace sar.Tools
 			{
 				return ((string[])value).ToJSON();
 			}
+			else if (value is string[][])
+			{
+				return ((string[][])value).ToJSON();
+			}
 			else if (value is int)
 			{
 				return ((int)value).ToJSON();
@@ -657,6 +661,10 @@ namespace sar.Tools
 			{
 				return ((int[])value).ToJSON();
 			}
+			else if (value is int[][])
+			{
+				return ((int[][])value).ToJSON();
+			}
 			else if (value is double)
 			{
 				return ((double)value).ToJSON();
@@ -664,6 +672,10 @@ namespace sar.Tools
 			else if (value is double[])
 			{
 				return ((double[])value).ToJSON();
+			}
+			else if (value is double[][])
+			{
+				return ((double[][])value).ToJSON();
 			}
 			else if (value is DateTime)
 			{
@@ -677,6 +689,10 @@ namespace sar.Tools
 			{
 				return ((bool[])value).ToJSON();
 			}
+			else if (value is bool[][])
+			{
+				return ((bool[][])value).ToJSON();
+			}
 			else if (value is Dictionary<string, object>)
 			{
 				return ((Dictionary<string, object>)value).ToJSON();
@@ -687,6 +703,11 @@ namespace sar.Tools
 			}
 
 			return "unknown";
+		}
+
+		public static string ToJSON(this int obj)
+		{
+			return obj.ToString();
 		}
 
 		public static string ToJSON(this int[] objs)
@@ -705,6 +726,27 @@ namespace sar.Tools
 			return JSON;
 		}
 		
+		public static string ToJSON(this int[][] objs)
+		{
+			string JSON = "[";
+			string delimitor = "";
+			
+			foreach (var obj in objs)
+			{
+				JSON += delimitor;
+				JSON += obj.ToJSON();
+				delimitor = ", ";
+			}
+			
+			JSON += "]";
+			return JSON;
+		}
+		
+		public static string ToJSON(this double obj)
+		{
+			return obj.ToString();
+		}
+
 		public static string ToJSON(this double[] objs)
 		{
 			string JSON = "[";
@@ -721,6 +763,22 @@ namespace sar.Tools
 			return JSON;
 		}
 		
+		public static string ToJSON(this double[][] objs)
+		{
+			string JSON = "[";
+			string delimitor = "";
+			
+			foreach (var obj in objs)
+			{
+				JSON += delimitor;
+				JSON += obj.ToJSON();
+				delimitor = ", ";
+			}
+			
+			JSON += "]";
+			return JSON;
+		}
+
 		public static string ToJSON(this object[] objs)
 		{
 			string JSON = "[";
@@ -736,7 +794,40 @@ namespace sar.Tools
 			JSON += "]";
 			return JSON;
 		}
+
+		public static string ToJSON(this object[][] objs)
+		{
+			string JSON = "[";
+			string delimitor = "";
+			
+			foreach (var obj in objs)
+			{
+				JSON += delimitor;
+				JSON += obj.ToJSON();
+				delimitor = ", ";
+			}
+			
+			JSON += "]";
+			return JSON;
+		}
 		
+		public static string ToJSON(this string obj)
+		{
+			string data = obj;
+			
+			// escape quotes, and solidus
+			data = Regex.Replace(data, @"([\""\/])", @"\$1");
+			
+			// escape other control-characters
+			data = Regex.Replace(data, @"[\n]", @"\n");
+			data = Regex.Replace(data, @"[\r]", @"\r");
+			data = Regex.Replace(data, @"[\t]", @"\t");
+			data = Regex.Replace(data, @"[\b]", @"\b");
+			data = Regex.Replace(data, @"[\f]", @"\f");
+			data = @"""" + data + @"""";
+			return data;
+		}
+
 		public static string ToJSON(this string[] objs)
 		{
 			string JSON = "[";
@@ -753,6 +844,27 @@ namespace sar.Tools
 			return JSON;
 		}
 		
+		public static string ToJSON(this string[][] objs)
+		{
+			string JSON = "[";
+			string delimitor = "";
+			
+			foreach (var obj in objs)
+			{
+				JSON += delimitor;
+				JSON += obj.ToJSON();
+				delimitor = ", ";
+			}
+			
+			JSON += "]";
+			return JSON;
+		}
+		
+		public static string ToJSON(this bool obj)
+		{
+			return obj ? @"true" : @"false";
+		}
+
 		public static string ToJSON(this bool[] objs)
 		{
 			string JSON = "[";
@@ -769,6 +881,27 @@ namespace sar.Tools
 			return JSON;
 		}
 
+		public static string ToJSON(this bool[][] objs)
+		{
+			string JSON = "[";
+			string delimitor = "";
+			
+			foreach (var obj in objs)
+			{
+				JSON += delimitor;
+				JSON += obj.ToJSON();
+				delimitor = ", ";
+			}
+			
+			JSON += "]";
+			return JSON;
+		}
+
+		public static string ToJSON(this DateTime obj)
+		{
+			return @"""" + obj.ToString(FileLogger.DATETIMESTAMP) + @"""";
+		}
+		
 		public static string ToJSON(this List<Dictionary<string, object>> obj)
 		{
 			string JSON = "[";
@@ -800,43 +933,6 @@ namespace sar.Tools
 			JSON += "}";
 			
 			return JSON;
-		}
-		
-		public static string ToJSON(this string obj)
-		{
-			string data = obj;
-			
-			// escape quotes, and solidus
-			data = Regex.Replace(data, @"([\""\/])", @"\$1");
-			
-			// escape other control-characters
-			data = Regex.Replace(data, @"[\n]", @"\n");
-			data = Regex.Replace(data, @"[\r]", @"\r");
-			data = Regex.Replace(data, @"[\t]", @"\t");
-			data = Regex.Replace(data, @"[\b]", @"\b");
-			data = Regex.Replace(data, @"[\f]", @"\f");
-			data = @"""" + data + @"""";
-			return data;
-		}
-		
-		public static string ToJSON(this int obj)
-		{
-			return obj.ToString();
-		}
-
-		public static string ToJSON(this double obj)
-		{
-			return obj.ToString();
-		}
-
-		public static string ToJSON(this DateTime obj)
-		{
-			return @"""" + obj.ToString(FileLogger.DATETIMESTAMP) + @"""";
-		}
-		
-		public static string ToJSON(this bool obj)
-		{
-			return obj ? @"true" : @"false";
 		}
 		
 		private static string GetJSON(string json, string element)
