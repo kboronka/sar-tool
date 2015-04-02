@@ -37,7 +37,7 @@ namespace sar.Http
 		
 		private string requestText;
 		private string fullUrl;
-		private string path;
+		public string Path { get; set;}
 		private string query;
 		private string reference;
 		
@@ -60,11 +60,6 @@ namespace sar.Http
 		public string FullUrl
 		{
 			get { return fullUrl; }
-		}
-		
-		public string Path
-		{
-			get { return path; }
 		}
 
 		public string Query
@@ -246,11 +241,11 @@ namespace sar.Http
 
 			this.fullUrl = CleanUrlString(initialRequest[1]);
 			string[] url = this.fullUrl.Split('#');
-			this.path = StringHelper.TrimStart(url[0], 1);
+			this.Path = StringHelper.TrimStart(url[0], 1);
 			this.reference = url.Length > 1 ? url[1] : "";
 			
-			url = this.path.Split('?');
-			this.path = url[0];
+			url = this.Path.Split('?');
+			this.Path = url[0];
 			this.query = url.Length > 1 ? url[1] : "";
 			
 			this.protocolVersion = initialRequest[2];

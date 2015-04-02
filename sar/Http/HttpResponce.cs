@@ -34,12 +34,16 @@ namespace sar.Http
 
 	public class HttpResponce
 	{
+		public const string PDF_RENDER = "-pdf-render";
 		private TcpClient socket;
 		private NetworkStream stream;
 		private Encoding encoding;
 
 		private HttpRequest request;
 		private HttpContent content;
+		
+		private bool pdfRender {get; set;}
+		
 		public byte[] bytes;
 		
 		public byte[] Bytes
@@ -56,6 +60,12 @@ namespace sar.Http
 			
 			try
 			{
+				if (this.request.Path.ToLower().EndsWith(PDF_RENDER, StringComparison.CurrentCulture))
+				{
+					this.request.Path = StringHelper.TrimEnd(this.request.Path, PDF_RENDER.Length);
+					this.pdfRender = true;
+				}
+				
 				if (this.request.Path == @"")
 				{
 					if (HttpController.Primary == null) throw new ApplicationException("Primary Controller Not Defined");
@@ -65,10 +75,10 @@ namespace sar.Http
 				}
 				else if (this.request.Path.ToLower().EndsWith(@"-pdf", StringComparison.CurrentCulture))
 				{
-					string url = "http://localhost:" + request.Server.Port.ToString() + this.request.FullUrl;
+					string url = "http://localhost:" + request.Server.Port.ToString() + this.request.FullUrl + PDF_RENDER;
 					
 					url = url.Replace(this.request.Path, StringHelper.TrimEnd(this.request.Path, 4));
-						
+					
 					this.content = HttpContent.GetPDF(url);
 				}
 				else if (this.request.Path.ToLower() == @"info")
@@ -118,7 +128,8 @@ namespace sar.Http
 			// content details
 			responce += "Content-Type: " + this.content.ContentType + "\n";
 			responce += "Content-Length: " + (contentBytes.Length).ToString() + "\n";
-			
+			if (this.pdfRender) responce += "X-Content-Type-Options: " + "pdf-render" + "\n";
+
 			// other
 			responce += "Connection: close" + "\n";
 			responce += "" + "\n";
