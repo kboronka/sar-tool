@@ -78,8 +78,8 @@ namespace sar.Testing
 				
 				byte[] data = siemensS7.ReadBytes("MW6600", 220);
 				//textBox1.Text = "MW6000 = " + siemensS7.ReadINT("MW6000").ToString();
-				textBox1.Text = "M6000.4 = " + siemensS7.ReadBytes("M6000.4", 1)[0].ToString();
 				textBox2.Text = "MD6700 = " + siemensS7.ReadFLOAT("MD6700").ToString("0.00");
+				textBox1.Text = "M6000.4 = " + siemensS7.ReadBit("M6000.4").ToString();
 			}
 			catch (Exception ex)
 			{
@@ -90,7 +90,7 @@ namespace sar.Testing
 		private void SendOutlookEmail(string recipient, string subject, string message)
 		{
 			Outlook.Application outlook = new Microsoft.Office.Interop.Outlook.Application();
-			Outlook.MailItem mailItem = (Outlook.MailItem)outlook.CreateItem(Outlook.OlItemType.olMailItem);
+			var mailItem = (Outlook.MailItem)outlook.CreateItem(Outlook.OlItemType.olMailItem);
 			mailItem.Subject = subject;
 			mailItem.To = recipient;
 			mailItem.Body = message;

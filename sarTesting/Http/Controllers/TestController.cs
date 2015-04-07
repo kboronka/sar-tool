@@ -44,14 +44,14 @@ namespace sar_testing.Http
 		public static HttpContent UpdateTable(HttpRequest request)
 		{
 			var json = new Dictionary<string, object>();
-			
-			string[] row1 = { "blabla", HttpHelper.LabelSuccess("passed"), Guid.NewGuid().ToString(), "booo" };
-			string[] row2 = { "blabla", HttpHelper.LabelDanger("failed"), Guid.NewGuid().ToString(), "booo" };
-			string[] row3 = { "blabla", HttpHelper.LabelDefault("whatever"), Guid.NewGuid().ToString(), "booo" };
+			/*
+			string[] row1 = { "blabla", "passed", Guid.NewGuid().ToString(), "booo" };
+			string[] row2 = { "blabla", "failed", Guid.NewGuid().ToString(), "booo" };
+			string[] row3 = { "blabla", "whatever", Guid.NewGuid().ToString(), "booo" };
 			
 			string[][] table = { row1, row2, row3 };
 			
-			json.Add("testTabelData", table.ToHTML());
+			json.Add("testTabelData", table.ToHTML());*/
 			return new HttpContent(json);
 		}
 		
