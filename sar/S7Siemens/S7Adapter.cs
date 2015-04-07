@@ -114,7 +114,7 @@ namespace sar.S7Siemens
 			if (bytes < 1) throw new IndexOutOfRangeException("min bytes = 1");
 			
 			var s7address = new Address(address);
-			s7address.byteLength = bytes;
+			s7address.byteLength = (ushort)bytes;
 			
 			// maximum page size = 220 bytes
 			if (bytes <= MAX_BYTES_PER_PAGE)

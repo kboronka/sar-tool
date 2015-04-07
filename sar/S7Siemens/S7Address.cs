@@ -28,8 +28,7 @@ namespace sar.S7Siemens
 		public ushort dataBlock;
 		public uint startAddress;
 		public ushort length;
-		//public ushort byteLength;
-        public uint byteLength;
+		public ushort byteLength;
 		public ushort byteAdddress;
 		public ushort bitAddress;
 		public TransportType transportType;
