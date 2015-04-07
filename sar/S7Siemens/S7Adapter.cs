@@ -148,7 +148,7 @@ namespace sar.S7Siemens
 			return ReadWriteMessage(action, address.area, address.dataBlock, address.startAddress, address.byteLength, address.transportType);
 		}
 		
-		private byte[] ReadWriteMessage(Action action, Areas addressArea, ushort dataBlock, uint startAddress, uint length, TransportType transportType)
+		private byte[] ReadWriteMessage(Action action, Areas addressArea, ushort dataBlock, uint startAddress, ushort length, TransportType transportType)
 		{
 			var message = new byte[] {(byte)action, 0x1};
 			
@@ -170,7 +170,6 @@ namespace sar.S7Siemens
 
 			// start address
 			message = IO.Combine(message, IO.SubSet(IO.Split(startAddress), 1, 3));
-			
 
 			return message;
 		}
@@ -219,7 +218,6 @@ namespace sar.S7Siemens
 			//	unknown = 0x0
 			message = IO.Combine(message, new byte[] { 0x32, 0x1, 0x0, 0x0 });
 			
-			/*// underconstruction*/
 			// sequence number (2 bytes)
 			message = IO.Combine(message, IO.Split(sequenceNumber));
 
