@@ -110,17 +110,26 @@ namespace sar.S7Siemens
 		private const int MAX_BYTES_PER_PAGE = 220;
 		private byte[] ReadBytesRaw(string address, uint bytes)
 		{
+			var s7address = new Address(address);
+			s7address.byteLength = (ushort)bytes;
+			
+			return ReadBytesRaw(s7address);
+		}
+		
+		private byte[] ReadBytesRaw(Address address)
+		{
+			var bytes = address.byteLength;
+			
 			if (bytes > 65535) throw new IndexOutOfRangeException("max bytes = 65535");
 			if (bytes < 1) throw new IndexOutOfRangeException("min bytes = 1");
 			
-			var s7address = new Address(address);
-			s7address.byteLength = (ushort)bytes;
+
 			
 			// maximum page size = 220 bytes
 			if (bytes <= MAX_BYTES_PER_PAGE)
 			{
 				// send read request message
-				var message = ReadWriteMessage(Action.Read, s7address);
+				var message = ReadWriteMessage(Action.Read, address);
 				DebugWrite("ReadWriteMessage", message);
 				message = EncodeTPDU(TPKT, message);
 				DebugWrite("TPDU", message);
@@ -135,10 +144,15 @@ namespace sar.S7Siemens
 			else
 			{
 				var data = new byte[bytes];
-				s7address.byteAdddress += MAX_BYTES_PER_PAGE;
 				
-				Array.Copy(ReadBytesRaw(address, MAX_BYTES_PER_PAGE), 0, data, 0, MAX_BYTES_PER_PAGE);
-				Array.Copy(ReadBytesRaw(s7address.ToString(), bytes-MAX_BYTES_PER_PAGE), 0, data, MAX_BYTES_PER_PAGE, bytes-MAX_BYTES_PER_PAGE);
+				address.byteLength = MAX_BYTES_PER_PAGE;
+				Array.Copy(ReadBytesRaw(address), 0, data, bytes-MAX_BYTES_PER_PAGE, MAX_BYTES_PER_PAGE);
+				
+				address.byteAdddress += MAX_BYTES_PER_PAGE;
+				address.startAddress += (MAX_BYTES_PER_PAGE * 8);
+				address.byteLength = (ushort)(bytes - MAX_BYTES_PER_PAGE);
+				Array.Copy(ReadBytesRaw(address), 0, data, 0, address.byteLength);
+								
 				return data;
 			}
 		}
