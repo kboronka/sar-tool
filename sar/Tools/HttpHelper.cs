@@ -607,38 +607,6 @@ namespace sar.Tools
 			return mimeTypes.TryGetValue(extension, out mime) ? mime : "application/octet-stream";
 		}
 		
-		public static string LabelDefault(string content)
-		{
-			return  @"<span class=""label label-default"">" + content + "</span>";
-		}
-
-		public static string LabelSuccess(string content)
-		{
-			return  @"<span class=""label label-success"">" + content + "</span>";
-		}
-
-		public static string LabelDanger(string content)
-		{
-			return  @"<span class=""label label-danger"">" + content + "</span>";
-		}
-		
-		public static string ToHTML(this string[][] tableArray)
-		{
-			string html = "";
-			foreach (string[] row in tableArray)
-			{
-				html += @"<tr>";
-				foreach(string col in row)
-				{
-					html += @"<td>" + col + @"</td>";
-				}
-				
-				html += @"</tr>";
-			}
-			
-			return html;
-		}
-		
 		private static string ToJSON(this object value)
 		{
 			if (value is String)
