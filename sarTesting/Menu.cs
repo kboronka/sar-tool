@@ -80,6 +80,7 @@ namespace sar.Testing
 				//textBox1.Text = "MW6000 = " + siemensS7.ReadINT("MW6000").ToString();
 				textBox2.Text = "MD6700 = " + siemensS7.ReadFLOAT("MD6700").ToString("0.00");
 				textBox1.Text = "M6000.4 = " + siemensS7.ReadBit("M6000.4").ToString();
+				textBox1.Text = "DB290.DBB240 = " + siemensS7.ReadBytes("DB290.DBB0", 256)[240].ToString();
 			}
 			catch (Exception ex)
 			{
