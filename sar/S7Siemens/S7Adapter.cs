@@ -107,90 +107,41 @@ namespace sar.S7Siemens
 			return data;
 		}
 		
+		private const int MAX_BYTES_PER_PAGE = 220;
 		private byte[] ReadBytesRaw(string address, uint bytes)
 		{
-			//Updated version 1.1, 
-            /* [0..65535]= 65536 Maximum DB bytes in siemens PLC 
-             * Each time we are fetching 219 bytes(maximum =220) into bReceive[] and
-             * fill into data[] (data.length = bytes)
-             * (note:testing of this new code is pending)
-             * Update Author: Saad Liaqat Ali. ver 1.1
-             * Orignal Author: Kevin Boronka. ver 1.0
-             * Update Date: April 4,2015; 6:00pm.
-             */
-
-
-            //if (bytes > 220) throw new IndexOutOfRangeException("max bytes = 220");
-            if (bytes > 65537) throw new IndexOutOfRangeException("max bytes = 65536");
-            if (bytes < 1) throw new IndexOutOfRangeException("min bytes = 1");
-            var s7address = new Address(address);
-            //s7address.byteLength = bytes; 
-
-
-            #region Calculation for getting [1..65536] bytes 
-            uint maximumPDUsize = 219; // Maximum PDU size is 220
-                byte[] data = new byte[bytes]; // bytes size Array
-                uint varMaximumSize = bytes;
-                uint noFPackets = bytes / maximumPDUsize; // No of Data Packet Required 
-                uint remainingBytes = bytes % maximumPDUsize; // No of remaining bytes
-                if (bytes <= maximumPDUsize) maximumPDUsize =  bytes;
-            #endregion
-            
-            #region new code Getting data from PLC
-
-                for (uint maximumPDUoffset = 0; maximumPDUoffset < varMaximumSize; maximumPDUoffset += maximumPDUsize)
-                {
-                    s7address.byteLength = maximumPDUsize;
-                    s7address.startAddress = maximumPDUoffset + s7address.startAddress;
-
-                     // send read request message
-                     byte[] message = ReadWriteMessage(Action.Read, s7address);
-                    // DebugWrite("ReadWriteMessage", message);
-                     message = EncodeTPDU(TPKT, message);
-                    // DebugWrite("TPDU", message);
-                     byte[] responce = socket.Write(message);
-                     //DebugWrite("responce", responce);
-
-                     byte[] bReceive = ExtractTPDU(responce);
-                     //DebugWrite("data", bReceive);
-
-                                
-                        for (int cnt = 0; cnt < maximumPDUsize; cnt++)
-                        {
-                            data[maximumPDUoffset + cnt] = bReceive[cnt];
-                        } // end of for
-
-                       // Buffer.BlockCopy(bReceive, 0, data, maximumPDUoffset, maximumPDUsize);
-                        #region Get Remainging bytes of UserRequest
-                        if ((maximumPDUoffset + maximumPDUsize) > (varMaximumSize - maximumPDUsize))// && ((varMaximumSize + bytesFPacket) <= 65535))
-                        {
-                            maximumPDUoffset += (maximumPDUsize - (uint)remainingBytes);
-                            maximumPDUsize = (uint)remainingBytes;
-                        } // end of if
-                        #endregion
-
-                }
-
-            #endregion 
-
-            #region Old code snippet
-                /*
-			// send read request message
-			byte[] message = ReadWriteMessage(Action.Read, s7address);
-			DebugWrite("ReadWriteMessage", message);
-			message = EncodeTPDU(TPKT, message);
-			DebugWrite("TPDU", message);
-			byte[] responce = socket.Write(message);
-			DebugWrite("responce", responce);
+			if (bytes > 65535) throw new IndexOutOfRangeException("max bytes = 65535");
+			if (bytes < 1) throw new IndexOutOfRangeException("min bytes = 1");
 			
-			byte[] data = ExtractTPDU(responce);
-			DebugWrite("data", data);
-		 */
-                #endregion
-
-            return data;
-      
-		}		
+			var s7address = new Address(address);
+			s7address.byteLength = bytes;
+			
+			// maximum page size = 220 bytes
+			if (bytes <= MAX_BYTES_PER_PAGE)
+			{
+				// send read request message
+				var message = ReadWriteMessage(Action.Read, s7address);
+				DebugWrite("ReadWriteMessage", message);
+				message = EncodeTPDU(TPKT, message);
+				DebugWrite("TPDU", message);
+				var responce = socket.Write(message);
+				DebugWrite("responce", responce);
+				
+				byte[] data = ExtractTPDU(responce);
+				DebugWrite("data", data);
+				
+				return data;
+			}
+			else
+			{
+				var data = new byte[bytes];
+				s7address.byteAdddress += MAX_BYTES_PER_PAGE;
+				
+				Array.Copy(ReadBytesRaw(address, MAX_BYTES_PER_PAGE), 0, data, 0, MAX_BYTES_PER_PAGE);
+				Array.Copy(ReadBytesRaw(s7address.ToString(), bytes-MAX_BYTES_PER_PAGE), 0, data, MAX_BYTES_PER_PAGE, bytes-MAX_BYTES_PER_PAGE);
+				return data;
+			}
+		}
 		
 		private byte[] ReadWriteMessage(Action action, Address address)
 		{
@@ -219,7 +170,7 @@ namespace sar.S7Siemens
 
 			// start address
 			message = IO.Combine(message, IO.SubSet(IO.Split(startAddress), 1, 3));
-   
+			
 
 			return message;
 		}
@@ -268,7 +219,7 @@ namespace sar.S7Siemens
 			//	unknown = 0x0
 			message = IO.Combine(message, new byte[] { 0x32, 0x1, 0x0, 0x0 });
 			
-            /*// underconstruction*/
+			/*// underconstruction*/
 			// sequence number (2 bytes)
 			message = IO.Combine(message, IO.Split(sequenceNumber));
 
