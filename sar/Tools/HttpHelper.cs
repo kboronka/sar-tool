@@ -633,6 +633,18 @@ namespace sar.Tools
 			{
 				return ((int[][])value).ToJSON();
 			}
+			else if (value is long)
+			{
+				return ((long)value).ToJSON();
+			}
+			else if (value is long[])
+			{
+				return ((long[])value).ToJSON();
+			}
+			else if (value is long[][])
+			{
+				return ((long[][])value).ToJSON();
+			}			
 			else if (value is double)
 			{
 				return ((double)value).ToJSON();
@@ -695,6 +707,43 @@ namespace sar.Tools
 		}
 		
 		public static string ToJSON(this int[][] objs)
+		{
+			string JSON = "[";
+			string delimitor = "";
+			
+			foreach (var obj in objs)
+			{
+				JSON += delimitor;
+				JSON += obj.ToJSON();
+				delimitor = ", ";
+			}
+			
+			JSON += "]";
+			return JSON;
+		}
+
+		public static string ToJSON(this long obj)
+		{
+			return obj.ToString();
+		}
+
+		public static string ToJSON(this long[] objs)
+		{
+			string JSON = "[";
+			string delimitor = "";
+			
+			foreach (var obj in objs)
+			{
+				JSON += delimitor;
+				JSON += obj.ToJSON();
+				delimitor = ", ";
+			}
+			
+			JSON += "]";
+			return JSON;
+		}
+		
+		public static string ToJSON(this long[][] objs)
 		{
 			string JSON = "[";
 			string delimitor = "";
