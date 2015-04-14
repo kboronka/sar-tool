@@ -20,18 +20,13 @@ using sar.Tools;
 
 namespace sar.Tools
 {
-	public class Progress
+	public static class Progress
 	{
-		private static bool enabled;
 		private static bool started;
 		private static int i = 0;
 		private static string status = "running";
 		
-		public static bool Enabled
-		{
-			get { return enabled; }
-			set	{ enabled = value; }
-		}
+		public static bool Enabled { get; set; }
 		
 		public static String Message
 		{
@@ -53,16 +48,21 @@ namespace sar.Tools
 		public static void Enable()
 		{
 			started = true;
+			const int TERMINAL_CHARACTER_WIDTH = 80;
 			
 			while (started && Tools.ApplicationInfo.IsWinVistaOrHigher)
 			{
 				Thread.Sleep(100);
 				
-				if (enabled)
+				if (Progress.Enabled)
 				{
 					if (++Progress.i >= 6) Progress.i = 0;
+					var message = Progress.status;
 					
-					ConsoleHelper.WriteProgress("\r" + Progress.status + new String('.', i) + new String(' ', 79 - Progress.status.Length - i) + "\r", ConsoleColor.Cyan);
+					if (message.Length > (TERMINAL_CHARACTER_WIDTH - 10)) message = message.Substring(0, (TERMINAL_CHARACTER_WIDTH - 10));
+						
+					
+					ConsoleHelper.WriteProgress("\r" + message + new String('.', i) + new String(' ', TERMINAL_CHARACTER_WIDTH - (i + 1) - message.Length) + "\r", ConsoleColor.Cyan);
 				}
 			}
 		}
