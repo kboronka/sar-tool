@@ -94,7 +94,7 @@ namespace sar.S7Siemens
 			if (this.length != 1 && address.IndexOf('.') != -1) throw new InvalidDataException("Invalid non-bit address location");
 			
 
-			double startAddress = double.Parse(address);
+			var startAddress = double.Parse(address);
 			this.byteAdddress = (ushort)Math.Floor(startAddress);
 			this.bitAddress = (ushort)((Math.Round(startAddress - (double)this.byteAdddress, 2)) * 10);
 			
