@@ -47,14 +47,14 @@ namespace sar.Commands
 			
 			if (!Directory.Exists(root)) throw new ApplicationException("Directory does not exist");
 
-			List<string> foundDirectories = new List<string>();
-			foundDirectories.AddRange(Directory.GetDirectories(root, filePattern, SearchOption.AllDirectories));	
+			var foundDirectories = new List<string>();
+			foundDirectories.AddRange(GetDirectories(root, filePattern));
 			
 			if (foundDirectories.Count == 0) throw new ApplicationException("\"" + filePattern + "\" Folders not found in \"" + root + "\"");
 			
 			
-			List<string> subDirectories = new List<string>();
-			List<string> files = new List<string>();
+			var subDirectories = new List<string>();
+			var files = new List<string>();
 			
 			foreach (string directory in foundDirectories)
 			{
@@ -115,6 +115,35 @@ namespace sar.Commands
 			
 			ConsoleHelper.WriteLine(foundDirectories.Count.ToString() + " Director" + ((foundDirectories.Count != 1) ? "ies" : "y") + " deleted", ConsoleColor.DarkYellow);
 			return ConsoleHelper.EXIT_OK;
+		}
+
+		public List<string> GetDirectories(string root, string filePattern)
+		{
+			var directories = new List<string>();
+			
+			try
+			{
+				foreach (var directory in Directory.GetDirectories(root))
+				{
+					directories.Add(directory);
+					directories.AddRange(GetDirectories(directory, filePattern));
+				}
+			}
+			catch (UnauthorizedAccessException ex)
+			{
+				ConsoleHelper.WriteException(ex);
+			}
+			
+			var filteredDirectories = new List<string>();
+			foreach (var directory in directories)
+			{
+				if (directory.EndsWith(@"\" + filePattern))
+				{
+					filteredDirectories.Add(directory);
+				}
+			}
+			
+			return filteredDirectories;
 		}
 	}
 }
