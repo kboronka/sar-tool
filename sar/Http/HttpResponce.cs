@@ -128,6 +128,8 @@ namespace sar.Http
 			// content details
 			responce += "Content-Type: " + this.content.ContentType + "\n";
 			responce += "Content-Length: " + (contentBytes.Length).ToString() + "\n";
+			responce += "Server: " + @"sar\" + AssemblyInfo.SarVersion +"\n";
+			
 			if (this.pdfRender) responce += "X-Content-Type-Options: " + "pdf-render" + "\n";
 
 			// other
