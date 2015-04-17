@@ -66,8 +66,6 @@ namespace sar.Tools
 
 		#endregion
 		
-		private static Thread backgroundThread;
-		
 		public static void Write(string text)
 		{
 			if (Environment.UserInteractive)
@@ -97,7 +95,8 @@ namespace sar.Tools
 			if (Environment.UserInteractive && ConsoleHelper.ConsoleRunning)
 			{
 				Console.ForegroundColor = colour;
-				Console.OutputEncoding = System.Text.Encoding.UTF8;
+				// utf8 does not work on WindowsXP
+				//Console.OutputEncoding = System.Text.Encoding.UTF8;
 				ConsoleHelper.Write(text);
 				Console.ResetColor();
 			}
@@ -471,24 +470,6 @@ namespace sar.Tools
 			get
 			{
 				return new String('-', 79);
-			}
-		}
-		
-		public static void Start()
-		{
-			backgroundThread = new Thread(Progress.Enable);
-			backgroundThread.IsBackground = true;
-			backgroundThread.Start();
-		}
-		
-		public static void Shutdown()
-		{
-			if (backgroundThread != null)
-			{
-				Progress.Disable();
-				backgroundThread.Join();
-				backgroundThread.Abort();					
-				backgroundThread = null;
 			}
 		}
 		

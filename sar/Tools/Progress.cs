@@ -22,7 +22,6 @@ namespace sar.Tools
 {
 	public static class Progress
 	{
-		private static bool started;
 		private static int i = 0;
 		private static string status = "running";
 		
@@ -30,46 +29,78 @@ namespace sar.Tools
 		
 		public static String Message
 		{
-			set { Progress.status = value; }
+			set
+			{
+				lock (Progress.status)
+				{
+					Progress.status = value;
+				}
+			}
 		}
 		
-		private static void Update(object sender, ElapsedEventArgs e)
+		#region background worker
+		
+		private static Thread messageLoopThread;
+		private static bool messageLoopShutdown;
+		
+		public static void Start()
 		{
-			try
-			{
+			messageLoopThread = new Thread(Progress.ProgressMessageLoop);
+			messageLoopThread.IsBackground = true;
+			messageLoopThread.Start();
+		}
+		
+		public static void Stop()
+		{
+			messageLoopShutdown = true;
 
-			}
-			catch
+			if (messageLoopThread != null && messageLoopThread.IsAlive)
 			{
-				
+				messageLoopThread.Join();
+				messageLoopThread.Abort();
+				messageLoopThread = null;
 			}
 		}
 		
-		public static void Enable()
+		public static void ProgressMessageLoop()
 		{
-			started = true;
 			const int TERMINAL_CHARACTER_WIDTH = 80;
 			
-			while (started && Tools.ApplicationInfo.IsWinVistaOrHigher)
+			while (!messageLoopShutdown)
 			{
 				Thread.Sleep(100);
 				
-				if (Progress.Enabled)
+				try
 				{
-					if (++Progress.i >= 6) Progress.i = 0;
-					var message = Progress.status;
-					
-					if (message.Length > (TERMINAL_CHARACTER_WIDTH - 10)) message = message.Substring(0, (TERMINAL_CHARACTER_WIDTH - 10));
+					if (Progress.Enabled)
+					{
+						if (++Progress.i >= 6) Progress.i = 0;
 						
-					
-					ConsoleHelper.WriteProgress("\r" + message + new String('.', i) + new String(' ', TERMINAL_CHARACTER_WIDTH - (i + 1) - message.Length) + "\r", ConsoleColor.Cyan);
+						lock (Progress.status)
+						{
+							var message = Progress.status;
+							
+							if (message.Length > (TERMINAL_CHARACTER_WIDTH - 10))
+							{
+								message = message.Substring(0, (TERMINAL_CHARACTER_WIDTH - 10));
+							}
+							
+							ConsoleHelper.WriteProgress("\r" + message + new String('.', i) + new String(' ', TERMINAL_CHARACTER_WIDTH - (i + 1) - message.Length) + "\r", ConsoleColor.Cyan);
+						}
+					}
+				}
+				catch
+				{
+					Thread.Sleep(5000);
 				}
 			}
 		}
 		
 		public static void Disable()
 		{
-			started = false;
+			messageLoopShutdown = false;
 		}
+		
+		#endregion
 	}
 }

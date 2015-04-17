@@ -39,22 +39,25 @@ namespace sar
 				args = new string[] { "mssql-gs", "192.168.14.110", "TestDB", "sa", "test123", @"\scripts\", @"/pause" };
 				args = new string[] { "f.open", "c:\temp" };
 				args = new string[] { "file.open", @"c:\temp", @"/pause" };
-				*/
+ 
+				Environment.CurrentDirectory = @"C:\Jobs\12011\repo\LabelPrinter\LabelPrinter v1.0.0.0";
+				args = new string[] { "-b.net", "3.5", @"LabelPrinter.sln", "/p:Configuration=Release /p:Platform=\"Any CPU\"" };
+				 */
 				
 				#endif
 				
 				var hub = new CommandHub();
-				ConsoleHelper.Start();	
+				Progress.Start();	
 				if (args.Length == 0) ConsoleHelper.ApplicationTitle();
 				int exitCode = hub.ProcessCommands(args);
 				
-				ConsoleHelper.Shutdown();
+				Progress.Stop();
 				return exitCode;
 			}
 			catch (Exception ex)
 			{
 				ConsoleHelper.WriteException(ex);
-				ConsoleHelper.Shutdown();
+				Progress.Stop();
 				return ConsoleHelper.EXIT_ERROR;
 			}
 		}

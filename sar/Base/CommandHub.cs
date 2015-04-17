@@ -131,7 +131,6 @@ namespace sar.Base
 					}
 				} while (this.commandlineActive);
 				
-				ConsoleHelper.Shutdown();
 				return exitCode;
 			}
 			catch (Exception ex)
@@ -174,7 +173,7 @@ namespace sar.Base
 			
 			if (!this.commands.ContainsKey(command))
 			{
-				throw new ArgumentException("Unknown command");
+				throw new ArgumentException("Unknown command >" + command);
 			}
 			
 			int exitCode = ConsoleHelper.EXIT_ERROR;
