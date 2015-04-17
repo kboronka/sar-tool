@@ -19,7 +19,7 @@ namespace sarValidate
 				try
 				{
 					CommandHub hub = new CommandHub();
-					ConsoleHelper.Start();
+					Progress.Start();
 					ConsoleHelper.ApplicationShortTitle();
 					hub.ProcessCommands(args);
 				}
@@ -29,7 +29,7 @@ namespace sarValidate
 
 				}
 				
-				ConsoleHelper.Shutdown();
+				Progress.Stop();
 				return ConsoleHelper.EXIT_OK;
 			}
 			catch

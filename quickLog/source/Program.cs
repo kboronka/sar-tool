@@ -28,7 +28,7 @@ namespace quickLog
 			try
 			{
 				Base.Program.LogInfo();
-				ConsoleHelper.Start();
+				Progress.Start();
 				
 				ConsoleHelper.WriteLine("Hello", ConsoleColor.Magenta);
 				
@@ -38,7 +38,7 @@ namespace quickLog
 				Base.Program.ErrorLog.FlushFile();
 				Base.Program.DebugLog.FlushFile();
 				
-				ConsoleHelper.Shutdown();
+				Progress.Stop();
 				return ConsoleHelper.EXIT_OK;
 			}
 			catch (Exception ex)
@@ -48,7 +48,7 @@ namespace quickLog
 				Base.Program.ErrorLog.FlushFile();
 				Base.Program.DebugLog.FlushFile();
 				
-				ConsoleHelper.Shutdown();
+				Progress.Stop();
 				return ConsoleHelper.EXIT_ERROR;
 			}
 		}
