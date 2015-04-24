@@ -183,6 +183,7 @@ namespace sar.Tools
 				{".htt", "text/webviewhtml"},
 				{".hxa", "application/xml"},
 				{".hxc", "application/xml"},
+				{".hex", "application/octet-stream"},
 				{".hxd", "application/octet-stream"},
 				{".hxe", "application/xml"},
 				{".hxf", "application/xml"},
