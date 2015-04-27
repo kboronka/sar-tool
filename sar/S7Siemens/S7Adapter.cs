@@ -87,10 +87,36 @@ namespace sar.S7Siemens
 			return BitConverter.ToInt16(data, 0);
 		}
 
+        public Int16[] ReadINT(string address, uint Quantity)
+        {
+            byte[] data = ReadBytesRaw(address, 2 * Quantity);
+            Int16[] Result = new Int16[Quantity];
+
+            for (int i = 0; i < Result.Length; i++)
+            {
+                Result[i] = BitConverter.ToInt16(data, i * 2);
+            }
+
+            return Result;
+        }
+
+
 		public Int32 ReadDINT(string address)
 		{
 			byte[] data = ReadBytesRaw(address, 4);
 			return BitConverter.ToInt32(data, 0);
+		}
+        public Int32[] ReadDINT(string address, uint Quantity)
+		{
+            byte[] data = ReadBytesRaw(address, 4 * Quantity);
+            Int32[] Result = new Int32[Quantity];
+
+            for (int i = 0; i < Result.Length; i++)
+			{
+                Result[i] = BitConverter.ToInt32(data, i * 4);
+			}
+
+            return Result;
 		}
 
 		public Single ReadFLOAT(string address)
@@ -98,6 +124,20 @@ namespace sar.S7Siemens
 			byte[] data = ReadBytesRaw(address, 4);
 			return BitConverter.ToSingle(data, 0);
 		}
+
+        public Single[] ReadFLOAT(string address, uint Quantity)
+        {
+            byte[] data = ReadBytesRaw(address, 4 * Quantity);
+            Single[] Result = new Single[Quantity];
+
+            for (int i = 0; i < Result.Length; i++)
+            {
+                Result[i] = BitConverter.ToSingle(data, i * 4);
+            }
+
+            return Result;
+        }
+
 		
 		public byte[] ReadBytes(string address, ushort bytes)
 		{
@@ -106,7 +146,11 @@ namespace sar.S7Siemens
 			
 			return data;
 		}
-		
+		public double[] ReadReals(string address, ushort bytes)
+        {
+            return null;
+        }
+
 		private const int MAX_BYTES_PER_PAGE = 220;
 		private byte[] ReadBytesRaw(string address, uint bytes)
 		{
