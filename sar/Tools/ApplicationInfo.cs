@@ -88,8 +88,9 @@ namespace sar.Tools
 			{
 				if (string.IsNullOrEmpty(ApplicationInfo.currentDirectory))
 				{
-					ApplicationInfo.currentDirectory = Directory.GetCurrentDirectory();
+					ApplicationInfo.currentDirectory = System.AppDomain.CurrentDomain.BaseDirectory;
 				}
+				
 				return ApplicationInfo.currentDirectory;
 			}
 		}
