@@ -37,7 +37,7 @@ namespace sar.Base
 		
 		internal Dictionary<string, Command> commands = new Dictionary<string, Command>();
 		
-		public CommandHub()
+		protected CommandHub()
 		{
 			this.commandList = new List<Command>();
 			this.commandList.AddRange(new Command[] {
@@ -209,7 +209,7 @@ namespace sar.Base
 			this.Debug = true;
 			#endif
 			
-			List<string> result = new List<string>();
+			var result = new List<string>();
 			int count = 0;
 			foreach (string arg in args)
 			{
@@ -246,7 +246,7 @@ namespace sar.Base
 							
 							if (!ApplicationInfo.HasAdministrativeRight)
 							{
-								List<string> newArgs = new List<string>();
+								var newArgs = new List<string>();
 								
 								foreach (string oldArg in args)
 								{
