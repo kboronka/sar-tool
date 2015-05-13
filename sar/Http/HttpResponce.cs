@@ -128,8 +128,15 @@ namespace sar.Http
 			// content details
 			responce += "Content-Type: " + this.content.ContentType + "\n";
 			responce += "Content-Length: " + (contentBytes.Length).ToString() + "\n";
-			responce += "Server: " + @"sar\" + AssemblyInfo.SarVersion +"\n";
+			responce += "Server: " + @"sar\" + AssemblyInfo.SarVersion + "\n";
+
+			responce += "Access-Control-Allow-Origin: *" +"\n";
+			responce += "Access-Control-Allow-Methods: POST, GET" + "\n";
+			responce += "Access-Control-Max-Age: 1728000" + "\n";
+			responce += "Access-Control-Allow-Credentials: true" + "\n";
 			
+		
+	
 			if (this.pdfRender) responce += "X-Content-Type-Options: " + "pdf-render" + "\n";
 
 			// other
