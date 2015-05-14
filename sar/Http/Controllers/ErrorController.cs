@@ -30,7 +30,7 @@ namespace sar.Http
 			
 			var baseContent = new Dictionary<string, HttpContent>() {};
 			baseContent.Add("Title", new HttpContent(status.ToString()));
-			baseContent.Add("ResponceCode", new HttpContent(((int)status).ToString()));
+			baseContent.Add("ResponseCode", new HttpContent(((int)status).ToString()));
 			baseContent.Add("ExceptionType", new HttpContent(inner.GetType().ToString()));
 			baseContent.Add("RequestURL", new HttpContent(request.FullUrl));
 			baseContent.Add("ExceptionMessage", new HttpContent(inner.Message));

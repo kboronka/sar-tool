@@ -59,9 +59,9 @@ namespace sar.S7Siemens
 			byte[] message = IO.Combine(TPKT, CONNECT_TO_ADAPTER);
 			EncodeTPKTSize(ref message);
 			DebugWrite("connect message", message);
-			byte[] responce = socket.Write(message);
-			DebugWrite("responce", responce);
-			this.connected = responce.SequenceEqual(CONNECTED_TO_ADAPTER);
+			byte[] response = socket.Write(message);
+			DebugWrite("response", response);
+			this.connected = response.SequenceEqual(CONNECTED_TO_ADAPTER);
 			
 			// TODO: end of automatic retry
 
@@ -69,8 +69,8 @@ namespace sar.S7Siemens
 			// exchange PDU
 			message = EncodeTPDU(TPKT_PDU, EXCHANGE_PDU_PARAMETER);
 			DebugWrite("ExchangePDU", message);
-			responce = socket.Write(message);
-			DebugWrite("responce", responce);
+			response = socket.Write(message);
+			DebugWrite("response", response);
 			
 			return this.connected;
 		}
@@ -177,10 +177,10 @@ namespace sar.S7Siemens
 				DebugWrite("ReadWriteMessage", message);
 				message = EncodeTPDU(TPKT, message);
 				DebugWrite("TPDU", message);
-				var responce = socket.Write(message);
-				DebugWrite("responce", responce);
+				var response = socket.Write(message);
+				DebugWrite("response", response);
 				
-				byte[] data = ExtractTPDU(responce);
+				byte[] data = ExtractTPDU(response);
 				DebugWrite("data", data);
 				
 				return data;

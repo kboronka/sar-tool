@@ -96,9 +96,9 @@ namespace sar.Tools
 			try
 			{
 				this.socket.ReceiveTimeout = timeout;
-				byte[] buffer = new byte[this.socket.ReceiveBufferSize];
-				int responceSize = this.socket.Receive(buffer);
-				return IO.SubSet(buffer, 0, responceSize);
+				var buffer = new byte[this.socket.ReceiveBufferSize];
+				int responseSize = this.socket.Receive(buffer);
+				return IO.SubSet(buffer, 0, responseSize);
 			}
 			catch (Exception ex)
 			{

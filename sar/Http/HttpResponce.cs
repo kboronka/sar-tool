@@ -32,7 +32,7 @@ namespace sar.Http
 		SERVERERROR=500
 	};
 
-	public class HttpResponce
+	public class HttpResponse
 	{
 		public const string PDF_RENDER = "-pdf-render";
 		private TcpClient socket;
@@ -51,7 +51,7 @@ namespace sar.Http
 			get { return this.bytes; }
 		}
 		
-		public HttpResponce(HttpRequest request, TcpClient socket)
+		public HttpResponse(HttpRequest request, TcpClient socket)
 		{
 			this.request = request;
 			this.encoding = Encoding.ASCII;
@@ -96,57 +96,57 @@ namespace sar.Http
 				
 				if (this.content is HttpErrorContent)
 				{
-					this.bytes = this.ConstructResponce(HttpStatusCode.SERVERERROR);
+					this.bytes = this.ConstructResponse(HttpStatusCode.SERVERERROR);
 				}
 				else
 				{
-					this.bytes = this.ConstructResponce(HttpStatusCode.OK);
+					this.bytes = this.ConstructResponse(HttpStatusCode.OK);
 				}
 			}
 			catch (FileNotFoundException ex)
 			{
 				Program.Log(ex);
 				this.content = ErrorController.Display(this.request, ex, HttpStatusCode.NOTFOUND);
-				this.bytes = this.ConstructResponce(HttpStatusCode.SERVERERROR);			}
+				this.bytes = this.ConstructResponse(HttpStatusCode.SERVERERROR);			}
 			catch (Exception ex)
 			{
 				Program.Log(ex);
 				this.content = ErrorController.Display(this.request, ex, HttpStatusCode.SERVERERROR);
-				this.bytes = this.ConstructResponce(HttpStatusCode.SERVERERROR);
+				this.bytes = this.ConstructResponse(HttpStatusCode.SERVERERROR);
 			}
 		}
 		
-		private byte[] ConstructResponce(HttpStatusCode status)
+		private byte[] ConstructResponse(HttpStatusCode status)
 		{
-			// Construct responce header
+			// Construct response header
 			
 			const string eol = "\r\n";
 
 			// status line
-			string responcePhrase = Enum.GetName(typeof(HttpStatusCode), status);
-			string responce = "HTTP/1.0" + " " + ((int)status).ToString() + " " + responcePhrase + eol;
+			string responsePhrase = Enum.GetName(typeof(HttpStatusCode), status);
+			string response = "HTTP/1.0" + " " + ((int)status).ToString() + " " + responsePhrase + eol;
 			
 			byte [] contentBytes = this.content.Render();
 			// content details
-			responce += "Content-Type: " + this.content.ContentType + eol;
-			responce += "Content-Length: " + (contentBytes.Length).ToString() + eol;
-			responce += "Server: " + @"sar\" + AssemblyInfo.SarVersion + eol;
+			response += "Content-Type: " + this.content.ContentType + eol;
+			response += "Content-Length: " + (contentBytes.Length).ToString() + eol;
+			response += "Server: " + @"sar\" + AssemblyInfo.SarVersion + eol;
 
-			responce += "Access-Control-Allow-Origin: *" + eol;
-			responce += "Access-Control-Allow-Methods: POST, GET" + eol;
-			responce += "Access-Control-Max-Age: 1728000" + eol;
-			responce += "Access-Control-Allow-Credentials: true" + eol;
+			response += "Access-Control-Allow-Origin: *" + eol;
+			response += "Access-Control-Allow-Methods: POST, GET" + eol;
+			response += "Access-Control-Max-Age: 1728000" + eol;
+			response += "Access-Control-Allow-Credentials: true" + eol;
 			
 		
 	
-			if (this.pdfRender) responce += "X-Content-Type-Options: " + "pdf-render" + eol;
+			if (this.pdfRender) response += "X-Content-Type-Options: " + "pdf-render" + eol;
 
 			// other
-			responce += "Connection: close";
+			response += "Connection: close";
 			// terminate header
-			responce += eol + eol;
+			response += eol + eol;
 			
-			return StringHelper.CombineByteArrays(Encoding.ASCII.GetBytes(responce), contentBytes);
+			return StringHelper.CombineByteArrays(Encoding.ASCII.GetBytes(response), contentBytes);
 		}
 	}
 }

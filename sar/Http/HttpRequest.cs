@@ -158,11 +158,11 @@ namespace sar.Http
 				}
 			}
 			
-			var responce = new HttpResponce(this, socket);
+			var response = new HttpResponse(this, socket);
 			
 			lock (socket)
 			{
-				stream.Write(responce.Bytes, 0, responce.Bytes.Length);
+				stream.Write(response.Bytes, 0, response.Bytes.Length);
 				stream.Flush();
 				stream = null;
 				socket.Close();
