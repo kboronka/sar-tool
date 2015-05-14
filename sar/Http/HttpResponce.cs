@@ -119,30 +119,32 @@ namespace sar.Http
 		private byte[] ConstructResponce(HttpStatusCode status)
 		{
 			// Construct responce header
+			
+			const string eol = "\r\n";
 
 			// status line
 			string responcePhrase = Enum.GetName(typeof(HttpStatusCode), status);
-			string responce = "HTTP/1.0" + " " + ((int)status).ToString() + " " + responcePhrase + "\n";
+			string responce = "HTTP/1.0" + " " + ((int)status).ToString() + " " + responcePhrase + eol;
 			
 			byte [] contentBytes = this.content.Render();
 			// content details
-			responce += "Content-Type: " + this.content.ContentType + "\n";
-			responce += "Content-Length: " + (contentBytes.Length).ToString() + "\n";
-			responce += "Server: " + @"sar\" + AssemblyInfo.SarVersion + "\n";
+			responce += "Content-Type: " + this.content.ContentType + eol;
+			responce += "Content-Length: " + (contentBytes.Length).ToString() + eol;
+			responce += "Server: " + @"sar\" + AssemblyInfo.SarVersion + eol;
 
-			responce += "Access-Control-Allow-Origin: *" +"\n";
-			responce += "Access-Control-Allow-Methods: POST, GET" + "\n";
-			responce += "Access-Control-Max-Age: 1728000" + "\n";
-			responce += "Access-Control-Allow-Credentials: true" + "\n";
+			responce += "Access-Control-Allow-Origin: *" + eol;
+			responce += "Access-Control-Allow-Methods: POST, GET" + eol;
+			responce += "Access-Control-Max-Age: 1728000" + eol;
+			responce += "Access-Control-Allow-Credentials: true" + eol;
 			
 		
 	
-			if (this.pdfRender) responce += "X-Content-Type-Options: " + "pdf-render" + "\n";
+			if (this.pdfRender) responce += "X-Content-Type-Options: " + "pdf-render" + eol;
 
 			// other
 			responce += "Connection: close";
 			// terminate header
-			responce += "\r\n" + "\r\n";
+			responce += eol + eol;
 			
 			return StringHelper.CombineByteArrays(Encoding.ASCII.GetBytes(responce), contentBytes);
 		}
