@@ -47,6 +47,8 @@ namespace sar.Http
 		
 		// header
 		private int contentLength;
+		private int bytesRecived;
+		
 		private string contentType;
 		private byte[] data;
 		
@@ -230,8 +232,9 @@ namespace sar.Http
 			ReadRequest(ref bufferIn);
 			if (!headerRecived) return;
 			
+			incomingRequestRecived |= (this.contentLength == 0);
 			ReadData(ref bufferIn);
-			incomingRequestRecived = true;
+			incomingRequestRecived |= this.bytesRecived >= this.contentLength;
 		}
 		
 		private void ReadRequest(ref byte[] bufferIn)
@@ -282,6 +285,7 @@ namespace sar.Http
 				{
 					case "Content-Length":
 						this.contentLength = requestHeader[1].ToInt();
+						this.bytesRecived = 0;
 						break;
 						
 					case "Content-Type":
@@ -303,8 +307,14 @@ namespace sar.Http
 		{
 			if (this.method != HttpMethod.POST) return;
 			
-			this.data = new Byte[this.contentLength];
-			System.Buffer.BlockCopy(bufferIn, 0, this.data, 0, this.contentLength);
+			// initilize data array
+			if (this.bytesRecived == 0)
+			{
+				this.data = new Byte[this.contentLength];
+			}
+			
+			System.Buffer.BlockCopy(bufferIn, this.bytesRecived, this.data, this.bytesRecived, bufferIn.Length);
+			this.bytesRecived += bufferIn.Length;
 		}
 		
 		private string ReadLine(ref byte[] bufferIn)
