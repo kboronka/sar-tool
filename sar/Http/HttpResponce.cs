@@ -140,8 +140,9 @@ namespace sar.Http
 			if (this.pdfRender) responce += "X-Content-Type-Options: " + "pdf-render" + "\n";
 
 			// other
-			responce += "Connection: close" + "\n";
-			responce += "" + "\n";
+			responce += "Connection: close";
+			// terminate header
+			responce += "\r\n" + "\r\n";
 			
 			return StringHelper.CombineByteArrays(Encoding.ASCII.GetBytes(responce), contentBytes);
 		}
