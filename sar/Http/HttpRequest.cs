@@ -81,7 +81,7 @@ namespace sar.Http
 		{
 			get { return parent; }
 		}
-				
+		
 		#endregion
 		
 		#region constructor
@@ -162,10 +162,16 @@ namespace sar.Http
 			
 			lock (socket)
 			{
-				stream.Write(response.Bytes, 0, response.Bytes.Length);
-				stream.Flush();
-				stream = null;
-				socket.Close();
+				try
+				{
+					stream.Write(response.Bytes, 0, response.Bytes.Length);
+					stream.Flush();
+				}
+				finally
+				{
+					stream = null;
+					socket.Close();
+				}
 			}
 		}
 		
@@ -220,7 +226,7 @@ namespace sar.Http
 		private void ProcessIncomingBuffer(ref byte[] bufferIn)
 		{
 			requestText += StringHelper.GetString(bufferIn);
-		
+			
 			ReadRequest(ref bufferIn);
 			if (!headerRecived) return;
 			
@@ -231,7 +237,7 @@ namespace sar.Http
 		private void ReadRequest(ref byte[] bufferIn)
 		{
 			if (headerRecived) return;
-		
+			
 			// Request Line
 			string requestLine = ReadLine(ref bufferIn);
 			if (string.IsNullOrEmpty(requestLine)) throw new InvalidDataException("request line missing");
@@ -343,6 +349,6 @@ namespace sar.Http
 		public override string ToString()
 		{
 			return this.requestText;
-		} 
+		}
 	}
 }
