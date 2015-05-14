@@ -589,7 +589,8 @@ namespace sar.Tools
 				{".svg", "image/svg+xml"},
 				{".woff", "application/font-woff"},
 				{".woff2", "application/font-woff2"},
-				{".json", "application/json"}
+				{".json", "text/plain"}
+				// {".json", "application/json"}
 				#endregion
 			};
 			
