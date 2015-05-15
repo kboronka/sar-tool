@@ -17,8 +17,23 @@
 		
 		<h3>Response:</h3>
 		<pre class="log" id="clientLog">client log</pre>
-		<div id="hidden" style="display: none;"><h1>I'm a PDF</h1></pre>
+		
+		<h3>Info:</h3>
+		<pre class="log">
+screen width: <span id="screen-width"></span>
+screen height: <span id="screen-height"></span>
+			
+availWidth: <span id="screen-avail-width"></span>
+availHeight: <span id="screen-avail-height"></span>
+
+window inner width: <span id="window-inner-width"></span>
+window inner height: <span id="window-inner-height"></span>
+		</pre>
+		
+		<div id="hidden" style="display: none;"><h1>I'm a PDF</h1></pre></div>
+		<br>		
 	</div>
+	
 	<script type="text/javascript">
 		var req = new XMLHttpRequest();
 		req.open('GET', document.location, false);
@@ -32,6 +47,34 @@
 		}
 		
 		$('#clientLog').html(headers);
+
+		function UpdateHeightWidth()
+		{
+			$('#screen-width').html(screen.width.toString());
+			$('#screen-height').html(screen.height.toString());
+			$('#screen-avail-width').html(screen.availWidth.toString());
+			$('#screen-avail-height').html(screen.availHeight.toString());
+			
+			var w = window.innerWidth
+			|| document.documentElement.clientWidth
+			|| document.body.clientWidth;
+			
+			var h = window.innerHeight
+			|| document.documentElement.clientHeight
+			|| document.body.clientHeight;
+	
+			$('#window-inner-width').html(w.toString());
+			$('#window-inner-height').html(h.toString());
+		}
+		
+		window.onresize=function() {
+			UpdateHeightWidth();
+		}
+		
+		window.onload=function(){
+			UpdateHeightWidth();
+		}		
+
 	</script>
 </body>
 </html>
