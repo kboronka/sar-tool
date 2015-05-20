@@ -41,6 +41,15 @@ namespace sar.S7Siemens
 		private static readonly byte[] TPKT =					new byte[] { 0x03, 0x00, 0x00, 0x1F };
 		private static readonly byte[] TPKT_PDU =				new byte[] { 0x03, 0x00, 0x00, 0x19 };
 
+		#region constructors
+		
+		protected Adapter()
+		{
+			// used for simulation
+			ipAddress = "";
+			connected = true;
+		}
+		
 		public Adapter(string ipAddress)
 		{
 			this.ipAddress = ipAddress;
@@ -75,6 +84,8 @@ namespace sar.S7Siemens
 			return this.connected;
 		}
 
+		#endregion
+		
 		public bool ReadBit(string address)
 		{
 			var data = ReadBytesRaw(address, 1);
@@ -106,6 +117,7 @@ namespace sar.S7Siemens
 			byte[] data = ReadBytesRaw(address, 4);
 			return BitConverter.ToInt32(data, 0);
 		}
+		
         public Int32[] ReadDINT(string address, uint Quantity)
 		{
             var data = ReadBytesRaw(address, 4 * Quantity);
@@ -147,11 +159,6 @@ namespace sar.S7Siemens
 			return data;
 		}
 
-		public double[] ReadReals(string address, ushort bytes)
-        {
-            return null;
-        }
-
 		private const int MAX_BYTES_PER_PAGE = 220;
 		private byte[] ReadBytesRaw(string address, uint bytes)
 		{
@@ -161,7 +168,7 @@ namespace sar.S7Siemens
 			return ReadBytesRaw(s7address);
 		}
 		
-		private byte[] ReadBytesRaw(Address address)
+		protected virtual byte[] ReadBytesRaw(Address address)
 		{
 			var bytes = address.byteLength;
 			
@@ -323,6 +330,7 @@ namespace sar.S7Siemens
 					line += delimiter + b.ToString();
 					delimiter = ", ";
 				}
+				
 				line += "]";
 				
 				Debug.WriteLine(line);
