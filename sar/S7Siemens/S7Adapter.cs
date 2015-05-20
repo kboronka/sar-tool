@@ -43,11 +43,11 @@ namespace sar.S7Siemens
 
 		#region constructors
 		
-		protected Adapter()
+		protected Adapter(string ipAddress, bool simulation)
 		{
-			// used for simulation
-			ipAddress = "";
-			connected = true;
+			// can be used for simulation
+			this.ipAddress = ipAddress;
+			connected = simulation ? simulation : this.Connect();
 		}
 		
 		public Adapter(string ipAddress)
