@@ -77,20 +77,20 @@ namespace sar.S7Siemens
 
 		public bool ReadBit(string address)
 		{
-			byte[] data = ReadBytesRaw(address, 1);
+			var data = ReadBytesRaw(address, 1);
 			return data[0] > 0;
 		}
 
 		public Int16 ReadINT(string address)
 		{
-			byte[] data = ReadBytesRaw(address, 2);
+			var data = ReadBytesRaw(address, 2);
 			return BitConverter.ToInt16(data, 0);
 		}
 
         public Int16[] ReadINT(string address, uint Quantity)
         {
-            byte[] data = ReadBytesRaw(address, 2 * Quantity);
-            Int16[] Result = new Int16[Quantity];
+            var data = ReadBytesRaw(address, 2 * Quantity);
+            var Result = new Int16[Quantity];
 
             for (int i = 0; i < Result.Length; i++)
             {
@@ -108,8 +108,8 @@ namespace sar.S7Siemens
 		}
         public Int32[] ReadDINT(string address, uint Quantity)
 		{
-            byte[] data = ReadBytesRaw(address, 4 * Quantity);
-            Int32[] Result = new Int32[Quantity];
+            var data = ReadBytesRaw(address, 4 * Quantity);
+            var Result = new Int32[Quantity];
 
             for (int i = 0; i < Result.Length; i++)
 			{
@@ -121,14 +121,14 @@ namespace sar.S7Siemens
 
 		public Single ReadFLOAT(string address)
 		{
-			byte[] data = ReadBytesRaw(address, 4);
+			var data = ReadBytesRaw(address, 4);
 			return BitConverter.ToSingle(data, 0);
 		}
 
         public Single[] ReadFLOAT(string address, uint Quantity)
         {
-            byte[] data = ReadBytesRaw(address, 4 * Quantity);
-            Single[] Result = new Single[Quantity];
+            var data = ReadBytesRaw(address, 4 * Quantity);
+            var Result = new Single[Quantity];
 
             for (int i = 0; i < Result.Length; i++)
             {
@@ -141,11 +141,12 @@ namespace sar.S7Siemens
 		
 		public byte[] ReadBytes(string address, ushort bytes)
 		{
-			byte[] data = IO.ReverseBytes(ReadBytesRaw(address, bytes));
+			var data = IO.ReverseBytes(ReadBytesRaw(address, bytes));
 			DebugWrite("data", data);
 			
 			return data;
 		}
+
 		public double[] ReadReals(string address, ushort bytes)
         {
             return null;
