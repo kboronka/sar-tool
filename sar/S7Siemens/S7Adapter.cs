@@ -30,7 +30,7 @@ namespace sar.S7Siemens
 	
 	public class Adapter
 	{
-		private string ipAddress;
+		protected string ipAddress;
 		private SimpleSocket socket;
 		
 		private bool connected;
