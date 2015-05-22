@@ -18,7 +18,7 @@ namespace sarValidate
 				
 				try
 				{
-					CommandHub hub = new CommandHub();
+					var hub = new CommandHub();
 					Progress.Start();
 					ConsoleHelper.ApplicationShortTitle();
 					hub.ProcessCommands(args);
