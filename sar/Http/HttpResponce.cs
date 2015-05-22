@@ -34,7 +34,6 @@ namespace sar.Http
 
 	public class HttpResponse
 	{
-		public const string PDF_RENDER = "-pdf-render";
 		private TcpClient socket;
 		private NetworkStream stream;
 		private Encoding encoding;
@@ -42,7 +41,6 @@ namespace sar.Http
 		private HttpRequest request;
 		private HttpContent content;
 		
-		private bool pdfRender {get; set;}
 		
 		public byte[] bytes;
 		
@@ -57,15 +55,10 @@ namespace sar.Http
 			this.encoding = Encoding.ASCII;
 			this.socket = socket;
 			this.stream = this.socket.GetStream();
+			const string PDF_IDENT = "-pdf";
 			
 			try
 			{
-				if (this.request.Path.ToLower().EndsWith(PDF_RENDER, StringComparison.CurrentCulture))
-				{
-					this.request.Path = StringHelper.TrimEnd(this.request.Path, PDF_RENDER.Length);
-					this.pdfRender = true;
-				}
-				
 				if (this.request.Path == @"")
 				{
 					if (HttpController.Primary == null) throw new ApplicationException("Primary Controller Not Defined");
@@ -73,11 +66,11 @@ namespace sar.Http
 	
 					this.content = HttpController.RequestPrimary(this.request);
 				}
-				else if (this.request.Path.ToLower().EndsWith(@"-pdf", StringComparison.CurrentCulture))
+				else if (this.request.Path.ToLower().EndsWith(PDF_IDENT, StringComparison.CurrentCulture))
 				{
-					string url = "http://localhost:" + request.Server.Port.ToString() + this.request.FullUrl + PDF_RENDER;
+					string url = "http://localhost:" + request.Server.Port.ToString() + this.request.FullUrl;
 					
-					url = url.Replace(this.request.Path, StringHelper.TrimEnd(this.request.Path, 4));
+					url = url.Replace(this.request.Path, StringHelper.TrimEnd(this.request.Path, PDF_IDENT.Length));
 					
 					this.content = new HttpContent(HtmlToPdfHelper.ReadPDF(url), "application/pdf");
 				}
@@ -139,7 +132,7 @@ namespace sar.Http
 			
 		
 	
-			if (this.pdfRender) response += "X-Content-Type-Options: " + "pdf-render" + eol;
+			if (this.request.PdfReader) response += "X-Content-Type-Options: " + "pdf-render" + eol;
 
 			// other
 			response += "Connection: close";

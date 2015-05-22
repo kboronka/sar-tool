@@ -48,6 +48,7 @@ namespace sar.Http
 		// header
 		private int contentLength;
 		private int bytesRecived;
+		private bool pdfReader;
 		
 		private string contentType;
 		private byte[] data;
@@ -82,6 +83,11 @@ namespace sar.Http
 		public HttpServer Server
 		{
 			get { return parent; }
+		}
+		
+		public bool PdfReader
+		{
+			get { return pdfReader; }
 		}
 		
 		#endregion
@@ -286,6 +292,10 @@ namespace sar.Http
 					case "Content-Length":
 						this.contentLength = requestHeader[1].ToInt();
 						this.bytesRecived = 0;
+						break;
+						
+					case "User-Agent":
+						if (requestHeader[1].Contains("wkhtmltopdf")) this.pdfReader = true;
 						break;
 						
 					case "Content-Type":
