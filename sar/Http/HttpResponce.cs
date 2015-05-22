@@ -79,7 +79,7 @@ namespace sar.Http
 					
 					url = url.Replace(this.request.Path, StringHelper.TrimEnd(this.request.Path, 4));
 					
-					this.content = HttpContent.GetPDF(url);
+					this.content = new HttpContent(HtmlToPdfHelper.ReadPDF(url), "application/pdf");
 				}
 				else if (this.request.Path.ToLower() == @"info")
 				{
