@@ -68,9 +68,15 @@ namespace sar.Commands
 
 			Progress.Message = "Searching";
 			string root = Directory.GetCurrentDirectory();
+			ConsoleHelper.DebugWriteLine("currentDir = " + root);
+			
 			IO.CheckRootAndPattern(ref root, ref filePattern);
-			List<string> files = IO.GetAllFiles(root, filePattern);
-			List<string> changedFiles = new List<string>();
+			ConsoleHelper.DebugWriteLine("root = " + root);
+			ConsoleHelper.DebugWriteLine("filePattern = " + filePattern);
+			
+			var files = IO.GetAllFiles(root, filePattern);
+			ConsoleHelper.DebugWriteLine("files = " + files.Count.ToString());
+			var changedFiles = new List<string>();
 			
 			foreach (string file in files)
 			{
