@@ -82,7 +82,8 @@ namespace sar.Commands
 			{
 				// [assembly: AssemblyVersion("1.0.1.85")]
 				// <Assembly: AssemblyFileVersion("1.0")>
-				if (IO.SearchAndReplaceInFile(file, @"(AssemblyFileVersion|AssemblyVersion)[\(][\""][^\""]*[\""][)]", @"$1(""" + version + @""")").Matches.Count > 0)
+				// [assembly: AssemblyVersion ("1.1.0.5")]
+				if (IO.SearchAndReplaceInFile(file, @"(AssemblyFileVersion|AssemblyVersion)\s*[\(][\""][^\""]*[\""][)]", @"$1(""" + version + @""")").Matches.Count > 0)
 				{
 					changedFiles.Add(file);
 				}
