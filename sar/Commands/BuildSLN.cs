@@ -65,7 +65,8 @@ namespace sar.Commands
 			Progress.Message = "Locating Installed .NET versions";
 			string msbuildPath = IO.FindDotNetFolder(netVersion);
 			
-			if (netVersion != "1.1" && soultionPath.EndsWith(".sln"))
+			if (netVersion != "1.1" 
+			    && (soultionPath.EndsWith(".sln") || soultionPath.EndsWith(".csproj")))
 			{
 				msbuildPath += @"\MSBuild.exe";
 			}
