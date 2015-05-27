@@ -83,7 +83,7 @@ namespace sar.Commands
 				ConsoleHelper.WriteLine("\nOptions:", ConsoleColor.White);
 				
 				ConsoleHelper.Write("\t" + @"/");
-				ConsoleHelper.Write("quite", ConsoleColor.Yellow);
+				ConsoleHelper.Write("quiet", ConsoleColor.Yellow);
 				ConsoleHelper.WriteLine(": no warnings");
 
 				ConsoleHelper.Write("\t" + @"/");

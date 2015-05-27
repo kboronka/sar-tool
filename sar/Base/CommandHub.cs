@@ -219,7 +219,8 @@ namespace sar.Base
 					switch (arg.ToLower())
 					{
 						case "/q":
-						case "/quite":
+						case "/quite": /*spelling error*/
+						case "/quiet":
 							this.NoWarning = true;
 							break;
 						case "/d":
