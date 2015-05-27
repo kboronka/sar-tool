@@ -48,7 +48,7 @@ namespace sar.Commands
 			if (!Directory.Exists(root)) throw new ApplicationException("Directory does not exist");
 
 			var foundDirectories = new List<string>();
-			foundDirectories.AddRange(GetDirectories(root, filePattern));
+			foundDirectories.AddRange(GetDirectories(root, filePattern, !this.commandHub.IncludeSubFolders));
 			
 			if (foundDirectories.Count == 0) throw new ApplicationException("\"" + filePattern + "\" Folders not found in \"" + root + "\"");
 			
@@ -119,6 +119,11 @@ namespace sar.Commands
 
 		public List<string> GetDirectories(string root, string filePattern)
 		{
+			return GetDirectories(root, filePattern, false);
+		}
+		
+		public List<string> GetDirectories(string root, string filePattern, bool rootOnly)
+		{
 			var directories = new List<string>();
 			
 			try
@@ -126,7 +131,7 @@ namespace sar.Commands
 				foreach (var directory in Directory.GetDirectories(root))
 				{
 					directories.Add(directory);
-					directories.AddRange(GetDirectories(directory, filePattern));
+					if (!rootOnly) directories.AddRange(GetDirectories(directory, filePattern));
 				}
 			}
 			catch (UnauthorizedAccessException ex)
