@@ -35,11 +35,6 @@
 	svn update
 	svn revert -R .
 
-	%SAR% -f.bsd \sar\*.cs "Kevin Boronka"
-	%SAR% -f.bsd \sarControls\*.cs "Kevin Boronka"
-	%SAR% -f.bsd \sarTesting\*.cs "Kevin Boronka"
-	%SAR% -f.bsd \quickLog\source\*.cs "Kevin Boronka"
-
 	%SAR% -assy.ver \sar\AssemblyInfo.* %VERSION%
 	%SAR% -assy.ver \sarControls\AssemblyInfo.* %VERSION%
 	%SAR% -assy.ver \quickLog\source\AssemblyInfo.* %VERSION%
@@ -70,6 +65,11 @@
 	svn commit -m "new binaries v%VERSION%"
 	%ZIP% "sar %VERSION%.zip" .\release\*.*
 	svn update
+
+	%SAR% -f.bsd \sar\*.cs "Kevin Boronka"
+	%SAR% -f.bsd \sarControls\*.cs "Kevin Boronka"
+	%SAR% -f.bsd \sarTesting\*.cs "Kevin Boronka"
+	%SAR% -f.bsd \quickLog\source\*.cs "Kevin Boronka"
 	
 	echo build completed
 	popd
