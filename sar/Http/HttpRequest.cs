@@ -172,7 +172,13 @@ namespace sar.Http
 			{
 				try
 				{
-					stream.Write(response.Bytes, 0, response.Bytes.Length);
+					const int MAX_LENGTH = 8192;
+					for (int b = 0; b <= response.bytes.Length; b += MAX_LENGTH)
+					{
+						int length = Math.Min(response.bytes.Length - b, MAX_LENGTH);
+						stream.Write(response.Bytes, b, length);
+					}
+					
 					stream.Flush();
 				}
 				finally
@@ -198,7 +204,7 @@ namespace sar.Http
 						{
 							if (stream.DataAvailable)
 							{
-								byte[] packetBytes = new byte[socket.Available];
+								var packetBytes = new byte[socket.Available];
 								stream.Read(packetBytes, 0, packetBytes.Length);
 								return packetBytes;
 								//return this.encoding.GetString(packetBytes, 0, packetSize);

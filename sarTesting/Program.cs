@@ -24,13 +24,16 @@ namespace sar.Testing
 {
 	internal sealed class Program : Base.Program
 	{
+		public static int port = 0;
+		
 		[STAThread]
 		private static void Main(string[] args)
 		{
 			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(LogUnhandledException);
 			
 			Base.Program.LogInfo();
-			var server = new Http.HttpServer(83);
+			var server = new Http.HttpServer();
+			port = server.Port;
 			
 //			foreach (string resource in EmbeddedResource.GetAllResources())
 //			{

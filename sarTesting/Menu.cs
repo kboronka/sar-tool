@@ -33,6 +33,8 @@ namespace sar.Testing
 		{
 			InitializeComponent();
 			
+			this.Text = "sar-tool testing:" + Program.port.ToString();
+			
 			try
 			{
 				throw new ApplicationException("test");
