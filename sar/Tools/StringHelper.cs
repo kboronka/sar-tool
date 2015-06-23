@@ -422,6 +422,16 @@ namespace sar.Tools
 			return result;
 		}
 		
+		public static bool IsNotZero(this byte[] byteArray)
+		{
+			foreach (var b in byteArray)
+			{
+				if (b != 0) return true;
+			}
+			
+			return false;
+		}
+		
 		#endregion
 		
 		#region environment variable helpers
