@@ -98,10 +98,6 @@
     <Folder Include="Http" />
     <Folder Include="Http\Controllers" />
     <Folder Include="Http\Views" />
-    <Folder Include="Http\Views\Test" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Http\Views\Test\Test.html" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Http\Views\index.html" />
@@ -109,9 +105,6 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>mkdir "$(TargetDir)views"
-copy "$(ProjectDir)Http\Views\index.html" "$(TargetDir)views\index.html"
-xcopy  /E /Y "$(ProjectDir)Http\Views\assets\*.*" "$(TargetDir)views\assets\*.*"</PostBuildEvent>
-    <PreBuildEvent>
-</PreBuildEvent>
+xcopy  /E /Y "$(ProjectDir)Http\Views\*.*" "$(TargetDir)views\*.*"</PostBuildEvent>
   </PropertyGroup>
 </Project>

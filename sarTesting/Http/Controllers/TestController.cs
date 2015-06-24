@@ -39,7 +39,7 @@ namespace sar_testing.Http
 
 		public static HttpContent Show(HttpRequest request)
 		{
-			return HttpContent.Read(request, "sar_testing.Http.Views.Test.Test.html");
+			return HttpContent.Read(request, "test.html");
 		}
 		
 		public static HttpContent UpdateTable(HttpRequest request)

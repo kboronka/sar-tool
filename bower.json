@@ -1,0 +1,18 @@
+{
+  "name": "LabelPrinter",
+  "dependencies": {
+    "angular": "~1.2",
+    "jquery": "~1.11.2",
+    "bootstrap": "~3.3.4",
+    "angular-bootstrap": "~0.12.1",
+    "font-awesome": "~4.3.0",
+    "html5shiv": "~3.7.2",
+    "respond": "~1.4.2",
+    "angular-chart.js": "~0.5.3",
+    "Chart.js": "https://github.com/kboronka/Chart.js.git#1.0.2-kb",
+    "es5-shim": "~4.1.1"
+  },
+  "resolutions": {
+    "angular": "~1.3.15"
+  }
+}

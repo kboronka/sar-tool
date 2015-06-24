@@ -117,6 +117,10 @@ namespace sar.Http
 			
 			byte [] contentBytes = this.content.Render();
 			// content details
+			//Wed, 24 Jun 2015 21:06:55 GMT
+			const string GMT = "ddd, dd MMM yyyy HH':'mm':'ss 'GMT'";
+			response += "Date: " + DateTime.UtcNow.ToString(GMT) + eol;
+			response += "Expires: " + DateTime.UtcNow.AddDays(1).ToString(GMT) + eol;
 			response += "Content-Type: " + this.content.ContentType + eol;
 			response += "Content-Length: " + (contentBytes.Length).ToString() + eol;
 			response += "Server: " + @"sar\" + AssemblyInfo.SarVersion + eol;
