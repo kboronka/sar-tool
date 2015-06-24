@@ -175,9 +175,9 @@ namespace sar.Http
 					stream.Write(bytes, 0, bytes.Length);
 					//stream.Flush();
 				}
-				finally
+				catch
 				{
-
+					
 				}
 			}
 			
@@ -196,10 +196,21 @@ namespace sar.Http
 					
 					stream.Flush();
 				}
+				catch
+				{
+					
+				}
 				finally
 				{
-					stream = null;
-					socket.Close();
+					try
+					{
+						stream = null;
+						socket.Close();
+					}
+					catch
+					{
+						
+					}
 				}
 			}
 		}
