@@ -14,7 +14,6 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -88,13 +87,13 @@ namespace sar.Tools
 		{
 			if (!File.Exists(path)) throw new FileNotFoundException("file " + path + " not found");
 			
-			System.IO.FileInfo info = new System.IO.FileInfo(path);
+			var info = new System.IO.FileInfo(path);
 			return (System.IO.FileAttributes.ReadOnly == info.Attributes);
 		}
 		
 		public static List<string> GetAllDirectories(string root)
 		{
-			List<string> directories = new List<string>();
+			var directories = new List<string>();
 			directories.Add(root);
 
 			try
@@ -215,7 +214,7 @@ namespace sar.Tools
 				throw new FileNotFoundException("root search path does not exist [" + root + "]");
 			}
 			
-			List<string> files = new List<string>();
+			var files = new List<string>();
 
 			if (pattern.LastIndexOf(':') != -1)
 			{
@@ -247,7 +246,7 @@ namespace sar.Tools
 		{
 			CheckRootAndPattern(ref root, ref pattern);
 			
-			List<string> files = new List<string>();
+			var files = new List<string>();
 			
 			foreach (string dir in GetAllDirectories(root))
 			{
@@ -283,7 +282,7 @@ namespace sar.Tools
 		
 		public static List<SearchResult> SearchAndReplaceInFiles(string root, string filePattern, string search, string replace)
 		{
-			List<SearchResult> results = new List<SearchResult>();
+			var results = new List<SearchResult>();
 			
 			IO.CheckRootAndPattern(ref root, ref filePattern);
 
@@ -304,7 +303,7 @@ namespace sar.Tools
 		
 		public static SearchResult SearchAndReplaceInFile(string path, string search, string replace)
 		{
-			SearchResult result = new SearchResult();
+			var result = new SearchResult();
 			result.FilePath = path;
 			result.Matches = new List<Match>();
 			
@@ -330,7 +329,7 @@ namespace sar.Tools
 			
 			if (newcontent != content)
 			{
-				using(StreamWriter writer = new StreamWriter(path, false, Encoding.UTF8))
+				using(var writer = new StreamWriter(path, false, Encoding.UTF8))
 				{
 					writer.Write(newcontent);
 				}
@@ -341,7 +340,7 @@ namespace sar.Tools
 
 		public static List<SearchResult> SearchInFiles(string root, string filePattern, string search)
 		{
-			List<SearchResult> results = new List<SearchResult>();
+			var results = new List<SearchResult>();
 			
 			IO.CheckRootAndPattern(ref root, ref filePattern);
 
@@ -362,7 +361,7 @@ namespace sar.Tools
 		
 		public static SearchResult SearchInFile(string path, string search)
 		{
-			SearchResult result = new SearchResult();
+			var result = new SearchResult();
 			result.FilePath = path;
 			result.Matches = new List<Match>();
 			
@@ -394,7 +393,7 @@ namespace sar.Tools
 			
 			Encoding encoding;
 			
-			using (StreamReader reader = new StreamReader(filepath, true))
+			using (var reader = new StreamReader(filepath, true))
 			{
 				encoding = reader.CurrentEncoding;
 			}
@@ -411,7 +410,7 @@ namespace sar.Tools
 			Encoding encoding = Encoding.Default;
 			String original = String.Empty;
 
-			using (StreamReader sr = new StreamReader(fileName, Encoding.Default))
+			using (var sr = new StreamReader(fileName, Encoding.Default))
 			{
 				original = sr.ReadToEnd();
 				encoding = sr.CurrentEncoding;
@@ -438,7 +437,7 @@ namespace sar.Tools
 		
 		public static void WriteFileLines(string filepath, string[] lines)
 		{
-			List<string> linesList = new List<string>();
+			var linesList = new List<string>();
 			
 			foreach (string line in lines)
 			{
@@ -491,7 +490,7 @@ namespace sar.Tools
 			string content = "";
 			
 			// read file
-			using (StreamReader reader = new StreamReader(filepath, true))
+			using (var reader = new StreamReader(filepath, true))
 			{
 				content = reader.ReadToEnd();
 			}
@@ -499,7 +498,7 @@ namespace sar.Tools
 			File.Delete(filepath);
 			
 			// write to file
-			using (StreamWriter writer = new StreamWriter(filepath, false, encoding))
+			using (var writer = new StreamWriter(filepath, false, encoding))
 			{
 				ConsoleHelper.DebugWriteLine("after: " + writer.Encoding.ToString());
 				writer.Write(content);
@@ -586,7 +585,7 @@ namespace sar.Tools
 		{
 			// get list of msbuild versions availble
 			string msbuildFolder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.System) + @"\..\Microsoft.NET\Framework";
-			List<string> allVersions = new List<string>();
+			var allVersions = new List<string>();
 			
 			foreach (string path in Directory.GetDirectories(msbuildFolder))
 			{
@@ -608,7 +607,7 @@ namespace sar.Tools
 		{
 			// get list of msbuild versions availble
 			string msbuildFolder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.System) + @"\..\Microsoft.NET\Framework";
-			Dictionary<string, string> msBuildFolders = new Dictionary<string, string>();
+			var msBuildFolders = new Dictionary<string, string>();
 			
 			foreach (string path in Directory.GetDirectories(msbuildFolder))
 			{
@@ -637,8 +636,8 @@ namespace sar.Tools
 				throw new DirectoryNotFoundException(directory);
 			}
 			
-			DirectoryInfo parent = new DirectoryInfo(directory);
-			FileInfo[] files = parent.GetFiles();
+			var parent = new DirectoryInfo(directory);
+			var files = parent.GetFiles();
 			
 			if (files.Length == 0)
 			{
@@ -664,8 +663,8 @@ namespace sar.Tools
 				throw new DirectoryNotFoundException(directory);
 			}
 			
-			DirectoryInfo parent = new DirectoryInfo(directory);
-			FileInfo[] files = parent.GetFiles();
+			var parent = new DirectoryInfo(directory);
+			var files = parent.GetFiles();
 			
 			if (files.Length == 0)
 			{
@@ -688,14 +687,14 @@ namespace sar.Tools
 		{
 			if (File.Exists(destinationPath))
 			{
-				FileInfo toFile = new FileInfo(destinationPath);
+				var toFile = new FileInfo(destinationPath);
 				if (toFile.IsReadOnly) toFile.IsReadOnly = false;
 			}
 
-			FileInfo sourceFile = new FileInfo(sourcePath);
+			var sourceFile = new FileInfo(sourcePath);
 			sourceFile.CopyTo(destinationPath, true);
 
-			FileInfo destinationFile = new FileInfo(destinationPath);
+			var destinationFile = new FileInfo(destinationPath);
 			if (destinationFile.IsReadOnly)
 			{
 				destinationFile.IsReadOnly = false;
