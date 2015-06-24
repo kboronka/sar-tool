@@ -31,6 +31,7 @@ namespace sar_testing.Http
 			return HttpController.RequestAction("Test", "Show", request);
 		}
 		
+		[ViewAlias("test.html")]
 		public static HttpContent Index(HttpRequest request)
 		{
 			return HttpContent.Read(request, "index.html");

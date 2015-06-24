@@ -138,6 +138,7 @@ namespace sar.Http
 					foreach (object obj in method.GetCustomAttributes(false))
 					{
 						if (obj is PrimaryView) this.primaryAction = method;
+						if (obj is ViewAlias) this.actions.Add(((ViewAlias)obj).Alias, method);
 					}
 				}
 			}
@@ -146,6 +147,17 @@ namespace sar.Http
 
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
 	public class PrimaryView : Attribute { }
+
+	[AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+	public class ViewAlias : Attribute
+	{
+		public string Alias { get; private set; }
+		
+		public ViewAlias(string alias)
+		{
+			this.Alias = alias;
+		}
+	}
 	
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 	public class PrimaryController : Attribute { }
