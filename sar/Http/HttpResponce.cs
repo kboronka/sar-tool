@@ -34,8 +34,6 @@ namespace sar.Http
 
 	public class HttpResponse
 	{
-		private TcpClient socket;
-		private NetworkStream stream;
 		private Encoding encoding;
 
 		private HttpRequest request;
@@ -49,12 +47,10 @@ namespace sar.Http
 			get { return this.bytes; }
 		}
 		
-		public HttpResponse(HttpRequest request, TcpClient socket)
+		public HttpResponse(HttpRequest request)
 		{
 			this.request = request;
 			this.encoding = Encoding.ASCII;
-			this.socket = socket;
-			this.stream = this.socket.GetStream();
 			const string PDF_IDENT = "-pdf";
 			
 			try
@@ -117,7 +113,7 @@ namespace sar.Http
 
 			// status line
 			string responsePhrase = Enum.GetName(typeof(HttpStatusCode), status);
-			string response = "HTTP/1.0" + " " + ((int)status).ToString() + " " + responsePhrase + eol;
+			string response = /*"HTTP/1.0" +*/ " " + ((int)status).ToString() + " " + responsePhrase + eol;
 			
 			byte [] contentBytes = this.content.Render();
 			// content details

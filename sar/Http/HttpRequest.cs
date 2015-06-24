@@ -166,7 +166,22 @@ namespace sar.Http
 				}
 			}
 			
-			var response = new HttpResponse(this, socket);
+			lock (socket)
+			{
+				try
+				{
+					const string INIT_HEADER = "HTTP/1.0";
+					var bytes = Encoding.ASCII.GetBytes(INIT_HEADER);
+					stream.Write(bytes, 0, bytes.Length);
+					//stream.Flush();
+				}
+				finally
+				{
+
+				}
+			}
+			
+			var response = new HttpResponse(this);
 			
 			lock (socket)
 			{
