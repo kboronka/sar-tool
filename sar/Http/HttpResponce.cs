@@ -23,12 +23,19 @@ using sar.Tools;
 
 namespace sar.Http
 {
+	// http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
 	public enum HttpStatusCode
 	{
 		[Description("OK")]
 		OK = 200,
+
 		FOUND = 302,
+		
+		[Description("Not Modified")]
+		NOT_MODIFIED = 304,
+
 		NOTFOUND = 404,
+
 		SERVERERROR=500
 	};
 
