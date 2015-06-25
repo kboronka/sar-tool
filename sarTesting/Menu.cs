@@ -144,7 +144,6 @@ namespace sar.Testing
 			}
 		}
 		
-		
 		void Button5Click(object sender, EventArgs e)
 		{
 			using (var plc = new S7.Adapter("192.168.1.3"))
