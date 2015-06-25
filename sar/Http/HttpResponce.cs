@@ -115,7 +115,7 @@ namespace sar.Http
 			string responsePhrase = Enum.GetName(typeof(HttpStatusCode), status);
 			string response = /*"HTTP/1.0" +*/ " " + ((int)status).ToString() + " " + responsePhrase + eol;
 			
-			byte [] contentBytes = this.content.Render();
+			byte [] contentBytes = this.content.Render(request.Server.Cache);
 			// content details
 			//Wed, 24 Jun 2015 21:06:55 GMT
 			const string GMT = "ddd, dd MMM yyyy HH':'mm':'ss 'GMT'";

@@ -44,47 +44,32 @@ namespace sar.Http
 		}
 		
 		public string FavIcon { get; set; }
+		
+		public HttpCache Cache { get; private set; }
 
 		#endregion
 		
 		#region constructor
 
-		public HttpServer(int port, string wwwroot)
+		public HttpServer(XML.Reader reader)
 		{
-			this.port = port;
-			this.root = wwwroot;
-			
-			this.Start();
-		}
-		
-		public HttpServer(int port)
-		{
-			this.port = port;
-			this.root = ApplicationInfo.CurrentDirectory + @"views\";
+			if (reader != null) this.Deserialize(reader);
 			
 			this.Start();
 		}
 
-		public HttpServer(string wwwroot)
+		public HttpServer(int port, string wwwroot)
 		{
-			this.port = sar.Socket.SocketHelper.FindAvailablePort(80, 100);
+			this.port = port;
 			this.root = wwwroot;
+			this.root = Path.GetFullPath(this.root);
 			
 			this.Start();
 		}
 		
-		public HttpServer(XML.Reader reader)
-		{
-			if (reader != null) this.Deserialize(reader);
-			this.Start();
-		}
-				
-		public HttpServer()
-		{
-			this.port = sar.Socket.SocketHelper.FindAvailablePort(80, 100);
-			this.root = ApplicationInfo.CurrentDirectory + @"views\";
-			this.Start();
-		}
+		public HttpServer(int port) : this(port, ApplicationInfo.CurrentDirectory + @"views\") { }
+		public HttpServer(string wwwroot) : this(sar.Socket.SocketHelper.FindAvailablePort(80, 100), wwwroot) { }
+		public HttpServer() : this(sar.Socket.SocketHelper.FindAvailablePort(80, 100), ApplicationInfo.CurrentDirectory + @"views\") { }
 		
 		private void Start()
 		{
@@ -95,6 +80,7 @@ namespace sar.Http
 			
 			if (!Directory.Exists(this.root)) Directory.CreateDirectory(this.root);
 			
+			this.Cache = new HttpCache(this);
 			HttpController.LoadControllers();
 			
 			this.listenerLoopThread = new Thread(this.ListenerLoop);
@@ -141,6 +127,7 @@ namespace sar.Http
 								
 							case "wwwroot":
 								this.root =  reader.GetValueString();
+								this.root = Path.GetFullPath(this.root);
 								break;
 						}
 					}
@@ -160,7 +147,7 @@ namespace sar.Http
 			writer.WriteEndElement();
 		}
 		
-		#endregion		
+		#endregion
 		#region service
 		
 		#region listners
@@ -171,7 +158,7 @@ namespace sar.Http
 		private void ListenerLoop()
 		{
 			// TODO: cache everything
-			EmbeddedResource.GetAllResources();				
+			EmbeddedResource.GetAllResources();
 			Thread.Sleep(300);
 			
 			while (!listenerLoopShutdown)

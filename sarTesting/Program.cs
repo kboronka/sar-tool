@@ -32,7 +32,13 @@ namespace sar.Testing
 			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(LogUnhandledException);
 			
 			Base.Program.LogInfo();
-			var server = new Http.HttpServer();
+			
+			#if DEBUG
+			var server = new HttpServer(ApplicationInfo.CurrentDirectory + @"..\..\Http\Views\");
+			#else
+			var server = new HttpServer(ApplicationInfo.CurrentDirectory + @"views\");
+			#endif
+				
 			port = server.Port;
 			
 //			foreach (string resource in EmbeddedResource.GetAllResources())

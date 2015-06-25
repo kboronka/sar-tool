@@ -120,8 +120,11 @@
     <Compile Include="Http\Controllers\EchoController.cs" />
     <Compile Include="Http\Controllers\ErrorController.cs" />
     <Compile Include="Http\HttpBase.cs" />
+    <Compile Include="Http\HttpCache.cs" />
+    <Compile Include="Http\HttpCachedFile.cs" />
     <Compile Include="Http\HttpContent.cs" />
     <Compile Include="Http\HttpController.cs" />
+    <Compile Include="Http\HttpCachedEmbeddedFile.cs" />
     <Compile Include="Http\HttpRequest.cs" />
     <Compile Include="Http\HttpResponce.cs" />
     <Compile Include="Http\HttpServer.cs" />

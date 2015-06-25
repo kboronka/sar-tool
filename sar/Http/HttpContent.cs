@@ -61,27 +61,16 @@ namespace sar.Http
 		
 		public static HttpContent Read(HttpServer server, string request, Dictionary<string, HttpContent> baseContent)
 		{
-			request = request.TrimWhiteSpace();
-			string filePath = server.Root + @"\" + request.Replace(@"/", @"\");
+			request = request.TrimWhiteSpace().Replace(@"/", @"\").ToLower();
+			string filePath = server.Root + @"\" + request;
 			
-			if (File.Exists(filePath))
+			if (server.Cache.Contains(request))
 			{
-				return HttpContent.ReadFile(filePath, baseContent);
+				return new HttpContent(server.Cache.Get(request), baseContent);
 			}
-			else if (EmbeddedResource.Contains(request))
+			else if (filePath.EndsWith("favicon.ico"))
 			{
-				return HttpContent.ReadEmbeddedFile(request, baseContent);
-			}
-			else if (filePath.EndsWith("favicon.ico") &&
-			         server.FavIcon.IsNotNull() &&
-			         filePath != server.FavIcon)
-			{
-				return HttpContent.ReadFile(server.FavIcon, baseContent);
-			}
-			else if (filePath.EndsWith("favicon.ico") &&
-			         EmbeddedResource.Contains("sar.Http.libs.art.favicon.ico"))
-			{
-				return HttpContent.ReadEmbeddedFile("sar.Http.libs.art.favicon.ico", baseContent);
+				return new HttpContent(server.Cache.Get("sar.Http.libs.art.favicon.ico"), baseContent);
 			}
 			else
 			{
@@ -89,50 +78,18 @@ namespace sar.Http
 			}
 		}
 		
-		private static HttpContent Read(string request)
+		private static HttpContent Read(HttpCache cache, string request, Dictionary<string, HttpContent> baseContent)
 		{
-			return Read(request, new Dictionary<string, HttpContent>() {});
-		}
-		
-		private static HttpContent Read(string request, Dictionary<string, HttpContent> baseContent)
-		{
-			request = request.TrimWhiteSpace();
+			request = request.TrimWhiteSpace().Replace(@"/", @"\").ToLower();
 			
-			if (File.Exists(request))
+			if (cache.Contains(request))
 			{
-				return HttpContent.ReadFile(request, baseContent);
-			}
-			else if (EmbeddedResource.Contains(request))
-			{
-				return HttpContent.ReadEmbeddedFile(request, baseContent);
+				return new HttpContent(cache.Get(request));
 			}
 			else
 			{
 				throw new FileNotFoundException("did not find " + request);
 			}
-		}
-		
-		private static HttpContent ReadFile(string filePath, Dictionary<string, HttpContent> baseContent)
-		{
-			string extension = IO.GetFileExtension(filePath).ToLower();
-			string contentType = HttpHelper.GetMimeType(extension);
-			byte[] content = File.ReadAllBytes(filePath);
-			
-			return new HttpContent(content, contentType, baseContent);
-		}
-		
-		private static HttpContent ReadEmbeddedFile(string resource, Dictionary<string, HttpContent> baseContent)
-		{
-			if (EmbeddedResource.Contains(resource))
-			{
-				string extension = IO.GetFileExtension(resource).ToLower();
-				string contentType = HttpHelper.GetMimeType(extension);
-				byte[] content = EmbeddedResource.Get(resource);
-				
-				return new HttpContent(content, contentType, baseContent);
-			}
-			
-			return new HttpContent();
 		}
 		
 		private static byte[] GetFile(string filepath)
@@ -179,37 +136,69 @@ namespace sar.Http
 		protected byte[] content;
 		protected string contentType;
 		protected Dictionary<string, HttpContent> baseContent;
+		private bool renderRequired;
 		
-		private string RenderText(Dictionary<string, HttpContent> baseContent)
+		public string ContentType
 		{
-			return StringHelper.GetString(Render(baseContent));
+			get { return this.contentType; }
+		}
+		
+		protected HttpContent() : this(Encoding.ASCII.GetBytes(""), "text/plain") { }
+		public HttpContent(string content) : this(Encoding.ASCII.GetBytes(content), "text/plain") { }
+		public HttpContent(Dictionary<string, object> json) : this(Encoding.ASCII.GetBytes(json.ToJSON()), "text/plain") { }
+		public HttpContent(List<Dictionary<string, object>> json) : this(Encoding.ASCII.GetBytes(json.ToJSON()), "text/plain") { }
+
+
+		public HttpContent(byte[] content, string contentType)
+		{
+			this.baseContent = new Dictionary<string, HttpContent>();
+			this.contentType = contentType;
+			this.content = content;
+		}
+		
+		public HttpContent(HttpCachedFile file) : this(file, new Dictionary<string, HttpContent>()) { }
+		public HttpContent(HttpCachedFile file, Dictionary<string, HttpContent> baseContent)
+		{
+			this.baseContent = baseContent;
+			this.contentType = file.ContentType;
+			this.content = file.Data;
+		}
+		
+		#region render
+		
+		private string RenderText(HttpCache cache, Dictionary<string, HttpContent> baseContent)
+		{
+			return StringHelper.GetString(Render(cache, baseContent));
 		}
 
-		public byte[] Render()
+		public byte[] Render(HttpCache cache)
 		{
-			return Render(baseContent);
+			return Render(cache, baseContent);
 		}
-		
-		public byte[] Render(Dictionary<string, HttpContent> baseContent)
+
+		public const string INCLUDE_RENDER_SYNTAX = @"\<%@ Include:\s*([^@]+)\s*\%\>";
+		public const string CONTENT_RENDER_SYNTAX = @"\<%@ Content:\s*([^@]+)\s*\%\>";
+
+		private byte[] Render(HttpCache cache, Dictionary<string, HttpContent> baseContent)
 		{
 			if (this.contentType.Contains("text") || this.contentType.Contains("xml"))
 			{
 				string text = Encoding.ASCII.GetString(this.content);
 				
 				// include linked externals
-				MatchCollection matches = Regex.Matches(text, @"\<%@ Include:\s*([^@]+)\s*\%\>");
+				MatchCollection matches = Regex.Matches(text, INCLUDE_RENDER_SYNTAX);
 				if (matches.Count > 0)
 				{
 					foreach (Match match in matches)
 					{
 						string key = match.Groups[1].Value.TrimWhiteSpace();
-						string replacmentContent = HttpContent.Read(key, baseContent).RenderText(baseContent);
+						string replacmentContent = HttpContent.Read(cache, key, baseContent).RenderText(cache, baseContent);
 						text = Regex.Replace(text, match.Groups[0].Value, replacmentContent);
 					}
 				}
-				
+
 				// include linked externals
-				matches = Regex.Matches(text, @"\<%@ Content:\s*([^@]+)\s*\%\>");
+				matches = Regex.Matches(text, CONTENT_RENDER_SYNTAX);
 				if (matches.Count > 0)
 				{
 					foreach (Match match in matches)
@@ -218,7 +207,7 @@ namespace sar.Http
 						if (baseContent.ContainsKey(key))
 						{
 							HttpContent replacmentContent = baseContent[key];
-							text = Regex.Replace(text, match.Groups[0].Value, replacmentContent.RenderText(baseContent));
+							text = Regex.Replace(text, match.Groups[0].Value, replacmentContent.RenderText(cache, baseContent));
 						}
 					}
 				}
@@ -228,59 +217,9 @@ namespace sar.Http
 			
 			return this.content;
 		}
-		
-		public string ContentType
-		{
-			get { return this.contentType; }
-		}
-		
-		protected HttpContent()
-		{
-			this.baseContent = new Dictionary<string, HttpContent>();
-			this.contentType = "text/plain";
-		}
-		
-		public HttpContent(string content)
-		{
-			this.baseContent = new Dictionary<string, HttpContent>();
-			this.contentType = "text/plain";
-			this.content = Encoding.ASCII.GetBytes(content);
-		}
-		
-		public HttpContent(Dictionary<string, object> json)
-		{
-			this.baseContent = new Dictionary<string, HttpContent>();
-			this.contentType = "text/plain";
-			this.content = Encoding.ASCII.GetBytes(json.ToJSON());
-		}
-		
-		public HttpContent(List<Dictionary<string, object>> json)
-		{
-			this.baseContent = new Dictionary<string, HttpContent>();
-			this.contentType = "text/plain";
-			this.content = Encoding.ASCII.GetBytes(json.ToJSON());
-		}
-
-		public HttpContent(string content, string contentType)
-		{
-			this.baseContent = new Dictionary<string, HttpContent>();
-			this.contentType = contentType;
-			this.content = Encoding.UTF8.GetBytes(content);
-		}
-
-		public HttpContent(byte[] content, string contentType)
-		{
-			this.baseContent = new Dictionary<string, HttpContent>();
-			this.contentType = contentType;
-			this.content = content;
-		}
 
 		
-		public HttpContent(byte[] content, string contentType, Dictionary<string, HttpContent> baseContent)
-		{
-			this.baseContent = baseContent;
-			this.contentType = contentType;
-			this.content = content;
-		}
+		#endregion
+		
 	}
 }
