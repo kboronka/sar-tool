@@ -34,8 +34,6 @@ namespace sar.Http
 
 	public class HttpResponse
 	{
-		private Encoding encoding;
-
 		private HttpRequest request;
 		private HttpContent content;
 		
@@ -50,7 +48,6 @@ namespace sar.Http
 		public HttpResponse(HttpRequest request)
 		{
 			this.request = request;
-			this.encoding = Encoding.ASCII;
 			const string PDF_IDENT = "-pdf";
 			
 			try
