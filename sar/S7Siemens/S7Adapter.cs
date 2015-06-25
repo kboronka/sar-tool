@@ -111,7 +111,6 @@ namespace sar.S7Siemens
             return Result;
         }
 
-
 		public Int32 ReadDINT(string address)
 		{
 			byte[] data = ReadBytesRaw(address, 4);
@@ -208,6 +207,47 @@ namespace sar.S7Siemens
 				return data;
 			}
 		}
+		
+		#region data output
+		
+		public void WriteBytes(string address, byte[] data)
+		{
+			WriteBytesRaw(address, data);
+		}
+		
+		protected void WriteBytesRaw(string address, byte[] data)
+		{
+			var s7address = new Address(address);
+			s7address.byteLength = (ushort)data.Length;
+			
+			WriteBytesRaw(s7address, data);
+		}
+						
+		protected virtual void WriteBytesRaw(Address address, byte[] data)
+		{
+			var bytes = address.byteLength;
+			
+			if (bytes > 65535) throw new IndexOutOfRangeException("max bytes = 65535");
+			if (bytes < 1) throw new IndexOutOfRangeException("min bytes = 1");
+			
+			if (bytes != data.Length) throw new ArgumentException("data size does not match address");
+
+			
+			// send read request message
+			var message = ReadWriteMessage(Action.Write, address);
+			DebugWrite("ReadWriteMessage", message);
+			
+			message = EncodeTPDU(TPKT, message, data);
+			DebugWrite("TPDU", message);
+			
+			var response = socket.Write(message);
+			DebugWrite("response", response);
+			
+			byte[] result = ExtractTPDU(response);
+			DebugWrite("result", result);				
+		}
+		
+		#endregion
 		
 		private byte[] ReadWriteMessage(Action action, Address address)
 		{

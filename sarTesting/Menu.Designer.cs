@@ -59,6 +59,7 @@ namespace sar.Testing
 			this.folderChanged = new sar.Controls.BooleanIndicator();
 			this.button4 = new System.Windows.Forms.Button();
 			this.textBox3 = new System.Windows.Forms.TextBox();
+			this.button5 = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -220,11 +221,22 @@ namespace sar.Testing
 			this.textBox3.Size = new System.Drawing.Size(312, 107);
 			this.textBox3.TabIndex = 14;
 			// 
+			// button5
+			// 
+			this.button5.Location = new System.Drawing.Point(367, 184);
+			this.button5.Name = "button5";
+			this.button5.Size = new System.Drawing.Size(103, 24);
+			this.button5.TabIndex = 15;
+			this.button5.Text = "Step Forward";
+			this.button5.UseVisualStyleBackColor = true;
+			this.button5.Click += new System.EventHandler(this.Button5Click);
+			// 
 			// Menu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(482, 351);
+			this.Controls.Add(this.button5);
 			this.Controls.Add(this.textBox3);
 			this.Controls.Add(this.button4);
 			this.Controls.Add(this.folderChanged);
@@ -264,5 +276,6 @@ namespace sar.Testing
 		private System.Windows.Forms.Button RemoteSocketButton;
 		private System.Windows.Forms.Button LocalSocketButton;
 		private System.Windows.Forms.TextBox textBox3;
+		private System.Windows.Forms.Button button5;
 	}
 }
