@@ -261,9 +261,6 @@ namespace sar.S7Siemens
 			
 			var response = socket.Write(message);
 			DebugWrite("response", response);
-			
-			byte[] result = ExtractTPDU(response);
-			DebugWrite("result", result);
 		}
 		
 		#endregion
