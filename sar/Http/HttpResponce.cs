@@ -74,10 +74,6 @@ namespace sar.Http
 					
 					this.content = new HttpContent(HtmlToPdfHelper.ReadPDF(url), "application/pdf");
 				}
-				else if (this.request.Path.ToLower() == @"info")
-				{
-					this.content = HttpController.RequestAction("Debug", "Info", this.request);
-				}
 				else if (HttpController.ActionExists(this.request))
 				{
 					this.content = HttpController.RequestAction(this.request);
