@@ -147,8 +147,10 @@ namespace sar.Testing
 		
 		void Button5Click(object sender, EventArgs e)
 		{
-			var plc = new S7.Adapter("192.168.1.3", false);
-			plc.WriteBytes("DB300.DBB0", new byte[] { 0x01 });
+			using (var plc = new S7.Adapter("192.168.1.3"))
+			{
+				plc.WriteBytes("DB300.DBB0", new byte[] { 0x01 });
+			}
 		}
 	}
 }
