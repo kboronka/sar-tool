@@ -28,7 +28,7 @@ namespace sar.S7Siemens
 	public enum Action : byte { Read = 0x4, Write = 0x5, ExchangePDU = 0xF0 };
 	public enum TransportType : byte { Bit = 0x1, Byte = 0x2, Word = 0x4 };
 	
-	public class Adapter
+	public class Adapter : IDisposable
 	{
 		protected string ipAddress;
 		private SimpleSocket socket;
@@ -55,6 +55,25 @@ namespace sar.S7Siemens
 			this.ipAddress = ipAddress;
 			connected = this.Connect();
 			//TODO: check if connection is established, handle retrys... possibly use a timed loop
+		}
+		
+		~Adapter()
+		{
+			Dispose(false);
+		}
+		
+		public void Dispose()
+		{
+			Dispose(true);
+		}
+		
+		protected void Dispose(bool disposing)
+		{
+			if (this.connected)
+			{
+				this.connected = false;
+				this.socket.Disconnect();
+			}
 		}
 		
 		private bool Connect()
@@ -98,18 +117,18 @@ namespace sar.S7Siemens
 			return BitConverter.ToInt16(data, 0);
 		}
 
-        public Int16[] ReadINT(string address, uint Quantity)
-        {
-            var data = ReadBytesRaw(address, 2 * Quantity);
-            var Result = new Int16[Quantity];
+		public Int16[] ReadINT(string address, uint Quantity)
+		{
+			var data = ReadBytesRaw(address, 2 * Quantity);
+			var Result = new Int16[Quantity];
 
-            for (int i = 0; i < Result.Length; i++)
-            {
-                Result[i] = BitConverter.ToInt16(data, i * 2);
-            }
+			for (int i = 0; i < Result.Length; i++)
+			{
+				Result[i] = BitConverter.ToInt16(data, i * 2);
+			}
 
-            return Result;
-        }
+			return Result;
+		}
 
 		public Int32 ReadDINT(string address)
 		{
@@ -117,17 +136,17 @@ namespace sar.S7Siemens
 			return BitConverter.ToInt32(data, 0);
 		}
 		
-        public Int32[] ReadDINT(string address, uint Quantity)
+		public Int32[] ReadDINT(string address, uint Quantity)
 		{
-            var data = ReadBytesRaw(address, 4 * Quantity);
-            var Result = new Int32[Quantity];
+			var data = ReadBytesRaw(address, 4 * Quantity);
+			var Result = new Int32[Quantity];
 
-            for (int i = 0; i < Result.Length; i++)
+			for (int i = 0; i < Result.Length; i++)
 			{
-                Result[i] = BitConverter.ToInt32(data, i * 4);
+				Result[i] = BitConverter.ToInt32(data, i * 4);
 			}
 
-            return Result;
+			return Result;
 		}
 
 		public Single ReadFLOAT(string address)
@@ -136,18 +155,18 @@ namespace sar.S7Siemens
 			return BitConverter.ToSingle(data, 0);
 		}
 
-        public Single[] ReadFLOAT(string address, uint Quantity)
-        {
-            var data = ReadBytesRaw(address, 4 * Quantity);
-            var Result = new Single[Quantity];
+		public Single[] ReadFLOAT(string address, uint Quantity)
+		{
+			var data = ReadBytesRaw(address, 4 * Quantity);
+			var Result = new Single[Quantity];
 
-            for (int i = 0; i < Result.Length; i++)
-            {
-                Result[i] = BitConverter.ToSingle(data, i * 4);
-            }
+			for (int i = 0; i < Result.Length; i++)
+			{
+				Result[i] = BitConverter.ToSingle(data, i * 4);
+			}
 
-            return Result;
-        }
+			return Result;
+		}
 
 		
 		public byte[] ReadBytes(string address, ushort bytes)
@@ -203,7 +222,7 @@ namespace sar.S7Siemens
 				address.startAddress += (MAX_BYTES_PER_PAGE * 8);
 				address.byteLength = (ushort)(bytes - MAX_BYTES_PER_PAGE);
 				Array.Copy(ReadBytesRaw(address), 0, data, 0, address.byteLength);
-								
+				
 				return data;
 			}
 		}
@@ -222,7 +241,7 @@ namespace sar.S7Siemens
 			
 			WriteBytesRaw(s7address, data);
 		}
-						
+		
 		protected virtual void WriteBytesRaw(Address address, byte[] data)
 		{
 			var bytes = address.byteLength;
@@ -244,7 +263,7 @@ namespace sar.S7Siemens
 			DebugWrite("response", response);
 			
 			byte[] result = ExtractTPDU(response);
-			DebugWrite("result", result);				
+			DebugWrite("result", result);
 		}
 		
 		#endregion
