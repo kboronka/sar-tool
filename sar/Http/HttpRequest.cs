@@ -157,7 +157,7 @@ namespace sar.Http
 					else if (incomingPacket.Length != 0)
 					{
 						// wait until entire request is recived
-						Thread.Sleep(50);
+						Thread.Sleep(1);
 					}
 					
 					if (!incomingLoopShutdown) Thread.Sleep(1);
@@ -166,21 +166,6 @@ namespace sar.Http
 				{
 					incomingLoopShutdown = true;
 					Program.Log(ex);
-				}
-			}
-			
-			lock (socket)
-			{
-				try
-				{
-					const string INIT_HEADER = "HTTP/1.0";
-					var bytes = Encoding.ASCII.GetBytes(INIT_HEADER);
-					stream.Write(bytes, 0, bytes.Length);
-					//stream.Flush();
-				}
-				catch
-				{
-					
 				}
 			}
 			

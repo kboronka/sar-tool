@@ -18,6 +18,7 @@ using System.Xml;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 
 using sar.Tools;
@@ -26,6 +27,7 @@ namespace sar.Http
 {
 	public class HttpServer : HttpBase
 	{
+		private AutoResetEvent connectionWaitHandle;
 		private TcpListener listener;
 		protected int port;
 		protected string root;
@@ -82,6 +84,8 @@ namespace sar.Http
 			
 			this.Cache = new HttpCache(this);
 			HttpController.LoadControllers();
+			
+			this.connectionWaitHandle = new AutoResetEvent(false);
 			
 			this.listenerLoopThread = new Thread(this.ListenerLoop);
 			this.listenerLoopThread.IsBackground = true;
@@ -157,25 +161,17 @@ namespace sar.Http
 		
 		private void ListenerLoop()
 		{
-			// TODO: cache everything
-			EmbeddedResource.GetAllResources();
 			Thread.Sleep(300);
-			
+			this.listener = new TcpListener(IPAddress.Any, this.port);
+			this.listener.Start();
+
 			while (!listenerLoopShutdown)
 			{
 				try
 				{
-					if (this.listener == null)
-					{
-						this.listener = new TcpListener(IPAddress.Any, this.port);
-						this.listener.Start();
-					}
-					else
-					{
-						this.ServiceListener();
-					}
-					
-					Thread.Sleep(1);
+					IAsyncResult result =  this.listener.BeginAcceptTcpClient(this.AcceptTcpClientCallback, this.listener);
+					this.connectionWaitHandle.WaitOne();
+					this.connectionWaitHandle.Reset();
 				}
 				catch (Exception ex)
 				{
@@ -183,7 +179,6 @@ namespace sar.Http
 					Thread.Sleep(5000);
 				}
 			}
-			
 			
 			// shutdown listner
 			try
@@ -198,15 +193,20 @@ namespace sar.Http
 			this.listener = null;
 		}
 
-		private void ServiceListener()
+		
+		private void AcceptTcpClientCallback(IAsyncResult ar)
 		{
-			lock (this.listener)
-			{
-				if (this.listener.Pending())
-				{
-					var client = new HttpRequest(this, this.listener.AcceptTcpClient());
-				}
-			}
+			var connection = (TcpListener) ar.AsyncState;
+			var client = connection.EndAcceptTcpClient(ar);
+			connectionWaitHandle.Set(); //Inform the main thread this connection is now handled
+
+			var stream = client.GetStream();
+	
+			const string INIT_HEADER = "HTTP/1.0";
+			var bytes = Encoding.ASCII.GetBytes(INIT_HEADER);
+			stream.Write(bytes, 0, bytes.Length);
+
+			var request = new HttpRequest(this, client);
 		}
 		
 		#endregion
