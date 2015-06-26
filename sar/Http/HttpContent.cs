@@ -36,7 +36,7 @@ namespace sar.Http
 			message += ExceptionHelper.GetStackTrace(inner);
 			
 			this.content = message.ToBytes();
-			this.contentType = "application/json";
+			this.ContentType = "application/json";
 		}
 	}
 	
@@ -134,14 +134,12 @@ namespace sar.Http
 		#endregion
 
 		protected byte[] content;
-		protected string contentType;
 		protected Dictionary<string, HttpContent> baseContent;
-		private bool renderRequired;
 		
-		public string ContentType
-		{
-			get { return this.contentType; }
-		}
+		public DateTime LastModified { get; protected set; }
+		public string ContentType { get; protected set; }
+		public string ETag { get; private set; }
+		public bool ParsingRequired { get; protected set; }
 		
 		protected HttpContent() : this(Encoding.ASCII.GetBytes(""), "text/plain") { }
 		public HttpContent(string content) : this(Encoding.ASCII.GetBytes(content), "text/plain") { }
@@ -152,16 +150,22 @@ namespace sar.Http
 		public HttpContent(byte[] content, string contentType)
 		{
 			this.baseContent = new Dictionary<string, HttpContent>();
-			this.contentType = contentType;
+			this.ContentType = contentType;
 			this.content = content;
+			this.ParsingRequired = false;
+			this.LastModified = DateTime.UtcNow;
+			this.ETag = "";
 		}
 		
 		public HttpContent(HttpCachedFile file) : this(file, new Dictionary<string, HttpContent>()) { }
 		public HttpContent(HttpCachedFile file, Dictionary<string, HttpContent> baseContent)
 		{
 			this.baseContent = baseContent;
-			this.contentType = file.ContentType;
 			this.content = file.Data;
+			this.ParsingRequired = file.ParsingRequired;
+			this.LastModified = file.LastModified;
+			this.ContentType = file.ContentType;
+			this.ETag = file.ETag;
 		}
 		
 		#region render
@@ -181,7 +185,7 @@ namespace sar.Http
 
 		private byte[] Render(HttpCache cache, Dictionary<string, HttpContent> baseContent)
 		{
-			if (this.contentType.Contains("text") || this.contentType.Contains("xml"))
+			if (this.ContentType.Contains("text") || this.ContentType.Contains("xml"))
 			{
 				string text = Encoding.ASCII.GetString(this.content);
 				

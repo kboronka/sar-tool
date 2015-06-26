@@ -16,7 +16,7 @@ namespace sar.Http
 		public string ContentType { get; private set; }
 		public string ETag { get; private set; }
 		public byte[] Data { get; private set; }
-		public bool RenderRequired { get; protected set; }
+		public bool ParsingRequired { get; protected set; }
 		
 		protected bool embedded;
 		protected string path;
@@ -34,17 +34,17 @@ namespace sar.Http
 			this.ContentType = HttpHelper.GetMimeType(extension);
 			this.Data = data;
 			this.ETag = GetETag(this.Data);
-			this.RenderRequired = false;
+			this.ParsingRequired = false;
 			
 			if (this.ContentType.Contains("text") || this.ContentType.Contains("xml"))
 			{
 				string text = Encoding.ASCII.GetString(this.Data);
 				MatchCollection matches = Regex.Matches(text, HttpContent.INCLUDE_RENDER_SYNTAX);
-				if (matches.Count > 0) this.RenderRequired = true;
+				if (matches.Count > 0) this.ParsingRequired = true;
 				
 				// include linked externals
 				matches = Regex.Matches(text, HttpContent.CONTENT_RENDER_SYNTAX);
-				if (matches.Count > 0) this.RenderRequired = true;
+				if (matches.Count > 0) this.ParsingRequired = true;
 			}
 		}
 		
@@ -84,14 +84,14 @@ namespace sar.Http
 		private static string GetETag(byte[] data)
 		{
 			var hash = new MD5CryptoServiceProvider().ComputeHash(data);
-			
 			var hex = "";
+			
 			foreach (var b in hash)
 			{
-				hex += b.ToString("{0:x2}");
+				hex += b.ToString("X2");
 			}
 			
-			return hex.ToString();
+			return hex;
 		}
 	}
 }

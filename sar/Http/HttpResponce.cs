@@ -96,7 +96,8 @@ namespace sar.Http
 			{
 				Program.Log(ex);
 				this.content = ErrorController.Display(this.request, ex, HttpStatusCode.NOTFOUND);
-				this.bytes = this.ConstructResponse(HttpStatusCode.SERVERERROR);			}
+				this.bytes = this.ConstructResponse(HttpStatusCode.SERVERERROR);			
+			}
 			catch (Exception ex)
 			{
 				Program.Log(ex);
@@ -119,16 +120,19 @@ namespace sar.Http
 			// content details
 			//Wed, 24 Jun 2015 21:06:55 GMT
 			const string GMT = "ddd, dd MMM yyyy HH':'mm':'ss 'GMT'";
-			response += "Date: " + DateTime.UtcNow.ToString(GMT) + eol;
-			response += "Expires: " + DateTime.UtcNow.AddDays(1).ToString(GMT) + eol;
-			response += "Content-Type: " + this.content.ContentType + eol;
-			response += "Content-Length: " + (contentBytes.Length).ToString() + eol;
-			response += "Server: " + @"sar\" + AssemblyInfo.SarVersion + eol;
+			response += @"Date: " + DateTime.UtcNow.ToString(GMT) + eol;
+			response += @"Server: " + @"sar\" + AssemblyInfo.SarVersion + eol;
+			response += @"Expires: " + DateTime.UtcNow.AddDays(1).ToString(GMT) + eol;
+			response += @"Last-Modified: " + this.content.LastModified.ToString(GMT) + eol;
+			response += @"ETag: " + this.content.ETag.QuoteDouble() + eol;
+			response += @"Last-Modified: " + this.content.LastModified.ToString(GMT) + eol;
+			response += @"Content-Type: " + this.content.ContentType + eol;
+			response += @"Content-Length: " + (contentBytes.Length).ToString() + eol;
 
-			response += "Access-Control-Allow-Origin: *" + eol;
-			response += "Access-Control-Allow-Methods: POST, GET" + eol;
-			response += "Access-Control-Max-Age: 1728000" + eol;
-			response += "Access-Control-Allow-Credentials: true" + eol;
+			response += @"Access-Control-Allow-Origin: *" + eol;
+			response += @"Access-Control-Allow-Methods: POST, GET" + eol;
+			response += @"Access-Control-Max-Age: 1728000" + eol;
+			response += @"Access-Control-Allow-Credentials: true" + eol;
 			
 		
 	
