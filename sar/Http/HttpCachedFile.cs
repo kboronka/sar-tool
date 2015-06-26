@@ -91,7 +91,7 @@ namespace sar.Http
 				hex += b.ToString("X2");
 			}
 			
-			return hex;
+			return hex.QuoteDouble();
 		}
 	}
 }

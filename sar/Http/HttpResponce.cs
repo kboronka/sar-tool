@@ -41,7 +41,7 @@ namespace sar.Http
 
 	public class HttpResponse
 	{
-		private HttpRequest request;
+		private readonly HttpRequest request;
 		private HttpContent content;
 		
 		
@@ -63,7 +63,7 @@ namespace sar.Http
 				{
 					if (HttpController.Primary == null) throw new ApplicationException("Primary Controller Not Defined");
 					if (HttpController.Primary.PrimaryAction == null) throw new ApplicationException("Primary Action Not Defined");
-	
+					
 					this.content = HttpController.RequestPrimary(this.request);
 				}
 				else if (this.request.Path.ToLower().EndsWith(PDF_IDENT, StringComparison.CurrentCulture))
@@ -87,6 +87,10 @@ namespace sar.Http
 				{
 					this.bytes = this.ConstructResponse(HttpStatusCode.SERVERERROR);
 				}
+				else if (this.content.ETag == this.request.ETag)
+				{
+					this.bytes = this.ConstructResponse(HttpStatusCode.NOT_MODIFIED);
+				}
 				else
 				{
 					this.bytes = this.ConstructResponse(HttpStatusCode.OK);
@@ -96,7 +100,7 @@ namespace sar.Http
 			{
 				Program.Log(ex);
 				this.content = ErrorController.Display(this.request, ex, HttpStatusCode.NOTFOUND);
-				this.bytes = this.ConstructResponse(HttpStatusCode.SERVERERROR);			
+				this.bytes = this.ConstructResponse(HttpStatusCode.SERVERERROR);
 			}
 			catch (Exception ex)
 			{
@@ -110,40 +114,44 @@ namespace sar.Http
 		{
 			// Construct response header
 			
+			const string GMT = "ddd, dd MMM yyyy HH':'mm':'ss 'GMT'";
 			const string eol = "\r\n";
 
 			// status line
 			string responsePhrase = Enum.GetName(typeof(HttpStatusCode), status);
 			string response = /*"HTTP/1.0" +*/ " " + ((int)status).ToString() + " " + responsePhrase + eol;
 			
-			byte [] contentBytes = this.content.Render(request.Server.Cache);
-			// content details
-			//Wed, 24 Jun 2015 21:06:55 GMT
-			const string GMT = "ddd, dd MMM yyyy HH':'mm':'ss 'GMT'";
-			response += @"Date: " + DateTime.UtcNow.ToString(GMT) + eol;
 			response += @"Server: " + @"sar\" + AssemblyInfo.SarVersion + eol;
-			response += @"Expires: " + DateTime.UtcNow.AddDays(1).ToString(GMT) + eol;
+			response += @"Date: " + DateTime.UtcNow.ToString(GMT) + eol;
+			response += @"ETag: " + this.content.ETag + eol;
 			response += @"Last-Modified: " + this.content.LastModified.ToString(GMT) + eol;
-			response += @"ETag: " + this.content.ETag.QuoteDouble() + eol;
-			response += @"Last-Modified: " + this.content.LastModified.ToString(GMT) + eol;
-			response += @"Content-Type: " + this.content.ContentType + eol;
-			response += @"Content-Length: " + (contentBytes.Length).ToString() + eol;
-
+			if (this.request.PdfReader) response += "X-Content-Type-Options: " + "pdf-render" + eol;
+			
+			// content details
+			var contentBytes = new byte[] {};
+			if (status != HttpStatusCode.NOT_MODIFIED)
+			{
+				contentBytes = this.content.Render(request.Server.Cache);				
+				response += @"Content-Type: " + this.content.ContentType + eol;
+				response += @"Content-Length: " + (contentBytes.Length).ToString() + eol;
+				//response += @"Expires: " + DateTime.UtcNow.AddDays(1).ToString(GMT) + eol;
+			}
+			
+			/*
 			response += @"Access-Control-Allow-Origin: *" + eol;
 			response += @"Access-Control-Allow-Methods: POST, GET" + eol;
 			response += @"Access-Control-Max-Age: 1728000" + eol;
 			response += @"Access-Control-Allow-Credentials: true" + eol;
+			 */
 			
-		
-	
-			if (this.request.PdfReader) response += "X-Content-Type-Options: " + "pdf-render" + eol;
-
+			
 			// other
 			response += "Connection: close";
 			// terminate header
 			response += eol + eol;
 			
-			return StringHelper.CombineByteArrays(Encoding.ASCII.GetBytes(response), contentBytes);
+			
+			return (contentBytes.Length > 0) ? StringHelper.CombineByteArrays(Encoding.ASCII.GetBytes(response), contentBytes) : Encoding.ASCII.GetBytes(response);
 		}
 	}
 }

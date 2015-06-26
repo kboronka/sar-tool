@@ -37,7 +37,7 @@ namespace sar.Http
 		
 		private string requestText;
 		private string fullUrl;
-		public string Path { get; set;}
+		
 		private string query;
 		private string reference;
 		
@@ -52,6 +52,9 @@ namespace sar.Http
 		
 		private string contentType;
 		private byte[] data;
+
+		public string Path { get; set;}
+		public string ETag { get; private set; }
 		
 		#region properties
 
@@ -333,6 +336,10 @@ namespace sar.Http
 					case "Content-Type":
 						this.contentType = requestHeader[1].TrimWhiteSpace();
 						break;
+						
+					case "If-None-Match":
+						this.ETag = requestHeader[1].TrimWhiteSpace();
+						break;						
 				}
 				// TODO: parse common request Headers
 				// Header format

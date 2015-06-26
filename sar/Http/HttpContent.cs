@@ -170,15 +170,16 @@ namespace sar.Http
 		
 		#region render
 		
+		public byte[] Render(HttpCache cache)
+		{
+			return (this.ParsingRequired) ? Render(cache, baseContent) : this.content;
+		}
+
 		private string RenderText(HttpCache cache, Dictionary<string, HttpContent> baseContent)
 		{
 			return StringHelper.GetString(Render(cache, baseContent));
 		}
 
-		public byte[] Render(HttpCache cache)
-		{
-			return Render(cache, baseContent);
-		}
 
 		public const string INCLUDE_RENDER_SYNTAX = @"\<%@ Include:\s*([^@]+)\s*\%\>";
 		public const string CONTENT_RENDER_SYNTAX = @"\<%@ Content:\s*([^@]+)\s*\%\>";
