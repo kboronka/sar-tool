@@ -143,8 +143,8 @@ namespace sar.Http
 		
 		protected HttpContent() : this(Encoding.ASCII.GetBytes(""), "text/plain") { }
 		public HttpContent(string content) : this(Encoding.ASCII.GetBytes(content), "text/plain") { }
-		public HttpContent(Dictionary<string, object> json) : this(Encoding.ASCII.GetBytes(json.ToJSON()), "text/plain") { }
-		public HttpContent(List<Dictionary<string, object>> json) : this(Encoding.ASCII.GetBytes(json.ToJSON()), "text/plain") { }
+		public HttpContent(Dictionary<string, object> json) : this(Encoding.ASCII.GetBytes(json.ToJSON()), "application/json") { }
+		public HttpContent(List<Dictionary<string, object>> json) : this(Encoding.ASCII.GetBytes(json.ToJSON()), "application/json") { }
 
 
 		public HttpContent(byte[] content, string contentType)
