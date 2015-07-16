@@ -33,8 +33,13 @@ namespace sar.Socket
 				usedPorts.Add(endpoint.Port);
 			}
 
+			// skip port 87
+			// http://superuser.com/questions/188058/which-ports-are-considered-unsafe-on-chrome
 			for (int port = firstPort; port < lastPort; port++)
 			{
+				if (port == 87) continue;
+				if (port == 95) continue;
+				if (port >= 101 && port < 1000) port = 1000;
 				if (!usedPorts.Contains(port)) return port;
 			}
 			
