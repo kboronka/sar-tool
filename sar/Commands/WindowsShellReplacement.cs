@@ -44,18 +44,7 @@ namespace sar.Commands
 			
 			if (!File.Exists(path)) throw new FileNotFoundException("unable to find file: " + path);
 			
-			RegistryKey winLoginKey;
-			if (ApplicationInfo.IsWow64)
-			{
-				winLoginKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion\Winlogon", true);
-				ConsoleHelper.WriteLine("64bit");
-			}
-			else
-			{
-				winLoginKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon", true);
-				ConsoleHelper.WriteLine("32bit");
-			}
-
+			RegistryKey winLoginKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon", true);
 			if (winLoginKey == null) throw new KeyNotFoundException("Winlogin key was not found");
 
 			winLoginKey.SetValue("Shell", path, RegistryValueKind.String);

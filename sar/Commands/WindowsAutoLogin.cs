@@ -51,16 +51,7 @@ namespace sar.Commands
 			
 			//TODO: split username by '/' to extract domain
 			
-			RegistryKey winLoginKey;
-			if (ApplicationInfo.IsWow64)
-			{
-				winLoginKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion\Winlogon\", true);
-			}
-			else
-			{
-				winLoginKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon", true);
-			}
-
+			RegistryKey winLoginKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon", true);
 			if (winLoginKey == null) throw new KeyNotFoundException("Winlogin key was not found");
 
 			winLoginKey.SetValue("DefaultUserName", username, RegistryValueKind.String);
