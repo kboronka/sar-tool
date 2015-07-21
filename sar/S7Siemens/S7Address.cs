@@ -110,17 +110,18 @@ namespace sar.S7Siemens
 
 		public static bool operator !=(Address address1, Address address2)
 		{
-			return !address1.Equals(address2);
+			return !(address1 == address2);
 		}
 		
 		public static bool operator ==(Address address1, string address2)
 		{
+			if (string.IsNullOrEmpty(address2)) return false;
 			return (address1 == new Address(address2));
 		}
 
 		public static bool operator !=(Address address1, string address2)
 		{
-			return (address1 != new Address(address2));
+			return !(address1 == address2);
 		}
 		
 		public override bool Equals(object obj)
