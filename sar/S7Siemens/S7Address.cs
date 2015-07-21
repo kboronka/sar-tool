@@ -102,5 +102,48 @@ namespace sar.S7Siemens
 			
 			this.byteLength = (ushort)(this.length / 8);
 		}
+		
+		public static bool operator ==(Address address1, Address address2)
+		{
+			return address1.Equals(address2);
+		}
+
+		public static bool operator !=(Address address1, Address address2)
+		{
+			return !address1.Equals(address2);
+		}
+		
+		public static bool operator ==(Address address1, string address2)
+		{
+			return (address1 == new Address(address2));
+		}
+
+		public static bool operator !=(Address address1, string address2)
+		{
+			return (address1 != new Address(address2));
+		}
+		
+		public override bool Equals(object obj)
+		{
+			return this.Equals((Address)obj);
+		}
+
+		public bool Equals(Address other)
+		{
+			if (other == null)
+				return false;
+
+			return
+				this.area == other.area &&
+				this.dataBlock == other.dataBlock &&
+				this.startAddress == other.startAddress &&
+				this.transportType == other.transportType &&
+				this.length == other.length;
+		}
+		
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
+		}
 	};
 }
