@@ -67,13 +67,28 @@ namespace sar.S7Siemens
 			Dispose(true);
 		}
 		
+		bool disposed = false;
 		protected void Dispose(bool disposing)
 		{
-			if (this.connected)
+			if (disposed) return;
+			
+			if (disposing)
 			{
-				this.connected = false;
-				this.socket.Disconnect();
+				try
+				{
+					if (this.connected) this.connected = false;
+					if (this.socket != null)
+					{
+						this.socket.Disconnect();
+					}
+				}
+				catch
+				{
+					
+				}
 			}
+
+			disposed = true;
 		}
 		
 		private bool Connect()
