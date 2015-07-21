@@ -130,9 +130,6 @@ namespace sar.S7Siemens
 
 		public bool Equals(Address other)
 		{
-			if (other == null)
-				return false;
-
 			return
 				this.area == other.area &&
 				this.dataBlock == other.dataBlock &&
