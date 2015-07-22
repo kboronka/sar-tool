@@ -646,7 +646,7 @@ namespace sar.Tools
 			else if (value is long[][])
 			{
 				return ((long[][])value).ToJSON();
-			}			
+			}
 			else if (value is double)
 			{
 				return ((double)value).ToJSON();
@@ -843,6 +843,7 @@ namespace sar.Tools
 			data = Regex.Replace(data, @"[\t]", @"\t");
 			data = Regex.Replace(data, @"[\b]", @"\b");
 			data = Regex.Replace(data, @"[\f]", @"\f");
+			data = Regex.Replace(data, @"[\\]", @"\\");
 			data = @"""" + data + @"""";
 			return data;
 		}
@@ -958,7 +959,18 @@ namespace sar.Tools
 		{
 			var pattern = @"\""" + element + @"\"":([^\,\}]*)";
 			var x = Regex.Match(json, pattern);
-			return x.Groups[1].Value;
+			
+			var data = x.Groups[1].Value;
+
+			// render escaped control characters
+			data = Regex.Replace(data, @"([^\\]|^)([\\][n])", m => m.Groups[1].Value + "\n");
+			data = Regex.Replace(data, @"([^\\]|^)([\\][r])", m => m.Groups[1].Value + "\r");
+			data = Regex.Replace(data, @"([^\\]|^)([\\][t])", m => m.Groups[1].Value + "\t");
+			data = Regex.Replace(data, @"([^\\]|^)([\\][b])", m => m.Groups[1].Value + "\b");
+			data = Regex.Replace(data, @"([^\\]|^)([\\][f])", m => m.Groups[1].Value + "\f");
+			data = Regex.Replace(data, @"([^\\]|^)([\\][\\])", m => m.Groups[1].Value + "\\");
+			
+			return data;
 		}
 		
 		public static int GetJSON(this string json, string element, int defaultValue)

@@ -60,6 +60,7 @@ namespace sar.Testing
 			this.button4 = new System.Windows.Forms.Button();
 			this.textBox3 = new System.Windows.Forms.TextBox();
 			this.button5 = new System.Windows.Forms.Button();
+			this.button6 = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -231,11 +232,22 @@ namespace sar.Testing
 			this.button5.UseVisualStyleBackColor = true;
 			this.button5.Click += new System.EventHandler(this.Button5Click);
 			// 
+			// button6
+			// 
+			this.button6.Location = new System.Drawing.Point(166, 208);
+			this.button6.Name = "button6";
+			this.button6.Size = new System.Drawing.Size(75, 23);
+			this.button6.TabIndex = 16;
+			this.button6.Text = "regex";
+			this.button6.UseVisualStyleBackColor = true;
+			this.button6.Click += new System.EventHandler(this.Button6Click);
+			// 
 			// Menu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(482, 351);
+			this.Controls.Add(this.button6);
 			this.Controls.Add(this.button5);
 			this.Controls.Add(this.textBox3);
 			this.Controls.Add(this.button4);
@@ -277,5 +289,6 @@ namespace sar.Testing
 		private System.Windows.Forms.Button LocalSocketButton;
 		private System.Windows.Forms.TextBox textBox3;
 		private System.Windows.Forms.Button button5;
+		private System.Windows.Forms.Button button6;
 	}
 }

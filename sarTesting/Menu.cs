@@ -17,6 +17,7 @@ using System;
 using System.Windows.Forms;
 using System.Timers;
 using System.Text;
+using System.Text.RegularExpressions;
 
 
 using Outlook = Microsoft.Office.Interop.Outlook;
@@ -150,6 +151,16 @@ namespace sar.Testing
 			{
 				plc.WriteBytes("DB300.DBB0", new byte[] { 0x01 });
 			}
+		}
+		void Button6Click(object sender, EventArgs e)
+		{
+			var data = @"\tC:\\test\\ \n";
+
+			data = Regex.Replace(data, @"([^\\]|^)([\\][n])", m => m.Groups[1].Value + "\n");
+			data = Regex.Replace(data, @"([^\\]|^)([\\][t])", m => m.Groups[1].Value + "\t");
+			data = Regex.Replace(data, @"([^\\]|^)([\\][\\])", m => m.Groups[1].Value + "\\");
+
+			System.Diagnostics.Debug.WriteLine(data);
 		}
 	}
 }
