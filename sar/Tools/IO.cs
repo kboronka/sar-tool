@@ -405,6 +405,42 @@ namespace sar.Tools
 			return encoding;
 		}
 		
+		private static FileStream WaitForFile (string path, FileMode mode, FileAccess access, FileShare share)
+		{
+			// check if file is locked by another application
+			for (int attempts = 0; attempts < 10; attempts++)
+			{
+				try
+				{
+					var fs = new FileStream(path, mode, access, share);
+
+					fs.ReadByte();
+					fs.Seek(0, SeekOrigin.Begin);
+
+					return fs;
+				}
+				catch (IOException)
+				{
+					Thread.Sleep(50);
+				}
+			}
+
+			return null;
+		}
+		
+		public static byte[] ReadAllBytes(string path)
+		{
+			byte[] buffer;
+			
+			using (var fs = WaitForFile(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+			{
+				buffer = new byte[fs.Length];
+				fs.Read(buffer, 0, (int)fs.Length);
+			}
+			
+			return buffer;
+		}
+		
 		public static String ReadFileAsUtf8(string fileName)
 		{
 			Encoding encoding = Encoding.Default;

@@ -20,6 +20,7 @@ using System.Security.Cryptography;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 using sar.Tools;
 
@@ -78,10 +79,10 @@ namespace sar.Http
 		}
 		
 		#endregion
-		
+
 		private void OnChanged(object sender, FileSystemEventArgs e)
 		{
-			this.Data = File.ReadAllBytes(path);
+			this.Data = IO.ReadAllBytes(path);
 			this.ETag = GetETag(this.Data);
 			this.LastModified = File.GetLastWriteTimeUtc(path);
 		}
