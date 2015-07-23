@@ -835,15 +835,15 @@ namespace sar.Tools
 			string data = obj;
 			
 			// escape quotes, and solidus
-			data = Regex.Replace(data, @"([\""\/])", @"\$1");
-			
+			data = Regex.Replace(data, @"[\\]", @"\\");
+			data = Regex.Replace(data, @"[\""]", @"\""");
+
 			// escape other control-characters
 			data = Regex.Replace(data, @"[\n]", @"\n");
 			data = Regex.Replace(data, @"[\r]", @"\r");
 			data = Regex.Replace(data, @"[\t]", @"\t");
 			data = Regex.Replace(data, @"[\b]", @"\b");
 			data = Regex.Replace(data, @"[\f]", @"\f");
-			data = Regex.Replace(data, @"[\\]", @"\\");
 			data = @"""" + data + @"""";
 			return data;
 		}
@@ -968,6 +968,7 @@ namespace sar.Tools
 			data = Regex.Replace(data, @"([^\\]|^)([\\][t])", m => m.Groups[1].Value + "\t");
 			data = Regex.Replace(data, @"([^\\]|^)([\\][b])", m => m.Groups[1].Value + "\b");
 			data = Regex.Replace(data, @"([^\\]|^)([\\][f])", m => m.Groups[1].Value + "\f");
+			data = Regex.Replace(data, @"([^\\]|^)([\\][""])", m => m.Groups[1].Value + @"""");
 			data = Regex.Replace(data, @"([^\\]|^)([\\][\\])", m => m.Groups[1].Value + "\\");
 			
 			return data;

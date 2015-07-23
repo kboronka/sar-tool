@@ -14,6 +14,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Timers;
 using System.Text;
@@ -161,6 +162,21 @@ namespace sar.Testing
 			data = Regex.Replace(data, @"([^\\]|^)([\\][\\])", m => m.Groups[1].Value + "\\");
 
 			System.Diagnostics.Debug.WriteLine(data);
+			
+			
+			var json = new Dictionary<string, object>();
+			json.Add("test", @"c:\test\ 102/103 ""abc efg""");
+			
+			var jsonString = json.ToJSON();
+			
+			var decodeJsonString = jsonString.GetJSON("test", "abc");
+			json = new Dictionary<string, object>();
+			json.Add("test", decodeJsonString);
+			
+			var jsonString2 = json.ToJSON();
+			
+			System.Diagnostics.Debug.WriteLine(jsonString);
+			System.Diagnostics.Debug.WriteLine(jsonString2);
 		}
 	}
 }
