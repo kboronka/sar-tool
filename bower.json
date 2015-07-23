@@ -3,6 +3,10 @@
   "version" : "1.0.1",
   "description" : "a collection of useful tools",
   "license" : "BSD",
+  "main": [
+    "release/sar.exe",
+    "release/sar.pdb"
+  ],
   "devDependencies": {
     "angular": "~1.2",
     "jquery": "~1.11.2",
@@ -21,6 +25,11 @@
   "ignore" : [
     "**/.*",
     "lib",
-    "sar"
+    "sar",
+    "quickLog",
+    "sarControls",
+    "sarTesting",
+    "sarValidate",
+    "*.*"
   ]
 }
