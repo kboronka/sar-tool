@@ -68,9 +68,13 @@ namespace sar.Http
 			{
 				return new HttpContent(server.Cache.Get(request), baseContent);
 			}
+			else if (File.Exists(filePath))
+			{
+				return new HttpContent(server.Cache.Get(filePath), baseContent);
+			}
 			else if (filePath.EndsWith("favicon.ico"))
 			{
-				return new HttpContent(server.Cache.Get("sar.Http.libs.art.favicon.ico"), baseContent);
+				return new HttpContent(server.Cache.Get("sar.http.libs.art.favicon.ico"), baseContent);
 			}
 			else
 			{

@@ -25,6 +25,7 @@ namespace sar.Testing
 	internal sealed class Program : Base.Program
 	{
 		public static int port = 0;
+		public static HttpServer Server;
 		
 		[STAThread]
 		private static void Main(string[] args)
@@ -38,7 +39,8 @@ namespace sar.Testing
 			#else
 			var server = new HttpServer(ApplicationInfo.CurrentDirectory + @"views\");
 			#endif
-				
+			Server = server;
+			
 			port = server.Port;
 			
 //			foreach (string resource in EmbeddedResource.GetAllResources())

@@ -37,6 +37,11 @@ namespace sar.Testing
 			
 			this.Text = "sar-tool testing:" + Program.port.ToString();
 			
+			foreach (var file in Program.Server.Cache.Files)
+			{
+				System.Diagnostics.Debug.WriteLine(file);
+			}
+			
 			try
 			{
 				throw new ApplicationException("test");

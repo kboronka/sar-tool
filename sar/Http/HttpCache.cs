@@ -27,6 +27,21 @@ namespace sar.Http
 		private Dictionary<string, HttpCachedFile> cache;
 		private HttpServer server;
 		
+		public List<string> Files
+		{
+			get
+			{
+				var result = new List<string>();
+				
+				foreach (var file in cache)
+				{
+					result.Add(file.Key);
+				}
+				
+				return result;
+			}
+		}
+		
 		public HttpCache(HttpServer server)
 		{
 			this.cache = new Dictionary<string, HttpCachedFile>();
@@ -43,7 +58,6 @@ namespace sar.Http
 			foreach (var file in IO.GetAllFiles(server.Root))
 			{
 				var request = file.Substring(server.Root.Length + 1).ToLower();
-				System.Diagnostics.Debug.WriteLine(request);
 				cache.Add(request, new HttpCachedFile(file));
 			}
 		}
@@ -68,6 +82,11 @@ namespace sar.Http
 			string filePath = server.Root + @"\" + requestPath.Replace(@"/", @"\");
 			return Get(filePath);
 		}
+		
+		public bool Find(string filePath)
+		{
+			return (this.cache.ContainsKey(filePath) || File.Exists(filePath));
+		}
 
 		public HttpCachedFile Get(string filePath)
 		{
@@ -77,10 +96,12 @@ namespace sar.Http
 				return this.cache[filePath];
 			}
 			
+			// TODO: this doesn't work
 			if (File.Exists(filePath))
 			{
-				var newFile = new HttpCachedFile(filePath);
-				this.cache.Add(filePath, newFile);
+				var request = filePath.Substring(server.Root.Length + 1).ToLower();
+				var newFile = new HttpCachedFile(filePath);				
+				this.cache.Add(request, newFile);
 				
 				return newFile;
 			}
