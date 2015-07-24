@@ -67,7 +67,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="sar\sar.cs" />
+    <Compile Include="sar\StringHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
