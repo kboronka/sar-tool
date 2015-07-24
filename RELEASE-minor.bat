@@ -34,14 +34,6 @@
 	svn cleanup
 	svn update
 	svn revert -R .
-
-	%SAR% -assy.ver \quickLog\source\AssemblyInfo.* %VERSION%
-	%SAR% -f.del quickLog\source\bin\%CONFIG%\*.* /q /svn
-	%SAR% -b.net 3.5 sarQuckLog.sln /p:Configuration=%CONFIG% /p:Platform=\"x86\"
-	if errorlevel 1 goto BuildFailed
-	copy quickLog\source\bin\%CONFIG%\*.exe quickLog\release\*.exe
-	copy quickLog\source\bin\%CONFIG%\*.pdb quickLog\release\*.pdb
-
 	
 	%SAR% -assy.ver \sar\AssemblyInfo.* %VERSION%
 	%SAR% -f.del sar\bin\%CONFIG%\*.* /q /svn

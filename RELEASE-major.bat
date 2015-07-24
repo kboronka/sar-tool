@@ -34,17 +34,6 @@
 	svn cleanup
 	svn update
 
-	%SAR% -f.bsd \quickLog\source\*.cs "Kevin Boronka"
-	%SAR% -assy.ver \quickLog\source\AssemblyInfo.* %VERSION%
-	%SAR% -f.del quickLog\source\bin\%CONFIG%\*.* /q /svn
-
-	%SAR% -b.net 3.5 sarQuckLog.sln /p:Configuration=%CONFIG% /p:Platform=\"x86\"
-	if errorlevel 1 goto BuildFailed
-
-	copy quickLog\source\bin\%CONFIG%\*.exe quickLog\release\*.exe
-	copy quickLog\source\bin\%CONFIG%\*.pdb quickLog\release\*.pdb
-
-
 	%SAR% -f.bsd \sar\*.cs "Kevin Boronka"
 	%SAR% -f.bsd \sarTesting\*.cs "Kevin Boronka"
 	%SAR% -assy.ver \sar\AssemblyInfo.* %VERSION%
