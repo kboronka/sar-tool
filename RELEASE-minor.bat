@@ -35,19 +35,21 @@
 	svn update
 	svn revert -R .
 
-	%SAR% -assy.ver \sar\AssemblyInfo.* %VERSION%
-	%SAR% -assy.ver \sarControls\AssemblyInfo.* %VERSION%
 	%SAR% -assy.ver \quickLog\source\AssemblyInfo.* %VERSION%
-
-	%SAR% -f.del sar\bin\%CONFIG%\*.* /q /svn
 	%SAR% -f.del quickLog\source\bin\%CONFIG%\*.* /q /svn
+	%SAR% -b.net 3.5 sarQuckLog.sln /p:Configuration=%CONFIG% /p:Platform=\"x86\"
+	if errorlevel 1 goto BuildFailed
+	copy quickLog\source\bin\%CONFIG%\*.exe quickLog\release\*.exe
+	copy quickLog\source\bin\%CONFIG%\*.pdb quickLog\release\*.pdb
+
+	
+	%SAR% -assy.ver \sar\AssemblyInfo.* %VERSION%
+	%SAR% -f.del sar\bin\%CONFIG%\*.* /q /svn
 	
 	echo building binaries
 	%SAR% -b.net 3.5 %SOLUTION% /p:Configuration=%CONFIG% /p:Platform=\"x86\"
 	if errorlevel 1 goto BuildFailed
 	
-	%SAR% -b.net 3.5 sarQuckLog.sln /p:Configuration=%CONFIG% /p:Platform=\"x86\"
-	if errorlevel 1 goto BuildFailed
 	svn cleanup
 	svn revert -R .
 	
@@ -55,21 +57,14 @@
 	svn revert
 	copy sar\bin\%CONFIG%\*.exe release\*.exe
 	copy sar\bin\%CONFIG%\*.pdb release\*.pdb
-	copy sarControls\bin\%CONFIG%\sarControls.dll release\sarControls.dll
-	copy sarControls\bin\%CONFIG%\sarControls.pdb release\sarControls.pdb
-
-	copy quickLog\source\bin\%CONFIG%\*.exe quickLog\release\*.exe
-	copy quickLog\source\bin\%CONFIG%\*.pdb quickLog\release\*.pdb
-	
 	copy license.txt release\license.txt
+	
 	svn commit -m "new binaries v%VERSION%"
 	%ZIP% "sar %VERSION%.zip" .\release\*.*
 	svn update
 
 	%SAR% -f.bsd \sar\*.cs "Kevin Boronka"
-	%SAR% -f.bsd \sarControls\*.cs "Kevin Boronka"
 	%SAR% -f.bsd \sarTesting\*.cs "Kevin Boronka"
-	%SAR% -f.bsd \quickLog\source\*.cs "Kevin Boronka"
 	
 	echo build completed
 	popd
