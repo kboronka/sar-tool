@@ -6,8 +6,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sar", "sar\sar.csproj", "{7
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sarTesting", "sarTesting\sarTesting.csproj", "{CF782D66-812A-46EE-9E1D-95879FC285D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sarControls", "sarControls\sarControls.csproj", "{304FB8D1-948C-42A1-AB22-8802FB42E8B0}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sarValidate", "sarValidate\sarValidate.csproj", "{C240AC11-57E3-4E06-AC91-6FD4592C41F2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "quickLog", "quickLog\source\quickLog.csproj", "{1A2E20F1-0940-4E89-ADCD-3F4EF0B96066}"
@@ -26,10 +24,6 @@ Global
 		{CF782D66-812A-46EE-9E1D-95879FC285D0}.Debug|x86.Build.0 = Debug|Any CPU
 		{CF782D66-812A-46EE-9E1D-95879FC285D0}.Release|x86.ActiveCfg = Release|Any CPU
 		{CF782D66-812A-46EE-9E1D-95879FC285D0}.Release|x86.Build.0 = Release|Any CPU
-		{304FB8D1-948C-42A1-AB22-8802FB42E8B0}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{304FB8D1-948C-42A1-AB22-8802FB42E8B0}.Debug|x86.Build.0 = Debug|Any CPU
-		{304FB8D1-948C-42A1-AB22-8802FB42E8B0}.Release|x86.ActiveCfg = Release|Any CPU
-		{304FB8D1-948C-42A1-AB22-8802FB42E8B0}.Release|x86.Build.0 = Release|Any CPU
 		{C240AC11-57E3-4E06-AC91-6FD4592C41F2}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{C240AC11-57E3-4E06-AC91-6FD4592C41F2}.Debug|x86.Build.0 = Debug|Any CPU
 		{C240AC11-57E3-4E06-AC91-6FD4592C41F2}.Release|x86.ActiveCfg = Release|Any CPU

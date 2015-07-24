@@ -52,19 +52,6 @@ namespace sar.Testing
 			}
 		}
 		
-		void LocalSocketClick(object sender, EventArgs e)
-		{
-			var frm = new LocalSocket();
-			frm.ShowDialog(this);
-			frm.Dispose();
-			
-		}
-		
-		void RemoteSocketClick(object sender, EventArgs e)
-		{
-			var frm = new RemoteSocket();
-			frm.ShowDialog(this);
-		}
 		
 		void Button1Click(object sender, EventArgs e)
 		{
@@ -113,35 +100,6 @@ namespace sar.Testing
 		{
 			SendOutlookEmail("kboronka@gmail.com", "Subject", "Body");
 		}
-		
-		void Button3Click(object sender, EventArgs e)
-		{
-			string test = "";
-			test += "abc" + Environment.NewLine;
-			test += "cccc" + Environment.NewLine;
-			test += DateTime.Now.ToString();
-			this.readOnlyTextBox1.Text = " -- ".AppendPrefixTo(test);
-		}
-		
-		#region folder control
-		private System.Timers.Timer resetBooleanTimer = new System.Timers.Timer(1000);
-
-		private void FolderSelect1ValueChanged(object sender, EventArgs e)
-		{
-			this.resetBooleanTimer.Elapsed += new ElapsedEventHandler(this.ResetBooleanTimerTick);
-			this.resetBooleanTimer.Enabled = true;
-			this.folderChanged.Status = true;
-			
-			// TODO: Implement FolderSelect1ValueChanged
-		}
-		
-		private void ResetBooleanTimerTick(object source, ElapsedEventArgs e)
-		{
-			this.resetBooleanTimer.Enabled = false;
-			this.folderChanged.Status = false;
-		}
-		
-		#endregion
 		
 		void Button4Click(object sender, EventArgs e)
 		{
