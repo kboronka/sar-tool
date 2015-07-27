@@ -5,7 +5,9 @@ namespace sar.Http
 {
 	public class HttpSession
 	{
-		// TODO add expiration date
+		// TODO: add expiration date
+		// TODO: add dictionary key, object lookup table
+		
 		private static Dictionary<string, HttpSession> sessions;
 		private static string sessionLock = "";
 		
