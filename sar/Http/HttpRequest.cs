@@ -17,6 +17,7 @@ using System;
 using System.IO;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 using sar.Tools;
@@ -55,6 +56,7 @@ namespace sar.Http
 
 		public string Path { get; set;}
 		public string ETag { get; private set; }
+		public HttpSession Session { get; private set; }
 		
 		#region properties
 
@@ -299,6 +301,8 @@ namespace sar.Http
 			}
 			
 			string line = "";
+			string sessionID = "";
+			
 			while (!this.headerRecived)
 			{
 				line = ReadLine(ref bufferIn);
@@ -324,7 +328,21 @@ namespace sar.Http
 						
 					case "If-None-Match":
 						this.ETag = requestHeader[1].TrimWhiteSpace();
-						break;						
+						break;
+					case "Cookie":
+						sessionID = requestHeader[1].TrimWhiteSpace();
+						var matches = Regex.Matches(requestHeader[1], @"sarSession=([^;]+)");
+						
+						foreach (Match match in matches)
+						{
+							var id = match.Groups[1].Value;
+							if (HttpSession.Contains(id))
+							{
+								this.Session = HttpSession.Find(id);
+							}
+						}
+						
+						break;
 				}
 				// TODO: parse common request Headers
 				// Header format
@@ -335,6 +353,8 @@ namespace sar.Http
 				// User-Agent: chrome v17
 				if (this.headerRecived) break;
 			}
+			
+			if (this.Session == null) this.Session = HttpSession.Find("");
 		}
 
 		private void ReadData(ref byte[] bufferIn)

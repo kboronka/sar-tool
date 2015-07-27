@@ -124,6 +124,7 @@ namespace sar.Http
 			response += @"Server: " + @"sar\" + AssemblyInfo.SarVersion + eol;
 			response += @"Date: " + DateTime.UtcNow.ToString(GMT) + eol;
 			response += @"ETag: " + this.content.ETag + eol;
+			response += @"Set-Cookie: sarSession=" + this.request.Session.ID + @"; Path=/;"	+ eol;
 			response += @"Last-Modified: " + this.content.LastModified.ToString(GMT) + eol;
 			if (this.request.PdfReader) response += "X-Content-Type-Options: " + "pdf-render" + eol;
 			
