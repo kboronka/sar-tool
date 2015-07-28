@@ -5,8 +5,7 @@ namespace sar.Http
 {
 	public class HttpSession
 	{
-		// TODO: add expiration date
-		// TODO: add dictionary key, object lookup table
+		#region static
 		
 		private static Dictionary<string, HttpSession> sessions;
 		private static string sessionLock = "";
@@ -45,13 +44,48 @@ namespace sar.Http
 			return responce;
 		}
 		
+		#endregion
+		
+		
+		private string dataLock;
 		public string ID { get; private set; }
-		public DateTime Timestamp { get; private set; }
+		public DateTime CreationDate { get; private set; }
+		public DateTime LastRequest { get; private set; }
+		public const int MAX_LIFE = 2;
+		
+		private Dictionary<string, object> data;
+		public Dictionary<string, object> Data
+		{
+			get
+			{
+				lock (dataLock)
+				{
+					return data;
+				}
+			}
+		}
+
+		private DateTime expiryDate;
+		public DateTime ExpiryDate
+		{
+			get
+			{
+				lock (dataLock)
+				{
+					this.LastRequest = DateTime.Now;
+					expiryDate = this.LastRequest.AddDays(MAX_LIFE);
+					return expiryDate;
+				}
+			}
+		}
 		
 		public HttpSession()
 		{
 			this.ID = Guid.NewGuid().ToString("D");
-			this.Timestamp = DateTime.Now;
+			this.CreationDate = DateTime.Now;
+			this.LastRequest = DateTime.Now;
+			this.ExpiryDate = this.LastRequest.AddDays(MAX_LIFE);
+			this.Data = new Dictionary<string, object>();
 			
 			sessions.Add(this.ID, this);
 		}
