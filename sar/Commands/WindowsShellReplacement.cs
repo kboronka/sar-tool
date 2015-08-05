@@ -48,11 +48,15 @@ namespace sar.Commands
 
 			if (winLoginKey == null) throw new KeyNotFoundException("Winlogin key was not found");
 
+
 			winLoginKey.SetValue("Shell", path, RegistryValueKind.String);
 			ConsoleHelper.WriteLine((string)winLoginKey.GetValue("Shell", path));
+			
+			var newShell = (string)winLoginKey.GetValue("Shell");
+			
 			winLoginKey.Close();
 
-			ConsoleHelper.WriteLine("Shell set to " + path + "", ConsoleColor.DarkYellow);
+			ConsoleHelper.WriteLine("Shell set to " + newShell + "", ConsoleColor.DarkYellow);
 			return ConsoleHelper.EXIT_OK;
 		}
 	}
