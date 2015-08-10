@@ -25,10 +25,7 @@
   "ignore" : [
     "lib",
     "sar",
-    "quickLog",
-    "sarControls",
     "sarTesting",
-    "sarValidate",
     "*.*"
   ]
 }
