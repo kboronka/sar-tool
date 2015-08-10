@@ -39,7 +39,7 @@ namespace sar.Http
 				result.Add("guid", Guid.NewGuid().ToString());
 				result.Add("html", @"<h1 class=""page-header"">" + request.Data + @"</h1><br/>" );
 				
-				if (result["request"] == "error") throw new ApplicationException("error test");
+				if (Encoding.ASCII.GetString(request.Data) == "error") throw new ApplicationException("error test");
 				
 				return new HttpContent(result.ToJSON());
 			}
