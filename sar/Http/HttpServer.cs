@@ -31,7 +31,6 @@ namespace sar.Http
 		private TcpListener listener;
 		protected int port;
 		protected string root;
-		private string favIcon;
 		
 		#region properties
 
