@@ -48,6 +48,7 @@ namespace sar.Tools
 			                          	new FileBsdHeader(this),
 			                          	new FileMove(this),
 			                          	new FileLock(this),
+			                          	new FanucBackup(this),
 			                          	new FileOpenFolder(this),
 			                          	new MSSQL_GenerateScripts(this),
 			                          	new DirectoryTimestamp(this),

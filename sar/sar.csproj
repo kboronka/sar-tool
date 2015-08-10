@@ -24,7 +24,7 @@
     <DelaySign>False</DelaySign>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <RegisterForComInterop>False</RegisterForComInterop>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
     <BaseAddress>4194304</BaseAddress>
@@ -79,6 +79,7 @@
     <Compile Include="Commands\AppShutdownWait.cs" />
     <Compile Include="Commands\CodeClean.cs" />
     <Compile Include="Commands\CodeReIndent.cs" />
+    <Compile Include="Commands\FanucBackup.cs" />
     <Compile Include="Commands\FileOpenFolder.cs" />
     <Compile Include="Commands\FileBackup.cs" />
     <Compile Include="Commands\BuildCHM.cs" />
