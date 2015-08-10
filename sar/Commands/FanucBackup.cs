@@ -46,11 +46,26 @@ namespace sar.Commands
 			if (path.EndsWith(@"\")) path = StringHelper.TrimEnd(path, 1);
 			if (!Directory.Exists(path)) Directory.CreateDirectory(path);
 			
-			foreach (string file in GetFileList(ip))
+			var files = GetFileList(ip);
+			for (int i = 0; i < files.Count; i++)
 			{
-				Progress.Message = "Downloading " + file;
-				Download(ip, file, path);
+				var file = files[i];
+				var progress = (i / (double)files.Count) * 100;
+				
+				Progress.Message = "Downloading " + progress.ToString("0") + "% [" + file + "]";
+				
+				try
+				{
+					Download(ip, file, path);
+				}
+				catch (Exception ex)
+				{
+					ConsoleHelper.WriteLine("Error downloading " + file);
+					ConsoleHelper.WriteException(ex);
+				}
 			}
+			
+			ConsoleHelper.WriteLine(files.Count.ToString() + " Files" + ((files.Count != 1) ? "s" : "") + " Downloaded", ConsoleColor.DarkYellow);
 			
 			return ConsoleHelper.EXIT_OK;
 		}
@@ -92,6 +107,7 @@ namespace sar.Commands
 			reqFTP.Proxy = null;
 			reqFTP.KeepAlive = false;
 			reqFTP.UsePassive = false;
+			reqFTP.Timeout = 30 * 1000;
 
 			var response = (FtpWebResponse)reqFTP.GetResponse();
 			var responseStream = response.GetResponseStream();
