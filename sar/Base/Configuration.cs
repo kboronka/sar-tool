@@ -28,11 +28,26 @@ namespace sar.Base
 	public abstract class Configuration
 	{
 		protected string path;
+		protected bool readOnly;
 		
 		public Configuration()
 		{
-			this.path = ApplicationInfo.CommonDataDirectory + sar.Tools.AssemblyInfo.Name + ".xml";
+			// check if local read-only configuration file exists
+			var localPath = ApplicationInfo.ApplicationPath + sar.Tools.AssemblyInfo.Name + ".xml";
+			var standardPath = ApplicationInfo.CommonDataDirectory + sar.Tools.AssemblyInfo.Name + ".xml";
 			
+			if (File.Exists(localPath))
+			{
+				this.path = localPath;
+				readOnly = true;
+			}
+			else
+			{
+				this.path = standardPath;
+				readOnly = false;
+			}
+			
+			// read the file
 			if (File.Exists(this.path))
 			{
 				XML.Reader reader = new XML.Reader(this.path);
@@ -44,10 +59,11 @@ namespace sar.Base
 		public Configuration(string path)
 		{
 			this.path = path;
+			this.readOnly = true;
 			
 			if (File.Exists(this.path))
 			{
-				XML.Reader reader = new XML.Reader(this.path);
+				var reader = new XML.Reader(this.path);
 
 				try
 				{
@@ -64,24 +80,30 @@ namespace sar.Base
 		
 		public void Save()
 		{
-			this.Save(this.path);
+			if (!readOnly)
+			{
+				this.Save(this.path);
+			}
 		}
 		
 		public void Save(string path)
 		{
-			this.path = path;
-			XML.Writer writer = new XML.Writer(path);
-			
-			try
+			if (!readOnly)
 			{
-				this.Serialize(writer);
-			}
-			catch
-			{
+				this.path = path;
+				var writer = new XML.Writer(path);
 				
+				try
+				{
+					this.Serialize(writer);
+				}
+				catch
+				{
+					
+				}
+				
+				writer.Close();
 			}
-			
-			writer.Close();
 		}
 		
 		protected abstract void Deserialize(XML.Reader reader);
