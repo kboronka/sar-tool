@@ -50,7 +50,7 @@ namespace sar.Base
 			// read the file
 			if (File.Exists(this.path))
 			{
-				XML.Reader reader = new XML.Reader(this.path);
+				var reader = new XML.Reader(this.path);
 				this.Deserialize(reader);
 				reader.Close();
 			}
