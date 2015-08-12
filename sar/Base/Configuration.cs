@@ -33,7 +33,7 @@ namespace sar.Base
 		public Configuration()
 		{
 			// check if local read-only configuration file exists
-			var localPath = ApplicationInfo.ApplicationPath + sar.Tools.AssemblyInfo.Name + ".xml";
+			var localPath = ApplicationInfo.CurrentDirectory + sar.Tools.AssemblyInfo.Name + ".xml";
 			var standardPath = ApplicationInfo.CommonDataDirectory + sar.Tools.AssemblyInfo.Name + ".xml";
 			
 			if (File.Exists(localPath))
