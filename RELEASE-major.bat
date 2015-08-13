@@ -31,10 +31,11 @@
 	echo "VERSION.MAJOR.MINOR.BUILD".
 	set /p VERSION="> "
 
+	%SAR% -bower
+	
 	svn cleanup
 	svn update
 
-	%SAR% -bower
 	%SAR% -f.bsd \sar\*.cs "Kevin Boronka"
 	%SAR% -f.bsd \sarTesting\*.cs "Kevin Boronka"
 	%SAR% -assy.ver \sar\AssemblyInfo.* %VERSION%

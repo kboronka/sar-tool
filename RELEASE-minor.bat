@@ -31,11 +31,12 @@
 	echo "VERSION.MAJOR.MINOR.BUILD".
 	set /p VERSION="> "
 
+	%SAR% -bower
+	
 	svn cleanup
 	svn update
 	svn revert -R .
-	
-	%SAR% -bower
+		
 	%SAR% -assy.ver \sar\AssemblyInfo.* %VERSION%
 	%SAR% -f.del sar\bin\%CONFIG%\*.* /q /svn
 	
