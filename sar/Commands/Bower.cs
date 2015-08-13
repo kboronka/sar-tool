@@ -43,13 +43,9 @@ namespace sar.Commands
 			
 			if (!File.Exists(bower)) throw new ApplicationException("Bower not found");
 			
-			//ConsoleHelper.Run(nodejs, bower + " install");
-			string output;
-			ConsoleHelper.Run(nodejs, bower + " cache clean", out output);
-			ConsoleHelper.Run(nodejs, bower + " update", out output);
-			
-			ConsoleHelper.WriteLine(output, ConsoleColor.White);
-			
+			ConsoleHelper.Run(nodejs, bower + " cache clean");
+			ConsoleHelper.Run(nodejs, bower + " update");
+						
 			ConsoleHelper.WriteLine("Bower update was successfully completed", ConsoleColor.DarkYellow);
 			return ConsoleHelper.EXIT_OK;
 		}
