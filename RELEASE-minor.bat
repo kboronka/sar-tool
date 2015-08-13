@@ -35,6 +35,7 @@
 	svn update
 	svn revert -R .
 	
+	%SAR% -bower
 	%SAR% -assy.ver \sar\AssemblyInfo.* %VERSION%
 	%SAR% -f.del sar\bin\%CONFIG%\*.* /q /svn
 	
