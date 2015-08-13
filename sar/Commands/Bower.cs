@@ -21,10 +21,8 @@ namespace sar.Commands
 		public override int Execute(string[] args)
 		{			
 			var nodejs = IO.FindApplication("node.exe", "nodejs");
-			
 			var bower = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\npm\node_modules\bower\bin\bower";
-			// C:\Users\kboronka\AppData\Roaming\npm\node_modules\bower\bin
-			
+		
 			
 			if (!File.Exists(bower)) throw new ApplicationException("Bower not found");
 			
