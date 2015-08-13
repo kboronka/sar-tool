@@ -34,7 +34,9 @@ namespace sar.Commands
 		}
 		
 		public override int Execute(string[] args)
-		{			
+		{		
+			Progress.Message = "bower update running";
+			
 			var nodejs = IO.FindApplication("node.exe", "nodejs");
 			var bower = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\npm\node_modules\bower\bin\bower";
 		
