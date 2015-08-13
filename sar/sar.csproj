@@ -77,6 +77,7 @@
     <Compile Include="Base\Program.cs" />
     <Compile Include="CommandHub.cs" />
     <Compile Include="Commands\AppShutdownWait.cs" />
+    <Compile Include="Commands\Bower.cs" />
     <Compile Include="Commands\CodeClean.cs" />
     <Compile Include="Commands\CodeReIndent.cs" />
     <Compile Include="Commands\FanucBackup.cs" />
@@ -101,9 +102,6 @@
     <Compile Include="Commands\NetListAddaptors.cs" />
     <Compile Include="Commands\AssemblyInfoVersion.cs" />
     <Compile Include="Commands\rdp.cs" />
-    <Compile Include="Commands\SkyUpdaterAdd.cs" />
-    <Compile Include="Commands\SkyUpdaterGenerate.cs" />
-    <Compile Include="Commands\SkyUpdaterUpdate.cs" />
     <Compile Include="Commands\WindowsAutoLogin.cs" />
     <Compile Include="Commands\WindowsLogin.cs" />
     <Compile Include="Commands\Kill.cs" />
