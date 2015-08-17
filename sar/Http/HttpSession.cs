@@ -62,7 +62,7 @@ namespace sar.Http
 		#endregion
 		
 		
-		private string dataLock;
+		private string dataLock = "";
 		public string ID { get; private set; }
 		public DateTime CreationDate { get; private set; }
 		public DateTime LastRequest { get; private set; }
