@@ -7,6 +7,9 @@
     "release/sar.exe",
     "release/sar.pdb"
   ],
+  "dependencies": {
+    "sar-controls": "https://github.com/kboronka/sar-controls.git#master"
+  },
   "devDependencies": {
     "angular": "~1.2",
     "jquery": "~1.11.2",
