@@ -48,6 +48,7 @@ namespace sar.Http
 				if (sessions.ContainsKey(id))
 				{
 					responce = sessions[id];
+					responce.LastRequest = DateTime.Now;
 				}
 				else
 				{
@@ -62,10 +63,12 @@ namespace sar.Http
 		#endregion
 		
 		
-		private string dataLock = "";
+		private string dataLock;
 		public string ID { get; private set; }
 		public DateTime CreationDate { get; private set; }
-		public DateTime LastRequest { get; private set; }
+		public DateTime LastRequest { get; set; }
+		public DateTime ExpiryDate { get { return LastRequest.AddDays(MAX_LIFE); } }
+
 		public const int MAX_LIFE = 2;
 		
 		private Dictionary<string, object> data;
@@ -80,26 +83,13 @@ namespace sar.Http
 			}
 		}
 
-		private DateTime expiryDate;
-		public DateTime ExpiryDate
-		{
-			get
-			{
-				lock (dataLock)
-				{
-					this.LastRequest = DateTime.Now;
-					expiryDate = this.LastRequest.AddDays(MAX_LIFE);
-					return expiryDate;
-				}
-			}
-		}
+		
 		
 		public HttpSession()
 		{
 			this.ID = Guid.NewGuid().ToString("D");
 			this.CreationDate = DateTime.Now;
 			this.LastRequest = DateTime.Now;
-			this.expiryDate = this.LastRequest.AddDays(MAX_LIFE);
 			this.data = new Dictionary<string, object>();
 			
 			sessions.Add(this.ID, this);

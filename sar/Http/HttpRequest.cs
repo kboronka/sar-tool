@@ -28,8 +28,6 @@ namespace sar.Http
 	
 	public class HttpRequest : HttpBase
 	{
-		private TcpClient socket;
-		private NetworkStream stream;
 		private Encoding encoding;
 		
 		private HttpServer parent;
@@ -57,6 +55,7 @@ namespace sar.Http
 		public string Path { get; set;}
 		public string ETag { get; private set; }
 		public HttpSession Session { get; private set; }
+		public HttpResponse Responce { get; private set; }
 		
 		#region properties
 
@@ -99,56 +98,34 @@ namespace sar.Http
 		
 		#region constructor
 		
-		public HttpRequest(HttpServer parent, TcpClient socket)
+		public HttpRequest(HttpConnection connection)
 		{
 			this.encoding = Encoding.ASCII;
-			this.parent = parent;
-			this.socket = socket;
-			this.stream = this.socket.GetStream();
-			
-			this.serviceRequestThread = new Thread(this.ServiceRequest);
-			this.serviceRequestThread.IsBackground = true;
-			this.serviceRequestThread.Start();
+			this.parent = connection.Parent;
+
+			this.ReadRequest(connection.Stream, connection.Socket);
 		}
 		
 		~HttpRequest()
 		{
-			this.Stop();
-		}
-		
-		public void Stop()
-		{
-			try
-			{
-				this.incomingLoopShutdown = true;
-				if (this.serviceRequestThread.IsAlive) this.serviceRequestThread.Join();
-			}
-			catch (Exception ex)
-			{
-				Program.Log(ex);
-			}
 		}
 		
 		#endregion
 		
-		#region service
+		#region read request
 		
-		#region service request
-		
-		private Thread serviceRequestThread;
-		private bool incomingLoopShutdown;
 		private bool incomingRequestRecived;
 
-		private void ServiceRequest()
+		private void ReadRequest(NetworkStream stream, TcpClient socket)
 		{
 			// Read and parse request
 			var buffer = new byte[0] {};
 			// TODO: add request timeout
-			while (!incomingLoopShutdown && !incomingRequestRecived)
+			while (!incomingRequestRecived)
 			{
 				try
 				{
-					byte[] incomingPacket = this.ReadIncomingPacket();
+					byte[] incomingPacket = this.ReadIncomingPacket(stream, socket);
 					buffer = StringHelper.CombineByteArrays(buffer, incomingPacket);
 					
 					if (buffer.Length > 0 && incomingPacket.Length == 0)
@@ -162,71 +139,32 @@ namespace sar.Http
 						Thread.Sleep(1);
 					}
 					
-					if (!incomingLoopShutdown) Thread.Sleep(1);
+					Thread.Sleep(1);
 				}
 				catch (Exception ex)
 				{
-					incomingLoopShutdown = true;
 					Program.Log(ex);
 				}
 			}
 			
-			var response = new HttpResponse(this);
-			
-			lock (socket)
-			{
-				try
-				{
-					const int MAX_LENGTH = 8192;
-					for (int b = 0; b <= response.bytes.Length; b += MAX_LENGTH)
-					{
-						int length = Math.Min(response.bytes.Length - b, MAX_LENGTH);
-						stream.Write(response.Bytes, b, length);
-					}
-					
-					stream.Flush();
-				}
-				catch
-				{
-					
-				}
-				finally
-				{
-					try
-					{
-						stream = null;
-						socket.Close();
-					}
-					catch
-					{
-						
-					}
-				}
-			}
+			this.Responce = new HttpResponse(this);
 		}
 		
-		private byte[] ReadIncomingPacket()
+		private byte[] ReadIncomingPacket(NetworkStream stream, TcpClient socket)
 		{
 			try
 			{
-				if (socket == null) return new byte[0] {};
-				if (stream == null) return new byte[0] {};
+				if (socket == null || stream == null) return new byte[0] {};
 				
 				lock (socket)
 				{
-					lock (stream)
+					if (socket.Available > 0 && stream.DataAvailable)
 					{
-						if (socket.Available > 0)
-						{
-							if (stream.DataAvailable)
-							{
-								var packetBytes = new byte[socket.Available];
-								stream.Read(packetBytes, 0, packetBytes.Length);
-								return packetBytes;
-								//return this.encoding.GetString(packetBytes, 0, packetSize);
-							}
-						}
+						var packetBytes = new byte[socket.Available];
+						stream.Read(packetBytes, 0, packetBytes.Length);
+						return packetBytes;
 					}
+					
 				}
 			}
 			catch (ObjectDisposedException ex)
@@ -257,15 +195,15 @@ namespace sar.Http
 		{
 			requestText += StringHelper.GetString(bufferIn);
 			
-			ReadRequest(ref bufferIn);
+			ParseHeader(ref bufferIn);
 			if (!headerRecived) return;
 			
 			incomingRequestRecived |= (this.contentLength == 0);
-			ReadData(ref bufferIn);
+			ParseData(ref bufferIn);
 			incomingRequestRecived |= this.bytesRecived >= this.contentLength;
 		}
 		
-		private void ReadRequest(ref byte[] bufferIn)
+		private void ParseHeader(ref byte[] bufferIn)
 		{
 			if (headerRecived) return;
 			
@@ -357,7 +295,7 @@ namespace sar.Http
 			if (this.Session == null) this.Session = HttpSession.Find("");
 		}
 
-		private void ReadData(ref byte[] bufferIn)
+		private void ParseData(ref byte[] bufferIn)
 		{
 			if (this.method != HttpMethod.POST) return;
 			
@@ -371,7 +309,7 @@ namespace sar.Http
 			this.bytesRecived += bufferIn.Length;
 		}
 		
-		private string ReadLine(ref byte[] bufferIn)
+		private static string ReadLine(ref byte[] bufferIn)
 		{
 			for (int i = 0; i < bufferIn.Length; i++)
 			{
@@ -382,7 +320,7 @@ namespace sar.Http
 					
 					if (i > 0 && bufferIn[i - 1] == '\r') i--;
 					
-					string line = this.encoding.GetString(bufferIn, 0, i);
+					string line = Encoding.ASCII.GetString(bufferIn, 0, i);
 
 					bufferIn = newBufferIn;
 					return line;
@@ -392,7 +330,7 @@ namespace sar.Http
 			return null;
 		}
 		
-		private string CleanUrlString(string url)
+		private static string CleanUrlString(string url)
 		{
 			while (url.Contains("%"))
 			{
@@ -406,8 +344,6 @@ namespace sar.Http
 			return url;
 		}
 
-		#endregion
-		
 		#endregion
 		
 		public override string ToString()

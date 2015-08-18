@@ -119,7 +119,7 @@ namespace sar.Http
 
 			// status line
 			string responsePhrase = Enum.GetName(typeof(HttpStatusCode), status);
-			string response = /*"HTTP/1.0" +*/ " " + ((int)status).ToString() + " " + responsePhrase + eol;
+			string response = /*"HTTP/1.1" +*/ " " + ((int)status).ToString() + " " + responsePhrase + eol;
 			
 			response += @"Server: " + @"sar\" + AssemblyInfo.SarVersion + eol;
 			response += @"Date: " + DateTime.UtcNow.ToString(GMT) + eol;
@@ -145,9 +145,10 @@ namespace sar.Http
 			response += @"Access-Control-Allow-Credentials: true" + eol;
 			 */
 			
+			// keep-alive
+			response += "Keep-Alive: timeout=" + HttpConnection.MAX_TIME.ToString() + eol;
+			response += "Connection: keep-alive";
 			
-			// other
-			response += "Connection: close";
 			// terminate header
 			response += eol + eol;
 			

@@ -35,9 +35,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Office.Interop.Outlook" />
-    <Reference Include="sar">
-      <HintPath>Http\Views\assets\sar-controls\release\sar.exe</HintPath>
-    </Reference>
     <Reference Include="sarControls">
       <HintPath>Http\Views\assets\sar-controls\release\sarControls.dll</HintPath>
     </Reference>
@@ -84,6 +81,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Http\Views\index.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\sar\sar.csproj">
+      <Project>{74862D71-2342-4EAE-8C29-D25F2A195677}</Project>
+      <Name>sar</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

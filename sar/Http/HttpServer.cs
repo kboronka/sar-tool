@@ -14,12 +14,12 @@
  */
 
 using System;
-using System.Xml;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
+using System.Xml;
 
 using sar.Tools;
 
@@ -29,6 +29,8 @@ namespace sar.Http
 	{
 		private AutoResetEvent connectionWaitHandle;
 		private TcpListener listener;
+		private List<HttpConnection> connections;
+		
 		protected int port;
 		protected string root;
 		
@@ -81,6 +83,7 @@ namespace sar.Http
 			
 			if (!Directory.Exists(this.root)) Directory.CreateDirectory(this.root);
 			
+			this.connections = new List<HttpConnection>();
 			this.Cache = new HttpCache(this);
 			HttpController.LoadControllers();
 			
@@ -151,6 +154,7 @@ namespace sar.Http
 		}
 		
 		#endregion
+		
 		#region service
 		
 		#region listners
@@ -195,17 +199,12 @@ namespace sar.Http
 		
 		private void AcceptTcpClientCallback(IAsyncResult ar)
 		{
-			var connection = (TcpListener) ar.AsyncState;
+			var connection = (TcpListener)ar.AsyncState;
 			var client = connection.EndAcceptTcpClient(ar);
-			connectionWaitHandle.Set(); //Inform the main thread this connection is now handled
-
-			var stream = client.GetStream();
-	
-			const string INIT_HEADER = "HTTP/1.0";
-			var bytes = Encoding.ASCII.GetBytes(INIT_HEADER);
-			stream.Write(bytes, 0, bytes.Length);
-
-			var request = new HttpRequest(this, client);
+			connectionWaitHandle.Set();
+			
+			connections.Add(new HttpConnection(this, client));
+			connections.RemoveAll(c=>c.Stopped);
 		}
 		
 		#endregion
