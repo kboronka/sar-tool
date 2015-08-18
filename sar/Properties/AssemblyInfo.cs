@@ -1,4 +1,4 @@
-﻿/* Copyright (C) 2013 Kevin Boronka
+/* Copyright (C) 2013 Kevin Boronka
  * 
  * software is distributed under the BSD license
  * 
@@ -14,35 +14,30 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 #region Using directives
-
 using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
 #endregion
-
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SAR Toolkit")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("SAR Toolkit")]
-[assembly: AssemblyCopyright("Copyright (c) 2012 Kevin Boronka")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
-
+[assembly: AssemblyTitle ("sar-tools")]
+[assembly: AssemblyDescription ("Search & Replace Toolkit + More")]
+[assembly: AssemblyConfiguration ("")]
+[assembly: AssemblyCompany ("")]
+[assembly: AssemblyProduct ("SAR Toolkit")]
+[assembly: AssemblyCopyright ("Copyright (c) 2012 Kevin Boronka")]
+[assembly: AssemblyTrademark ("")]
+[assembly: AssemblyCulture ("")]
 // This sets the default COM visibility of types in the assembly to invisible.
 // If you need to expose a type to COM, use [ComVisible(true)] on that type.
-[assembly: ComVisible(false)]
-
+[assembly: ComVisible (false)]
 // The assembly version has following format :
 //
 // Major.Minor.Build.Revision
 //
 // You can specify all the values or you can use the default the Revision and 
 // Build Numbers by using the '*' as shown below:
-[assembly: AssemblyVersion("1.1.0.353")]
+[assembly: AssemblyVersion ("1.1.0.353")]
