@@ -199,12 +199,21 @@ namespace sar.Http
 		
 		private void AcceptTcpClientCallback(IAsyncResult ar)
 		{
-			var connection = (TcpListener)ar.AsyncState;
-			var client = connection.EndAcceptTcpClient(ar);
-			connectionWaitHandle.Set();
-			
-			connections.Add(new HttpConnection(this, client));
-			connections.RemoveAll(c=>c.Stopped);
+			try
+			{
+				var connection = (TcpListener)ar.AsyncState;
+				var client = connection.EndAcceptTcpClient(ar);
+				
+				connectionWaitHandle.Set();
+				
+				connections.Add(new HttpConnection(this, client));
+				connections.RemoveAll(c=>c.Stopped);
+			}
+			catch (Exception ex)
+			{
+				connectionWaitHandle.Set();
+				sar.Base.Program.Log(ex);
+			}
 		}
 		
 		#endregion
