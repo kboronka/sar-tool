@@ -34,7 +34,7 @@ namespace sar.Http
 
 		private HttpMethod method;
 		
-		private string requestText;
+		public string Header { get; private set; }
 		private string fullUrl;
 		
 		private string query;
@@ -193,7 +193,7 @@ namespace sar.Http
 		
 		private void ProcessIncomingBuffer(ref byte[] bufferIn)
 		{
-			requestText += StringHelper.GetString(bufferIn);
+			Header += StringHelper.GetString(bufferIn);
 			
 			ParseHeader(ref bufferIn);
 			if (!headerRecived) return;
@@ -348,7 +348,7 @@ namespace sar.Http
 		
 		public override string ToString()
 		{
-			return this.requestText;
+			return this.method.ToString() + ": " + this.fullUrl;
 		}
 	}
 }

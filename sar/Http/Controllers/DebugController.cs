@@ -45,7 +45,7 @@ namespace sar.Http
 		public static HttpContent Header(HttpRequest request)
 		{
 			var baseContent = new Dictionary<string, HttpContent>() {};
-			baseContent.Add("Header", new HttpContent(request.ToString()));
+			baseContent.Add("Header", new HttpContent(request.Header));
 			return HttpContent.Read(request.Server, "sar.Http.Views.Debug.Header.html", baseContent);
 		}		
 	}
