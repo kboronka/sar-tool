@@ -87,7 +87,7 @@ namespace sar.Http
 				{
 					this.bytes = this.ConstructResponse(HttpStatusCode.SERVERERROR);
 				}
-				else if (this.content.ETag == this.request.ETag)
+				else if (this.content.ETag == this.request.ETag && !this.content.ParsingRequired)
 				{
 					this.bytes = this.ConstructResponse(HttpStatusCode.NOT_MODIFIED);
 				}
