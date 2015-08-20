@@ -56,7 +56,9 @@ namespace sar.Testing
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new Menu());
-			Base.Program.Log("throwing error");
+			
+			Server.Stop();
+			System.Threading.Thread.Sleep(500);
 			//throw new ApplicationException("testing unhandled exception");
 			// Program.Log("shutting down");
 			// Application.Exit();
