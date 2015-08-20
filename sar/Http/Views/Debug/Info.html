@@ -1,11 +1,25 @@
-<html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>HTTP Headers</title>
+
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+</head>
+
 <body>
-	<strong>Method:</strong> <%@ Content:Method %><br>
-	<strong>URL:</strong> <%@ Content:URL %><br>
-	<strong>Data:</strong> <%@ Content:Data %><br>
-	<strong>Version:</strong> <%@ Content:Version %><br>
-	<form method=post action="/Debug/Info"><br>
-		<input type=text name="foo" value="foovalue"><br>
-		<input type=submit name="bar" value="barvalue"><br>
-	</form>
+	<div class="container">
+		<h3>Connections (<%@ Content:TotalConnections %>):</h3>
+		<pre class="log"><%@ Content:Connections %></pre>
+		<br>
+		
+		<h3>Session</h3>
+		<pre class="log"><%@ Content:Session %></pre>
+		<br>
+
+		<h3>Sessions (<%@ Content:TotalSessions %>):</h3>
+		<pre class="log"><%@ Content:Sessions %></pre>
+		<br>
+	</div>
+</body>
 </html>

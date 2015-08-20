@@ -29,22 +29,17 @@ namespace sar.Http
 	{
 		private AutoResetEvent connectionWaitHandle;
 		private TcpListener listener;
-		private List<HttpConnection> connections;
 		
 		protected int port;
 		protected string root;
 		
 		#region properties
 
-		public string Root
-		{
-			get { return root; }
-		}
+		public List<HttpConnection> Connections { get; private set; }
+
+		public string Root { get { return root; } }
 		
-		public int Port
-		{
-			get { return port; }
-		}
+		public int Port { get { return port; } }
 		
 		public string FavIcon { get; set; }
 		
@@ -83,7 +78,7 @@ namespace sar.Http
 			
 			if (!Directory.Exists(this.root)) Directory.CreateDirectory(this.root);
 			
-			this.connections = new List<HttpConnection>();
+			this.Connections = new List<HttpConnection>();
 			this.Cache = new HttpCache(this);
 			HttpController.LoadControllers();
 			
@@ -207,8 +202,20 @@ namespace sar.Http
 				
 				connectionWaitHandle.Set();
 				
-				connections.Add(new HttpConnection(this, client));
-				connections.RemoveAll(c=>c.Stopped);
+				lock (Connections)
+				{
+					Connections.Add(new HttpConnection(this, client));
+					Connections.RemoveAll(c =>
+					                      {
+					                      	if (c.Stopped)
+					                      	{
+					                      		c.Dispose();
+					                      		return true;
+					                      	}
+					                      	
+					                      	return false;
+					                      });
+				}
 			}
 			catch (Exception ex)
 			{

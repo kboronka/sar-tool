@@ -16,6 +16,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Net;
+using System.Net.Sockets;
 
 using sar.Tools;
 
@@ -34,11 +36,48 @@ namespace sar.Http
 			}
 			
 			var baseContent = new Dictionary<string, HttpContent>() {};
-			baseContent.Add("Method", new HttpContent(request.Method.ToString()));
-			baseContent.Add("URL", new HttpContent(request.FullUrl));
-			baseContent.Add("Version", new HttpContent(request.ProtocolVersion));
-			baseContent.Add("Data", new HttpContent(data));
 
+			// get connections
+			lock (request.Server.Connections)
+			{
+				var totalConnections = request.Server.Connections.Count.ToString();
+				var connections = "";
+				
+				foreach (var connection in request.Server.Connections)
+				{
+					if (!connection.Stopped)
+					{
+						var ip = ((IPEndPoint)connection.Socket.Client.RemoteEndPoint).Address.ToString();
+						var port = ((IPEndPoint)connection.Socket.Client.RemoteEndPoint).Port.ToString();
+						
+						connections += ip + ":" + port + "\n";
+					}
+					else
+					{
+						connections += "timed out\n";
+					}
+				}
+				
+				baseContent.Add("TotalConnections", new HttpContent(totalConnections));
+				baseContent.Add("Connections", new HttpContent(connections));
+			}
+			
+			// get sessions
+			// TODO: finish
+			var totalSessions = "tbd";
+			var sessions = "tbd";
+			
+			baseContent.Add("TotalSessions", new HttpContent(totalSessions));
+			baseContent.Add("Sessions", new HttpContent(sessions));
+			
+
+			var session = "";
+			session += "ID: " + request.Session.ID + "\n";
+			session += "Created: " + request.Session.CreationDate.ToString() + "\n";
+			session += "ExpiryDate: " + request.Session.ExpiryDate.ToString() + "\n";
+			
+			baseContent.Add("Session", new HttpContent(session));
+			
 			return HttpContent.Read(request.Server, "sar.Http.Views.Debug.Info.html", baseContent);
 		}
 		
@@ -47,6 +86,6 @@ namespace sar.Http
 			var baseContent = new Dictionary<string, HttpContent>() {};
 			baseContent.Add("Header", new HttpContent(request.Header));
 			return HttpContent.Read(request.Server, "sar.Http.Views.Debug.Header.html", baseContent);
-		}		
+		}
 	}
 }

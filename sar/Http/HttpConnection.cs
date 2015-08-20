@@ -14,7 +14,6 @@
  */
 
 using System;
-using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -24,10 +23,14 @@ using sar.Tools;
 
 namespace sar.Http
 {
-	public class HttpConnection
+	public class HttpConnection : IDisposable
 	{
+		#if DEBUG
+		public const int MAX_TIME = 3;
+		#else
 		public const int MAX_TIME = 300;
-
+		#endif
+		
 		private readonly System.Timers.Timer timeout;
 		
 		public bool Open { get; private set; }
@@ -59,8 +62,46 @@ namespace sar.Http
 		
 		~HttpConnection()
 		{
-
+			Dispose(false);
 		}
+		
+		public void Dispose()
+		{
+			Dispose(true);
+		}
+		
+		bool disposed = false;
+		protected void Dispose(bool disposing)
+		{
+			if (disposed) return;
+			
+			if (disposing)
+			{
+				// abort thread
+				try
+				{
+					serviceRequestThread.Abort();
+				}
+				catch
+				{
+					
+				}
+
+				// close connections
+				try
+				{
+					this.Stream.Close();
+					this.Socket.Close();
+				}
+				catch
+				{
+					
+				}
+			}
+
+			disposed = true;
+		}
+		
 		
 		#region service
 		
