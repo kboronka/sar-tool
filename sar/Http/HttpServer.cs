@@ -104,6 +104,7 @@ namespace sar.Http
 			try
 			{
 				this.listenerLoopShutdown = true;
+				connectionWaitHandle.Set();
 				if (this.listenerLoopThread.IsAlive) this.listenerLoopThread.Join();
 			}
 			catch (Exception ex)
