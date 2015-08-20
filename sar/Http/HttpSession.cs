@@ -20,50 +20,7 @@ namespace sar.Http
 {
 	public class HttpSession
 	{
-		#region static
-		
-		private static Dictionary<string, HttpSession> sessions;
-		private static string sessionLock = "";
-		
-		public static bool Contains(string id)
-		{
-			bool result;
-			lock (sessionLock)
-			{
-				if (sessions == null) sessions = new Dictionary<string, HttpSession>();
-				result = sessions.ContainsKey(id);
-			}
-			
-			return result;
-		}
-		
-		public static HttpSession Find(string id)
-		{
-			HttpSession responce;
-			
-			lock(sessionLock)
-			{
-				if (sessions == null) sessions = new Dictionary<string, HttpSession>();
-
-				if (sessions.ContainsKey(id))
-				{
-					responce = sessions[id];
-					responce.LastRequest = DateTime.Now;
-				}
-				else
-				{
-					responce = new HttpSession();
-				}
-			}
-			
-			
-			return responce;
-		}
-		
-		#endregion
-		
-		
-		private string dataLock;
+		public string dataLock = "";
 		public string ID { get; private set; }
 		public DateTime CreationDate { get; private set; }
 		public DateTime LastRequest { get; set; }
@@ -82,8 +39,6 @@ namespace sar.Http
 				}
 			}
 		}
-
-		
 		
 		public HttpSession()
 		{
@@ -91,8 +46,6 @@ namespace sar.Http
 			this.CreationDate = DateTime.Now;
 			this.LastRequest = DateTime.Now;
 			this.data = new Dictionary<string, object>();
-			
-			sessions.Add(this.ID, this);
 		}
 	}
 }

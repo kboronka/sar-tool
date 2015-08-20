@@ -274,14 +274,18 @@ namespace sar.Http
 						foreach (Match match in matches)
 						{
 							var id = match.Groups[1].Value;
-							if (HttpSession.Contains(id))
+							lock (Server.Sessions)
 							{
-								this.Session = HttpSession.Find(id);
+								if (Server.Sessions.ContainsKey(id))
+								{
+									this.Session = Server.Sessions[id];
+								}
 							}
 						}
 						
 						break;
 				}
+				
 				// TODO: parse common request Headers
 				// Header format
 				// Name: value
@@ -292,7 +296,16 @@ namespace sar.Http
 				if (this.headerRecived) break;
 			}
 			
-			if (this.Session == null) this.Session = HttpSession.Find("");
+			if (this.Session == null)
+			{
+				this.Session = new HttpSession();
+				lock (Server.Sessions)
+				{
+					Server.Sessions.Add(this.Session.ID, this.Session);
+				}
+			}
+			
+			this.Session.LastRequest = DateTime.Now;
 		}
 
 		private void ParseData(ref byte[] bufferIn)

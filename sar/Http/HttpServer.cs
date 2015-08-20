@@ -36,6 +36,7 @@ namespace sar.Http
 		#region properties
 
 		public List<HttpConnection> Connections { get; private set; }
+		public Dictionary<string, HttpSession> Sessions { get; private set; }
 
 		public string Root { get { return root; } }
 		
@@ -79,6 +80,8 @@ namespace sar.Http
 			if (!Directory.Exists(this.root)) Directory.CreateDirectory(this.root);
 			
 			this.Connections = new List<HttpConnection>();
+			this.Sessions = new Dictionary<string, HttpSession>();
+			
 			this.Cache = new HttpCache(this);
 			HttpController.LoadControllers();
 			

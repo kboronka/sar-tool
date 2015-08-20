@@ -64,19 +64,27 @@ namespace sar.Http
 			
 			// get sessions
 			// TODO: finish
-			var totalSessions = "tbd";
-			var sessions = "tbd";
-			
-			baseContent.Add("TotalSessions", new HttpContent(totalSessions));
-			baseContent.Add("Sessions", new HttpContent(sessions));
-			
+			lock (request.Server.Sessions)
+			{
+				var totalSessions = request.Server.Sessions.Count.ToString();
+				var sessions = "";
+				
+				foreach (var session in request.Server.Sessions)
+				{
+					sessions += session.Key + " - " + session.Value.CreationDate.ToString() + "\n";
+				}
+				
+				
+				baseContent.Add("TotalSessions", new HttpContent(totalSessions));
+				baseContent.Add("Sessions", new HttpContent(sessions));
+			}
 
-			var session = "";
-			session += "ID: " + request.Session.ID + "\n";
-			session += "Created: " + request.Session.CreationDate.ToString() + "\n";
-			session += "ExpiryDate: " + request.Session.ExpiryDate.ToString() + "\n";
+			var currentSession = "";
+			currentSession += "ID: " + request.Session.ID + "\n";
+			currentSession += "Created: " + request.Session.CreationDate.ToString() + "\n";
+			currentSession += "ExpiryDate: " + request.Session.ExpiryDate.ToString() + "\n";
 			
-			baseContent.Add("Session", new HttpContent(session));
+			baseContent.Add("Session", new HttpContent(currentSession));
 			
 			return HttpContent.Read(request.Server, "sar.Http.Views.Debug.Info.html", baseContent);
 		}
