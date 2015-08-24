@@ -193,7 +193,6 @@
     <Folder Include="Http\Views" />
     <Folder Include="Http\Views\Error" />
     <Folder Include="Http\Views\Debug" />
-    <Folder Include="Http\Views\Shared" />
     <Folder Include="Databases\MSSQL" />
     <Folder Include="Databases" />
     <Folder Include="S7Siemens" />
