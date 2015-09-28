@@ -119,8 +119,9 @@ namespace sar.S7Siemens
 		}
 
 		#endregion
-		
-		public bool ReadBit(string address)
+
+        #region Reading from PLC
+        public bool ReadBit(string address)
 		{
 			var data = ReadBytesRaw(address, 1);
 			return data[0] > 0;
@@ -182,7 +183,6 @@ namespace sar.S7Siemens
 
 			return Result;
 		}
-
 		
 		public byte[] ReadBytes(string address, ushort bytes)
 		{
@@ -241,11 +241,51 @@ namespace sar.S7Siemens
 				return data;
 			}
 		}
-		
-		#region data output
-		
+        #endregion
+
+		#region Writing to PLC
+        public void WriteFloats(string address, float[] data)
+        {
+            var returnByte = new byte[data.Length * 4];
+            Buffer.BlockCopy(data, 0, returnByte, 0, returnByte.Length);
+            WriteBytes(address, returnByte);
+
+        }
+        public void WriteDints(string address, Int32[] data)
+        {
+            byte[] returnByte = new byte[] { };
+            byte[] tmpByte = new byte[4] { 0, 0,0,0 };
+            Array.Resize(ref returnByte, (data.Length) * 4);
+            int cnt = 0;
+            foreach (var _data in data)
+            {
+                tmpByte = BitConverter.GetBytes(_data);
+                returnByte[cnt + 3] = tmpByte[0];
+                returnByte[cnt + 2] = tmpByte[1];
+                returnByte[cnt + 1] = tmpByte[2];
+                returnByte[cnt]     = tmpByte[3];
+                cnt = cnt + 4;
+            }
+            WriteBytes(address, returnByte);
+        }
+        public void WriteInts(string address, Int16[] data)
+        {
+            byte[] returnByte = new byte[]{};
+            byte[] tmpByte = new byte[2]{0,0};
+            Array.Resize(ref returnByte, (data.Length)*2);
+            int cnt = 0;
+            foreach (var _data in data)
+	                {
+                       tmpByte= BitConverter.GetBytes(_data);
+                       returnByte[cnt + 1] = tmpByte[0];
+                       returnByte[cnt]     = tmpByte[1];
+                       cnt =cnt+2;
+	                }
+            WriteBytes(address, returnByte);
+        }
 		public void WriteBytes(string address, byte[] data)
 		{
+                       
 			WriteBytesRaw(address, data);
 		}
 		
