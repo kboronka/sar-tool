@@ -38,9 +38,7 @@ namespace sar
 				args = new string[] { "ip.config", @"/pause" };
 				args = new string[] { "mssql-gs", "192.168.14.110", "TestDB", "sa", "test123", @"\scripts\", @"/pause" };
 				args = new string[] { "f.open", "c:\temp" };
-				args = new string[] { "file.open", @"c:\temp", @"/pause" };
- 
-				Environment.CurrentDirectory = @"C:\Jobs\12011\repo\LabelPrinter\LabelPrinter v1.0.0.0";
+				args = new string[] { "file.open", @"c:\temp", @"/pause" }; 
 				args = new string[] { "-b.net", "3.5", @"LabelPrinter.sln", "/p:Configuration=Release /p:Platform=\"Any CPU\"" };
 				 */
 				

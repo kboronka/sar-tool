@@ -50,6 +50,7 @@ namespace sar.Tools
 			                          	new FileLock(this),
 			                          	new FanucFixLineNumbers(this),
 			                          	new FanucBackup(this),
+			                          	new FanucPositionsToCSV(this),
 			                          	new FileOpenFolder(this),
 			                          	new MSSQL_GenerateScripts(this),
 			                          	new DirectoryTimestamp(this),
