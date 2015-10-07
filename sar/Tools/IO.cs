@@ -483,7 +483,8 @@ namespace sar.Tools
 			WriteFileLines(filepath, linesList);
 		}
 		
-		public static void WriteFileLines(string filepath, List<string> lines)
+		
+		public static string LinesToString(string[] lines)
 		{
 			string newFile = "";
 			string linebreak = "";
@@ -494,20 +495,33 @@ namespace sar.Tools
 				linebreak = System.Environment.NewLine;
 			}
 			
-			WriteFile(filepath, newFile);
+			return newFile;
+		}
+
+		public static string LinesToString(List<string> lines)
+		{
+			return LinesToString(lines.ToArray());
 		}
 		
-		public static void WriteFile(string filepath, string text)
+		public static void WriteFileLines(string filepath, List<string> lines)
 		{
-			Encoding encoding = Encoding.UTF8;
-			
+			WriteFile(filepath, LinesToString(lines));
+		}
+		
+		public static void WriteFile(string filepath, string text, Encoding encoding)
+		{
 			if (!File.Exists(filepath) || text != ReadFile(filepath))
 			{
 				using (var writter = new StreamWriter(filepath, false, encoding))
 				{
 					writter.Write(text);
 				}
-			}
+			}			
+		}
+		
+		public static void WriteFile(string filepath, string text)
+		{
+			WriteFile(filepath, text, Encoding.UTF8);
 		}
 		
 		public static void Encode(string filepath, Encoding encoding)
