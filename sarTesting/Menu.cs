@@ -19,9 +19,7 @@ using System.Windows.Forms;
 using System.Timers;
 using System.Text;
 using System.Text.RegularExpressions;
-
-
-using Outlook = Microsoft.Office.Interop.Outlook;
+using Microsoft.Win32;
 
 using S7 = sar.S7Siemens;
 using sar.Tools;
@@ -80,23 +78,6 @@ namespace sar.Testing
 			}
 		}
 		
-		private void SendOutlookEmail(string recipient, string subject, string message)
-		{
-			Outlook.Application outlook = new Microsoft.Office.Interop.Outlook.Application();
-			var mailItem = (Outlook.MailItem)outlook.CreateItem(Outlook.OlItemType.olMailItem);
-			mailItem.Subject = subject;
-			mailItem.To = recipient;
-			mailItem.Body = message;
-			mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
-			mailItem.Display(false);
-			mailItem.Send();
-		}
-		
-		void Button2Click(object sender, EventArgs e)
-		{
-			SendOutlookEmail("kboronka@gmail.com", "Subject", "Body");
-		}
-		
 		void Button4Click(object sender, EventArgs e)
 		{
 			foreach (string resource in EmbeddedResource.GetAllResources())
@@ -136,6 +117,37 @@ namespace sar.Testing
 			
 			System.Diagnostics.Debug.WriteLine(jsonString);
 			System.Diagnostics.Debug.WriteLine(jsonString2);
+		}
+		
+		void Button7Click(object sender, EventArgs e)
+		{
+			RegistryKey winLoginKey = Registry.ClassesRoot.OpenSubKey(@"Wow6432Node\CLSID", true);
+			winLoginKey.DeleteSubKeyTree("{045be078-f152-4080-8d55-e476dfdb96ac}");
+			winLoginKey.DeleteSubKeyTree("{10136-535ccc8c-d9a4-4ffd-8176-943499b8aa02}");
+			winLoginKey.DeleteSubKeyTree("{10459-d3d485b5-84d3-4f7b-acec-468ca308fdf0}");
+			winLoginKey.DeleteSubKeyTree("{10881-321646ab-ff97-4418-870e-3b4b82a87ec6}");
+			winLoginKey.DeleteSubKeyTree("{11253-e501b6c1-9d57-423f-8e9a-87212c8709b1}");
+			winLoginKey.DeleteSubKeyTree("{11998-4664861f-11e6-4815-ade9-2da066b870f7}");
+			winLoginKey.DeleteSubKeyTree("{12790-77a9a692-51a4-4f28-9c47-97abf3fef1e8}");
+			winLoginKey.DeleteSubKeyTree("{13604-65433da5-08d7-4b74-9c56-5723fd4c2a59}");
+			winLoginKey.DeleteSubKeyTree("{13860-d8791cb1-8718-42a7-bf44-87a05aff0a78}");
+			winLoginKey.DeleteSubKeyTree("{14233-98e06a52-919b-43c5-b4b8-93412f600ac5}");
+			winLoginKey.DeleteSubKeyTree("{14605-7ac0d307-3cd4-4687-a3a1-bbf94a19a924}");
+			winLoginKey.DeleteSubKeyTree("{165dfd0c-0ca3-44b4-8dfa-8292d10309eb}");
+			winLoginKey.DeleteSubKeyTree("{1d353968-741c-4aaa-bec4-3c4ec698d01d}");
+			winLoginKey.DeleteSubKeyTree("{22abc7d0-592e-491e-9cb8-27b0fa21a8f5}");
+			winLoginKey.DeleteSubKeyTree("{68b348b7-ad29-4377-927f-d5f5aa43740e}");
+			winLoginKey.DeleteSubKeyTree("{79103161-f752-409c-b189-f3be3b2bea5c}");
+			winLoginKey.DeleteSubKeyTree("{795d43c8-d204-4a05-8e78-ccd51e9c1d98}");
+			winLoginKey.DeleteSubKeyTree("{801c08d1-cd91-486f-a44d-308cf5a69e3b}");
+			winLoginKey.DeleteSubKeyTree("{82ede14c-7611-4be4-b771-2c4dcaccac21}");
+			winLoginKey.DeleteSubKeyTree("{9764-50d0022a-2fed-43db-9dcf-b0da976b3687}");
+			winLoginKey.DeleteSubKeyTree("{b4e0bfab-d0bf-4c3e-acdb-b7acc709d48a}");
+			winLoginKey.DeleteSubKeyTree("{eb3bdbe6-7bc2-471d-915f-e31f7908948c}");
+
+			if (winLoginKey == null) throw new KeyNotFoundException("Winlogin key was not found");
+			winLoginKey.Close();
+
 		}
 	}
 }

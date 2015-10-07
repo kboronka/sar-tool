@@ -51,6 +51,7 @@ namespace sar.Testing
 			this.textBox3 = new System.Windows.Forms.TextBox();
 			this.button5 = new System.Windows.Forms.Button();
 			this.button6 = new System.Windows.Forms.Button();
+			this.button7 = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// button1
@@ -81,7 +82,6 @@ namespace sar.Testing
 			this.button2.TabIndex = 6;
 			this.button2.Text = "Send Email";
 			this.button2.UseVisualStyleBackColor = true;
-			this.button2.Click += new System.EventHandler(this.Button2Click);
 			// 
 			// button3
 			// 
@@ -130,11 +130,22 @@ namespace sar.Testing
 			this.button6.UseVisualStyleBackColor = true;
 			this.button6.Click += new System.EventHandler(this.Button6Click);
 			// 
+			// button7
+			// 
+			this.button7.Location = new System.Drawing.Point(158, 46);
+			this.button7.Name = "button7";
+			this.button7.Size = new System.Drawing.Size(113, 23);
+			this.button7.TabIndex = 17;
+			this.button7.Text = "Send Email";
+			this.button7.UseVisualStyleBackColor = true;
+			this.button7.Click += new System.EventHandler(this.Button7Click);
+			// 
 			// Menu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(482, 351);
+			this.Controls.Add(this.button7);
 			this.Controls.Add(this.button6);
 			this.Controls.Add(this.button5);
 			this.Controls.Add(this.textBox3);
@@ -157,5 +168,6 @@ namespace sar.Testing
 		private System.Windows.Forms.TextBox textBox3;
 		private System.Windows.Forms.Button button5;
 		private System.Windows.Forms.Button button6;
+		private System.Windows.Forms.Button button7;
 	}
 }
