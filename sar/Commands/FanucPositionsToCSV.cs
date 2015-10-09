@@ -86,9 +86,8 @@ namespace sar.Commands
 			IO.CheckRootAndPattern(ref root, ref filePattern);
 			List<string> files = IO.GetAllFiles(root, filePattern);
 
-			
+			if (files.Count == 0) throw new FileNotFoundException("file not found");
 			var file = files[0];
-			if (!File.Exists(file)) throw new FileNotFoundException("file not found");
 
 			var positions = new List<PositionRegister>();
 			var input = IO.ReadFile(file);
