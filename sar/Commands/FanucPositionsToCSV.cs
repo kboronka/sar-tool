@@ -81,7 +81,13 @@ namespace sar.Commands
 				throw new ArgumentException("incorrect number of arguments");
 			}
 			
-			var file = args[1];
+			string filePattern = args[1];
+			string root = Directory.GetCurrentDirectory();
+			IO.CheckRootAndPattern(ref root, ref filePattern);
+			List<string> files = IO.GetAllFiles(root, filePattern);
+
+			
+			var file = files[0];
 			if (!File.Exists(file)) throw new FileNotFoundException("file not found");
 
 			var positions = new List<PositionRegister>();
