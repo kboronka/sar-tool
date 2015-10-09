@@ -67,7 +67,7 @@ namespace sar.Commands
 			
 			foreach (string file in files)
 			{
-				StreamReader reader = new StreamReader(file);
+				var reader = new StreamReader(file);
 				string code = reader.ReadToEnd();
 				reader.Close();
 				reader.Dispose();
