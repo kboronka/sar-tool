@@ -27,8 +27,8 @@ namespace sar.Commands
 	public class FanucPositionsToCSV : Command
 	{
 		public FanucPositionsToCSV(Base.CommandHub parent) : base(parent, "Fanuc Export Positions",
-		                                                          new List<string> { "fanuc.ExportPositions" },
-		                                                          @"-fanuc.ExportPositions <path to posreg.va>",
+		                                                          new List<string> { "fanuc.ExportPositions", "fanuc.ExportPR" },
+		                                                          @"-fanuc.ExportPR <path to posreg.va>",
 		                                                          new List<string> { @"-fanuc.ExportPositions C:\Temp" })
 		{
 		}
@@ -83,18 +83,27 @@ namespace sar.Commands
 			
 			string filePattern = args[1];
 			string root = Directory.GetCurrentDirectory();
+
 			IO.CheckRootAndPattern(ref root, ref filePattern);
 			List<string> files = IO.GetAllFiles(root, filePattern);
 
 			if (files.Count == 0) throw new FileNotFoundException("file not found");
-			var file = files[0];
+
+			var input = IO.ReadFile(files[0]);
+			var positions = ExportPositions(input, IO.GetFileDirectory(files[0]) + @"\" +"posreg.csv");
+			
+			ConsoleHelper.WriteLine(positions.ToString() + " Position" + ((positions != 1) ? "s" : "") + " Exported", ConsoleColor.DarkYellow);
+			
+			return ConsoleHelper.EXIT_OK;
+		}
+
+		public static int ExportPositions(string input, string csv)
+		{
+			const string search = @"\s*\[1,(\d*)] = \s*'([^\']*)'\s*Group:[^X]*X:\s*([^\s]*)\s*Y:\s*([^\s]*)\s*Z:\s*([^\s]*)\s*W:\s*([^\s]*)\s*P:\s*([^\s]*)\s*R:\s*([^\s]*)";			
 
 			var positions = new List<PositionRegister>();
-			var input = IO.ReadFile(file);
-			var output = "pr, description, x, y, z, w, p, r" + Environment.NewLine;
-			var search = @"\s*\[1,(\d*)] = \s*'([^\']*)'\s*Group:[^X]*X:\s*([^\s]*)\s*Y:\s*([^\s]*)\s*Z:\s*([^\s]*)\s*W:\s*([^\s]*)\s*P:\s*([^\s]*)\s*R:\s*([^\s]*)";
-			
 			var matches = Regex.Matches(input, search);
+			var output = "pr, description, x, y, z, w, p, r" + Environment.NewLine;
 			
 			foreach (Match match in matches)
 			{
@@ -107,12 +116,8 @@ namespace sar.Commands
 				}
 			}
 			
-
-			IO.WriteFile(IO.GetFileDirectory(file) + @"\" +"posreg.csv", output, Encoding.ASCII);
-			
-			ConsoleHelper.WriteLine(positions.Count.ToString() + " Position" + ((positions.Count != 1) ? "s" : "") + " Exported", ConsoleColor.DarkYellow);
-			
-			return ConsoleHelper.EXIT_OK;
+			IO.WriteFile(csv, output, Encoding.ASCII);
+			return positions.Count;
 		}
 	}
 }

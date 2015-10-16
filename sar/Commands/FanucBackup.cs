@@ -23,9 +23,9 @@ using sar.Base;
 
 namespace sar.Commands
 {
-	public class FanucBackup : Command
+	public class FanucFTP : Command
 	{
-		public FanucBackup(Base.CommandHub parent) : base(parent, "FanucBackup",
+		public FanucFTP(Base.CommandHub parent) : base(parent, "FanucBackup",
 		                                                  new List<string> { "fanuc.bk" },
 		                                                  @"-fanuc.bk <ip:port> <path>",
 		                                                  new List<string> { @"-fanuc.bk 192.168.0.2:21 C:\Temp" })
@@ -56,7 +56,7 @@ namespace sar.Commands
 				
 				try
 				{
-					Download(ip, file, path);
+					DownloadFile(ip, file, path);
 				}
 				catch (Exception ex)
 				{
@@ -70,8 +70,7 @@ namespace sar.Commands
 			return ConsoleHelper.EXIT_OK;
 		}
 		
-		// download all files from FTP server
-		private List<string> GetFileList(string ip)
+		public static List<string> GetFileList(string ip)
 		{
 			var downloadFiles = new List<string>();
 			
@@ -98,33 +97,44 @@ namespace sar.Commands
 			return downloadFiles;
 		}
 
-		private void Download(string ip, string file, string root)
+		public static byte[] DownloadBytes(string ip, string file)
 		{
-			var reqFTP = (FtpWebRequest)FtpWebRequest.Create(new Uri("ftp://" + ip + "/" + file));
-			reqFTP.UseBinary = true;
-			reqFTP.AuthenticationLevel = System.Net.Security.AuthenticationLevel.None;
-			reqFTP.Method = WebRequestMethods.Ftp.DownloadFile;
-			reqFTP.Proxy = null;
-			reqFTP.KeepAlive = false;
-			reqFTP.UsePassive = false;
-			reqFTP.Timeout = 30 * 1000;
+			var ftpRequest = (FtpWebRequest)FtpWebRequest.Create(new Uri("ftp://" + ip + "/" + file));
+			ftpRequest.UseBinary = true;
+			ftpRequest.AuthenticationLevel = System.Net.Security.AuthenticationLevel.None;
+			ftpRequest.Method = WebRequestMethods.Ftp.DownloadFile;
+			ftpRequest.Proxy = null;
+			ftpRequest.KeepAlive = false;
+			ftpRequest.UsePassive = false;
+			ftpRequest.Timeout = 30 * 1000;
 
-			var response = (FtpWebResponse)reqFTP.GetResponse();
-			var responseStream = response.GetResponseStream();
-			var writeStream = new FileStream(root + @"\" + file, FileMode.Create);
+			var ftpResponce = (FtpWebResponse)ftpRequest.GetResponse();
+			var ftpStream = ftpResponce.GetResponseStream();
+
 			
-			int length = 2048;
-			var buffer = new Byte[length];
-			int bytesread = responseStream.Read(buffer, 0, length);
+
+			var buffer = new Byte[2048];
+			int bytesread = 0;
 			
-			while (bytesread > 0)
+			using (var ms = new MemoryStream())
 			{
-				writeStream.Write(buffer, 0, bytesread);
-				bytesread = responseStream.Read(buffer, 0, length);
+				while ((bytesread = ftpStream.Read(buffer, 0, buffer.Length)) > 0)
+				{
+					ms.Write(buffer, 0, bytesread);
+				}
+				
+				ftpResponce.Close();
+				return ms.ToArray();
 			}
+		}
+		
+		public static void DownloadFile(string ip, string file, string root)
+		{
+			var buffer = DownloadBytes(ip, file);
 			
+			var writeStream = new FileStream(root + @"\" + file, FileMode.Create);
+			writeStream.Write(buffer, 0, buffer.Length);
 			writeStream.Close();
-			response.Close();
 		}
 	}
 }
