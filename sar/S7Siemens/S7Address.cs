@@ -32,12 +32,10 @@ namespace sar.S7Siemens
 		public ushort byteAdddress;
 		public ushort bitAddress;
 		public TransportType transportType;
-		public string address;
 		
 		public Address(string address)
 		{
 			address = address.ToUpper();
-			this.address = address;
 			
 			if (address.Length >= 1 && address[0] == 'M') this.area = Areas.M;
 			//else if (address.Length >= 1 && address[0] == 'P') this.AddressArea = AddressArea.P;
@@ -148,7 +146,33 @@ namespace sar.S7Siemens
 		
 		public override string ToString()
 		{
-			return this.address;
+			string address = "";
+			address += this.area.ToString();
+			if (this.area == Areas.DB)
+			{
+				address += this.dataBlock.ToString();
+				address += ".DB";
+				
+				if (this.length == 1) address += ".X";
+				if (this.length == 1*8) address += ".B";
+				if (this.length == 2*8) address += ".W";
+				if (this.length == 4*8) address += ".D";
+				
+				address += this.byteAdddress;
+				if (this.transportType == TransportType.Bit) address += "." + this.bitAddress.ToString();
+			}
+			else
+			{
+				if (this.length == 1*8) address += ".B";
+				if (this.length == 2*8) address += ".W";
+				if (this.length == 4*8) address += ".D";				
+				address += this.byteAdddress;
+				
+				if (this.transportType == TransportType.Bit) address += "." + this.bitAddress.ToString();
+			}
+			
+			
+			return address;
 		}
 	};
 }
