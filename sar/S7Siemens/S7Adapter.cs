@@ -234,10 +234,14 @@ namespace sar.S7Siemens
 					
 					data = ExtractTPDU(response);
 					DebugWrite("data", data);
+					
+					if (data.Length != bytes) throw new ApplicationException("responce data size does not match requested size");
 				}
 				catch (Exception ex)
 				{
-					sar.Base.Program.Log("s7Adaptor error >> " + this.ipAddress);
+					sar.Base.Program.Log("s7Adaptor ERROR");
+					sar.Base.Program.Log("s7Adaptor.IP >> " + this.ipAddress);
+					sar.Base.Program.Log("s7Adaptor.IP >> " + address.ToString());
 					sar.Base.Program.Log(StringHelper.ArrayToString("ReadWriteMessage", message));
 					sar.Base.Program.Log(StringHelper.ArrayToString("TPDU", tpdu));
 					sar.Base.Program.Log(StringHelper.ArrayToString("response", response));
