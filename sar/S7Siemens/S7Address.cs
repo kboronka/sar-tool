@@ -32,10 +32,12 @@ namespace sar.S7Siemens
 		public ushort byteAdddress;
 		public ushort bitAddress;
 		public TransportType transportType;
+		public string address;
 		
 		public Address(string address)
 		{
 			address = address.ToUpper();
+			this.address = address;
 			
 			if (address.Length >= 1 && address[0] == 'M') this.area = Areas.M;
 			//else if (address.Length >= 1 && address[0] == 'P') this.AddressArea = AddressArea.P;
@@ -142,6 +144,11 @@ namespace sar.S7Siemens
 		public override int GetHashCode()
 		{
 			return base.GetHashCode();
+		}
+		
+		public override string ToString()
+		{
+			return this.address;
 		}
 	};
 }
