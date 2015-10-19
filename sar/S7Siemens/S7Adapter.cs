@@ -93,6 +93,8 @@ namespace sar.S7Siemens
 		
 		private bool Connect()
 		{
+			sar.Base.Program.Log("s7Adaptor.Connect >> " + this.ipAddress);
+			
 			// TODO: add automatic retry
 
 			// open a TCP connection to S7 via port 102
@@ -235,12 +237,11 @@ namespace sar.S7Siemens
 				}
 				catch (Exception ex)
 				{
-					
-					sar.Base.Program.DebugLog.WriteLine("s7Adaptor error");
-					sar.Base.Program.DebugLog.WriteLine(StringHelper.ArrayToString("ReadWriteMessage", message));
-					sar.Base.Program.DebugLog.WriteLine(StringHelper.ArrayToString("TPDU", tpdu));
-					sar.Base.Program.DebugLog.WriteLine(StringHelper.ArrayToString("response", response));
-					sar.Base.Program.DebugLog.WriteLine(StringHelper.ArrayToString("data", data));
+					sar.Base.Program.Log("s7Adaptor error >> " + this.ipAddress);
+					sar.Base.Program.Log(StringHelper.ArrayToString("ReadWriteMessage", message));
+					sar.Base.Program.Log(StringHelper.ArrayToString("TPDU", tpdu));
+					sar.Base.Program.Log(StringHelper.ArrayToString("response", response));
+					sar.Base.Program.Log(StringHelper.ArrayToString("data", data));
 
 					throw ex;
 				}
