@@ -48,11 +48,11 @@ namespace sar.Commands
 			IO.CheckRootAndPattern(ref root, ref csv);			
 			string filename = IO.GetFilename(csv);
 			string filepath = root + filename;
-			var files = FanucFTP.GetFileList(ip);
+			var files = FTPHelper.GetFileList(ip);
 			
 			if (!files.Contains("posreg.va")) throw new FileNotFoundException("posreg.va not found on ftp server");
 			
-			var input = StringHelper.GetString(FanucFTP.DownloadBytes(ip, "posreg.va"));
+			var input = StringHelper.GetString(FTPHelper.DownloadBytes(ip, "posreg.va"));
 			
 				
 			if (File.Exists(filepath)) File.Delete(filepath);

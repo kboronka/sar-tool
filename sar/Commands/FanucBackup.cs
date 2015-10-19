@@ -15,7 +15,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.IO;
 
 using sar.Tools;
@@ -46,7 +45,7 @@ namespace sar.Commands
 			if (path.EndsWith(@"\")) path = StringHelper.TrimEnd(path, 1);
 			if (!Directory.Exists(path)) Directory.CreateDirectory(path);
 			
-			var files = GetFileList(ip);
+			var files = FTPHelper.GetFileList(ip);
 			for (int i = 0; i < files.Count; i++)
 			{
 				var file = files[i];
@@ -56,7 +55,7 @@ namespace sar.Commands
 				
 				try
 				{
-					DownloadFile(ip, file, path);
+					FTPHelper.DownloadFile(ip, file, path);
 				}
 				catch (Exception ex)
 				{
@@ -68,73 +67,6 @@ namespace sar.Commands
 			ConsoleHelper.WriteLine(files.Count.ToString() + " Files" + ((files.Count != 1) ? "s" : "") + " Downloaded", ConsoleColor.DarkYellow);
 			
 			return ConsoleHelper.EXIT_OK;
-		}
-		
-		public static List<string> GetFileList(string ip)
-		{
-			var downloadFiles = new List<string>();
-			
-			var reqFTP = (FtpWebRequest)FtpWebRequest.Create(new Uri("ftp://" + ip + "/"));
-			reqFTP.UseBinary = true;
-			reqFTP.AuthenticationLevel = System.Net.Security.AuthenticationLevel.None;
-			reqFTP.Method = WebRequestMethods.Ftp.ListDirectory;
-			reqFTP.Proxy = null;
-			reqFTP.KeepAlive = false;
-			reqFTP.UsePassive = false;
-			
-			var response = reqFTP.GetResponse();
-			var reader = new StreamReader(response.GetResponseStream());
-			
-			string line = reader.ReadLine();
-			while (line != null)
-			{
-				line.Replace("\n", "");
-				downloadFiles.Add(line);
-				
-				line = reader.ReadLine();
-			}
-			
-			return downloadFiles;
-		}
-
-		public static byte[] DownloadBytes(string ip, string file)
-		{
-			var ftpRequest = (FtpWebRequest)FtpWebRequest.Create(new Uri("ftp://" + ip + "/" + file));
-			ftpRequest.UseBinary = true;
-			ftpRequest.AuthenticationLevel = System.Net.Security.AuthenticationLevel.None;
-			ftpRequest.Method = WebRequestMethods.Ftp.DownloadFile;
-			ftpRequest.Proxy = null;
-			ftpRequest.KeepAlive = false;
-			ftpRequest.UsePassive = false;
-			ftpRequest.Timeout = 30 * 1000;
-
-			var ftpResponce = (FtpWebResponse)ftpRequest.GetResponse();
-			var ftpStream = ftpResponce.GetResponseStream();
-
-			
-
-			var buffer = new Byte[2048];
-			int bytesread = 0;
-			
-			using (var ms = new MemoryStream())
-			{
-				while ((bytesread = ftpStream.Read(buffer, 0, buffer.Length)) > 0)
-				{
-					ms.Write(buffer, 0, bytesread);
-				}
-				
-				ftpResponce.Close();
-				return ms.ToArray();
-			}
-		}
-		
-		public static void DownloadFile(string ip, string file, string root)
-		{
-			var buffer = DownloadBytes(ip, file);
-			
-			var writeStream = new FileStream(root + @"\" + file, FileMode.Create);
-			writeStream.Write(buffer, 0, buffer.Length);
-			writeStream.Close();
 		}
 	}
 }
