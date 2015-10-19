@@ -220,6 +220,23 @@ namespace sar.Tools
 			return array.ToArray();
 		}
 		
+		public static string ArrayToString(string title, byte[] data)
+		{
+			string line = "";
+			string delimiter = "";
+			
+			line += title + " [";
+			foreach (byte b in data)
+			{
+				line += delimiter + b.ToString();
+				delimiter = ", ";
+			}
+			
+			line += "]";
+			
+			return line;
+		}		
+		
 		public static string AddQuotes(string input)
 		{
 			return "\"" + input + "\"";

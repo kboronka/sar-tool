@@ -120,8 +120,8 @@ namespace sar.S7Siemens
 
 		#endregion
 
-        #region Reading from PLC
-        public bool ReadBit(string address)
+		#region Reading from PLC
+		public bool ReadBit(string address)
 		{
 			var data = ReadBytesRaw(address, 1);
 			return data[0] > 0;
@@ -208,27 +208,48 @@ namespace sar.S7Siemens
 			if (bytes > 65535) throw new IndexOutOfRangeException("max bytes = 65535");
 			if (bytes < 1) throw new IndexOutOfRangeException("min bytes = 1");
 			
+			var message = new byte[] {};
+			var tpdu = new byte[] {};
+			var response = new byte[] {};
+			var data = new byte[] {};
+			
 
 			
 			// maximum page size = 220 bytes
 			if (bytes <= MAX_BYTES_PER_PAGE)
 			{
-				// send read request message
-				var message = ReadWriteMessage(Action.Read, address);
-				DebugWrite("ReadWriteMessage", message);
-				message = EncodeTPDU(TPKT, message);
-				DebugWrite("TPDU", message);
-				var response = socket.Write(message);
-				DebugWrite("response", response);
-				
-				byte[] data = ExtractTPDU(response);
-				DebugWrite("data", data);
+				try
+				{
+					// send read request message
+					message = ReadWriteMessage(Action.Read, address);
+					DebugWrite("ReadWriteMessage", message);
+					
+					tpdu = EncodeTPDU(TPKT, message);
+					DebugWrite("TPDU", tpdu);
+					
+					response = socket.Write(tpdu);
+					DebugWrite("response", response);
+					
+					data = ExtractTPDU(response);
+					DebugWrite("data", data);
+				}
+				catch (Exception ex)
+				{
+					
+					sar.Base.Program.DebugLog.WriteLine("s7Adaptor error");
+					sar.Base.Program.DebugLog.WriteLine(StringHelper.ArrayToString("ReadWriteMessage", message));
+					sar.Base.Program.DebugLog.WriteLine(StringHelper.ArrayToString("TPDU", tpdu));
+					sar.Base.Program.DebugLog.WriteLine(StringHelper.ArrayToString("response", response));
+					sar.Base.Program.DebugLog.WriteLine(StringHelper.ArrayToString("data", data));
+
+					throw ex;
+				}
 				
 				return data;
 			}
 			else
 			{
-				var data = new byte[bytes];
+				data = new byte[bytes];
 				
 				address.byteLength = MAX_BYTES_PER_PAGE;
 				Array.Copy(ReadBytesRaw(address), 0, data, bytes-MAX_BYTES_PER_PAGE, MAX_BYTES_PER_PAGE);
@@ -241,51 +262,53 @@ namespace sar.S7Siemens
 				return data;
 			}
 		}
-        #endregion
+		#endregion
 
 		#region Writing to PLC
-        public void WriteFloats(string address, float[] data)
-        {
-            var returnByte = new byte[data.Length * 4];
-            Buffer.BlockCopy(data, 0, returnByte, 0, returnByte.Length);
-            WriteBytes(address, returnByte);
+		public void WriteFloats(string address, float[] data)
+		{
+			var returnByte = new byte[data.Length * 4];
+			Buffer.BlockCopy(data, 0, returnByte, 0, returnByte.Length);
+			WriteBytes(address, returnByte);
 
-        }
-        public void WriteDints(string address, Int32[] data)
-        {
-            byte[] returnByte = new byte[] { };
-            byte[] tmpByte = new byte[4] { 0, 0,0,0 };
-            Array.Resize(ref returnByte, (data.Length) * 4);
-            int cnt = 0;
-            foreach (var _data in data)
-            {
-                tmpByte = BitConverter.GetBytes(_data);
-                returnByte[cnt + 3] = tmpByte[0];
-                returnByte[cnt + 2] = tmpByte[1];
-                returnByte[cnt + 1] = tmpByte[2];
-                returnByte[cnt]     = tmpByte[3];
-                cnt = cnt + 4;
-            }
-            WriteBytes(address, returnByte);
-        }
-        public void WriteInts(string address, Int16[] data)
-        {
-            byte[] returnByte = new byte[]{};
-            byte[] tmpByte = new byte[2]{0,0};
-            Array.Resize(ref returnByte, (data.Length)*2);
-            int cnt = 0;
-            foreach (var _data in data)
-	                {
-                       tmpByte= BitConverter.GetBytes(_data);
-                       returnByte[cnt + 1] = tmpByte[0];
-                       returnByte[cnt]     = tmpByte[1];
-                       cnt =cnt+2;
-	                }
-            WriteBytes(address, returnByte);
-        }
+		}
+		public void WriteDints(string address, Int32[] data)
+		{
+			var returnByte = new byte[] { };
+			var tmpByte = new byte[4] { 0, 0,0,0 };
+			Array.Resize(ref returnByte, (data.Length) * 4);
+			int cnt = 0;
+			foreach (var _data in data)
+			{
+				tmpByte = BitConverter.GetBytes(_data);
+				returnByte[cnt + 3] = tmpByte[0];
+				returnByte[cnt + 2] = tmpByte[1];
+				returnByte[cnt + 1] = tmpByte[2];
+				returnByte[cnt]     = tmpByte[3];
+				cnt = cnt + 4;
+			}
+			WriteBytes(address, returnByte);
+		}
+		
+		public void WriteInts(string address, Int16[] data)
+		{
+			var returnByte = new byte[]{};
+			var tmpByte = new byte[2]{0,0};
+			Array.Resize(ref returnByte, (data.Length)*2);
+			int cnt = 0;
+			foreach (var _data in data)
+			{
+				tmpByte= BitConverter.GetBytes(_data);
+				returnByte[cnt + 1] = tmpByte[0];
+				returnByte[cnt]     = tmpByte[1];
+				cnt =cnt+2;
+			}
+			
+			WriteBytes(address, returnByte);
+		}
+		
 		public void WriteBytes(string address, byte[] data)
 		{
-                       
 			WriteBytesRaw(address, data);
 		}
 		
@@ -432,21 +455,11 @@ namespace sar.S7Siemens
 		{
 			if (ConsoleHelper.ShowDebug)
 			{
-				string line = "";
-				string delimiter = "";
-				
-				line += title + " [";
-				foreach (byte b in data)
-				{
-					line += delimiter + b.ToString();
-					delimiter = ", ";
-				}
-				
-				line += "]";
-				
-				Debug.WriteLine(line);
+				Debug.WriteLine(StringHelper.ArrayToString(title, data));
 			}
 		}
+		
+
 
 		private byte[] ExtractTPDU(byte[] message)
 		{
