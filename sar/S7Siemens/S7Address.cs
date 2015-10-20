@@ -153,24 +153,25 @@ namespace sar.S7Siemens
 				address += this.dataBlock.ToString();
 				address += ".DB";
 				
-				if (this.length == 1) address += ".X";
-				if (this.length == 1*8) address += ".B";
-				if (this.length == 2*8) address += ".W";
-				if (this.length == 4*8) address += ".D";
+				if (this.length == 1 ||  this.length > 4*8) address += "X";
+				if (this.length == 1*8) address += "B";
+				if (this.length == 2*8) address += "W";
+				if (this.length == 4*8) address += "D";
 				
-				address += this.byteAdddress;
+				address += this.byteAdddress.ToString();
 				if (this.transportType == TransportType.Bit) address += "." + this.bitAddress.ToString();
 			}
 			else
 			{
-				if (this.length == 1*8) address += ".B";
-				if (this.length == 2*8) address += ".W";
-				if (this.length == 4*8) address += ".D";				
-				address += this.byteAdddress;
+				if (this.length == 1*8) address += "B";
+				if (this.length == 2*8) address += "W";
+				if (this.length == 4*8) address += "D";				
+				address += this.byteAdddress.ToString();
 				
 				if (this.transportType == TransportType.Bit) address += "." + this.bitAddress.ToString();
 			}
 			
+			if (this.length > 4*8) address += " LEN=" + this.length.ToString();
 			
 			return address;
 		}
