@@ -180,7 +180,6 @@
     <Compile Include="Tools\RawPrinterHelper.cs" />
     <Compile Include="Tools\ServiceHelper.cs" />
     <Compile Include="Tools\Shell.cs" />
-    <Compile Include="Tools\SkyUpdater.cs" />
     <Compile Include="Tools\StreamHelper.cs" />
     <Compile Include="Tools\StringHelper.cs" />
     <Compile Include="Tools\Subversion.cs" />
