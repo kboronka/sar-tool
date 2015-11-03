@@ -76,11 +76,7 @@ namespace sar.S7Siemens
 			{
 				try
 				{
-					if (this.connected) this.connected = false;
-					if (this.socket != null)
-					{
-						this.socket.Disconnect();
-					}
+					this.Disconnect();
 				}
 				catch
 				{
@@ -93,31 +89,61 @@ namespace sar.S7Siemens
 		
 		private bool Connect()
 		{
-			sar.Base.Program.Log("s7Adaptor.Connect >> " + this.ipAddress);
-			
-			// TODO: add automatic retry
+			try
+			{
+				sar.Base.Program.Log("s7Adaptor.Connect >> " + this.ipAddress);
+				
+				// TODO: add automatic retry
 
-			// open a TCP connection to S7 via port 102
-			this.socket = new SimpleSocket(this.ipAddress, 102);
+				// open a TCP connection to S7 via port 102
+				this.socket = new SimpleSocket(this.ipAddress, 102);
 
-			// write data to socket
-			byte[] message = IO.Combine(TPKT, CONNECT_TO_ADAPTER);
-			EncodeTPKTSize(ref message);
-			DebugWrite("connect message", message);
-			byte[] response = socket.Write(message);
-			DebugWrite("response", response);
-			this.connected = response.SequenceEqual(CONNECTED_TO_ADAPTER);
-			
-			// TODO: end of automatic retry
+				// write data to socket
+				byte[] message = IO.Combine(TPKT, CONNECT_TO_ADAPTER);
+				EncodeTPKTSize(ref message);
+				DebugWrite("connect message", message);
+				byte[] response = socket.Write(message);
+				DebugWrite("response", response);
+				this.connected = response.SequenceEqual(CONNECTED_TO_ADAPTER);
+				
+				// TODO: end of automatic retry
 
-			
-			// exchange PDU
-			message = EncodeTPDU(TPKT_PDU, EXCHANGE_PDU_PARAMETER);
-			DebugWrite("ExchangePDU", message);
-			response = socket.Write(message);
-			DebugWrite("response", response);
+				
+				// exchange PDU
+				message = EncodeTPDU(TPKT_PDU, EXCHANGE_PDU_PARAMETER);
+				DebugWrite("ExchangePDU", message);
+				response = socket.Write(message);
+				DebugWrite("response", response);
+			}
+			catch (Exception ex)
+			{
+				sar.Base.Program.Log(ex);
+				return false;
+			}
 			
 			return this.connected;
+		}
+		
+		private void Disconnect()
+		{
+			try
+			{
+				if (this.connected) this.connected = false;
+				if (this.socket != null)
+				{
+					this.socket.Disconnect();
+				}
+			}
+			catch
+			{
+				
+			}
+		}
+		
+		public void Reconnect()
+		{
+			this.Disconnect();
+			this.Connect();
 		}
 
 		#endregion
