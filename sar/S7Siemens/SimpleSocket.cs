@@ -47,9 +47,11 @@ namespace sar.Tools
 			try
 			{
 				IPAddress address = IPAddress.Parse(this.ipAddress);
-				IPEndPoint remoteEP = new IPEndPoint(address, this.port);
+				var remoteEP = new IPEndPoint(address, this.port);
 
 				socket = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+				socket.SendTimeout = 10000;
+				
 				socket.Connect(remoteEP);
 
 				connected = socket.Connected;
