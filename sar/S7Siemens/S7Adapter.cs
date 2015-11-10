@@ -212,11 +212,22 @@ namespace sar.S7Siemens
 			return Result;
 		}
 		
+		public string ReadString(string address, ushort length)
+		{
+			var data = IO.ReverseBytes(ReadBytesRaw(address, length));
+			
+			string output = "";
+			for (var i=2; i<data.Length && i<(data[1]+2); i++)
+			{
+				output += Convert.ToChar(data[i]);
+			}
+			
+			return output;
+		}		
+		
 		public byte[] ReadBytes(string address, ushort bytes)
 		{
 			var data = IO.ReverseBytes(ReadBytesRaw(address, bytes));
-			DebugWrite("data", data);
-			
 			return data;
 		}
 
