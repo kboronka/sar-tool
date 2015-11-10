@@ -68,8 +68,12 @@ namespace sar.Testing
 		{
 			try
 			{
-				var siemensS7 = new S7.Adapter("10.242.217.122");
-				byte[] data = siemensS7.ReadBytes("MW6600", 220);
+				var siemensS7 = new S7.Adapter("10.240.26.54");
+				byte[] data = siemensS7.ReadBytes("DB250.DBB164", 86);
+				var stringValue = siemensS7.ReadString("DB250.DBB164", 86);
+				textBox3.Text = StringHelper.ArrayToString("data", data);
+				textBox3.Text += "value: " + stringValue;
+				
 				siemensS7.Dispose();
 			}
 			catch (Exception ex)
