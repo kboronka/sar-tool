@@ -268,9 +268,24 @@ namespace sar.Socket
 			this.pingLoopThread.Start();
 		}
 		
+		protected override void Dispose(bool disposing)
+		{
+			if (!disposed)
+			{
+				if (disposing)
+				{
+					this.Log("Dispose Starting");
+					this.Stop();		
+					this.Log("Dispose Complete");
+				}
+			}
+			
+			disposed = true;
+		}
+		
 		~SocketClient()
 		{
-			this.Stop();
+			this.Log("Destructor");
 		}
 		
 		public override void Stop()
@@ -419,6 +434,7 @@ namespace sar.Socket
 				{
 					if (this.socket == null)
 					{
+						this.Log("re-connecting");
 						this.OpenConnection();
 						Thread.Sleep(500);
 					}
@@ -455,8 +471,8 @@ namespace sar.Socket
 				{
 					if( this.socket.Client.Poll(1, SelectMode.SelectRead))
 					{
-						byte[] buff = new byte[1];
-						if(this.socket.Client.Receive(buff, SocketFlags.Peek) == 0)
+						var buffer = new byte[1];
+						if(this.socket.Client.Receive(buffer, SocketFlags.Peek) == 0)
 						{
 							this.Disconnect();
 						}
@@ -498,7 +514,7 @@ namespace sar.Socket
 				//this.connected = true;
 				this.Log(connectionAttempt.ToString() + ": " + " Socket Open");
 				
-				Stopwatch timeout = new Stopwatch();
+				var timeout = new Stopwatch();
 				timeout.Start();
 
 				while(!this.initilized)
@@ -571,17 +587,18 @@ namespace sar.Socket
 			try
 			{
 				if (socket == null) return "";
-				if (stream == null) return "";
 				
 				lock (socket)
 				{
+					if (stream == null) return "";
+					
 					lock (stream)
 					{
 						if (socket.Available > 0)
 						{
 							if (stream.DataAvailable)
 							{
-								byte[] packetBytes = new byte[socket.Available];
+								var packetBytes = new byte[socket.Available];
 								int packetSize = stream.Read(packetBytes, 0, packetBytes.Length);
 								return this.encoding.GetString(packetBytes, 0, packetSize);
 							}
@@ -591,12 +608,14 @@ namespace sar.Socket
 			}
 			catch (ObjectDisposedException ex)
 			{
+				this.Log("ObjectDisposedException - The NetworkStream is closed");
 				this.Log(ex);
 				// The NetworkStream is closed.
 				//this.Disconnect();
 			}
 			catch (IOException ex)
 			{
+				this.Log("IOException - The NetworkStream is closed");
 				this.Log(ex);
 				// The underlying Socket is closed.
 				//this.Disconnect();

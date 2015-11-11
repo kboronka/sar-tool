@@ -52,6 +52,7 @@ namespace sar.Testing
 			this.button5 = new System.Windows.Forms.Button();
 			this.button6 = new System.Windows.Forms.Button();
 			this.button7 = new System.Windows.Forms.Button();
+			this.MakeSocket = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// button1
@@ -66,7 +67,7 @@ namespace sar.Testing
 			// 
 			// ConnectToSPS
 			// 
-			this.ConnectToSPS.Location = new System.Drawing.Point(248, 184);
+			this.ConnectToSPS.Location = new System.Drawing.Point(357, 50);
 			this.ConnectToSPS.Name = "ConnectToSPS";
 			this.ConnectToSPS.Size = new System.Drawing.Size(113, 24);
 			this.ConnectToSPS.TabIndex = 5;
@@ -132,19 +133,29 @@ namespace sar.Testing
 			// 
 			// button7
 			// 
-			this.button7.Location = new System.Drawing.Point(158, 46);
+			this.button7.Location = new System.Drawing.Point(259, 141);
 			this.button7.Name = "button7";
 			this.button7.Size = new System.Drawing.Size(113, 23);
 			this.button7.TabIndex = 17;
 			this.button7.Text = "Send Email";
 			this.button7.UseVisualStyleBackColor = true;
-			this.button7.Click += new System.EventHandler(this.Button7Click);
+			// 
+			// MakeSocket
+			// 
+			this.MakeSocket.Location = new System.Drawing.Point(115, 50);
+			this.MakeSocket.Name = "MakeSocket";
+			this.MakeSocket.Size = new System.Drawing.Size(103, 23);
+			this.MakeSocket.TabIndex = 18;
+			this.MakeSocket.Text = "MakeSocket";
+			this.MakeSocket.UseVisualStyleBackColor = true;
+			this.MakeSocket.Click += new System.EventHandler(this.MakeSocketClick);
 			// 
 			// Menu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(482, 351);
+			this.Controls.Add(this.MakeSocket);
 			this.Controls.Add(this.button7);
 			this.Controls.Add(this.button6);
 			this.Controls.Add(this.button5);
@@ -169,5 +180,6 @@ namespace sar.Testing
 		private System.Windows.Forms.Button button5;
 		private System.Windows.Forms.Button button6;
 		private System.Windows.Forms.Button button7;
+		private System.Windows.Forms.Button MakeSocket;
 	}
 }

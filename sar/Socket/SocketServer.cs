@@ -176,11 +176,25 @@ namespace sar.Socket
 			}
 		}
 		
+
+		protected override void Dispose(bool disposing)
+		{
+			if (!disposed)
+			{
+				if (disposing)
+				{
+					this.Stop();
+				}
+			}
+			
+			disposed = true;
+		}
+		
 		~SocketServer()
 		{
-			this.Stop();
-		}
 			
+		}
+		
 		
 		public override void Stop()
 		{
@@ -397,9 +411,11 @@ namespace sar.Socket
 					{
 						if (!client.Connected)
 						{
+							this.Log("client lost");
 							client.Stop();
 							this.clients.Remove(client);
 							OnClientLost(client);
+							client.Dispose();
 
 							break;
 						}

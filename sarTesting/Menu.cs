@@ -15,23 +15,25 @@
 
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
-using System.Timers;
-using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.Win32;
+using System.Threading;
+using System.Windows.Forms;
 
 using S7 = sar.S7Siemens;
+using sar.Socket;
 using sar.Tools;
-using sar.Http;
 
 namespace sar.Testing
 {
 	public partial class Menu : Form
 	{
+		private SocketServer socketServer;
+		
 		public Menu()
 		{
 			InitializeComponent();
+			
+			socketServer = new SocketServer(911, Program.ErrorLog, Program.DebugLog);
 			
 			this.Text = "sar-tool testing:" + Program.port.ToString();
 			
@@ -97,6 +99,7 @@ namespace sar.Testing
 				plc.WriteBytes("DB300.DBB0", new byte[] { 0x01 });
 			}
 		}
+		
 		void Button6Click(object sender, EventArgs e)
 		{
 			var data = @"\tC:\\test\\ \n";
@@ -123,9 +126,17 @@ namespace sar.Testing
 			System.Diagnostics.Debug.WriteLine(jsonString2);
 		}
 		
-		void Button7Click(object sender, EventArgs e)
+		void MakeSocketClick(object sender, EventArgs e)
 		{
+			using(var client = new SocketClient("127.0.0.1", 911, Program.ErrorLog, Program.DebugLog))
+			{
+				client.SetValue("sarTesting", AssemblyInfo.Version, true);
+				
+				Thread.Sleep(2500);
 
+			}
+			
+			System.GC.Collect();
 		}
 	}
 }
