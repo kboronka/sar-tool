@@ -578,11 +578,7 @@ namespace sar.Socket
 		
 		private void IncomingLoop()
 		{
-			var timer = new Stopwatch();
-			long currentTime = 0;
-			long lastTime = 0;
-			long updateRate = 0;			
-			
+			Thread.Sleep(0);
 			this.Log(this.ID.ToString() + ": " + "Incoming Loop Started");
 			
 			string incomingBuffer = "";
@@ -771,25 +767,14 @@ namespace sar.Socket
 		
 		private void OutgoingLoop()
 		{
-			var timer = new Stopwatch();
-			long currentTime = 0;
-			long lastTime = 0;
-			long updateRate = 100;			
-			
+			Thread.Sleep(100);
 			this.Log(this.ID.ToString() + ": " + "Outgoing Loop Started");
 			
 			while (!outgoingLoopShutdown)
 			{
 				try
 				{
-					currentTime = timer.ElapsedMilliseconds;
-					if ((currentTime - lastTime) > updateRate)
-					{
-						updateRate = 0;
-						lastTime = currentTime;
 						this.ServiceOutgoing();
-					}
-					
 					Thread.Sleep(1);
 				}
 				catch (Exception ex)
@@ -798,8 +783,6 @@ namespace sar.Socket
 					Thread.Sleep(1000);
 				}
 			}
-			
-			timer.Stop();
 			
 			this.Log(this.ID.ToString() + ": " + "Outgoing Loop Shutdown Gracefully");
 		}
@@ -892,30 +875,17 @@ namespace sar.Socket
 
 		private void PingLoop()
 		{
-			var timer = new Stopwatch();
-			long currentTime = 0;
-			long lastTime = 0;
-			long updateRate = 1000;
-
+			Thread.Sleep(1000);
 			this.Log(this.ID.ToString() + ": " + "Ping Loop Started");
 			pingStopWatch = new Stopwatch();
 			pingStopWatch.Start();
-			
-			timer.Start();
 			
 			while (!pingLoopShutdown)
 			{
 				try
 				{
-					currentTime = timer.ElapsedMilliseconds;
-					if ((currentTime - lastTime) > updateRate)
-					{
-						updateRate = (this.IsHost ? 10000 : 500);
-						lastTime = currentTime;
 						this.Ping();	
-					}
-					
-					Thread.Sleep(50);
+					Thread.Sleep((this.IsHost ? 10000 : 500));
 				}
 				catch (Exception ex)
 				{
@@ -923,8 +893,6 @@ namespace sar.Socket
 					Thread.Sleep(1000);
 				}
 			}
-			
-			timer.Stop();
 			
 			this.Log(this.ID.ToString() + ": " + "Ping Loop Shutdown Gracefully");
 		}
