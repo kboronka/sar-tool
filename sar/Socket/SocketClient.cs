@@ -118,70 +118,6 @@ namespace sar.Socket
 		
 		#endregion
 
-		#region events
-		
-		#region ConnectionChange
-
-		public EventHandler ConnectionChange = null;
-		
-		private void OnConnectionChange(bool connected)
-		{
-			try
-			{
-				if (connected != this.connected)
-				{
-					this.connected = connected;
-					if (this.connected) this.SendData("get-all");
-
-					if (ConnectionChange != null)
-					{
-						ConnectionChange(connected, new System.EventArgs());
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-				this.Log(ex);
-			}
-		}
-
-		#endregion
-
-		#region DataChanged
-
-		private SocketValue.DataChangedHandler dataChanged = null;
-		public event SocketValue.DataChangedHandler DataChanged
-		{
-			add
-			{
-				this.dataChanged += value;
-			}
-			remove
-			{
-				this.dataChanged -= value;
-			}
-		}
-		
-		protected override void OnMemCacheChanged(SocketValue data)
-		{
-			try
-			{
-				SocketValue.DataChangedHandler handler;
-				if (null != (handler = (SocketValue.DataChangedHandler)this.dataChanged))
-				{
-					handler(data);
-				}
-			}
-			catch
-			{
-
-			}
-		}
-
-		#endregion
-
-		#endregion
-
 		#region constructors
 
 		public SocketClient(SocketServer parent, TcpClient socket, long clientID, ErrorLogger errorLog, FileLogger debugLog) : base(errorLog, debugLog)
@@ -275,7 +211,24 @@ namespace sar.Socket
 				if (disposing)
 				{
 					this.Log("Dispose Starting");
-					this.Stop();		
+					
+					this.Stop();
+
+					this.parent = null;
+					this.messagesOut = null;
+					this.messagesIn = null;
+					
+					this.connectionLoopThread = null;
+					this.outgoingLoopThread = null;
+					this.incomingLoopThread = null;
+					this.pingLoopThread = null;
+
+					this.socket = null;
+					this.stream.Dispose();
+					this.stream = null;
+					
+					this.memCache = null;
+				
 					this.Log("Dispose Complete");
 				}
 			}
@@ -286,6 +239,7 @@ namespace sar.Socket
 		~SocketClient()
 		{
 			this.Log("Destructor");
+			Dispose(false);
 		}
 		
 		public override void Stop()
@@ -314,6 +268,70 @@ namespace sar.Socket
 				this.Log(ex);
 			}
 		}
+
+		#endregion
+
+		#region events
+		
+		#region ConnectionChange
+
+		public EventHandler ConnectionChange = null;
+		
+		private void OnConnectionChange(bool connected)
+		{
+			try
+			{
+				if (connected != this.connected)
+				{
+					this.connected = connected;
+					if (this.connected) this.SendData("get-all");
+
+					if (ConnectionChange != null)
+					{
+						ConnectionChange(connected, new System.EventArgs());
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				this.Log(ex);
+			}
+		}
+
+		#endregion
+
+		#region DataChanged
+
+		private SocketValue.DataChangedHandler dataChanged = null;
+		public event SocketValue.DataChangedHandler DataChanged
+		{
+			add
+			{
+				this.dataChanged += value;
+			}
+			remove
+			{
+				this.dataChanged -= value;
+			}
+		}
+		
+		protected override void OnMemCacheChanged(SocketValue data)
+		{
+			try
+			{
+				SocketValue.DataChangedHandler handler;
+				if (null != (handler = (SocketValue.DataChangedHandler)this.dataChanged))
+				{
+					handler(data);
+				}
+			}
+			catch
+			{
+
+			}
+		}
+
+		#endregion
 
 		#endregion
 
@@ -560,7 +578,11 @@ namespace sar.Socket
 		
 		private void IncomingLoop()
 		{
-			Thread.Sleep(0);
+			var timer = new Stopwatch();
+			long currentTime = 0;
+			long lastTime = 0;
+			long updateRate = 0;			
+			
 			this.Log(this.ID.ToString() + ": " + "Incoming Loop Started");
 			
 			string incomingBuffer = "";
@@ -749,14 +771,25 @@ namespace sar.Socket
 		
 		private void OutgoingLoop()
 		{
-			Thread.Sleep(100);
+			var timer = new Stopwatch();
+			long currentTime = 0;
+			long lastTime = 0;
+			long updateRate = 100;			
+			
 			this.Log(this.ID.ToString() + ": " + "Outgoing Loop Started");
 			
 			while (!outgoingLoopShutdown)
 			{
 				try
 				{
-					this.ServiceOutgoing();
+					currentTime = timer.ElapsedMilliseconds;
+					if ((currentTime - lastTime) > updateRate)
+					{
+						updateRate = 0;
+						lastTime = currentTime;
+						this.ServiceOutgoing();
+					}
+					
 					Thread.Sleep(1);
 				}
 				catch (Exception ex)
@@ -765,6 +798,8 @@ namespace sar.Socket
 					Thread.Sleep(1000);
 				}
 			}
+			
+			timer.Stop();
 			
 			this.Log(this.ID.ToString() + ": " + "Outgoing Loop Shutdown Gracefully");
 		}
@@ -857,17 +892,30 @@ namespace sar.Socket
 
 		private void PingLoop()
 		{
-			Thread.Sleep(1000);
+			var timer = new Stopwatch();
+			long currentTime = 0;
+			long lastTime = 0;
+			long updateRate = 1000;
+
 			this.Log(this.ID.ToString() + ": " + "Ping Loop Started");
 			pingStopWatch = new Stopwatch();
 			pingStopWatch.Start();
+			
+			timer.Start();
 			
 			while (!pingLoopShutdown)
 			{
 				try
 				{
-					this.Ping();
-					Thread.Sleep((this.IsHost ? 10000 : 500));
+					currentTime = timer.ElapsedMilliseconds;
+					if ((currentTime - lastTime) > updateRate)
+					{
+						updateRate = (this.IsHost ? 10000 : 500);
+						lastTime = currentTime;
+						this.Ping();	
+					}
+					
+					Thread.Sleep(50);
 				}
 				catch (Exception ex)
 				{
@@ -875,6 +923,8 @@ namespace sar.Socket
 					Thread.Sleep(1000);
 				}
 			}
+			
+			timer.Stop();
 			
 			this.Log(this.ID.ToString() + ": " + "Ping Loop Shutdown Gracefully");
 		}

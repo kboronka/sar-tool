@@ -128,15 +128,21 @@ namespace sar.Testing
 		
 		void MakeSocketClick(object sender, EventArgs e)
 		{
-			using(var client = new SocketClient("127.0.0.1", 911, Program.ErrorLog, Program.DebugLog))
+			for (var x=0;x<1000; x++)
 			{
-				client.SetValue("sarTesting", AssemblyInfo.Version, true);
+				for (var i = 0; i<100; i++)
+				{
+					using(var client = new SocketClient("127.0.0.1", 911, Program.ErrorLog, Program.DebugLog))
+					{
+						client.SetValue("sarTesting", AssemblyInfo.Version, true);
+						
+						Thread.Sleep(250);
+					}
+				}
 				
-				Thread.Sleep(2500);
-
+				System.GC.Collect();
+				Thread.Sleep(1250);
 			}
-			
-			System.GC.Collect();
 		}
 	}
 }
