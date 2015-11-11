@@ -55,11 +55,8 @@ namespace sar.Tools
 				// no filename
 				if (String.IsNullOrEmpty(filename)) this.filename = AssemblyInfo.Name + ".log";
 				
-				// it is a service
-				if (!System.Environment.UserInteractive) this.filename += ".service";
-				
 				// no file extension
-				if (this.filename.EndsWith(".log")) this.filename += ".log";
+				if (!this.filename.EndsWith(".log")) this.filename += ".log";
 
 				// root = C:\ProgramData\Company\Product
 				this.root = ApplicationInfo.CommonDataDirectory;

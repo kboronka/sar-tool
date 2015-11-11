@@ -35,7 +35,12 @@ namespace sar.Base
 		{
 			get
 			{
-				if (String.IsNullOrEmpty(Program.LogFilename)) Program.LogFilename = "log";
+				if (String.IsNullOrEmpty(Program.LogFilename))
+				{
+					Program.LogFilename = (System.Environment.UserInteractive) ? "" : "service.";
+					Program.LogFilename += "log";
+				}
+
 				if (Program.errorLog == null) Program.errorLog = new ErrorLogger("error." + Program.LogFilename);
 				return Program.errorLog;
 			}
@@ -45,7 +50,12 @@ namespace sar.Base
 		{
 			get
 			{
-				if (String.IsNullOrEmpty(Program.LogFilename)) Program.LogFilename = "log";
+				if (String.IsNullOrEmpty(Program.LogFilename))
+				{
+					Program.LogFilename = (System.Environment.UserInteractive) ? "" : "service.";
+					Program.LogFilename += "log";
+				}
+				 
 				if (Program.debugLog == null) Program.debugLog = new FileLogger("debug." + Program.LogFilename, true);
 				return Program.debugLog;
 			}
