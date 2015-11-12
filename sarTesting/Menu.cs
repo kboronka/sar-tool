@@ -68,7 +68,7 @@ namespace sar.Testing
 		
 		private void TestLoop()
 		{
-			var logTrigger = new sar.Control.Interval(1000);
+			var logTrigger = new sar.Control.Interval(1000, 5000);
 			var counter = 0;
 			while (!shutdown)
 			{

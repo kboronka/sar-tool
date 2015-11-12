@@ -25,10 +25,10 @@ namespace sar.Control
 		private long interval;
 		private long lastTrigger;
 		
-		public Interval(long interval)
+		public Interval(long interval, long firstRunDelay)
 		{
 			this.interval = interval;
-			this.lastTrigger = Interval.Time;
+			this.lastTrigger = Interval.Time - interval + firstRunDelay;
 		}
 		
 		public bool Ready
