@@ -51,7 +51,7 @@ namespace sar.Commands
 				return ConsoleHelper.EXIT_OK;
 			}
 			
-			ConsoleHelper.WriteLine("Bower failed to update", ConsoleColor.DarkYellow);
+			ConsoleHelper.WriteLine("Bower failed to update", ConsoleColor.Red);
 			return ConsoleHelper.EXIT_ERROR;
 		}
 	}
