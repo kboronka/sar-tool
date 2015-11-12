@@ -37,7 +37,7 @@ namespace sar.Base
 			{
 				if (String.IsNullOrEmpty(Program.LogFilename))
 				{
-					Program.LogFilename = (System.Environment.UserInteractive) ? "" : "service.";
+					Program.LogFilename = (System.Environment.UserInteractive) ? "" : "s.";
 					Program.LogFilename += "log";
 				}
 
