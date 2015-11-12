@@ -129,6 +129,7 @@ namespace sar.Socket
 				this.ID = clientID;
 				this.socket = socket;
 				this.stream = this.socket.GetStream();
+				this.connected = true;
 				
 				this.connectionLoopThread = new Thread(this.ConnectionLoop);
 				this.outgoingLoopThread = new Thread(this.OutgoingLoop);
@@ -740,7 +741,7 @@ namespace sar.Socket
 							{
 								case "SocketMessage":
 									this.packetsIn++;
-									var = new SocketMessage(reader);
+									var message = new SocketMessage(reader);
 									
 									if (!this.ProcessMessage(message) && this.IsHost)
 									{
