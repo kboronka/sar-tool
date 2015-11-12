@@ -20,19 +20,12 @@ namespace sar.Timing
 {
 	public class Interval
 	{
-		private static Stopwatch time;
+		private Stopwatch time;
 		
-		private static long Time
+		private long Time
 		{
 			get
 			{
-				
-				if (time == null)
-				{
-					time = new Stopwatch();
-					time.Start();
-				}
-				
 				return time.ElapsedMilliseconds;
 			}
 		}
@@ -42,8 +35,10 @@ namespace sar.Timing
 		
 		public Interval(long interval, long firstRunDelay)
 		{
+			this.time = new Stopwatch();
+			this.time.Start();			
 			this.interval = interval;
-			this.lastTrigger = Interval.Time - interval + firstRunDelay;
+			this.lastTrigger = this.Time - interval + firstRunDelay;
 		}
 		
 		public bool Ready
