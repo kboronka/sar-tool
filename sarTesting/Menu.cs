@@ -22,6 +22,7 @@ using System.Windows.Forms;
 using S7 = sar.S7Siemens;
 using sar.Socket;
 using sar.Tools;
+using sar.Timing;
 
 namespace sar.Testing
 {
@@ -68,7 +69,7 @@ namespace sar.Testing
 		
 		private void TestLoop()
 		{
-			var logTrigger = new sar.Control.Interval(1000, 5000);
+			var logTrigger = new Interval(1000, 5000);
 			var counter = 0;
 			while (!shutdown)
 			{
