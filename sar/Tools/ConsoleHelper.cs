@@ -324,7 +324,7 @@ namespace sar.Tools
 				ConsoleHelper.WriteLine(" " + arguments, ConsoleColor.Gray);
 			}
 			
-			Process shell = new Process();
+			var shell = new Process();
 			shell.StartInfo.FileName = filename;
 			shell.StartInfo.Arguments = arguments;
 			shell.StartInfo.UseShellExecute = false;
@@ -342,6 +342,7 @@ namespace sar.Tools
 			{
 				ConsoleHelper.Write("error:", ConsoleColor.Red);
 				ConsoleHelper.WriteLine(" " + StringHelper.TrimWhiteSpace(error), ConsoleColor.Gray);
+				return ConsoleHelper.EXIT_ERROR;
 			}
 			
 			return shell.ExitCode;
