@@ -728,9 +728,9 @@ namespace sar.Socket
 			string packetIn = ExtractPacket(ref bufferIn);
 			if (String.IsNullOrEmpty(packetIn)) return;
 
-			using (StringReader sr = new StringReader(packetIn))
+			using (var sr = new StringReader(packetIn))
 			{
-				using (XML.Reader reader = new XML.Reader(sr))
+				using (var reader = new XML.Reader(sr))
 				{
 					while (reader.Read())
 					{
@@ -740,7 +740,7 @@ namespace sar.Socket
 							{
 								case "SocketMessage":
 									this.packetsIn++;
-									SocketMessage message = new SocketMessage(reader);
+									var = new SocketMessage(reader);
 									
 									if (!this.ProcessMessage(message) && this.IsHost)
 									{
@@ -793,7 +793,7 @@ namespace sar.Socket
 			if (stream == null) return;
 			if (messagesOut.Count == 0) return;
 			
-			List<SocketMessage> messageQueue = new List<SocketMessage>();
+			var messageQueue = new List<SocketMessage>();
 			
 			try
 			{
@@ -805,9 +805,9 @@ namespace sar.Socket
 				}
 				
 				string packetString = "";
-				using (StringWriter sw = new StringWriter())
+				using (var sw = new StringWriter())
 				{
-					using (XML.Writer writer = new XML.Writer(sw))
+					using (var writer = new XML.Writer(sw))
 					{
 						writer.WriteStartElement("SocketMessages");
 						
