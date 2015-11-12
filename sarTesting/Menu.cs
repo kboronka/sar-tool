@@ -28,6 +28,8 @@ namespace sar.Testing
 	public partial class Menu : Form
 	{
 		private SocketServer socketServer;
+		private Thread loop;
+		private bool shutdown = false;
 		
 		public Menu()
 		{
@@ -49,6 +51,29 @@ namespace sar.Testing
 			catch (Exception ex)
 			{
 				textBox3.Text = ExceptionHelper.GetStackTrace(ex);
+			}
+			
+			
+			this.loop = new Thread(this.TestLoop);
+			this.loop.IsBackground = true;
+			this.loop.Start();
+		}
+		
+		~Menu()
+		{
+			this.shutdown = true;
+			this.loop.Join();
+		}
+		
+		
+		private void TestLoop()
+		{
+			var logTrigger = new sar.Control.Interval(1000);
+			var counter = 0;
+			while (!shutdown)
+			{
+				if (logTrigger.Ready) Program.Log("log " + counter++.ToString());
+				Thread.Sleep(11);
 			}
 		}
 		
