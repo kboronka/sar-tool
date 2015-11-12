@@ -66,7 +66,7 @@ namespace sar.Tools
 		{
 			try
 			{
-				socket.Disconnect(false);
+				if (socket != null) socket.Disconnect(false);
 				socket = null;
 			}
 			catch (Exception ex)
