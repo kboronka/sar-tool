@@ -123,7 +123,7 @@
     <Compile Include="Commands\WindowsRearm.cs" />
     <Compile Include="Commands\WindowsRestart.cs" />
     <Compile Include="Commands\WindowsShellReplacement.cs" />
-    <Compile Include="Control\Interval.cs" />
+    <Compile Include="Timing\Interval.cs" />
     <Compile Include="Databases\DatabaseHelper.cs" />
     <Compile Include="Databases\DatabaseObject.cs" />
     <Compile Include="Http\Controllers\DebugController.cs" />
@@ -199,7 +199,7 @@
     <Folder Include="Http\Views\Debug" />
     <Folder Include="Databases\MSSQL" />
     <Folder Include="Databases" />
-    <Folder Include="Control" />
+    <Folder Include="Timing" />
     <Folder Include="S7Siemens" />
     <Folder Include="Socket" />
     <Folder Include="Tools" />
