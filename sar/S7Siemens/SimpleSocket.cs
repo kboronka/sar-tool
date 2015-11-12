@@ -42,8 +42,10 @@ namespace sar.Tools
 			this.Connect();
 		}
 		
-		private void Connect()
+		private const int MAX_RETRIES = 10;
+		private void Connect(int retryCount)
 		{
+			var retry = false;
 			try
 			{
 				IPAddress address = IPAddress.Parse(this.ipAddress);
@@ -56,10 +58,29 @@ namespace sar.Tools
 
 				connected = socket.Connected;
 			}
+			catch (SocketException ex)
+			{
+				if(retryCount < MAX_RETRIES)
+				{
+					socket = null;
+					retry = true;
+					retryCount++;
+				}
+				else
+				{
+					Program.Log(ex);
+				}
+			}
 			catch (Exception ex)
 			{
 				Program.Log(ex);
 			}
+			
+		    if(retry)
+		    {
+		        Thread.Sleep(1);
+		        Connect(retryCount);
+		    }
 		}
 		
 		public void Disconnect()
@@ -80,6 +101,7 @@ namespace sar.Tools
 		public byte[] Write(byte[] message)
 		{
 			if (!this.connected) this.Connect();
+			if (!this.connected) throw new ApplicationException("socket is not connected " + this.ipAddress);
 
 			try
 			{
