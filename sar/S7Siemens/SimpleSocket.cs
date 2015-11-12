@@ -42,6 +42,11 @@ namespace sar.Tools
 			this.Connect();
 		}
 		
+		private void Connect()
+		{
+			this.Connect(0);
+		}
+		
 		private const int MAX_RETRIES = 10;
 		private void Connect(int retryCount)
 		{
