@@ -348,7 +348,7 @@ namespace sar.Socket
 			{
 				if (this.listener.Pending())
 				{
-					SocketClient client = new SocketClient(this, this.listener.AcceptTcpClient(), ++this.lastClientID, this.ErrorLog, this.DebugLog);
+					var client = new SocketClient(this, this.listener.AcceptTcpClient(), ++this.lastClientID, this.ErrorLog, this.DebugLog);
 					this.clients.Add(client);
 					this.OnNewClient(client);
 				}
