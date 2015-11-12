@@ -611,7 +611,11 @@ namespace sar.Tools
 		
 		private static string ToJSON(this object value)
 		{
-			if (value is String)
+			if (value == null)
+			{
+				return "null";
+			}
+			else if (value is String)
 			{
 				return ((string)value).ToJSON();
 			}
