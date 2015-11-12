@@ -21,33 +21,48 @@ namespace sar.Timing
 	public class Interval
 	{
 		private Stopwatch time;
+		private long setPoint;
+		private long lastTrigger;
 		
-		private long Time
+		public long Time
 		{
 			get
 			{
-				return time.ElapsedMilliseconds;
+				lock (time)
+				{
+					return time.ElapsedMilliseconds - lastTrigger;
+				}
 			}
 		}
 		
-		private long interval;
-		private long lastTrigger;
+		public long SetPoint
+		{
+			get
+			{
+				lock (time)
+				{
+					return setPoint;
+				}
+			}
+		}
 		
-		public Interval(long interval, long firstRunDelay)
+
+		
+		public Interval(long setPoint, long firstRunDelay)
 		{
 			this.time = new Stopwatch();
 			this.time.Start();			
-			this.interval = interval;
-			this.lastTrigger = this.Time - interval + firstRunDelay;
+			this.setPoint = setPoint;
+			this.lastTrigger = this.Time - setPoint + firstRunDelay;
 		}
 		
 		public bool Ready
 		{
 			get
 			{
-				if (Time - lastTrigger > interval)
+				if (Time > SetPoint)
 				{
-					this.lastTrigger += interval;
+					this.lastTrigger += SetPoint;
 					return true;
 				}
 				
