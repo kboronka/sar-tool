@@ -4,7 +4,7 @@
   "description": "a collection of useful tools",
   "license": "BSD",
   "homepage": "http://kboronka.github.io/sar-tool/",
-  "author": "kevin boronka",  
+  "author": "kevin boronka",
   "main": [
     "release/sar.exe",
     "release/sar.pdb"
@@ -20,11 +20,8 @@
     "font-awesome": "~4.3.0",
     "html5shiv": "~3.7.2",
     "respond": "~1.4.2",
-    "Chart.js": "https://github.com/kboronka/Chart.js.git#master",
-    "es5-shim": "~4.1.1"
-  },
-  "resolutions": {
-    "Chart.js": "~1.0.1"
+    "es5-shim": "~4.1.1",
+    "Chart.js": "https://github.com/kboronka/Chart.js.git#master"
   },
   "ignore": [
     "lib",

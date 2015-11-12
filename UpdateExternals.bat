@@ -27,5 +27,6 @@
 	set ZIP="%PROGRAMFILES%\7-Zip\7zG.exe" a -tzip
 
 	%SAR% -bower
-	%SAR% file.move ".\sarTesting\Http\Views\assets\sar-controls\release\*.*" ".\lib\sar-controls\"	
-	%SAR% -delay 10000
+	%SAR% f.bk ".\sarTesting\Http\Views\assets\sar-controls\release\*.*" ".\lib\sar-controls"	
+	%SAR% file.removedirectory ".\sarTesting\Http\Views\assets\sar-controls" /q
+	%SAR% file.removedirectory ".\sarTesting\Http\Views\assets\sar-tool" /q
