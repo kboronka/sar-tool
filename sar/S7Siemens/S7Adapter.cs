@@ -130,10 +130,8 @@ namespace sar.S7Siemens
 			try
 			{
 				if (this.connected) this.connected = false;
-				if (this.socket != null)
-				{
-					this.socket.Disconnect();
-				}
+				if (this.socket != null) this.socket.Close();
+				this.socket = null;
 			}
 			catch
 			{

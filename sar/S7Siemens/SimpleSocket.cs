@@ -27,12 +27,14 @@ using sar.Tools;
 
 namespace sar.Tools
 {
-	public class SimpleSocket
+	public class SimpleSocket : IDisposable
 	{
 		private System.Net.Sockets.Socket socket;
 		private bool connected;
 		private string ipAddress;
 		private int port;
+		
+		#region constructors
 		
 		public SimpleSocket(string ipAddress, int port)
 		{
@@ -41,6 +43,41 @@ namespace sar.Tools
 			
 			this.Connect();
 		}
+		
+		private bool disposed;
+		
+		public void Close()
+		{
+			sar.Base.Program.Log("SimpleSocket Close");
+			Dispose();
+		}
+		
+		public void Dispose()
+		{
+	        Dispose(true);
+		}
+		
+		private void Dispose(bool disposing)
+		{
+			if (!disposed)
+			{
+				if (disposing)
+				{
+					sar.Base.Program.Log("SimpleSocket Disposing");
+					this.Disconnect();
+				}
+			}
+			
+			disposed = true;
+		}
+		
+		~SimpleSocket()
+		{
+			sar.Base.Program.Log("SimpleSocket Destructor");
+			Dispose(false);
+		}
+		
+		#endregion
 		
 		private void Connect()
 		{
@@ -92,8 +129,13 @@ namespace sar.Tools
 		{
 			try
 			{
-				if (socket != null) socket.Disconnect(false);
-				socket = null;
+				if (this.socket != null)
+				{
+					this.socket.Disconnect(false);
+					this.socket.Close();
+				}
+				
+				this.socket = null;
 			}
 			catch (Exception ex)
 			{
