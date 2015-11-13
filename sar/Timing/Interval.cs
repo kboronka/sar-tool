@@ -24,7 +24,17 @@ namespace sar.Timing
 		private long setPoint;
 		private long lastTrigger;
 		
-		public long Time
+		public long Clock
+		{
+			get
+			{
+				lock (time)
+				{
+					return time.ElapsedMilliseconds;
+				}
+			}
+		}
+		public long ElapsedMilliseconds
 		{
 			get
 			{
@@ -53,16 +63,16 @@ namespace sar.Timing
 			this.time = new Stopwatch();
 			this.time.Start();			
 			this.setPoint = setPoint;
-			this.lastTrigger = this.Time - setPoint + firstRunDelay;
+			this.lastTrigger = time.ElapsedMilliseconds - setPoint + firstRunDelay;
 		}
 		
 		public bool Ready
 		{
 			get
 			{
-				if (Time > SetPoint)
+				if (this.ElapsedMilliseconds > setPoint)
 				{
-					this.lastTrigger += SetPoint;
+					this.lastTrigger = time.ElapsedMilliseconds;
 					return true;
 				}
 				
