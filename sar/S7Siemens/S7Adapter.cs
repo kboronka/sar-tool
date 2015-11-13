@@ -16,8 +16,9 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Sockets;
 using System.IO;
-
+using System.Threading;
 
 using sar.Tools;
 
@@ -143,6 +144,8 @@ namespace sar.S7Siemens
 		public void Reconnect()
 		{
 			this.Disconnect();
+			GC.Collect();
+			Thread.Sleep(5000);
 			this.Connect();
 		}
 
@@ -273,6 +276,17 @@ namespace sar.S7Siemens
 					DebugWrite("data", data);
 					
 					if (data.Length != bytes) throw new ApplicationException("responce data size does not match requested size");
+				}
+				catch (SocketException ex)
+				{
+					sar.Base.Program.Log("s7Adaptor ERROR");
+					sar.Base.Program.Log(" >> " + this.ipAddress);
+					sar.Base.Program.Log(" >> " + address.ToString());
+					
+					// auto-reconnect
+					this.Reconnect();
+					
+					throw ex;
 				}
 				catch (Exception ex)
 				{
