@@ -56,27 +56,41 @@ namespace sar.Timing
 			}
 		}
 		
-
-		
-		public Interval(long setPoint, long firstRunDelay)
-		{
-			this.time = new Stopwatch();
-			this.time.Start();			
-			this.setPoint = setPoint;
-			this.lastTrigger = time.ElapsedMilliseconds - setPoint + firstRunDelay;
-		}
-		
 		public bool Ready
 		{
 			get
 			{
 				if (this.ElapsedMilliseconds > setPoint)
 				{
-					this.lastTrigger = time.ElapsedMilliseconds;
+					this.Reset();
 					return true;
 				}
 				
 				return false;
+			}
+		}
+		
+		public Interval(long setPoint, long firstRunDelay)
+		{
+			this.time = new Stopwatch();
+			this.time.Start();
+			this.setPoint = setPoint;
+			this.lastTrigger = time.ElapsedMilliseconds - setPoint + firstRunDelay;
+		}
+		
+		public void Reset()
+		{
+			lock (time)
+			{
+				this.lastTrigger += setPoint;
+			}
+			
+			if (this.ElapsedMilliseconds > setPoint)
+			{
+				lock (time)
+				{
+					this.lastTrigger = time.ElapsedMilliseconds;
+				}
 			}
 		}
 	}
