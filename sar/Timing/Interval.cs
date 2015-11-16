@@ -24,6 +24,8 @@ namespace sar.Timing
 		private long setPoint;
 		private long lastTrigger;
 		
+		#region properties
+		
 		public long Clock
 		{
 			get
@@ -70,13 +72,27 @@ namespace sar.Timing
 			}
 		}
 		
+		#endregion
+		
+		#region constructor
+		
 		public Interval(long setPoint, long firstRunDelay)
 		{
 			this.time = new Stopwatch();
 			this.time.Start();
 			this.setPoint = setPoint;
 			this.lastTrigger = time.ElapsedMilliseconds - setPoint + firstRunDelay;
+		}		
+		
+		public Interval(long setPoint)
+		{
+			this.time = new Stopwatch();
+			this.time.Start();
+			this.setPoint = setPoint;
+			this.lastTrigger = time.ElapsedMilliseconds;
 		}
+		
+		#endregion
 		
 		public void Reset()
 		{
