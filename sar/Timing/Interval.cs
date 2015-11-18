@@ -99,11 +99,10 @@ namespace sar.Timing
 			lock (time)
 			{
 				this.lastTrigger += setPoint;
-			}
-			
-			if (this.ElapsedMilliseconds > setPoint)
-			{
-				lock (time)
+				
+				var timeToNextTrigger = time.ElapsedMilliseconds - this.lastTrigger;
+					
+				if (timeToNextTrigger > setPoint ||timeToNextTrigger < 0)
 				{
 					this.lastTrigger = time.ElapsedMilliseconds;
 				}

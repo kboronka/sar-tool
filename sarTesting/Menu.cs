@@ -70,11 +70,13 @@ namespace sar.Testing
 		private void TestLoop()
 		{
 			var logTrigger = new Interval(1000, 5000);
+			var timeout = new Interval(30000);
 			var counter = 0;
 			while (!shutdown)
 			{
-				if (logTrigger.Ready) Program.Log("log " + counter++.ToString());
-				Thread.Sleep(11);
+				if (logTrigger.Ready) Program.Log("log: " + counter++.ToString());
+				if (timeout.Ready) Program.Log("timeout: " + timeout.ElapsedMilliseconds.ToString());
+				Thread.Sleep(670);
 			}
 		}
 		
