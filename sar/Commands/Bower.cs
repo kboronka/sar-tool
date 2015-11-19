@@ -45,7 +45,7 @@ namespace sar.Commands
 			
 			//ConsoleHelper.Run(nodejs, bower + " cache clean");
 			if (ConsoleHelper.Run(nodejs, bower + " install") == ConsoleHelper.EXIT_OK && 
-			    ConsoleHelper.Run(nodejs, bower + " -force update") == ConsoleHelper.EXIT_OK)
+			    ConsoleHelper.Run(nodejs, bower + " --force --silent update") == ConsoleHelper.EXIT_OK)
 			{
 				ConsoleHelper.WriteLine("Bower update was successfully completed", ConsoleColor.DarkYellow);
 				return ConsoleHelper.EXIT_OK;
