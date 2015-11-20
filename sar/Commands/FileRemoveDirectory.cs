@@ -58,18 +58,24 @@ namespace sar.Commands
 			
 			foreach (string directory in foundDirectories)
 			{
-				foreach (string subDirectory in IO.GetAllDirectories(directory))
+				if (this.commandHub.Debug)
 				{
-					ConsoleHelper.Write("found: " , ConsoleColor.Cyan);
-					ConsoleHelper.WriteLine(StringHelper.TrimStart(subDirectory, root.Length));
+					foreach (string subDirectory in IO.GetAllDirectories(directory))
+					{
+						ConsoleHelper.Write("found: " , ConsoleColor.Cyan);
+						ConsoleHelper.WriteLine(StringHelper.TrimStart(subDirectory, root.Length));
+					}
 				}
 				
 				subDirectories.AddRange(IO.GetAllDirectories(directory));
 				
-				foreach (string file in IO.GetAllFiles(directory))
+				if (this.commandHub.Debug)
 				{
-					ConsoleHelper.Write("found: ", ConsoleColor.Cyan);
-					ConsoleHelper.WriteLine(StringHelper.TrimStart(file, root.Length));
+					foreach (string file in IO.GetAllFiles(directory))
+					{
+						ConsoleHelper.Write("found: ", ConsoleColor.Cyan);
+						ConsoleHelper.WriteLine(StringHelper.TrimStart(file, root.Length));
+					}
 				}
 				
 				files.AddRange(IO.GetAllFiles(directory));
