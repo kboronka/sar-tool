@@ -83,7 +83,6 @@ namespace sar.Commands
 			var tempFile = tempFolder + @"\externals.txt";
 			externals.Sort();
 			IO.WriteFileLines(tempFile, externals, Encoding.ASCII);
-			IO.WriteFileLines(@"C:\Users\kboronka\Documents\Jobs\OmniTrak-Sim\test.txt", externals, Encoding.ASCII);
 			
 			//svn propset svn:externals -F b:\externals.txt
 			Progress.Message = "propset running";			
