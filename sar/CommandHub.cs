@@ -63,6 +63,7 @@ namespace sar.Tools
 			                          	new WindowsShellReplacement(this),
 			                          	new NetListAdapters(this),
 			                          	new NetSetIP(this),
+			                          	new svnAddExternals(this),
 			                          	new Bower(this)
 			                          });
 		}

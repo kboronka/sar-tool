@@ -112,6 +112,7 @@
     <Compile Include="Commands\NetListAddaptors.cs" />
     <Compile Include="Commands\AssemblyInfoVersion.cs" />
     <Compile Include="Commands\rdp.cs" />
+    <Compile Include="Commands\svnAddExternals.cs" />
     <Compile Include="Commands\WindowsAutoLogin.cs" />
     <Compile Include="Commands\WindowsLogin.cs" />
     <Compile Include="Commands\Kill.cs" />

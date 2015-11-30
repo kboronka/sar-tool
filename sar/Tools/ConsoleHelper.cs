@@ -277,6 +277,13 @@ namespace sar.Tools
 			return ConsoleHelper.Run(filename, arguments, out output);
 		}
 		
+		public static int Run(string filename, string arguments, string workingDirectory)
+		{
+			string output;
+			string error;
+			return ConsoleHelper.Run(filename, arguments, workingDirectory, out output, out error);
+		}		
+		
 		public static int TryRun(string filename, string arguments, out string output)
 		{
 			try
@@ -313,8 +320,16 @@ namespace sar.Tools
 				return ConsoleHelper.EXIT_ERROR;
 			}
 		}
-		
+
 		public static int Run(string filename, string arguments, out string output, out string error)
+		{
+			int result = ConsoleHelper.Run(filename, arguments, Directory.GetCurrentDirectory(), out output, out error);
+			output += "\n" + error;
+			
+			return result;			
+		}
+		
+		public static int Run(string filename, string arguments, string workingDirectory, out string output, out string error)
 		{
 			arguments = StringHelper.TrimWhiteSpace(arguments);
 			
@@ -325,6 +340,8 @@ namespace sar.Tools
 			}
 			
 			var shell = new Process();
+			
+			shell.StartInfo.WorkingDirectory = workingDirectory;
 			shell.StartInfo.FileName = filename;
 			shell.StartInfo.Arguments = arguments;
 			shell.StartInfo.UseShellExecute = false;

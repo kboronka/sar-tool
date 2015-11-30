@@ -508,6 +508,11 @@ namespace sar.Tools
 			WriteFile(filepath, LinesToString(lines));
 		}
 		
+		public static void WriteFileLines(string filepath, List<string> lines, Encoding encoding)
+		{
+			WriteFile(filepath, LinesToString(lines), encoding);
+		}		
+		
 		public static void WriteFile(string filepath, string text, Encoding encoding)
 		{
 			if (!File.Exists(filepath) || text != ReadFile(filepath))
@@ -516,7 +521,7 @@ namespace sar.Tools
 				{
 					writter.Write(text);
 				}
-			}			
+			}
 		}
 		
 		public static void WriteFile(string filepath, string text)
@@ -586,7 +591,10 @@ namespace sar.Tools
 			if (Directory.Exists(IO.ProgramFilesx86 + folder + @"\")) files = IO.GetAllFiles(IO.ProgramFilesx86 + folder + @"\", exeName);
 			if (files.Count == 0)
 			{
-				if (Directory.Exists(IO.ProgramFiles + folder + @"\"))  files = IO.GetAllFiles(IO.ProgramFiles + folder + @"\", exeName);
+				if (Directory.Exists(IO.ProgramFiles + folder + @"\"))
+				{
+					files = IO.GetAllFiles(IO.ProgramFiles + folder + @"\", exeName);
+				}
 			}
 
 			// unable to locate application

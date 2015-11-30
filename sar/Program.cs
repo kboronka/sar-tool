@@ -31,6 +31,7 @@ namespace sar
 				#if DEBUG
 				
 				/*
+
 				args = new string[] { "f.rd", @"C:\Users\kboronka\Documents\Virtual Machines\caches", @"/pause" };
 				args = new string[] { "rdp", "192.168.171.208", @"username", "password", @"/pause" };
 				args = new string[] { "ip.set", "gigabit", "dhcp", @"/debug", @"/pause", @"/admin" };
@@ -41,8 +42,8 @@ namespace sar
 				args = new string[] { "file.open", @"c:\temp", @"/pause" }; 
 				args = new string[] { "-b.net", "3.5", @"LabelPrinter.sln", "/p:Configuration=Release /p:Platform=\"Any CPU\"" };
 				args = new string[] { "fanuc.downloadPR", "10.240.26.104", @"C:\Temp\posreg.test.csv", @"/pause" };
-				 */
 				
+				*/
 				#endif
 				
 				var hub = new CommandHub();
