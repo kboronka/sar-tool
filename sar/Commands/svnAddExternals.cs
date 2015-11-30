@@ -88,7 +88,6 @@ namespace sar.Commands
 			Progress.Message = "propset running";			
 			ConsoleHelper.Run(svn, @" propset svn:externals -F """ + tempFile + @""" .");
 			
-		
 			// delete tempFolder
 			if (Directory.Exists(tempFolder)) Directory.Delete(tempFolder, true);
 			
