@@ -103,6 +103,18 @@ namespace sar.Commands
 					{
 						foreach (string directory in foundDirectories)
 						{
+							filePattern = "*.*";
+							root = directory;
+							IO.CheckRootAndPattern(ref root, ref filePattern);
+							files = IO.GetAllFiles(root, filePattern);
+			
+							// make every file not read-only
+							foreach (string filepath in files)
+							{
+								File.SetAttributes(filepath, FileAttributes.Normal);
+							}
+							
+							// delete the directory
 							Directory.Delete(directory, true);
 						}
 					}
