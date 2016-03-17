@@ -114,6 +114,10 @@ namespace sar.Commands
 								File.SetAttributes(filepath, FileAttributes.Normal);
 							}
 							
+							// make directory not read only
+							var directoryInfo = new DirectoryInfo(directory);
+							directoryInfo.Attributes &= ~FileAttributes.ReadOnly;
+							
 							// delete the directory
 							Directory.Delete(directory, true);
 						}
