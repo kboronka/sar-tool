@@ -44,9 +44,10 @@ namespace sar.Commands
 				throw new ArgumentException("incorrect number of arguments");
 			}
 			
+			string filePattern = args[1];
 			string search = args[2];
 			string replace = args[3];
-			string filePattern = args[1];
+			
 			string root = Directory.GetCurrentDirectory();
 
 			List<IO.SearchResult> results = IO.SearchAndReplaceInFiles(root, filePattern, search, replace);

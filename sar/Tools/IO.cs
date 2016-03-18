@@ -329,6 +329,10 @@ namespace sar.Tools
 			
 			if (newcontent != content)
 			{
+				// make file not readonly
+				File.SetAttributes(path, FileAttributes.Normal);
+				
+				// write new content back to file
 				using(var writer = new StreamWriter(path, false, Encoding.UTF8))
 				{
 					writer.Write(newcontent);
