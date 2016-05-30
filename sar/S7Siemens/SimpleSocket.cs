@@ -1,4 +1,4 @@
-/* Copyright (C) 2015 Kevin Boronka
+/* Copyright (C) 2016 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -27,12 +27,14 @@ using sar.Tools;
 
 namespace sar.Tools
 {
-	public class SimpleSocket
+	public class SimpleSocket : IDisposable
 	{
 		private System.Net.Sockets.Socket socket;
 		private bool connected;
 		private string ipAddress;
 		private int port;
+		
+		#region constructors
 		
 		public SimpleSocket(string ipAddress, int port)
 		{
@@ -42,30 +44,98 @@ namespace sar.Tools
 			this.Connect();
 		}
 		
+		private bool disposed;
+		
+		public void Close()
+		{
+			sar.Base.Program.Log("SimpleSocket Close");
+			Dispose();
+		}
+		
+		public void Dispose()
+		{
+	        Dispose(true);
+		}
+		
+		private void Dispose(bool disposing)
+		{
+			if (!disposed)
+			{
+				if (disposing)
+				{
+					sar.Base.Program.Log("SimpleSocket Disposing");
+					this.Disconnect();
+				}
+			}
+			
+			disposed = true;
+		}
+		
+		~SimpleSocket()
+		{
+			sar.Base.Program.Log("SimpleSocket Destructor");
+			Dispose(false);
+		}
+		
+		#endregion
+		
 		private void Connect()
 		{
+			this.Connect(0);
+		}
+		
+		private const int MAX_RETRIES = 10;
+		private void Connect(int retryCount)
+		{
+			var retry = false;
 			try
 			{
 				IPAddress address = IPAddress.Parse(this.ipAddress);
-				IPEndPoint remoteEP = new IPEndPoint(address, this.port);
+				var remoteEP = new IPEndPoint(address, this.port);
 
 				socket = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+				socket.SendTimeout = 10000;
+				
 				socket.Connect(remoteEP);
 
 				connected = socket.Connected;
+			}
+			catch (SocketException ex)
+			{
+				if(retryCount < MAX_RETRIES)
+				{
+					socket = null;
+					retry = true;
+					retryCount++;
+				}
+				else
+				{
+					Program.Log(ex);
+				}
 			}
 			catch (Exception ex)
 			{
 				Program.Log(ex);
 			}
+			
+		    if(retry)
+		    {
+		        Thread.Sleep(1);
+		        Connect(retryCount);
+		    }
 		}
 		
 		public void Disconnect()
 		{
 			try
 			{
-				socket.Disconnect(false);
-				socket = null;
+				if (this.socket != null)
+				{
+					this.socket.Disconnect(false);
+					this.socket.Close();
+				}
+				
+				this.socket = null;
 			}
 			catch (Exception ex)
 			{
@@ -78,6 +148,7 @@ namespace sar.Tools
 		public byte[] Write(byte[] message)
 		{
 			if (!this.connected) this.Connect();
+			if (!this.connected) throw new ApplicationException("socket is not connected " + this.ipAddress);
 
 			try
 			{

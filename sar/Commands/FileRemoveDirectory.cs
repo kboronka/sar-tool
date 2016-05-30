@@ -1,4 +1,4 @@
-/* Copyright (C) 2015 Kevin Boronka
+/* Copyright (C) 2016 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -58,18 +58,24 @@ namespace sar.Commands
 			
 			foreach (string directory in foundDirectories)
 			{
-				foreach (string subDirectory in IO.GetAllDirectories(directory))
+				if (this.commandHub.Debug)
 				{
-					ConsoleHelper.Write("found: " , ConsoleColor.Cyan);
-					ConsoleHelper.WriteLine(StringHelper.TrimStart(subDirectory, root.Length));
+					foreach (string subDirectory in IO.GetAllDirectories(directory))
+					{
+						ConsoleHelper.Write("found: " , ConsoleColor.Cyan);
+						ConsoleHelper.WriteLine(StringHelper.TrimStart(subDirectory, root.Length));
+					}
 				}
 				
 				subDirectories.AddRange(IO.GetAllDirectories(directory));
 				
-				foreach (string file in IO.GetAllFiles(directory))
+				if (this.commandHub.Debug)
 				{
-					ConsoleHelper.Write("found: ", ConsoleColor.Cyan);
-					ConsoleHelper.WriteLine(StringHelper.TrimStart(file, root.Length));
+					foreach (string file in IO.GetAllFiles(directory))
+					{
+						ConsoleHelper.Write("found: ", ConsoleColor.Cyan);
+						ConsoleHelper.WriteLine(StringHelper.TrimStart(file, root.Length));
+					}
 				}
 				
 				files.AddRange(IO.GetAllFiles(directory));
@@ -97,6 +103,22 @@ namespace sar.Commands
 					{
 						foreach (string directory in foundDirectories)
 						{
+							filePattern = "*.*";
+							root = directory;
+							IO.CheckRootAndPattern(ref root, ref filePattern);
+							files = IO.GetAllFiles(root, filePattern);
+			
+							// make every file not read-only
+							foreach (string filepath in files)
+							{
+								File.SetAttributes(filepath, FileAttributes.Normal);
+							}
+							
+							// make directory not read only
+							var directoryInfo = new DirectoryInfo(directory);
+							directoryInfo.Attributes &= ~FileAttributes.ReadOnly;
+							
+							// delete the directory
 							Directory.Delete(directory, true);
 						}
 					}

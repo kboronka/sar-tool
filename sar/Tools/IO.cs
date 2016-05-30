@@ -1,4 +1,4 @@
-/* Copyright (C) 2015 Kevin Boronka
+/* Copyright (C) 2016 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -329,6 +329,10 @@ namespace sar.Tools
 			
 			if (newcontent != content)
 			{
+				// make file not readonly
+				File.SetAttributes(path, FileAttributes.Normal);
+				
+				// write new content back to file
 				using(var writer = new StreamWriter(path, false, Encoding.UTF8))
 				{
 					writer.Write(newcontent);
@@ -508,6 +512,11 @@ namespace sar.Tools
 			WriteFile(filepath, LinesToString(lines));
 		}
 		
+		public static void WriteFileLines(string filepath, List<string> lines, Encoding encoding)
+		{
+			WriteFile(filepath, LinesToString(lines), encoding);
+		}		
+		
 		public static void WriteFile(string filepath, string text, Encoding encoding)
 		{
 			if (!File.Exists(filepath) || text != ReadFile(filepath))
@@ -516,7 +525,7 @@ namespace sar.Tools
 				{
 					writter.Write(text);
 				}
-			}			
+			}
 		}
 		
 		public static void WriteFile(string filepath, string text)
@@ -586,7 +595,10 @@ namespace sar.Tools
 			if (Directory.Exists(IO.ProgramFilesx86 + folder + @"\")) files = IO.GetAllFiles(IO.ProgramFilesx86 + folder + @"\", exeName);
 			if (files.Count == 0)
 			{
-				if (Directory.Exists(IO.ProgramFiles + folder + @"\"))  files = IO.GetAllFiles(IO.ProgramFiles + folder + @"\", exeName);
+				if (Directory.Exists(IO.ProgramFiles + folder + @"\"))
+				{
+					files = IO.GetAllFiles(IO.ProgramFiles + folder + @"\", exeName);
+				}
 			}
 
 			// unable to locate application

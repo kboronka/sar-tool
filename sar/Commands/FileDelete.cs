@@ -1,4 +1,4 @@
-/* Copyright (C) 2015 Kevin Boronka
+/* Copyright (C) 2016 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -25,9 +25,9 @@ namespace sar.Commands
 	public class FileDelete : Command
 	{
 		public FileDelete(Base.CommandHub parent) : base(parent, "File - Delete",
-		                            new List<string> { "file.delete", "f.del" },
-		                            "-f.del [filepattern]",
-		                            new List<string> { "-f.d \"*.vmdk\"" })
+		                                                 new List<string> { "file.delete", "f.del" },
+		                                                 "-f.del [filepattern]",
+		                                                 new List<string> { "-f.d \"*.vmdk\"" })
 		{
 		}
 		
@@ -48,10 +48,13 @@ namespace sar.Commands
 			
 			if (!this.commandHub.NoWarning)
 			{
-				foreach (string file in files)
+				if (this.commandHub.Debug)
 				{
-					ConsoleHelper.Write("found: ", ConsoleColor.Cyan);
-					ConsoleHelper.WriteLine(StringHelper.TrimStart(file, root.Length));
+					foreach (string file in files)
+					{
+						ConsoleHelper.Write("found: ", ConsoleColor.Cyan);
+						ConsoleHelper.WriteLine(StringHelper.TrimStart(file, root.Length));
+					}
 				}
 
 				ConsoleHelper.WriteLine(files.Count.ToString() + " file" + ((files.Count != 1) ? "s" : "") + " found");

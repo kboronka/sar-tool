@@ -1,4 +1,4 @@
-/* Copyright (C) 2015 Kevin Boronka
+/* Copyright (C) 2016 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -277,6 +277,13 @@ namespace sar.Tools
 			return ConsoleHelper.Run(filename, arguments, out output);
 		}
 		
+		public static int Run(string filename, string arguments, string workingDirectory)
+		{
+			string output;
+			string error;
+			return ConsoleHelper.Run(filename, arguments, workingDirectory, out output, out error);
+		}		
+		
 		public static int TryRun(string filename, string arguments, out string output)
 		{
 			try
@@ -313,8 +320,16 @@ namespace sar.Tools
 				return ConsoleHelper.EXIT_ERROR;
 			}
 		}
-		
+
 		public static int Run(string filename, string arguments, out string output, out string error)
+		{
+			int result = ConsoleHelper.Run(filename, arguments, Directory.GetCurrentDirectory(), out output, out error);
+			output += "\n" + error;
+			
+			return result;			
+		}
+		
+		public static int Run(string filename, string arguments, string workingDirectory, out string output, out string error)
 		{
 			arguments = StringHelper.TrimWhiteSpace(arguments);
 			
@@ -324,7 +339,9 @@ namespace sar.Tools
 				ConsoleHelper.WriteLine(" " + arguments, ConsoleColor.Gray);
 			}
 			
-			Process shell = new Process();
+			var shell = new Process();
+			
+			shell.StartInfo.WorkingDirectory = workingDirectory;
 			shell.StartInfo.FileName = filename;
 			shell.StartInfo.Arguments = arguments;
 			shell.StartInfo.UseShellExecute = false;
@@ -338,10 +355,11 @@ namespace sar.Tools
 			
 			shell.WaitForExit();
 			
-			if (ConsoleHelper.ShowDebug && !String.IsNullOrEmpty(error))
+			if (!String.IsNullOrEmpty(error))
 			{
 				ConsoleHelper.Write("error:", ConsoleColor.Red);
 				ConsoleHelper.WriteLine(" " + StringHelper.TrimWhiteSpace(error), ConsoleColor.Gray);
+				return ConsoleHelper.EXIT_ERROR;
 			}
 			
 			return shell.ExitCode;

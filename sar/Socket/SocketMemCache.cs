@@ -1,4 +1,4 @@
-/* Copyright (C) 2015 Kevin Boronka
+/* Copyright (C) 2016 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -25,13 +25,23 @@ using sar.Tools;
 
 namespace sar.Socket
 {
-	public abstract class SocketMemCache
+	public abstract class SocketMemCache : System.IDisposable
 	{
 		public SocketMemCache(ErrorLogger errorLog, FileLogger debugLog)
 		{
 			this.errorLogger = errorLog;
 			this.debugLog = debugLog;
 		}
+
+		public void Dispose()
+		{
+	        Dispose(true);
+	        GC.SuppressFinalize(this);			
+		}
+		
+		protected bool disposed;
+		protected abstract void Dispose(bool disposing);
+		
 		
 		public abstract void Stop();
 		
@@ -200,10 +210,10 @@ namespace sar.Socket
 		
 		protected void Log(Exception ex)
 		{
-			if (this.errorLogger == null) return;
-			this.errorLogger.Write(ex);
+			if (this.errorLogger != null) this.errorLogger.Write(ex);
+			this.Log("error: " + ex.Message);
 		}
 		
-		#endregion
+		#endregion		
 	}
 }

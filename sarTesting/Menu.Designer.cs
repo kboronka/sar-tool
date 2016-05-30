@@ -1,4 +1,4 @@
-/* Copyright (C) 2015 Kevin Boronka
+/* Copyright (C) 2016 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -52,11 +52,12 @@ namespace sar.Testing
 			this.button5 = new System.Windows.Forms.Button();
 			this.button6 = new System.Windows.Forms.Button();
 			this.button7 = new System.Windows.Forms.Button();
+			this.MakeSocket = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// button1
 			// 
-			this.button1.Location = new System.Drawing.Point(8, 184);
+			this.button1.Location = new System.Drawing.Point(520, 316);
 			this.button1.Name = "button1";
 			this.button1.Size = new System.Drawing.Size(113, 23);
 			this.button1.TabIndex = 1;
@@ -66,7 +67,7 @@ namespace sar.Testing
 			// 
 			// ConnectToSPS
 			// 
-			this.ConnectToSPS.Location = new System.Drawing.Point(248, 184);
+			this.ConnectToSPS.Location = new System.Drawing.Point(629, 181);
 			this.ConnectToSPS.Name = "ConnectToSPS";
 			this.ConnectToSPS.Size = new System.Drawing.Size(113, 24);
 			this.ConnectToSPS.TabIndex = 5;
@@ -76,7 +77,7 @@ namespace sar.Testing
 			// 
 			// button2
 			// 
-			this.button2.Location = new System.Drawing.Point(128, 184);
+			this.button2.Location = new System.Drawing.Point(400, 315);
 			this.button2.Name = "button2";
 			this.button2.Size = new System.Drawing.Size(113, 23);
 			this.button2.TabIndex = 6;
@@ -85,7 +86,7 @@ namespace sar.Testing
 			// 
 			// button3
 			// 
-			this.button3.Location = new System.Drawing.Point(248, 208);
+			this.button3.Location = new System.Drawing.Point(520, 339);
 			this.button3.Name = "button3";
 			this.button3.Size = new System.Drawing.Size(113, 23);
 			this.button3.TabIndex = 10;
@@ -94,7 +95,7 @@ namespace sar.Testing
 			// 
 			// button4
 			// 
-			this.button4.Location = new System.Drawing.Point(367, 208);
+			this.button4.Location = new System.Drawing.Point(639, 339);
 			this.button4.Name = "button4";
 			this.button4.Size = new System.Drawing.Size(103, 23);
 			this.button4.TabIndex = 13;
@@ -104,7 +105,7 @@ namespace sar.Testing
 			// 
 			// textBox3
 			// 
-			this.textBox3.Location = new System.Drawing.Point(158, 237);
+			this.textBox3.Location = new System.Drawing.Point(430, 368);
 			this.textBox3.Multiline = true;
 			this.textBox3.Name = "textBox3";
 			this.textBox3.Size = new System.Drawing.Size(312, 107);
@@ -112,7 +113,7 @@ namespace sar.Testing
 			// 
 			// button5
 			// 
-			this.button5.Location = new System.Drawing.Point(367, 184);
+			this.button5.Location = new System.Drawing.Point(639, 315);
 			this.button5.Name = "button5";
 			this.button5.Size = new System.Drawing.Size(103, 24);
 			this.button5.TabIndex = 15;
@@ -122,7 +123,7 @@ namespace sar.Testing
 			// 
 			// button6
 			// 
-			this.button6.Location = new System.Drawing.Point(166, 208);
+			this.button6.Location = new System.Drawing.Point(438, 339);
 			this.button6.Name = "button6";
 			this.button6.Size = new System.Drawing.Size(75, 23);
 			this.button6.TabIndex = 16;
@@ -132,19 +133,29 @@ namespace sar.Testing
 			// 
 			// button7
 			// 
-			this.button7.Location = new System.Drawing.Point(158, 46);
+			this.button7.Location = new System.Drawing.Point(531, 276);
 			this.button7.Name = "button7";
-			this.button7.Size = new System.Drawing.Size(113, 23);
+			this.button7.Size = new System.Drawing.Size(113, 19);
 			this.button7.TabIndex = 17;
 			this.button7.Text = "Send Email";
 			this.button7.UseVisualStyleBackColor = true;
-			this.button7.Click += new System.EventHandler(this.Button7Click);
+			// 
+			// MakeSocket
+			// 
+			this.MakeSocket.Location = new System.Drawing.Point(387, 181);
+			this.MakeSocket.Name = "MakeSocket";
+			this.MakeSocket.Size = new System.Drawing.Size(103, 23);
+			this.MakeSocket.TabIndex = 18;
+			this.MakeSocket.Text = "MakeSocket";
+			this.MakeSocket.UseVisualStyleBackColor = true;
+			this.MakeSocket.Click += new System.EventHandler(this.MakeSocketClick);
 			// 
 			// Menu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(482, 351);
+			this.ClientSize = new System.Drawing.Size(780, 487);
+			this.Controls.Add(this.MakeSocket);
 			this.Controls.Add(this.button7);
 			this.Controls.Add(this.button6);
 			this.Controls.Add(this.button5);
@@ -169,5 +180,6 @@ namespace sar.Testing
 		private System.Windows.Forms.Button button5;
 		private System.Windows.Forms.Button button6;
 		private System.Windows.Forms.Button button7;
+		private System.Windows.Forms.Button MakeSocket;
 	}
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2015 Kevin Boronka
+/* Copyright (C) 2016 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -56,7 +56,7 @@ namespace sar.Tools
 				if (String.IsNullOrEmpty(filename)) this.filename = AssemblyInfo.Name + ".log";
 				
 				// no file extension
-				if (this.filename.IndexOf('.') == -1) this.filename += ".log";
+				if (!this.filename.EndsWith(".log")) this.filename += ".log";
 
 				// root = C:\ProgramData\Company\Product
 				this.root = ApplicationInfo.CommonDataDirectory;

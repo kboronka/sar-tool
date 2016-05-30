@@ -1,4 +1,4 @@
-/* Copyright (C) 2015 Kevin Boronka
+/* Copyright (C) 2016 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -611,7 +611,11 @@ namespace sar.Tools
 		
 		private static string ToJSON(this object value)
 		{
-			if (value is String)
+			if (value == null)
+			{
+				return "null";
+			}
+			else if (value is String)
 			{
 				return ((string)value).ToJSON();
 			}

@@ -1,4 +1,4 @@
-/* Copyright (C) 2015 Kevin Boronka
+/* Copyright (C) 2016 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -176,11 +176,25 @@ namespace sar.Socket
 			}
 		}
 		
+
+		protected override void Dispose(bool disposing)
+		{
+			if (!disposed)
+			{
+				if (disposing)
+				{
+					this.Stop();
+				}
+			}
+			
+			disposed = true;
+		}
+		
 		~SocketServer()
 		{
-			this.Stop();
-		}
 			
+		}
+		
 		
 		public override void Stop()
 		{
@@ -334,7 +348,7 @@ namespace sar.Socket
 			{
 				if (this.listener.Pending())
 				{
-					SocketClient client = new SocketClient(this, this.listener.AcceptTcpClient(), ++this.lastClientID, this.ErrorLog, this.DebugLog);
+					var client = new SocketClient(this, this.listener.AcceptTcpClient(), ++this.lastClientID, this.ErrorLog, this.DebugLog);
 					this.clients.Add(client);
 					this.OnNewClient(client);
 				}
@@ -397,9 +411,11 @@ namespace sar.Socket
 					{
 						if (!client.Connected)
 						{
+							this.Log("client lost");
 							client.Stop();
 							this.clients.Remove(client);
 							OnClientLost(client);
+							client.Dispose();
 
 							break;
 						}

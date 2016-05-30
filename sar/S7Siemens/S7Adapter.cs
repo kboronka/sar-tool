@@ -1,4 +1,4 @@
-/* Copyright (C) 2015 Kevin Boronka
+/* Copyright (C) 2016 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -16,8 +16,9 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Sockets;
 using System.IO;
-
+using System.Threading;
 
 using sar.Tools;
 
@@ -76,11 +77,7 @@ namespace sar.S7Siemens
 			{
 				try
 				{
-					if (this.connected) this.connected = false;
-					if (this.socket != null)
-					{
-						this.socket.Disconnect();
-					}
+					this.Disconnect();
 				}
 				catch
 				{
@@ -93,31 +90,61 @@ namespace sar.S7Siemens
 		
 		private bool Connect()
 		{
-			sar.Base.Program.Log("s7Adaptor.Connect >> " + this.ipAddress);
-			
-			// TODO: add automatic retry
+			try
+			{
+				sar.Base.Program.Log("s7Adaptor.Connect >> " + this.ipAddress);
+				
+				// TODO: add automatic retry
 
-			// open a TCP connection to S7 via port 102
-			this.socket = new SimpleSocket(this.ipAddress, 102);
+				// open a TCP connection to S7 via port 102
+				this.socket = new SimpleSocket(this.ipAddress, 102);
 
-			// write data to socket
-			byte[] message = IO.Combine(TPKT, CONNECT_TO_ADAPTER);
-			EncodeTPKTSize(ref message);
-			DebugWrite("connect message", message);
-			byte[] response = socket.Write(message);
-			DebugWrite("response", response);
-			this.connected = response.SequenceEqual(CONNECTED_TO_ADAPTER);
-			
-			// TODO: end of automatic retry
+				// write data to socket
+				byte[] message = IO.Combine(TPKT, CONNECT_TO_ADAPTER);
+				EncodeTPKTSize(ref message);
+				DebugWrite("connect message", message);
+				byte[] response = socket.Write(message);
+				DebugWrite("response", response);
+				this.connected = response.SequenceEqual(CONNECTED_TO_ADAPTER);
+				
+				// TODO: end of automatic retry
 
-			
-			// exchange PDU
-			message = EncodeTPDU(TPKT_PDU, EXCHANGE_PDU_PARAMETER);
-			DebugWrite("ExchangePDU", message);
-			response = socket.Write(message);
-			DebugWrite("response", response);
+				
+				// exchange PDU
+				message = EncodeTPDU(TPKT_PDU, EXCHANGE_PDU_PARAMETER);
+				DebugWrite("ExchangePDU", message);
+				response = socket.Write(message);
+				DebugWrite("response", response);
+			}
+			catch (Exception ex)
+			{
+				sar.Base.Program.Log(ex);
+				return false;
+			}
 			
 			return this.connected;
+		}
+		
+		private void Disconnect()
+		{
+			try
+			{
+				if (this.connected) this.connected = false;
+				if (this.socket != null) this.socket.Close();
+				this.socket = null;
+			}
+			catch
+			{
+				
+			}
+		}
+		
+		public void Reconnect()
+		{
+			this.Disconnect();
+			GC.Collect();
+			Thread.Sleep(5000);
+			this.Connect();
 		}
 
 		#endregion
@@ -186,11 +213,22 @@ namespace sar.S7Siemens
 			return Result;
 		}
 		
+		public string ReadString(string address, ushort length)
+		{
+			var data = IO.ReverseBytes(ReadBytesRaw(address, length));
+			
+			string output = "";
+			for (var i=2; i<data.Length && i<(data[1]+2); i++)
+			{
+				output += Convert.ToChar(data[i]);
+			}
+			
+			return output;
+		}		
+		
 		public byte[] ReadBytes(string address, ushort bytes)
 		{
 			var data = IO.ReverseBytes(ReadBytesRaw(address, bytes));
-			DebugWrite("data", data);
-			
 			return data;
 		}
 
@@ -236,6 +274,17 @@ namespace sar.S7Siemens
 					DebugWrite("data", data);
 					
 					if (data.Length != bytes) throw new ApplicationException("responce data size does not match requested size");
+				}
+				catch (SocketException ex)
+				{
+					sar.Base.Program.Log("s7Adaptor ERROR");
+					sar.Base.Program.Log(" >> " + this.ipAddress);
+					sar.Base.Program.Log(" >> " + address.ToString());
+					
+					// auto-reconnect
+					this.Reconnect();
+					
+					throw ex;
 				}
 				catch (Exception ex)
 				{

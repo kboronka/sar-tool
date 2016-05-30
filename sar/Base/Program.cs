@@ -1,4 +1,4 @@
-/* Copyright (C) 2015 Kevin Boronka
+/* Copyright (C) 2016 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -35,7 +35,12 @@ namespace sar.Base
 		{
 			get
 			{
-				if (String.IsNullOrEmpty(Program.LogFilename)) Program.LogFilename = "log";
+				if (String.IsNullOrEmpty(Program.LogFilename))
+				{
+					Program.LogFilename = (System.Environment.UserInteractive) ? "" : "s.";
+					Program.LogFilename += "log";
+				}
+
 				if (Program.errorLog == null) Program.errorLog = new ErrorLogger("error." + Program.LogFilename);
 				return Program.errorLog;
 			}
@@ -45,7 +50,12 @@ namespace sar.Base
 		{
 			get
 			{
-				if (String.IsNullOrEmpty(Program.LogFilename)) Program.LogFilename = "log";
+				if (String.IsNullOrEmpty(Program.LogFilename))
+				{
+					Program.LogFilename = (System.Environment.UserInteractive) ? "" : "s.";
+					Program.LogFilename += "log";
+				}
+				 
 				if (Program.debugLog == null) Program.debugLog = new FileLogger("debug." + Program.LogFilename, true);
 				return Program.debugLog;
 			}

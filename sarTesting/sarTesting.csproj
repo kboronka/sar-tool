@@ -36,7 +36,7 @@
   <ItemGroup>
     <Reference Include="Microsoft.Office.Interop.Outlook" />
     <Reference Include="sarControls">
-      <HintPath>Http\Views\assets\sar-controls\release\sarControls.dll</HintPath>
+      <HintPath>..\lib\sar-controls\sarControls.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -54,10 +54,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs" />
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
     <Compile Include="Http\Controllers\TestController.cs" />
     <Compile Include="Menu.cs" />
     <Compile Include="Menu.Designer.cs">
@@ -67,9 +63,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Menu.resx">
       <DependentUpon>Menu.cs</DependentUpon>
     </EmbeddedResource>

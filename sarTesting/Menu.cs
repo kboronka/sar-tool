@@ -1,4 +1,4 @@
-/* Copyright (C) 2015 Kevin Boronka
+/* Copyright (C) 2016 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -15,23 +15,28 @@
 
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
-using System.Timers;
-using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.Win32;
+using System.Threading;
+using System.Windows.Forms;
 
 using S7 = sar.S7Siemens;
+using sar.Socket;
 using sar.Tools;
-using sar.Http;
+using sar.Timing;
 
 namespace sar.Testing
 {
 	public partial class Menu : Form
 	{
+		private SocketServer socketServer;
+		private Thread loop;
+		private bool shutdown = false;
+		
 		public Menu()
 		{
 			InitializeComponent();
+			
+			socketServer = new SocketServer(911, Program.ErrorLog, Program.DebugLog);
 			
 			this.Text = "sar-tool testing:" + Program.port.ToString();
 			
@@ -47,6 +52,31 @@ namespace sar.Testing
 			catch (Exception ex)
 			{
 				textBox3.Text = ExceptionHelper.GetStackTrace(ex);
+			}
+			
+			
+			this.loop = new Thread(this.TestLoop);
+			this.loop.IsBackground = true;
+			this.loop.Start();
+		}
+		
+		~Menu()
+		{
+			this.shutdown = true;
+			this.loop.Join();
+		}
+		
+		
+		private void TestLoop()
+		{
+			var logTrigger = new Interval(1000, 5000);
+			var timeout = new Interval(30000);
+			var counter = 0;
+			while (!shutdown)
+			{
+				if (logTrigger.Ready) Program.Log("log: " + counter++.ToString());
+				if (timeout.Ready) Program.Log("timeout: " + timeout.ElapsedMilliseconds.ToString());
+				Thread.Sleep(670);
 			}
 		}
 		
@@ -68,8 +98,12 @@ namespace sar.Testing
 		{
 			try
 			{
-				var siemensS7 = new S7.Adapter("10.242.217.122");
-				byte[] data = siemensS7.ReadBytes("MW6600", 220);
+				var siemensS7 = new S7.Adapter("10.240.26.54");
+				byte[] data = siemensS7.ReadBytes("DB250.DBB164", 86);
+				var stringValue = siemensS7.ReadString("DB250.DBB164", 86);
+				textBox3.Text = StringHelper.ArrayToString("data", data);
+				textBox3.Text += "value: " + stringValue;
+				
 				siemensS7.Dispose();
 			}
 			catch (Exception ex)
@@ -93,6 +127,7 @@ namespace sar.Testing
 				plc.WriteBytes("DB300.DBB0", new byte[] { 0x01 });
 			}
 		}
+		
 		void Button6Click(object sender, EventArgs e)
 		{
 			var data = @"\tC:\\test\\ \n";
@@ -119,9 +154,23 @@ namespace sar.Testing
 			System.Diagnostics.Debug.WriteLine(jsonString2);
 		}
 		
-		void Button7Click(object sender, EventArgs e)
+		void MakeSocketClick(object sender, EventArgs e)
 		{
-
+			for (var x=0;x<1000; x++)
+			{
+				for (var i = 0; i<100; i++)
+				{
+					using(var client = new SocketClient("127.0.0.1", 911, Program.ErrorLog, Program.DebugLog))
+					{
+						client.SetValue("sarTesting", AssemblyInfo.Version, true);
+						
+						Thread.Sleep(250);
+					}
+				}
+				
+				System.GC.Collect();
+				Thread.Sleep(1250);
+			}
 		}
 	}
 }

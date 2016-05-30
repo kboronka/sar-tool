@@ -112,6 +112,7 @@
     <Compile Include="Commands\NetListAddaptors.cs" />
     <Compile Include="Commands\AssemblyInfoVersion.cs" />
     <Compile Include="Commands\rdp.cs" />
+    <Compile Include="Commands\svnAddExternals.cs" />
     <Compile Include="Commands\WindowsAutoLogin.cs" />
     <Compile Include="Commands\WindowsLogin.cs" />
     <Compile Include="Commands\Kill.cs" />
@@ -123,6 +124,7 @@
     <Compile Include="Commands\WindowsRearm.cs" />
     <Compile Include="Commands\WindowsRestart.cs" />
     <Compile Include="Commands\WindowsShellReplacement.cs" />
+    <Compile Include="Timing\Interval.cs" />
     <Compile Include="Databases\DatabaseHelper.cs" />
     <Compile Include="Databases\DatabaseObject.cs" />
     <Compile Include="Http\Controllers\DebugController.cs" />
@@ -198,6 +200,7 @@
     <Folder Include="Http\Views\Debug" />
     <Folder Include="Databases\MSSQL" />
     <Folder Include="Databases" />
+    <Folder Include="Timing" />
     <Folder Include="S7Siemens" />
     <Folder Include="Socket" />
     <Folder Include="Tools" />
