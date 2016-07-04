@@ -299,6 +299,7 @@ namespace sar.Http
 			if (this.Session == null)
 			{
 				this.Session = new HttpSession();
+				this.Session.SessionExpired += new HttpSession.SessionExpiredHandler(this.RemoveSession);
 				lock (Server.Sessions)
 				{
 					Server.Sessions.Add(this.Session.ID, this.Session);
@@ -308,6 +309,21 @@ namespace sar.Http
 			this.Session.LastRequest = DateTime.Now;
 		}
 
+		private void RemoveSession(HttpSession session)
+		{
+			try
+			{
+				lock (Server.Sessions)
+				{
+					Server.Sessions.Remove(session.ID);
+				}
+			}
+			catch
+			{
+				
+			}
+		}
+		
 		private void ParseData(ref byte[] bufferIn)
 		{
 			if (this.method != HttpMethod.POST) return;

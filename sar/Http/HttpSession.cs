@@ -15,6 +15,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
+
+using sar.Timing;
 
 namespace sar.Http
 {
@@ -46,6 +49,106 @@ namespace sar.Http
 			this.CreationDate = DateTime.Now;
 			this.LastRequest = DateTime.Now;
 			this.data = new Dictionary<string, object>();
+			
+			this.expiryLoopThread = new Thread(this.ExpiryLoop);
+			this.expiryLoopThread.IsBackground = true;
+			this.expiryLoopThread.Start();			
 		}
+
+		~HttpSession()
+		{
+			try
+			{
+				this.expiryLoopShutdown = true;
+
+				if (this.expiryLoopThread.IsAlive) this.expiryLoopThread.Join();
+			}
+			catch (Exception ex)
+			{
+				Program.Log(ex);
+			}
+		}
+
+		#region service
+		
+		private Thread expiryLoopThread;
+		private bool expiryLoopShutdown = false;
+		
+		private void ExpiryLoop()
+		{
+			// every thirty minutes
+			var expiryCheck = new Interval(30 * 60000, 5000);
+			
+			while (!expiryLoopShutdown)
+			{
+				try
+				{
+					if (expiryCheck.Ready)
+					{
+						if (DateTime.Now > this.ExpiryDate)
+						{
+							// expired
+							this.data = new Dictionary<string, object>();
+							
+							// throw an expired event
+							OnSessionExpiring(this);
+							
+							// shutdown loop
+							this.expiryLoopShutdown = true;
+						}
+					}
+					
+					Thread.Sleep(1000);
+				}
+				catch (Exception ex)
+				{
+					Program.Log(ex);
+					Thread.Sleep(2000);
+				}
+			}
+		}
+
+		#endregion		
+		
+		#region events
+		
+		public delegate void SessionExpiredHandler(HttpSession session);
+
+		#region session expired
+		
+		private SessionExpiredHandler sessionExpired = null;
+		public event SessionExpiredHandler SessionExpired
+		{
+			add
+			{
+				this.sessionExpired += value;
+			}
+			remove
+			{
+				this.sessionExpired -= value;
+			}
+		}
+		
+		private void OnSessionExpiring(HttpSession session)
+		{
+			try
+			{
+				SessionExpiredHandler handler;
+				if (null != (handler = (SessionExpiredHandler)this.sessionExpired))
+				{
+					handler(session);
+				}
+			}
+			catch (Exception ex)
+			{
+				Program.Log(ex);
+			}
+		}
+		
+		
+		#endregion
+
+		#endregion
+		
 	}
 }
