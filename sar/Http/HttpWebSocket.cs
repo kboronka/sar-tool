@@ -86,6 +86,7 @@ namespace sar.Http
 		{
 			this.Open = true;
 			this.request = request;
+			OnNewClient(this);
 		}
 		
 		public void SetSocket(TcpClient socket, NetworkStream stream)
@@ -110,6 +111,7 @@ namespace sar.Http
 					
 					if (buffer.Length > 0 && incomingPacket.Length == 0)
 					{
+						OnFrameRecived(HttpWebSocketFrame.DecodeFrame(buffer));
 						break;
 					}
 					else if (incomingPacket.Length != 0)
@@ -154,5 +156,79 @@ namespace sar.Http
 				}
 			}
 		}
+		
+		
+		#region events
+		
+		#region new connection
+
+		public delegate void NewConnectionHandler(HttpWebSocket client);
+		private static NewConnectionHandler newClient = null;
+		public static event NewConnectionHandler NewClient
+		{
+			add
+			{
+				newClient += value;
+			}
+			remove
+			{
+				newClient -= value;
+			}
+		}
+		
+		private static void OnNewClient(HttpWebSocket client)
+		{
+			try
+			{
+				NewConnectionHandler handler;
+				if (null != (handler = (NewConnectionHandler)newClient))
+				{
+					handler(client);
+				}
+			}
+			catch (Exception ex)
+			{
+				Program.Log(ex);
+			}
+		}
+		
+		#endregion
+		
+		#region frame recived
+
+		public delegate void FrameRecivedHandler(HttpWebSocketFrame frame);
+		private FrameRecivedHandler frameRecived = null;
+		public event FrameRecivedHandler FrameRecived 
+		{
+			add
+			{
+				this.frameRecived += value;
+			}
+			remove
+			{
+				this.frameRecived -= value;
+			}
+		}
+		
+		private void OnFrameRecived(HttpWebSocketFrame frame)
+		{
+			try
+			{
+				FrameRecivedHandler handler;
+				if (null != (handler = (FrameRecivedHandler)this.frameRecived))
+				{
+					handler(frame);
+				}
+			}
+			catch (Exception ex)
+			{
+				Program.Log(ex);
+			}
+		}
+		
+		#endregion
+
+		#endregion
+		
 	}
 }

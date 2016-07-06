@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using sar.Http;
 using sar.Tools;
 
-namespace sar_testing.Http
+namespace sar.CNC.Http
 {
 	[SarController]
 	[PrimaryController]

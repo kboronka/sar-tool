@@ -1,21 +1,127 @@
 <!DOCTYPE html>
 <html ng-app="testApp">
   <head>
-
-    <!-- Latest compiled and minified CSS -->
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
-    <script src="http://code.angularjs.org/1.2.8/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.js"></script>
     <script src="http://rawgithub.com/highslide-software/highcharts.com/master/js/adapters/standalone-framework.src.js"></script>
     <script src="http://rawgithub.com/joewalnes/reconnecting-websocket/master/reconnecting-websocket.js"></script>
+    <script src="https://cdn.rawgit.com/Luegg/angularjs-scroll-glue/master/src/scrollglue.js"></script>
+
     <script src="test.js"></script>
+    <link rel="stylesheet" href="test.css">
   </head>
 
   <body ng-controller="WebSocketController">
-    <h1>websocket test</h1>
-    <div console>
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Bootstrap</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><button type="button" class="btn btn-default" style="margin: 10px;" id="sendReset">RESET (ctrl-x)</button></li>
+            <li><button type="button" class="btn btn-success" style="margin: 10px;" id="sendGrblHelp">help ($)</button></li>
+            <li><button type="button" class="btn btn-success" style="margin: 10px;" id="sendGrblSettings">settings ($$)</button></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid">
+      <div class="table-layout">
+        <div class="table-cell fixed-width-cell" ng-hide="true">
+          <select id="choosePort" class="form-control">
+            <option val="no">Select a serial port</option>
+          </select>
+
+          <h5 id="mStatus" style="text-align: right;">Select Port</h5>
+
+          <ul class="nav nav-tabs nav-justified" role="tablist">
+            <li id="mpA">
+              <a id="mpC" href="#">Machine Position</a>
+            </li>
+            <li id="wpA" class="active">
+              <a id="wpC" href="#">Working Position</a>
+            </li>
+          </ul>
+
+          <br />
+
+          <div id="mPosition" style="display: none;">
+            <center>
+              <div id="mX" style="text-align: left; padding-left: 15px; margin: 4px; font-size: 30px; width: 190px; border: 1px solid #aaa; font-weight: bold;">X: 0.000</div>
+              <div id="mY" style="text-align: left; padding-left: 15px; margin: 4px; font-size: 30px; width: 190px; border: 1px solid #aaa; font-weight: bold;">Y: 0.000</div>
+              <div id="mZ" style="text-align: left; padding-left: 15px; margin: 4px; font-size: 30px; width: 190px; border: 1px solid #aaa; font-weight: bold;">Z: 0.000</div>
+            </center>
+          </div>
+
+          <div id="wPosition">
+            <center>
+              <div id="wX" style="text-align: left; padding-left: 15px; margin: 4px; font-size: 30px; width: 190px; border: 1px solid #aaa; font-weight: bold;">X: 0.000</div>
+              <div id="wY" style="text-align: left; padding-left: 15px; margin: 4px; font-size: 30px; width: 190px; border: 1px solid #aaa; font-weight: bold;">Y: 0.000</div>
+              <div id="wZ" style="text-align: left; padding-left: 15px; margin: 4px; font-size: 30px; width: 190px; border: 1px solid #aaa; font-weight: bold;">Z: 0.000</div>
+            </center>
+          </div>
+
+          <center>
+            <button type="button" class="btn btn-default" style="margin-top: 5px;" id="sendZero">Zero Machine (G92)</button>
+          </center>
+
+
+          <hr style="clear: both;" />
+
+          <div id="zAxisControl" style="float: right;">
+            <button type="button" id="zP" class="btn btn-info btn-sm" style="width: 10px;">&uarr;</button>
+            <br />
+            <button type="button" id="zM" class="btn btn-info btn-sm" style="width: 10px;">&darr;</button>
+          </div>
+
+          <div draggable="true" id="betterControls" style="width: 200px; height: 200px; border: 1px solid orange; padding; none; background-color: #fff;">
+            <div id="betterControlsPoint" style="position: relative; top: 85px; left: 85px; background-color: red; width: 20px; height: 20px; padding: none;"></div>
+          </div>
+
+          <br />
+
+          <select class="form-control" id="jogSpeed">
+            <option value="1500">Feed Rate: 1500</option>
+            <option selected value="1000">Feed Rate: 1000</option>
+            <option value="500">Feed Rate: 500</option>
+            <option value="100">Feed Rate: 100</option>
+            <option value="5">Feed Rate: 5</option>
+          </select>
+
+          <select class="form-control" id="jogSize">
+            <option value=".5">Distance: .1</option>
+            <option value=".5">Distance: .5</option>
+            <option value="1">Distance: 1</option>
+            <option value="2">Distance: 2</option>
+            <option selected value="5">Distance: 5</option>
+            <option value="10">Distance: 10</option>
+            <option value="20">Distance: 20</option>
+          </select>
+        </div>
+        <!--<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">-->
+        <div class="table-cell">
+          <h1>websocket test</h1>
+          <div id="console" scroll-glue>
+            <ul>
+              <li ng-repeat="msg in log.messages track by $index">{{msg}}</li>
+            </ul>
+          </div>
+        </div>
+        <div class="table-cell">
+          <button type="button" class="btn btn-default" ng-click="jogxp();">x+</button>
+          <button type="button" class="btn btn-default" ng-click="jogxn();">x-</button>
+        </div>
+      </div>
     </div>
   </body>
 </html>

@@ -20,7 +20,7 @@ using Base=sar.Base;
 using sar.Tools;
 using sar.Http;
 
-namespace sar.Testing
+namespace sar.CNC
 {
 	internal sealed class Program : Base.Program
 	{

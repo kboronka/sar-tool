@@ -11,7 +11,7 @@ using System;
 using sar.Http;
 using sar.Tools;
 
-namespace sar_testing.Http
+namespace sar.CNC.Http
 {
 	[SarWebSocketController]
 	public class TestWebSocket : sar.Http.HttpWebSocket
@@ -44,9 +44,9 @@ namespace sar_testing.Http
 			var frame = new byte[]{ 129, 131, 61, 84, 35, 6, 112, 16, 109 };
 			var msg = HttpWebSocketFrame.DecodeFrame(frame);
 			
-			sar.Testing.Program.Log(StringHelper.ArrayToString("frame", frame));
-			sar.Testing.Program.Log(StringHelper.ArrayToString("mdn", mdn));
-			sar.Testing.Program.Log(StringHelper.ArrayToString("payload", msg.Payload));
+			sar.CNC.Program.Log(StringHelper.ArrayToString("frame", frame));
+			sar.CNC.Program.Log(StringHelper.ArrayToString("mdn", mdn));
+			sar.CNC.Program.Log(StringHelper.ArrayToString("payload", msg.Payload));
 		}
 	}
 }
