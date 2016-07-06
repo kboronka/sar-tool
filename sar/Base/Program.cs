@@ -123,7 +123,10 @@ namespace sar.Base
 		public static void Log(string message)
 		{
 			try
-			{		
+			{	
+				#if DEBUG
+				System.Diagnostics.Debug.WriteLine(message);
+				#endif
 				Program.DebugLog.WriteLine(message);
 			}
 			catch

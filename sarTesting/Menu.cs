@@ -71,11 +71,10 @@ namespace sar.Testing
 		{
 			var logTrigger = new Interval(1000, 5000);
 			var timeout = new Interval(30000);
-			var counter = 0;
 			while (!shutdown)
 			{
-				if (logTrigger.Ready) Program.Log("log: " + counter++.ToString());
-				if (timeout.Ready) Program.Log("timeout: " + timeout.ElapsedMilliseconds.ToString());
+				//if (logTrigger.Ready) Program.Log("log: " + counter++.ToString());
+				//if (timeout.Ready) Program.Log("timeout: " + timeout.ElapsedMilliseconds.ToString());
 				Thread.Sleep(670);
 			}
 		}
@@ -171,6 +170,11 @@ namespace sar.Testing
 				System.GC.Collect();
 				Thread.Sleep(1250);
 			}
+		}
+		
+		void JogForwardClick(object sender, EventArgs e)
+		{
+			sar_testing.Http.TestWebSocket.JogForward();
 		}
 	}
 }

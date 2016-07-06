@@ -84,6 +84,7 @@ namespace sar.Http
 			
 			this.Cache = new HttpCache(this);
 			HttpController.LoadControllers();
+			HttpWebSocket.LoadControllers();
 			
 			this.connectionWaitHandle = new AutoResetEvent(false);
 			

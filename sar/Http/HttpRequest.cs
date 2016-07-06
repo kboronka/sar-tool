@@ -52,12 +52,16 @@ namespace sar.Http
 		private string contentType;
 		private byte[] data;
 
+		#region properties
+
 		public string Path { get; set;}
 		public string ETag { get; private set; }
 		public HttpSession Session { get; private set; }
 		public HttpResponse Responce { get; private set; }
-		
-		#region properties
+		public HttpWebSocket WebSocket { get; set; }
+		public bool IsWebSocket { get; private set; }
+		public string WebSocketKey { get; private set; }
+		public string WebSocketProtocol { get; private set; }
 
 		public HttpMethod Method
 		{
@@ -150,7 +154,7 @@ namespace sar.Http
 			this.Responce = new HttpResponse(this);
 		}
 		
-		private byte[] ReadIncomingPacket(NetworkStream stream, TcpClient socket)
+		public byte[] ReadIncomingPacket(NetworkStream stream, TcpClient socket)
 		{
 			try
 			{
@@ -248,9 +252,24 @@ namespace sar.Http
 				this.headerRecived = string.IsNullOrEmpty(line);
 				
 				string[] requestHeader = line.Split(':');
+				#if DEBUG
+				System.Diagnostics.Debug.WriteLine(line);
+				#endif
 				
 				switch(requestHeader[0].TrimWhiteSpace())
 				{
+					case "Connection":
+						this.IsWebSocket = requestHeader[1].TrimWhiteSpace() == "Upgrade";
+						break;
+					
+					case "Sec-WebSocket-Key":
+						this.WebSocketKey = requestHeader[1].TrimWhiteSpace();
+						break;
+						
+					case "Sec-WebSocket-Protocol":
+						this.WebSocketProtocol = requestHeader[1].TrimWhiteSpace();
+						break;
+
 					case "Content-Length":
 						this.contentLength = requestHeader[1].ToInt();
 						this.bytesRecived = 0;
@@ -267,6 +286,7 @@ namespace sar.Http
 					case "If-None-Match":
 						this.ETag = requestHeader[1].TrimWhiteSpace();
 						break;
+
 					case "Cookie":
 						sessionID = requestHeader[1].TrimWhiteSpace();
 						var matches = Regex.Matches(requestHeader[1], @"sarSession=([^;]+)");

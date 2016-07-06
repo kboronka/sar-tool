@@ -15,6 +15,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Security.Cryptography;
 using System.IO;
 using System.Net.Sockets;
 using System.Text;
@@ -26,6 +27,9 @@ namespace sar.Http
 	// http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
 	public enum HttpStatusCode
 	{
+		[Description("Switching Protocols")]
+		SWITCHING_PROTOCOLS = 101,
+
 		[Description("OK")]
 		OK = 200,
 
@@ -74,6 +78,11 @@ namespace sar.Http
 					
 					this.content = new HttpContent(HtmlToPdfHelper.ReadPDF(url), "application/pdf");
 				}
+				else if (this.request.IsWebSocket && HttpWebSocket.WebSocketControllerExists(this.request))
+				{
+					var type = HttpWebSocket.GetWebSocketController(this.request);
+					this.request.WebSocket = (HttpWebSocket)Activator.CreateInstance(type, this.request);
+				}
 				else if (HttpController.ActionExists(this.request))
 				{
 					this.content = HttpController.RequestAction(this.request);
@@ -86,6 +95,10 @@ namespace sar.Http
 				if (this.content is HttpErrorContent)
 				{
 					this.bytes = this.ConstructResponse(HttpStatusCode.SERVERERROR);
+				}
+				else if (this.request.IsWebSocket)
+				{
+					this.bytes = this.ConstructResponse(HttpStatusCode.SWITCHING_PROTOCOLS);
 				}
 				else if (this.content.ETag == this.request.ETag && !this.content.ParsingRequired)
 				{
@@ -116,41 +129,58 @@ namespace sar.Http
 			
 			const string GMT = "ddd, dd MMM yyyy HH':'mm':'ss 'GMT'";
 			const string eol = "\r\n";
-
+			string response = "";
+			var contentBytes = new byte[] {};
+			
 			// status line
 			string responsePhrase = Enum.GetName(typeof(HttpStatusCode), status);
-			string response = /*"HTTP/1.1" +*/ " " + ((int)status).ToString() + " " + responsePhrase + eol;
+			response += " " + ((int)status).ToString() + " " + responsePhrase + eol;
 			
-			response += @"Server: " + @"sar\" + AssemblyInfo.SarVersion + eol;
-			response += @"Date: " + DateTime.UtcNow.ToString(GMT) + eol;
-			response += @"ETag: " + this.content.ETag + eol;
-			response += @"Set-Cookie: sarSession=" + this.request.Session.ID + @"; Path=/; expires=" + this.request.Session.ExpiryDate.ToString(GMT) + ";"	+ eol;
-			response += @"Last-Modified: " + this.content.LastModified.ToString(GMT) + eol;
-			if (this.request.PdfReader) response += "X-Content-Type-Options: " + "pdf-render" + eol;
-			
-			// content details
-			var contentBytes = new byte[] {};
-			if (status != HttpStatusCode.NOT_MODIFIED)
+			if (!request.IsWebSocket)
 			{
-				contentBytes = this.content.Render(request.Server.Cache);				
-				response += @"Content-Type: " + this.content.ContentType + eol;
-				response += @"Content-Length: " + (contentBytes.Length).ToString() + eol;
-				//response += @"Expires: " + DateTime.UtcNow.AddDays(1).ToString(GMT) + eol;
+				response += @"Server: " + @"sar\" + AssemblyInfo.SarVersion + eol;
+				response += @"Date: " + DateTime.UtcNow.ToString(GMT) + eol;
+				response += @"ETag: " + this.content.ETag + eol;
+				response += @"Set-Cookie: sarSession=" + this.request.Session.ID + @"; Path=/; expires=" + this.request.Session.ExpiryDate.ToString(GMT) + ";"	+ eol;
+				response += @"Last-Modified: " + this.content.LastModified.ToString(GMT) + eol;
+				if (this.request.PdfReader) response += "X-Content-Type-Options: " + "pdf-render" + eol;
+				
+				// content details
+				if (status != HttpStatusCode.NOT_MODIFIED)
+				{
+					contentBytes = this.content.Render(request.Server.Cache);				
+					response += @"Content-Type: " + this.content.ContentType + eol;
+					response += @"Content-Length: " + (contentBytes.Length).ToString() + eol;
+					//response += @"Expires: " + DateTime.UtcNow.AddDays(1).ToString(GMT) + eol;
+				}
+				
+				/*
+				response += @"Access-Control-Allow-Origin: *" + eol;
+				response += @"Access-Control-Allow-Methods: POST, GET" + eol;
+				response += @"Access-Control-Max-Age: 1728000" + eol;
+				response += @"Access-Control-Allow-Credentials: true" + eol;
+				 */
+				
+				// keep-alive
+				response += "Keep-Alive: timeout=" + HttpConnection.MAX_TIME.ToString() + eol;
+				response += "Connection: keep-alive";
+				response += eol + eol;
 			}
-			
-			/*
-			response += @"Access-Control-Allow-Origin: *" + eol;
-			response += @"Access-Control-Allow-Methods: POST, GET" + eol;
-			response += @"Access-Control-Max-Age: 1728000" + eol;
-			response += @"Access-Control-Allow-Credentials: true" + eol;
-			 */
-			
-			// keep-alive
-			response += "Keep-Alive: timeout=" + HttpConnection.MAX_TIME.ToString() + eol;
-			response += "Connection: keep-alive";
-			
-			// terminate header
-			response += eol + eol;
+			else
+			{
+				response += @"Connection: Upgrade" + eol;
+				response += @"Upgrade: websocket" + eol;
+
+				var hash = SHA1.Create().ComputeHash(Encoding.UTF8.GetBytes(this.request.WebSocketKey + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"));
+				response += @"Sec-WebSocket-Accept: " + Convert.ToBase64String(hash) + eol;
+				
+				if (!String.IsNullOrEmpty(this.request.WebSocketProtocol))
+				{
+					response += @"Sec-WebSocket-Protocol: " + this.request.WebSocketProtocol + eol;
+				}
+				
+				response += eol;
+			}
 			
 			
 			return (contentBytes.Length > 0) ? StringHelper.CombineByteArrays(Encoding.ASCII.GetBytes(response), contentBytes) : Encoding.ASCII.GetBytes(response);

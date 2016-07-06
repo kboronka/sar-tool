@@ -14,7 +14,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 
 namespace sar.Http
 {
@@ -22,7 +21,7 @@ namespace sar.Http
 	{
 		public HttpView()
 		{
+			
 		}
-		
 	}
 }

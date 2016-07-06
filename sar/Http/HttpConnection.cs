@@ -171,6 +171,25 @@ namespace sar.Http
 								// TODO: close connection?
 							}
 						}
+						
+						
+						if (request.IsWebSocket)
+						{
+							request.WebSocket.SetSocket(this.Socket, this.Stream);
+							while (this.Socket.Connected)
+							{
+								// reset timeout
+								timeout.Stop();
+								timeout.Start();
+	
+								if (this.RequestReady())
+								{
+									request.WebSocket.ReadNewData();
+								}
+								
+								Thread.Sleep(1);
+							}
+						}
 					}
 					
 					Thread.Sleep(1);

@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Http\Controllers\TestController.cs" />
+    <Compile Include="Http\Controllers\TestWebSocket.cs" />
     <Compile Include="Menu.cs" />
     <Compile Include="Menu.Designer.cs">
       <DependentUpon>Menu.cs</DependentUpon>

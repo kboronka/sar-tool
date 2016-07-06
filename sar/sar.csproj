@@ -124,6 +124,8 @@
     <Compile Include="Commands\WindowsRearm.cs" />
     <Compile Include="Commands\WindowsRestart.cs" />
     <Compile Include="Commands\WindowsShellReplacement.cs" />
+    <Compile Include="Http\HttpWebSocket.cs" />
+    <Compile Include="Http\HttpWebSocketFrame.cs" />
     <Compile Include="Timing\Interval.cs" />
     <Compile Include="Databases\DatabaseHelper.cs" />
     <Compile Include="Databases\DatabaseObject.cs" />

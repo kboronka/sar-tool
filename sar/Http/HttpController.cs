@@ -33,7 +33,7 @@ namespace sar.Http
 		
 		public static void LoadControllers()
 		{
-			controllers = new Dictionary<string, HttpController>();
+			HttpController.controllers = new Dictionary<string, HttpController>();
 			
 			foreach (Assembly assembly in AssemblyInfo.Assemblies)
 			{
@@ -47,7 +47,7 @@ namespace sar.Http
 							{
 								// add the sar controller
 								string controllerName = type.Name.Substring(0, type.Name.Length - "Controller".Length);
-								controllers.Add(controllerName, new HttpController(type));
+								HttpController.controllers.Add(controllerName, new HttpController(type));
 							}
 						}
 					}
@@ -164,6 +164,4 @@ namespace sar.Http
 
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 	public class SarController : Attribute { }
-	
-	
 }

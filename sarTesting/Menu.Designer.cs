@@ -53,6 +53,8 @@ namespace sar.Testing
 			this.button6 = new System.Windows.Forms.Button();
 			this.button7 = new System.Windows.Forms.Button();
 			this.MakeSocket = new System.Windows.Forms.Button();
+			this.jogStatus = new System.Windows.Forms.TextBox();
+			this.jogForward = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// button1
@@ -150,11 +152,31 @@ namespace sar.Testing
 			this.MakeSocket.UseVisualStyleBackColor = true;
 			this.MakeSocket.Click += new System.EventHandler(this.MakeSocketClick);
 			// 
+			// jogStatus
+			// 
+			this.jogStatus.Location = new System.Drawing.Point(12, 24);
+			this.jogStatus.Multiline = true;
+			this.jogStatus.Name = "jogStatus";
+			this.jogStatus.Size = new System.Drawing.Size(312, 107);
+			this.jogStatus.TabIndex = 19;
+			// 
+			// jogForward
+			// 
+			this.jogForward.Location = new System.Drawing.Point(211, 137);
+			this.jogForward.Name = "jogForward";
+			this.jogForward.Size = new System.Drawing.Size(113, 23);
+			this.jogForward.TabIndex = 20;
+			this.jogForward.Text = "Jog +";
+			this.jogForward.UseVisualStyleBackColor = true;
+			this.jogForward.Click += new System.EventHandler(this.JogForwardClick);
+			// 
 			// Menu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(780, 487);
+			this.Controls.Add(this.jogForward);
+			this.Controls.Add(this.jogStatus);
 			this.Controls.Add(this.MakeSocket);
 			this.Controls.Add(this.button7);
 			this.Controls.Add(this.button6);
@@ -181,5 +203,7 @@ namespace sar.Testing
 		private System.Windows.Forms.Button button6;
 		private System.Windows.Forms.Button button7;
 		private System.Windows.Forms.Button MakeSocket;
+		private System.Windows.Forms.TextBox jogStatus;
+		private System.Windows.Forms.Button jogForward;
 	}
 }
