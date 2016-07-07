@@ -67,6 +67,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Http\Controllers\GrblWebSocket.cs" />
     <Compile Include="Http\Controllers\TestController.cs" />
     <Compile Include="Http\Controllers\TestWebSocket.cs" />
     <Compile Include="Menu.cs" />
@@ -75,6 +76,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="GrblPort.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Menu.resx">

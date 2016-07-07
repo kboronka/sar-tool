@@ -30,8 +30,6 @@ namespace sar.CNC
 	public partial class Menu : Form
 	{
 		private SocketServer socketServer;
-		private Thread loop;
-		private bool shutdown = false;
 		
 		public Menu()
 		{
@@ -46,8 +44,7 @@ namespace sar.CNC
 		
 		~Menu()
 		{
-			this.shutdown = true;
-			this.loop.Join();
+
 		}
 		
 		delegate void AddTextCallback(string text);
