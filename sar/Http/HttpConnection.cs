@@ -176,7 +176,7 @@ namespace sar.Http
 						if (request.IsWebSocket)
 						{
 							request.WebSocket.SetSocket(this.Socket, this.Stream);
-							while (this.Socket.Connected)
+							while (request.WebSocket.Open && this.Socket.Connected)
 							{
 								// reset timeout
 								timeout.Stop();
@@ -189,6 +189,8 @@ namespace sar.Http
 								
 								Thread.Sleep(1);
 							}
+							
+							request.WebSocket.Open = false;
 						}
 					}
 					

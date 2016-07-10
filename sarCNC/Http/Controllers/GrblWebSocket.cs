@@ -70,12 +70,6 @@ namespace sar.CNC.Http
 		#region static
 		
 		private static GrblWebSocket Singleton { get; set; }
-
-		public static void JogForward()
-		{
-			TestMessage();
-			if (Singleton != null) Singleton.Send(HttpWebSocketFrame.EncodeFrame("jog +").EncodedFrame);
-		}
 		
 		#endregion 
 
@@ -87,17 +81,6 @@ namespace sar.CNC.Http
 		override public void NewData(byte[] data)
 		{
 			
-		}
-		
-		public static void TestMessage()
-		{
-			var mdn = System.Text.Encoding.ASCII.GetBytes("MDN");
-			var frame = new byte[]{ 129, 131, 61, 84, 35, 6, 112, 16, 109 };
-			var msg = HttpWebSocketFrame.DecodeFrame(frame);
-			
-			sar.CNC.Program.Log(StringHelper.ArrayToString("frame", frame));
-			sar.CNC.Program.Log(StringHelper.ArrayToString("mdn", mdn));
-			sar.CNC.Program.Log(StringHelper.ArrayToString("payload", msg.Payload));
 		}
 	}
 }

@@ -27,10 +27,12 @@ namespace sar.Http
 	public abstract class HttpWebSocket
 	{
 		#region static
+		
 		[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 		public class SarWebSocketController : Attribute { }
 		
 		private static Dictionary<string, Type> controllers;
+		private static int nextID;
 		
 		public static void LoadControllers()
 		{
@@ -80,13 +82,38 @@ namespace sar.Http
 		private	NetworkStream stream;
 		public HttpRequest request;
 		
-		public bool Open { get; private set; }
+		public int ID { get; private set; }
+		
+		private bool open;
+		public bool Open 
+		{ 
+			get
+			{
+				return open;
+			}
+			set
+			{
+				if (!value && open)
+				{
+					OnDisconnectedClient(this);
+				}
+				
+				open = value;
+				
+			}
+		}
 		
 		public HttpWebSocket(HttpRequest request)
 		{
-			this.Open = true;
+			this.open = true;
 			this.request = request;
+			this.ID = nextID++;
 			OnNewClient(this);
+			
+		}
+		
+		~HttpWebSocket()
+		{
 		}
 		
 		public void SetSocket(TcpClient socket, NetworkStream stream)
@@ -129,12 +156,10 @@ namespace sar.Http
 				}
 			}
 			
-			NewData(buffer);
+			NewData(HttpWebSocketFrame.DecodeFrame(buffer).Payload);
 		}
 		
-
-		
-		public void Send(byte[] data)
+		private void Send(byte[] data)
 		{
 			// send responce
 			lock (socket)
@@ -152,27 +177,32 @@ namespace sar.Http
 				}
 				catch
 				{
+					this.Open = false;
 					// TODO: close connection?
 				}
 			}
 		}
 		
+		public void SendString(string message)
+		{
+			Send(HttpWebSocketFrame.EncodeFrame(message).EncodedFrame);
+		}
 		
 		#region events
 		
 		#region new connection
 
-		public delegate void NewConnectionHandler(HttpWebSocket client);
-		private static NewConnectionHandler newClient = null;
-		public static event NewConnectionHandler NewClient
+		public delegate void ConnectedClientHandler(HttpWebSocket client);
+		private static ConnectedClientHandler clientConnected = null;
+		public static event ConnectedClientHandler ClientConnected
 		{
 			add
 			{
-				newClient += value;
+				clientConnected += value;
 			}
 			remove
 			{
-				newClient -= value;
+				clientConnected -= value;
 			}
 		}
 		
@@ -180,8 +210,8 @@ namespace sar.Http
 		{
 			try
 			{
-				NewConnectionHandler handler;
-				if (null != (handler = (NewConnectionHandler)newClient))
+				ConnectedClientHandler handler;
+				if (null != (handler = (ConnectedClientHandler)clientConnected))
 				{
 					handler(client);
 				}
@@ -194,6 +224,39 @@ namespace sar.Http
 		
 		#endregion
 		
+		#region disconnected
+
+		public delegate void ClientDisconnectedHandler(HttpWebSocket client);
+		private static ClientDisconnectedHandler clientDisconnected = null;
+		public static event ClientDisconnectedHandler ClientDisconnected
+		{
+			add
+			{
+				clientDisconnected += value;
+			}
+			remove
+			{
+				clientDisconnected -= value;
+			}
+		}
+		
+		private static void OnDisconnectedClient(HttpWebSocket client)
+		{
+			try
+			{
+				ClientDisconnectedHandler handler;
+				if (null != (handler = (ClientDisconnectedHandler)clientDisconnected))
+				{
+					handler(client);
+				}
+			}
+			catch (Exception ex)
+			{
+				Program.Log(ex);
+			}
+		}
+		
+		#endregion
 		#region frame recived
 
 		public delegate void FrameRecivedHandler(HttpWebSocketFrame frame);

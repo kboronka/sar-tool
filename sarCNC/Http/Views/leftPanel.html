@@ -1,3 +1,45 @@
-<select id="choosePort" class="form-control">
-  <option val="no">Select a serial port</option>
-</select>
+<div class="panel panel-default">
+  <img src="cnc.png" class="img-rounded" alt="my cnc" width="100%">
+</div>
+
+
+<div class="panel panel-default">
+  <div class="panel-heading">Machine Position</div>
+  <div class="table-responsive">
+    <table class="table">
+      <tr>
+          <td>X</td>
+          <td>{{ machine.status.wX | number:3 }}</td>
+        </tr>
+        <tr>
+          <td>Y</td>
+          <td>{{ machine.status.wY | number:3 }}</td>
+        </tr>
+        <tr>
+          <td>Z</td>
+          <td>{{ machine.status.wZ | number:3 }}</td>
+        </tr>
+        <tr>
+          <td>Running</td>
+          <td>{{ machine.status.running }}</td>
+        </tr>
+        <tr>
+          <td>Motion Planner</td>
+          <td>{{ machine.status.motionBuffer }}</td>
+        </tr>
+        <tr>
+          <td>Rx Buffer</td>
+          <td>{{ machine.status.rxBuffer }}</td>
+        </tr>
+    </table>
+  </div>
+</div>
+
+<div id="jog-buttons">
+  <button type="button" id="jog-xp" class="btn btn-info" ng-click='grbl("G91\nG0 X10");'>x+</button>
+  <button type="button" id="jog-xn" class="btn btn-info" ng-click='grbl("G91\nG0 X-10");'>x-</button>
+  <button type="button" id="jog-yp" class="btn btn-info" ng-click='grbl("G91\nG0 Y10");'>y+</button>
+  <button type="button" id="jog-yn" class="btn btn-info" ng-click='grbl("G91\nG0 Y-10");'>y-</button>
+  <button type="button" id="jog-zp" class="btn btn-info" ng-click='grbl("G91\nG0 Z10");'>z+</button>
+  <button type="button" id="jog-zn" class="btn btn-info" ng-click='grbl("G91\nG0 Z-10");'>z-</button>
+</div>

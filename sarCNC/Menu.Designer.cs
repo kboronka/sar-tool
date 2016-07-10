@@ -44,7 +44,6 @@ namespace sar.CNC
 		private void InitializeComponent()
 		{
 			this.txtCommLog = new System.Windows.Forms.TextBox();
-			this.jogForward = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// txtCommLog
@@ -52,25 +51,14 @@ namespace sar.CNC
 			this.txtCommLog.Location = new System.Drawing.Point(12, 24);
 			this.txtCommLog.Multiline = true;
 			this.txtCommLog.Name = "txtCommLog";
-			this.txtCommLog.Size = new System.Drawing.Size(312, 107);
+			this.txtCommLog.Size = new System.Drawing.Size(354, 196);
 			this.txtCommLog.TabIndex = 19;
-			// 
-			// jogForward
-			// 
-			this.jogForward.Location = new System.Drawing.Point(211, 137);
-			this.jogForward.Name = "jogForward";
-			this.jogForward.Size = new System.Drawing.Size(113, 23);
-			this.jogForward.TabIndex = 20;
-			this.jogForward.Text = "Jog +";
-			this.jogForward.UseVisualStyleBackColor = true;
-			this.jogForward.Click += new System.EventHandler(this.JogForwardClick);
 			// 
 			// Menu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(378, 276);
-			this.Controls.Add(this.jogForward);
+			this.ClientSize = new System.Drawing.Size(386, 235);
 			this.Controls.Add(this.txtCommLog);
 			this.Name = "Menu";
 			this.Text = "Menu";
@@ -79,6 +67,5 @@ namespace sar.CNC
 
 		}
 		private System.Windows.Forms.TextBox txtCommLog;
-		private System.Windows.Forms.Button jogForward;
 	}
 }

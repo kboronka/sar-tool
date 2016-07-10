@@ -19,12 +19,6 @@ namespace sar.CNC.Http
 		#region static
 		
 		private static TestWebSocket Singleton { get; set; }
-
-		public static void JogForward()
-		{
-			TestMessage();
-			if (Singleton != null) Singleton.Send(HttpWebSocketFrame.EncodeFrame("jog +").EncodedFrame);
-		}
 		
 		#endregion 
 
@@ -35,7 +29,13 @@ namespace sar.CNC.Http
 		
 		override public void NewData(byte[] data)
 		{
+			var rxBuffer = System.Text.Encoding.ASCII.GetString(data);
+			var commands = rxBuffer.Split('\n');
 			
+			foreach (var command in commands)
+			{
+				Program.Port.SendCommand(command);
+			}
 		}
 		
 		public static void TestMessage()

@@ -7,13 +7,16 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Bootstrap</a>
+      <a class="navbar-brand" href="#">sarCNC</a>
     </div>
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
-        <li><button type="button" class="btn btn-default" style="margin: 10px;" id="sendReset">RESET (ctrl-x)</button></li>
-        <li><button type="button" class="btn btn-success" style="margin: 10px;" id="sendGrblHelp">help ($)</button></li>
-        <li><button type="button" class="btn btn-success" style="margin: 10px;" id="sendGrblSettings">settings ($$)</button></li>
+        <li><button type="button" class="btn btn-danger" ng-click='grbl("$X\nG92 X0 Y0 Z0");'>zero</button></li>
+        <li><button type="button" class="btn btn-danger" ng-click='reset();'>CTRL+X</button></li>
+        <li><button type="button" class="btn btn-success" ng-click='grbl("~");'>start</button></li>
+        <li><button type="button" class="btn btn-danger" ng-click='grbl("!");'>hold</button></li>
+        <li><button type="button" class="btn btn-warning" ng-click='grbl("$X\nG90\nG0 Z0\nG0 X0 Y0");'>Go Home</button></li>
+        <li><button type="button" class="btn btn-danger" ng-click='grbl("$100=320.000\n$101=320.000\n$102=320.000\n$10=7\n$110=3000.000\n$111=3000.000\n$112=3000.000");'>init</button></li>
       </ul>
     </div>
   </div>

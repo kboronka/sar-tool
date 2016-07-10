@@ -14,18 +14,22 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 using Base=sar.Base;
 using sar.Tools;
 using sar.Http;
 
+using sar.CNC.Http;
+
 namespace sar.CNC
 {
 	internal sealed class Program : Base.Program
 	{
-		public static int port = 0;
+		private static int port = 0;
 		public static HttpServer Server;
+		public static GrblPort Port;
 		
 		[STAThread]
 		private static void Main(string[] args)
@@ -43,6 +47,9 @@ namespace sar.CNC
 			
 			port = server.Port;
 			
+			Port = new GrblPort("COM3");
+			Port.ResponceRecived += new GrblPort.ResponceRecivedHandler(Program.LogResponce);
+			
 //			foreach (string resource in EmbeddedResource.GetAllResources())
 //			{
 //				System.Diagnostics.Debug.WriteLine(resource);
@@ -53,9 +60,13 @@ namespace sar.CNC
 			root = IO.CheckRoot(@"..\..\");
 			root = IO.CheckRoot(@"\");
 				
+			HttpWebSocket.ClientConnected += new HttpWebSocket.ConnectedClientHandler(AddClient);
+			HttpWebSocket.ClientDisconnected += new HttpWebSocket.ClientDisconnectedHandler(DropClient);
+		
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new Menu());
+			
 			
 			Server.Stop();
 			System.Threading.Thread.Sleep(500);
@@ -63,5 +74,50 @@ namespace sar.CNC
 			// Program.Log("shutting down");
 			// Application.Exit();
 		}
+		
+		private static List<HttpWebSocket> clients = new List<HttpWebSocket>();
+
+		private static void AddClient(HttpWebSocket client)
+		{
+			Program.Log("Client " + client.ID.ToString() + " Connected");
+			clients.Add(client);
+		}
+		
+		private static void DropClient(HttpWebSocket client)
+		{
+			Program.Log("Client " + client.ID.ToString() + " Disconnected");
+			clients.Remove(client);
+		}
+		
+		public static void LogRaw(string raw)
+		{
+			foreach (var client in clients)
+			{
+				client.SendString(raw);
+			}
+		}
+		
+		public static void LogCommand(string message)
+		{
+			foreach (var client in clients)
+			{
+				client.SendString(client.ID.ToString() + "<< " + message);
+			}
+		}
+		
+		public static void LogResponce(string message)
+		{
+			foreach (var client in clients)
+			{
+				if (message == "ok")
+				{
+					client.SendString(client.ID.ToString() + ">> " + message);	
+				}
+				else
+				{
+					client.SendString(">> " + message);	
+				}
+			}
+		}		
 	}
 }

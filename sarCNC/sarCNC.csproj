@@ -67,6 +67,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GrblCommand.cs" />
+    <Compile Include="GrblStatus.cs" />
     <Compile Include="Http\Controllers\GrblWebSocket.cs" />
     <Compile Include="Http\Controllers\TestController.cs" />
     <Compile Include="Http\Controllers\TestWebSocket.cs" />

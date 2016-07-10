@@ -6,11 +6,10 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.js"></script>
-    <script src="http://rawgithub.com/highslide-software/highcharts.com/master/js/adapters/standalone-framework.src.js"></script>
-    <script src="http://rawgithub.com/joewalnes/reconnecting-websocket/master/reconnecting-websocket.js"></script>
-    <script src="https://cdn.rawgit.com/Luegg/angularjs-scroll-glue/master/src/scrollglue.js"></script>
 
+    <script src="libs/reconnecting-websocket.js"></script>
     <script src="test.js"></script>
+    
     <link rel="stylesheet" href="test.css">
   </head>
 
@@ -21,15 +20,9 @@
     <!-- content -->
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md-9 col-md-3" ng-include="'leftPanel.html'"></div>
-        <div class="col-md-3 col-md-9" ng-include="'rightPanel.html'"></div>
+        <div class="col-md-12 col-offset-250" ng-include="'rightPanel.html'"></div>
+        <div class="col-fixed-250" ng-include="'leftPanel.html'"></div>
       </div>
     </div>
-
-    <footer class="footer">
-      <div class="container">
-        <p class="text-muted">Place sticky footer content here.</p>
-      </div>
-    </footer>
   </body>
 </html>

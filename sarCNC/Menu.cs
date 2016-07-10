@@ -29,56 +29,14 @@ namespace sar.CNC
 {
 	public partial class Menu : Form
 	{
-		private SocketServer socketServer;
-		
 		public Menu()
 		{
 			InitializeComponent();
-			
-			socketServer = new SocketServer(911, Program.ErrorLog, Program.DebugLog);
-			
-			this.Text = "server:" + Program.port.ToString();
-			
-			HttpWebSocket.NewClient += new HttpWebSocket.NewConnectionHandler(this.NewClient);
 		}
 		
 		~Menu()
 		{
 
-		}
-		
-		delegate void AddTextCallback(string text);
-		
-		private void AddText(string text)
-		{
-		  // InvokeRequired required compares the thread ID of the
-		  // calling thread to the thread ID of the creating thread.
-		  // If these threads are different, it returns true.
-		  if (this.txtCommLog.InvokeRequired)
-		  { 
-		    var d = new AddTextCallback(AddText);
-		    this.Invoke(d, new object[] { text });
-		  }
-		  else
-		  {
-		    this.txtCommLog.Text = text + Environment.NewLine + this.txtCommLog.Text;
-		  }
-		}
-
-		private void NewClient(HttpWebSocket client)
-		{
-			AddText("Client Connected");
-			client.FrameRecived += new HttpWebSocket.FrameRecivedHandler(this.NewFrame);
-		}
-		
-		private void NewFrame(HttpWebSocketFrame frame)
-		{
-			AddText(System.Text.Encoding.ASCII.GetString(frame.Payload));
-		}
-		
-		void JogForwardClick(object sender, EventArgs e)
-		{
-			sar.CNC.Http.TestWebSocket.JogForward();
 		}
 	}
 }
