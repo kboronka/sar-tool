@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html ng-app="testApp">
+  <head>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.js"></script>
+
+    <script src="libs/ng-file-upload.js"></script>
+    <script src="libs/reconnecting-websocket.js"></script>
+    <script src="test.js"></script>
+    <script src="ul.js"></script>
+
+    <link rel="stylesheet" href="test.css">
+    <link rel="stylesheet" href="ul.css">
+  </head>
+
+  <body ng-controller="WebSocketController">
+    <section ng-app="fileUpload" ng-controller="ProductEditorCtrl">
+
+        <div ngf-select=""
+             ngf-drop=""
+             ng-model="files"
+             class="drop-box"
+             ngf-drag-over-class="{ accept:'dragover', reject:'dragover-err', delay:100}"
+             ngf-multiple="true"
+             ngf-allow-dir="false"
+             ngf-accept="'.jpg,.png'">Drag images here or click</div>
+    </section>
+  </body>
+</html>

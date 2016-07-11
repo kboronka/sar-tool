@@ -1,4 +1,4 @@
-var app = angular.module('testApp', []);
+var app = angular.module('testApp', ['ngFileUpload']);
 
 app.controller("WebSocketController", function($scope) {
   //var ws = new ReconnectingWebSocket("ws://localhost:81/Test");

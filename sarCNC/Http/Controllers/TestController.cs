@@ -78,6 +78,13 @@ namespace sar.CNC.Http
 			return new HttpContent(json);
 		}
 		
+		public static HttpContent Ul(HttpRequest request)
+		{
+			var data = System.Text.Encoding.ASCII.GetString(request.Data);
+			Program.Log(data);
+			return new HttpContent("ok");
+		}		
+		
 		public static HttpContent GetIntArrayJSON(HttpRequest request)
 		{
 			var json = new Dictionary<string, object>();

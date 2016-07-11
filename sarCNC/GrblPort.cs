@@ -64,12 +64,9 @@ namespace sar.CNC
 			}
 		}
 		
-		
 		public GrblPort(string portName)
 		{
 			port = new SerialPort(portName, 115200, Parity.None, 8, StopBits.One);
-			port.Open();
-			
 			readLoopShutdown = false;
 			//serialPort1.DataReceived += new SerialDataReceivedEventHandler(this.serialPort1_DataReceived);
 			this.readLoopThread = new Thread(this.ReadLoop);
@@ -121,6 +118,22 @@ namespace sar.CNC
 			
 			while (!readLoopShutdown)
 			{
+				
+				// open the port if it's not already oppend
+				try
+				{
+					lock(port)
+					{
+						if (!port.IsOpen) port.Open();
+						Thread.Sleep(1000);
+					}
+				}
+				catch
+				{
+					Thread.Sleep(500);
+					continue;
+				}
+				
 				try
 				{
 					if (readInterval.Ready)
@@ -158,12 +171,12 @@ namespace sar.CNC
 								if (command.Command.Length > 0) commandBuffered.Add(command);
 							}
 							
-							OnResponceRecived(responce);	
+							OnResponceRecived(responce);
 						}
 						else if (responce.StartsWith("<") && responce.EndsWith(">"))
 						{
 							GrblStatus.Parse(responce);
-								
+							
 							// command complete
 							if (commandBuffered.Count > GrblStatus.MotionBuffer)
 							{
@@ -201,7 +214,7 @@ namespace sar.CNC
 						}
 						else
 						{
-							OnResponceRecived(responce);	
+							OnResponceRecived(responce);
 						}
 						
 						rxBuffer = rxBuffer.Substring(responce.Length + 2, (rxBuffer.Length - responce.Length - 2));
@@ -209,13 +222,13 @@ namespace sar.CNC
 					
 					// send queued command to grbl if rxBuffer can fit new message
 					const int MAX_RX_BUFFER = 127;
-					if (this.commandQueue.Count > 0  && 
+					if (this.commandQueue.Count > 0  &&
 					    ((GrblStatus.RxBuffer + this.commandQueue[0].Command.Length + 1) < 127 || this.commandQueue[0].Command.Length == 1))
 					{
 						GrblStatus.RxBuffer += this.commandQueue[0].Command.Length + 1;
 						
 						var command = commandQueue[0];
-						commandQueue.RemoveAt(0);						
+						commandQueue.RemoveAt(0);
 						Program.LogCommand(command.Command);
 						port.Write(command.Command + "\n");
 						command.Sent = true;
