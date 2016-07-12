@@ -35,11 +35,17 @@
   </div>
 </div>
 
+<div class="btn-group">
+    <label class="btn btn-success" ng-model="setup.jogDistance" uib-btn-radio="'0.1'" uncheckable>0.1</label>
+    <label class="btn btn-success" ng-model="setup.jogDistance" uib-btn-radio="'1'" uncheckable>1</label>
+    <label class="btn btn-success" ng-model="setup.jogDistance" uib-btn-radio="'10'" uib-uncheckable="uncheckable">10</label>
+    <label class="btn btn-success" ng-model="setup.jogDistance" uib-btn-radio="'25'" uib-uncheckable="uncheckable">25</label>
+</div>
 <div id="jog-buttons">
-  <button type="button" id="jog-xp" class="btn btn-info" ng-click='grbl("G91\nG0 X10");'>x+</button>
-  <button type="button" id="jog-xn" class="btn btn-info" ng-click='grbl("G91\nG0 X-10");'>x-</button>
-  <button type="button" id="jog-yp" class="btn btn-info" ng-click='grbl("G91\nG0 Y10");'>y+</button>
-  <button type="button" id="jog-yn" class="btn btn-info" ng-click='grbl("G91\nG0 Y-10");'>y-</button>
-  <button type="button" id="jog-zp" class="btn btn-info" ng-click='grbl("G91\nG0 Z10");'>z+</button>
-  <button type="button" id="jog-zn" class="btn btn-info" ng-click='grbl("G91\nG0 Z-10");'>z-</button>
+  <button type="button" id="jog-xp" uib-tooltip="A" class="btn btn-info" ng-click='grbl("G91\nG0 X" + setup.jogDistance);'>x+</button>
+  <button type="button" id="jog-xn" uib-tooltip="D" class="btn btn-info" ng-click='grbl("G91\nG0 X-" + setup.jogDistance);'>x-</button>
+  <button type="button" id="jog-yp" uib-tooltip="W" class="btn btn-info" ng-click='grbl("G91\nG0 Y" + setup.jogDistance);'>y+</button>
+  <button type="button" id="jog-yn" uib-tooltip="S" class="btn btn-info" ng-click='grbl("G91\nG0 Y-" + setup.jogDistance);'>y-</button>
+  <button type="button" id="jog-zp" uib-tooltip="Q" class="btn btn-info" ng-click='grbl("G91\nG0 Z" + setup.jogDistance);'>z+</button>
+  <button type="button" id="jog-zn" uib-tooltip="E" class="btn btn-info" ng-click='grbl("G91\nG0 Z-" + setup.jogDistance);'>z-</button>
 </div>

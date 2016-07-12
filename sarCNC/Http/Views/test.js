@@ -1,6 +1,6 @@
-var app = angular.module('testApp', ['ngFileUpload']);
+var app = angular.module('testApp', ['ngFileUpload', 'ui.bootstrap']);
 
-app.controller("WebSocketController", function($scope) {
+app.controller("WebSocketController", function($scope, $window) {
   //var ws = new ReconnectingWebSocket("ws://localhost:81/Test");
   $scope.log = {
     messages: [ "init" ]
@@ -8,6 +8,15 @@ app.controller("WebSocketController", function($scope) {
   log = function(message)
   {
     $scope.log.messages.push(message);
+  };
+
+  $scope.focus = function(focused) {
+    $scope.hotkeys = !focused
+  };
+
+  $scope.hotkeys = true;
+  $scope.setup = {
+    jogDistance : '1'
   };
 
   $scope.gcode = "G90\n"
@@ -37,18 +46,9 @@ app.controller("WebSocketController", function($scope) {
 
   $scope.commands = [];
 
-  $scope.jogxp = function() {
-    var distance = 10;
-    ws.send("G91 X" + distance.toString());
-  }
-
-  $scope.jogxn = function() {
-    var distance = 10;
-    ws.send("G91 X-" + distance.toString());
-  }
-
   $scope.grbl = function(command)
   {
+    console.log(command);
     ws.send(command);
   }
 
@@ -57,9 +57,55 @@ app.controller("WebSocketController", function($scope) {
     ws.send(String.fromCharCode(24));
   }
 
+  $scope.keyPress = function(eve){
+    console.log("keypress " + eve.which.toString());
+    if(eve.which === 16){//shift
+        //$rootScope.$broadcast('doShift');
+        $rootScope.shiftOn = true;
+    }
+ }
+
+ // key press
+  angular.element($window).on('keydown', function(e) {
+
+    if ($scope.hotkeys)
+    {
+      switch (e.keyCode) {
+        case 87:
+          $scope.grbl("G91\nG0 Y" + $scope.setup.jogDistance);
+          break;
+        case 83:
+          $scope.grbl("G91\nG0 Y-" + $scope.setup.jogDistance);
+          break;
+        case 65:
+          $scope.grbl("G91\nG0 X" + $scope.setup.jogDistance);
+          break;
+        case 68:
+          $scope.grbl("G91\nG0 X-" + $scope.setup.jogDistance);
+          break;
+        case 81:
+          $scope.grbl("G91\nG0 Z" + $scope.setup.jogDistance);
+          break;
+        case 69:
+          $scope.grbl("G91\nG0 Z-" + $scope.setup.jogDistance);
+          break;
+        default:
+          console.log(e.keyCode.toString());
+      }
+    }
+
+    // estop
+    if (e.keyCode == 27)
+    {
+      // hold
+      $scope.grbl("!");
+    }
+ });
+
+
   //log("test");
 
-  var ws = new ReconnectingWebSocket("ws://localhost:80/Test", null, {debug: true, reconnectInterval: 100});
+  var ws = new ReconnectingWebSocket("ws://localhost:80/Test", null, {debug: false, reconnectInterval: 100});
   ws.onopen = function() {
     //$scope.console.log("Websocket is open");
     log("Websocket is open");

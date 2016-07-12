@@ -92,5 +92,44 @@ namespace sar.CNC.Http
 			
 			return new HttpContent(json);
 		}
+		
+		public static HttpContent Upload(HttpRequest request)
+		{
+			var file = System.Text.Encoding.ASCII.GetString(request.Data);
+			var lines = file.ToLines();
+			
+			var nc = new List<string>();
+			var ncString = "";
+			
+			foreach (var step in lines)
+			{
+				var ncStep = step.TrimWhiteSpace();
+				
+				if (ncStep.StartsWith("------WebKitFormBoundary"))
+				{
+					
+				}
+				else if (ncStep.StartsWith("Content-"))
+				{
+					
+				}
+				else if (String.IsNullOrEmpty(ncStep))
+				{
+					
+				}
+				else if (ncStep.StartsWith("G28 G91 Z0"))
+				{
+					
+				}
+				else
+				{
+					nc.Add(ncStep);
+					ncString += ncStep + Environment.NewLine;
+					Program.Port.SendCommand(ncStep);
+				}
+			}
+			
+			return HttpContent.Read(request, "test.html");
+		}
 	}
 }

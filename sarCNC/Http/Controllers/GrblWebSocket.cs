@@ -70,7 +70,7 @@ namespace sar.CNC.Http
 		#region static
 		
 		private static GrblWebSocket Singleton { get; set; }
-		
+			
 		#endregion 
 
 		public GrblWebSocket(HttpRequest request) : base(request)

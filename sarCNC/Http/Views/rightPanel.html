@@ -7,5 +7,10 @@
     <span class="progress-completed">{{ machine.status.runTime / 60000 | number:1 }}min - {{ machine.status.commandsComplete / machine.status.commandsTotal * 100 | number:0 }}%</span>
 </div>
 
-<textarea class="form-control" rows="25" id="comment" ng-model="gcode"></textarea>
+<textarea class="form-control" rows="25" id="comment" ng-model="gcode" ng-focus="focus(true);" ng-blur="focus(false);"></textarea>
 <button type="button" class="btn btn-success" ng-click='grbl(gcode);'>execute gcode</button>
+
+<form method="POST" action="Test/Upload" enctype="multipart/form-data">
+  <input type="file" name="file" accept="nc">
+  <input type="submit">
+</form>
