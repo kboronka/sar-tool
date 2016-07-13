@@ -124,8 +124,11 @@ namespace sar.CNC
 				{
 					lock(port)
 					{
-						if (!port.IsOpen) port.Open();
-						Thread.Sleep(1000);
+						if (!port.IsOpen)
+						{
+							port.Open();
+							Thread.Sleep(1000);
+						}
 					}
 				}
 				catch
