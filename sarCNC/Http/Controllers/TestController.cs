@@ -100,12 +100,17 @@ namespace sar.CNC.Http
 			
 			var nc = new List<string>();
 			var ncString = "";
+			var comment = "";
 			
 			foreach (var step in lines)
 			{
 				var ncStep = step.TrimWhiteSpace();
 				
 				if (ncStep.StartsWith("------WebKitFormBoundary"))
+				{
+					
+				}
+				else if (ncStep == "%")
 				{
 					
 				}
@@ -117,15 +122,20 @@ namespace sar.CNC.Http
 				{
 					
 				}
+				/* drop this for now since i don't have limit switches setup */
 				else if (ncStep.StartsWith("G28 G91 Z0"))
 				{
 					
+				}
+				else if (ncStep.StartsWith("(") && ncStep.EndsWith(")"))
+				{
+					comment = ncStep.TrimStart('(').TrimEnd(')');
 				}
 				else
 				{
 					nc.Add(ncStep);
 					ncString += ncStep + Environment.NewLine;
-					Program.Port.SendCommand(ncStep);
+					Program.Port.SendCommand(ncStep, comment);
 				}
 			}
 			

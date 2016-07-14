@@ -25,7 +25,11 @@ namespace sar.CNC
 		private static double wZ = 0.0f;
 		
 		private static int motionBuffer = 0;
-		public static int MotionBuffer { get { return motionBuffer; } }
+		public static int MotionBuffer
+		{ 
+			get { return motionBuffer; }
+			set	{ motionBuffer = value; }			
+		}
 		
 		private static int rxBuffer = 0;
 		public static int RxBuffer
@@ -78,14 +82,14 @@ namespace sar.CNC
 		public static int CommandsTotal { get; set; }
 		public static int CommandsCompleted { get; set; }
 
-		public static void Parse(string data)
+		public static void Parse(string data, bool commandQueued)
 		{
 			var re = new Regex(@"<(.*),MPos:(-?\d+.\d+),(-?\d+.\d+),(-?\d+.\d+),WPos:(-?\d+.\d+),(-?\d+.\d+),(-?\d+.\d+),Buf:(\d+),RX:(\d+)>");
 			var reMatch = re.Match(data);
 			
 			if (reMatch.Groups.Count > 0)
 			{
-				Running = reMatch.Groups[1].Value != "Idle";
+				Running = reMatch.Groups[1].Value != "Idle" || commandQueued;
 				mX = Convert.ToDouble(reMatch.Groups[2].Value);
 				mY = Convert.ToDouble(reMatch.Groups[3].Value);
 				mZ = Convert.ToDouble(reMatch.Groups[4].Value);

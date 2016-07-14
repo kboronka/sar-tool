@@ -82,6 +82,11 @@ namespace sar.CNC
 		
 		public bool SendCommand(string command)
 		{
+			return SendCommand(command, "");
+		}
+		
+		public bool SendCommand(string command, string comment)
+		{
 			lock (port)
 			{
 				if (command == "?")
@@ -90,11 +95,11 @@ namespace sar.CNC
 				}
 				else if (command.Length == 1)
 				{
-					commandQueue.Insert(0, new GrblCommand(nextCommandID++, command));
+					commandQueue.Insert(0, new GrblCommand(nextCommandID++, command, comment));
 				}
 				else
 				{
-					commandQueue.Add(new GrblCommand(nextCommandID++, command));
+					commandQueue.Add(new GrblCommand(nextCommandID++, command, comment));
 				}
 				
 				//port.Write(command + "\n");
@@ -110,9 +115,10 @@ namespace sar.CNC
 		private void ReadLoop()
 		{
 			var readInterval = new Interval(250, 500);
-			var requestStatusInterval = new Interval(350, 500);
-			var txInterval = new Interval(5000, 500);
+			var requestStatusInterval = new Interval(350, 1000);
+			var txInterval = new Interval(5000, 1500);
 			var running = GrblStatus.Running;
+			bool statusRecived = false;
 			
 			string rxBuffer = "";
 			
@@ -155,6 +161,7 @@ namespace sar.CNC
 						lock (port)
 						{
 							port.Write("?");
+							statusRecived = false;
 						}
 					}
 					
@@ -178,8 +185,8 @@ namespace sar.CNC
 						}
 						else if (responce.StartsWith("<") && responce.EndsWith(">"))
 						{
-							GrblStatus.Parse(responce);
-							
+							GrblStatus.Parse(responce, (commandBuffered.Count > 0));
+							statusRecived = true;
 							// command complete
 							if (commandBuffered.Count > GrblStatus.MotionBuffer)
 							{
@@ -204,7 +211,7 @@ namespace sar.CNC
 							Program.LogRaw(GrblStatus.ToJSON());
 							
 							// just finished job
-							if (running && !GrblStatus.Running)
+							if (running && !GrblStatus.Running && this.commandQueue.Count == 0)
 							{
 								GrblStatus.CommandsCompleted = GrblStatus.CommandsTotal;
 								this.commandQueue.Clear();
@@ -225,10 +232,18 @@ namespace sar.CNC
 					
 					// send queued command to grbl if rxBuffer can fit new message
 					const int MAX_RX_BUFFER = 127;
-					if (this.commandQueue.Count > 0  &&
+/*					if (this.commandQueue.Count > 0  &&
 					    ((GrblStatus.RxBuffer + this.commandQueue[0].Command.Length + 1) < 127 || this.commandQueue[0].Command.Length == 1))
 					{
+*/
+					if (this.commandQueue.Count > 0  &&
+					    (
+    					/* try not to overfill the buffer */
+    					((GrblStatus.RxBuffer) < 20 && GrblStatus.MotionBuffer < 5 && statusRecived)
+     					|| this.commandQueue[0].Command.Length == 1))
+					{
 						GrblStatus.RxBuffer += this.commandQueue[0].Command.Length + 1;
+						GrblStatus.MotionBuffer++;
 						
 						var command = commandQueue[0];
 						commandQueue.RemoveAt(0);
