@@ -4,7 +4,7 @@
     <ProjectGuid>{CF782D66-812A-46EE-9E1D-95879FC285D0}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>sar.CNC</RootNamespace>
     <AssemblyName>sar.CNC</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
@@ -52,6 +52,7 @@
       <HintPath>..\lib\sar-controls\sarControls.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -60,35 +61,35 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandHub.cs" />
+    <Compile Include="Commands\Install.cs" />
+    <Compile Include="Commands\Run.cs" />
+    <Compile Include="Commands\Start.cs" />
+    <Compile Include="Commands\Stop.cs" />
+    <Compile Include="Commands\Uninstall.cs" />
+    <Compile Include="Configuration.cs" />
     <Compile Include="GrblCommand.cs" />
     <Compile Include="GrblStatus.cs" />
     <Compile Include="Http\Controllers\GrblWebSocket.cs" />
     <Compile Include="Http\Controllers\TestController.cs" />
     <Compile Include="Http\Controllers\TestWebSocket.cs" />
-    <Compile Include="Menu.cs" />
-    <Compile Include="Menu.Designer.cs">
-      <DependentUpon>Menu.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GrblPort.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Menu.resx">
-      <DependentUpon>Menu.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Include="Service.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Http" />
     <Folder Include="Http\Controllers" />
     <Folder Include="Http\Views" />
+    <Folder Include="Commands" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Http\Views\index.html" />

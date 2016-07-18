@@ -135,7 +135,7 @@ namespace sar.CNC.Http
 				{
 					nc.Add(ncStep);
 					ncString += ncStep + Environment.NewLine;
-					Program.Port.SendCommand(ncStep, comment);
+					App.Port.SendCommand(ncStep, comment);
 				}
 			}
 			

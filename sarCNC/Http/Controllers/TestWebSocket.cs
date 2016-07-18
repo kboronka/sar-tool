@@ -34,7 +34,7 @@ namespace sar.CNC.Http
 			
 			foreach (var command in commands)
 			{
-				Program.Port.SendCommand(command);
+				App.Port.SendCommand(command);
 			}
 		}
 		

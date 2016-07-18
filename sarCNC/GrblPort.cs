@@ -207,8 +207,8 @@ namespace sar.CNC
 								GrblStatus.CommandsCompleted = this.commandHistory.Count;
 							}
 							
-							// send update
-							Program.LogRaw(GrblStatus.ToJSON());
+							// send update to web clients
+							App.SendToWebSocketClients(GrblStatus.ToJSON());
 							
 							// just finished job
 							if (running && !GrblStatus.Running && this.commandQueue.Count == 0)
@@ -247,7 +247,6 @@ namespace sar.CNC
 						
 						var command = commandQueue[0];
 						commandQueue.RemoveAt(0);
-						Program.LogCommand(command.Command);
 						port.Write(command.Command + "\n");
 						command.Sent = true;
 						commandSent.Add(command);
