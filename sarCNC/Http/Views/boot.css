@@ -1,0 +1,64 @@
+.panel-topic {
+  box-shadow: 0 0 20px gray;
+  border: 0px;
+  border-radius: 0px;
+  margin-left: 5px;
+  margin-top: 5px;
+  margin-right: 5px;
+}
+
+.panel-topic > .panel-heading {
+    background-image: none;
+    background-color: #666699;
+    border-radius: 0px;
+    color: white;
+}
+
+.list-instructions {
+  max-height: 300px;
+  overflow-y:scroll;
+}
+
+.list-instructions>.active {
+  color: black;
+  background-color: #00ccff;
+  border-color: #00ccff;
+}
+
+.nav-sm
+{
+  /*position: fixed;*/
+  height: 100%;
+  width: 70px;
+  padding: 0;
+  z-index: 9999;
+  background-color: #2A3F54;
+}
+
+.side-menu > li > a {
+  text-align: center !important;
+  font-weight: 400;
+  font-size: 10px;
+  padding: 10px 5px;
+}
+.side-menu .fa {
+  width: 26px;
+  opacity: .99;
+  display: inline-block;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.nav.side-menu li a {
+  color: #E7E7E7;
+}
+
+.nav.side-menu li a i {
+    font-size: 25px !important;
+    text-align: center;
+    width: 100% !important;
+    margin-bottom: 5px;
+}
