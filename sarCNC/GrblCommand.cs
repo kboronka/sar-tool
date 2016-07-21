@@ -1,12 +1,4 @@
-﻿/*
- * Created by SharpDevelop.
- * User: Kevin
- * Date: 7/8/2016
- * Time: 6:48 PM
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
- */
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 using sar.Tools;
@@ -31,10 +23,7 @@ namespace sar.CNC
 		public bool Active { get; set; }
 		public string Responce
 		{
-			get
-			{
-				return responce;
-			}
+			get { return responce; }
 			set
 			{
 				this.Sent = true;
@@ -48,21 +37,13 @@ namespace sar.CNC
 		public bool Buffered
 		{
 			get { return this.buffered; }
-			set
-			{
-				this.buffered = value;
-				//Program.LogRaw(this.ToJSON());
-			}
+			set { this.buffered = value; }
 		}
 		
 		public bool Completed
 		{
 			get { return this.completed; }
-			set
-			{
-				this.completed = value;
-				//Program.LogRaw(this.ToJSON());
-			}
+			set { this.completed = value; }
 		}
 		
 		public Dictionary<string, object> NamedParameters

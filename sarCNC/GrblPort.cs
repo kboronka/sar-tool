@@ -1,12 +1,4 @@
-﻿/*
- * Created by SharpDevelop.
- * User: kboronka
- * Date: 7/7/2016
- * Time: 1:03 PM
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
- */
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Threading;
