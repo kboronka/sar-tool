@@ -47,7 +47,7 @@ namespace sar.Commands
 			if (!Directory.Exists(path)) Directory.CreateDirectory(path);
 			
 
-			var files = IO.GetAllFiles(path, "_*.ls");
+			var files = IO.GetAllFiles(path, "*.ls");
 			for (int fileNumber = 0; fileNumber < files.Count; fileNumber++)
 			{
 				var file = files[fileNumber];
