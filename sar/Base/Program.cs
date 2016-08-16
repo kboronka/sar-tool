@@ -105,7 +105,17 @@ namespace sar.Base
 				
 			}
 		}
-
+		
+		public void WriteLog(Exception ex)
+		{
+			Program.Log(ex);
+		}
+		
+		public void WriteLog(string message)
+		{
+			Program.Log(message);
+		}
+		
 		public static void Log(Exception ex)
 		{
 			try
