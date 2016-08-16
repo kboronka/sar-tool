@@ -54,6 +54,11 @@ namespace sar.Base
 				this.Deserialize(reader);
 				reader.Close();
 			}
+			else
+			{
+				this.InitDefaults();
+				this.Save();
+			}
 		}
 		
 		public Configuration(string path)
@@ -108,5 +113,6 @@ namespace sar.Base
 		
 		protected abstract void Deserialize(XML.Reader reader);
 		protected abstract void Serialize(XML.Writer writer);
+		protected abstract void InitDefaults();
 	}
 }
