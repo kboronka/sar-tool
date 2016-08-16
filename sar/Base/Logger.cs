@@ -21,12 +21,12 @@ namespace sar
 	{
 		public static void Log(Exception ex)
 		{
-			Logger.Log(ex);
+			Base.Program.Log(ex);
 		}
 		
 		public static void Log(string message)
 		{
-			Logger.Log(message);
+			Base.Program.Log(message);
 		}
 		
 		public static void FlushLogs()
