@@ -141,7 +141,7 @@ namespace sar.Http
 			}
 			catch (Exception ex)
 			{
-				Base.Program.Log(ex);
+				Logger.Log(ex);
 			}
 		}
 		
@@ -224,7 +224,7 @@ namespace sar.Http
 			catch (Exception ex)
 			{
 				connectionWaitHandle.Set();
-				sar.Base.Program.Log(ex);
+				Logger.Log(ex);
 			}
 		}
 		

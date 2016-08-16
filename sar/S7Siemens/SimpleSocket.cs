@@ -23,6 +23,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Text;
 
+using sar;
 using sar.Tools;
 
 namespace sar.Tools
@@ -48,7 +49,7 @@ namespace sar.Tools
 		
 		public void Close()
 		{
-			sar.Base.Program.Log("SimpleSocket Close");
+			Logger.Log("SimpleSocket Close");
 			Dispose();
 		}
 		
@@ -63,7 +64,7 @@ namespace sar.Tools
 			{
 				if (disposing)
 				{
-					sar.Base.Program.Log("SimpleSocket Disposing");
+					Logger.Log("SimpleSocket Disposing");
 					this.Disconnect();
 				}
 			}
@@ -73,7 +74,7 @@ namespace sar.Tools
 		
 		~SimpleSocket()
 		{
-			sar.Base.Program.Log("SimpleSocket Destructor");
+			Logger.Log("SimpleSocket Destructor");
 			Dispose(false);
 		}
 		

@@ -15,7 +15,7 @@
 
 namespace sar.Tools
 {
-	partial class Logger
+	partial class LogForm
 	{
 		/// <summary>
 		/// Designer variable used to keep track of non-visual components.

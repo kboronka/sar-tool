@@ -22,7 +22,7 @@ using sar.Tools;
 
 namespace sar
 {
-	public class Program
+	public class Program : Base.Program
 	{
 		public static int Main(string[] args)
 		{
@@ -65,11 +65,11 @@ namespace sar
 		#region loging functions
 		
 		// TODO: do we really to Log method or is the base class good enough
-		public static void Log(Exception ex)
+		new public static void Log(Exception ex)
 		{
 			try
 			{
-				sar.Base.Program.Log(ex);
+				Logger.Log(ex);
 			}
 			catch
 			{
@@ -77,11 +77,11 @@ namespace sar
 			}
 		}
 		
-		public static void Log(string message)
+		new public static void Log(string message)
 		{
 			try
 			{
-				sar.Base.Program.Log(message);
+				Logger.Log(message);
 			}
 			catch
 			{

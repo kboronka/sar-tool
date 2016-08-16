@@ -15,7 +15,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
 
@@ -23,7 +22,7 @@ using sar.Tools;
 
 namespace sar.Tools
 {
-	public partial class Logger : Form
+	public partial class LogForm : Form
 	{
 		private const int MAXLINES = 100;
 		
@@ -71,14 +70,14 @@ namespace sar.Tools
 		
 		#endregion
 		
-		public Logger()
+		public LogForm()
 		{
 			InitializeComponent();
 			this.updateDisplayTimer.Enabled = true;
 			this.saveToFile = false;
 		}
 		
-		public Logger(string filename)
+		public LogForm(string filename)
 		{
 			InitializeComponent();
 			this.updateDisplayTimer.Enabled = true;

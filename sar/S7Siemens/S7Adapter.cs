@@ -92,7 +92,7 @@ namespace sar.S7Siemens
 		{
 			try
 			{
-				sar.Base.Program.Log("s7Adaptor.Connect >> " + this.ipAddress);
+				Logger.Log("s7Adaptor.Connect >> " + this.ipAddress);
 				
 				// TODO: add automatic retry
 
@@ -118,7 +118,7 @@ namespace sar.S7Siemens
 			}
 			catch (Exception ex)
 			{
-				sar.Base.Program.Log(ex);
+				Logger.Log(ex);
 				return false;
 			}
 			
@@ -277,9 +277,9 @@ namespace sar.S7Siemens
 				}
 				catch (SocketException ex)
 				{
-					sar.Base.Program.Log("s7Adaptor ERROR");
-					sar.Base.Program.Log(" >> " + this.ipAddress);
-					sar.Base.Program.Log(" >> " + address.ToString());
+					Logger.Log("s7Adaptor ERROR");
+					Logger.Log(" >> " + this.ipAddress);
+					Logger.Log(" >> " + address.ToString());
 					
 					// auto-reconnect
 					this.Reconnect();
@@ -288,13 +288,13 @@ namespace sar.S7Siemens
 				}
 				catch (Exception ex)
 				{
-					sar.Base.Program.Log("s7Adaptor ERROR");
-					sar.Base.Program.Log(" >> " + this.ipAddress);
-					sar.Base.Program.Log(" >> " + address.ToString());
-					sar.Base.Program.Log(StringHelper.ArrayToString("ReadWriteMessage", message));
-					sar.Base.Program.Log(StringHelper.ArrayToString("TPDU", tpdu));
-					sar.Base.Program.Log(StringHelper.ArrayToString("response", response));
-					sar.Base.Program.Log(StringHelper.ArrayToString("data", data));
+					Logger.Log("s7Adaptor ERROR");
+					Logger.Log(" >> " + this.ipAddress);
+					Logger.Log(" >> " + address.ToString());
+					Logger.Log(StringHelper.ArrayToString("ReadWriteMessage", message));
+					Logger.Log(StringHelper.ArrayToString("TPDU", tpdu));
+					Logger.Log(StringHelper.ArrayToString("response", response));
+					Logger.Log(StringHelper.ArrayToString("data", data));
 
 					throw ex;
 				}

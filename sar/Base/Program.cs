@@ -35,14 +35,15 @@ namespace sar.Base
 		{
 			get
 			{
-				if (String.IsNullOrEmpty(Program.LogFilename))
+
+				if (String.IsNullOrEmpty(LogFilename))
 				{
-					Program.LogFilename = (System.Environment.UserInteractive) ? "" : "s.";
-					Program.LogFilename += "log";
+					LogFilename = (System.Environment.UserInteractive) ? "" : "s.";
+					LogFilename += "log";
 				}
 
-				if (Program.errorLog == null) Program.errorLog = new ErrorLogger("error." + Program.LogFilename);
-				return Program.errorLog;
+				if (errorLog == null) errorLog = new ErrorLogger("error." + LogFilename);
+				return errorLog;
 			}
 		}
 		
@@ -50,14 +51,14 @@ namespace sar.Base
 		{
 			get
 			{
-				if (String.IsNullOrEmpty(Program.LogFilename))
+				if (String.IsNullOrEmpty(LogFilename))
 				{
-					Program.LogFilename = (System.Environment.UserInteractive) ? "" : "s.";
-					Program.LogFilename += "log";
+					LogFilename = (System.Environment.UserInteractive) ? "" : "s.";
+					LogFilename += "log";
 				}
 				 
-				if (Program.debugLog == null) Program.debugLog = new FileLogger("debug." + Program.LogFilename, true);
-				return Program.debugLog;
+				if (debugLog == null) debugLog = new FileLogger("debug." + LogFilename, true);
+				return debugLog;
 			}
 		}
 		
@@ -65,15 +66,15 @@ namespace sar.Base
 		{
 			try
 			{
-				bool logTimestamps = Program.DebugLog.LogTime;
-				Program.DebugLog.LogTime = false;
-				Program.DebugLog.WriteLine(AssemblyInfo.Name + " v" + AssemblyInfo.Version);
-				Program.DebugLog.WriteLine("Path = " + ApplicationInfo.ApplicationPath);
-				Program.DebugLog.WriteLine("Environment.UserInteractive = " + Environment.UserInteractive.ToString());
-				Program.DebugLog.WriteLine("Username = " + System.Security.Principal.WindowsIdentity.GetCurrent().Name);
-				Program.DebugLog.WriteLine(ConsoleHelper.HR);
+				bool logTimestamps = DebugLog.LogTime;
+				DebugLog.LogTime = false;
+				DebugLog.WriteLine(AssemblyInfo.Name + " v" + AssemblyInfo.Version);
+				DebugLog.WriteLine("Path = " + ApplicationInfo.ApplicationPath);
+				DebugLog.WriteLine("Environment.UserInteractive = " + Environment.UserInteractive.ToString());
+				DebugLog.WriteLine("Username = " + System.Security.Principal.WindowsIdentity.GetCurrent().Name);
+				DebugLog.WriteLine(ConsoleHelper.HR);
 				
-				Program.DebugLog.LogTime = logTimestamps;
+				DebugLog.LogTime = logTimestamps;
 			}
 			catch
 			{
@@ -98,31 +99,21 @@ namespace sar.Base
 		{
 			try
 			{
-				Program.Log((Exception)e.ExceptionObject);
+				Log((Exception)e.ExceptionObject);
 			}
 			catch
 			{
 				
 			}
 		}
-		
-		public void WriteLog(Exception ex)
-		{
-			Program.Log(ex);
-		}
-		
-		public void WriteLog(string message)
-		{
-			Program.Log(message);
-		}
-		
+	
 		public static void Log(Exception ex)
 		{
 			try
 			{
-				Program.Log(ex.GetType().ToString() + ": " + ex.Message);
-				Program.ErrorLog.Write(ex);
-				Program.FlushLogs();
+				Log(ex.GetType().ToString() + ": " + ex.Message);
+				ErrorLog.Write(ex);
+				FlushLogs();
 			}
 			catch
 			{
@@ -137,7 +128,7 @@ namespace sar.Base
 				#if DEBUG
 				System.Diagnostics.Debug.WriteLine(message);
 				#endif
-				Program.DebugLog.WriteLine(message);
+				DebugLog.WriteLine(message);
 			}
 			catch
 			{
