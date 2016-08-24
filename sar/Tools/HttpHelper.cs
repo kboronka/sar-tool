@@ -990,6 +990,18 @@ namespace sar.Tools
 			}
 		}
 		
+		public static double GetJSON(this string json, string element, double defaultValue)
+		{
+			try
+			{
+				return double.Parse(GetJSON(json, element));
+			}
+			catch
+			{
+				return defaultValue;
+			}
+		}
+				
 		public static string GetJSON(this string json, string element, string defaultValue)
 		{
 			try
