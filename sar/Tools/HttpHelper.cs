@@ -1046,7 +1046,7 @@ namespace sar.Tools
 		{
 			try
 			{
-				return DateTime.ParseExact(GetJSON(json, element), "FileLogger.DATETIMESTAMP", DateTimeFormatInfo.InvariantInfo);
+				return DateTime.Parse(GetJSON(json, element), null, System.Globalization.DateTimeStyles.RoundtripKind);
 			}
 			catch
 			{
