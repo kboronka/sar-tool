@@ -15,18 +15,25 @@
 
 using System;
 
+using sar.Tools;
+
 namespace sar
 {
 	public static class Logger
 	{
+		public static bool LogToConsole { get; set; }
+		
 		public static void Log(Exception ex)
 		{
 			Base.Program.Log(ex);
+			
+			if (LogToConsole) ConsoleHelper.WriteException(ex);
 		}
 		
 		public static void Log(string message)
 		{
 			Base.Program.Log(message);
+			if (LogToConsole) ConsoleHelper.WriteLine(message);
 		}
 		
 		public static void FlushLogs()
