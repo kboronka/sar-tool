@@ -449,6 +449,27 @@ namespace sar.Tools
 			return false;
 		}
 		
+		public static string ToCommaSeperatedValues(this int[] numbers)
+		{
+			try
+			{
+				var line = "";
+				var delimiter = "";
+				
+				foreach (var number in numbers)
+				{
+					line += delimiter + number.ToString();
+					delimiter = ", ";
+				}
+				
+				return line;
+			}
+			catch
+			{
+				return "";
+			}
+		}		
+		
 		#endregion
 		
 		#region environment variable helpers
