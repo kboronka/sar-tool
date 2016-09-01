@@ -16,6 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Text;
 
 namespace sar.Tools
 {
@@ -122,16 +123,30 @@ namespace sar.Tools
 		
 		public string GetCreateScript(SqlConnection connection)
 		{
+			string result = "";
+			
 			switch (this.type)
 			{
 				case SqlObjectType.TT:
 				case SqlObjectType.U:
-					// TODO: generate table
-					return "CREATE TABLE " + name.QuoteSingle();
+					var createTableScript = EmbeddedResource.Get(@"sar.Databases.MSSQL.CreateTable.sql");
+					var script = Encoding.ASCII.GetString(createTableScript);
+					script = script.Replace(@"%%TableName%%", this.name);
+					
+					using (var command = new SqlCommand(script, connection))
+					{
+						using (var reader = command.ExecuteReader())
+						{
+							while (reader.Read())
+							{
+								result += reader.GetString(0) + Environment.NewLine;
+							}
+						}
+					}
+					
+					return result.TrimWhiteSpace();
 
 				default:
-					string result = "";
-					
 					using (var command = new SqlCommand("sp_helptext " + this.name.QuoteSingle(), connection))
 					{
 						using (var reader = command.ExecuteReader())

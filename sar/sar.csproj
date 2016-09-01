@@ -222,5 +222,6 @@
     <EmbeddedResource Include="Http\Views\Error\Display.html" />
     <EmbeddedResource Include="Http\Views\Debug\Header.html" />
     <EmbeddedResource Include="Http\Views\Debug\Info.html" />
+    <EmbeddedResource Include="Databases\MSSQL\CreateTable.sql" />
   </ItemGroup>
 </Project>

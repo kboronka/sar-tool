@@ -70,12 +70,8 @@ namespace sar.Commands
 					
 					Progress.Message = "Saving Script " + filename;
 					
-					if (databaseObject.Type != "Table")
-					{
-						// TODO: remove Table filter once table generation code is complete
-						IO.WriteFile(root + filename, databaseObject.GetCreateScript(connection));
-						objectCounter++;
-					}
+					IO.WriteFile(root + filename, databaseObject.GetCreateScript(connection));
+					objectCounter++;
 				}
 				
 				connection.Close();
