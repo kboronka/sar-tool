@@ -3,6 +3,7 @@ declare @table varchar(100)
  set @table = '%%TableName%%'
  declare @sql table(s varchar(1000), id int identity)
 
+ insert into @sql(s) values ('if not exists (select * from sysobjects where name=''' + @table +''' and xtype=''U'')')
  insert into @sql(s) values ('CREATE TABLE [' + @table + '] (')
  insert into @sql(s)
 

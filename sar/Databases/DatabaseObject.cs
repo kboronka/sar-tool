@@ -206,6 +206,8 @@ namespace sar.Tools
 					script += " ,@PrintGeneratedCode=0";
 					script += " ,@GenerateProjectInfo=0";
 					
+					result = @"IF NOT EXISTS (SELECT TOP 1 * FROM [" + this.name + "])" + Environment.NewLine;
+						
 					using (var command = new SqlCommand(script, connection))
 					{
 						using (var reader = command.ExecuteReader())
