@@ -60,6 +60,27 @@ namespace sar.Tools
 			return result;
 		}
 		
+		public static DatabaseObject GetDatabaseObject(SqlConnection connection, string name)
+		{
+			var result = new List<DatabaseObject>();
+			
+			using (var command = new SqlCommand(@"SELECT name, xtype FROM sysobjects WHERE name = " + name.QuoteSingle(), connection))
+			{
+				using (var reader = command.ExecuteReader())
+				{
+					if (reader.Read())
+					{
+						var type = (SqlObjectType)Enum.Parse(typeof(SqlObjectType), reader.GetString(1));
+						return new DatabaseObject(reader.GetString(0), type);
+					}
+					else
+					{
+						throw new MissingMemberException("object " + name + " not found");
+					}
+				}
+			}
+		}
+		
 		#endregion
 		
 		#region members
@@ -159,6 +180,53 @@ namespace sar.Tools
 					}
 					
 					return result.TrimWhiteSpace();
+			}
+		}
+		
+		public string GetInsertScript(SqlConnection connection)
+		{
+			string result = "";
+			
+			switch (this.type)
+			{
+				case SqlObjectType.TT:
+				case SqlObjectType.U:
+					var sproc = Encoding.ASCII.GetString(EmbeddedResource.Get(@"sar.Databases.MSSQL.GenerateInsert.sql"));
+					foreach (var sql in DatabaseHelper.SplitByGO(sproc))
+					{
+						using (var command = new SqlCommand(sql, connection))
+						{
+							command.ExecuteNonQuery();
+						}
+					}
+					
+					var script = "";
+					script += "EXECUTE ";
+					script += " dbo.GenerateInsert @ObjectName = N'" + this.name + "'";
+					script += " ,@PrintGeneratedCode=0";
+					script += " ,@GenerateProjectInfo=0";
+					
+					using (var command = new SqlCommand(script, connection))
+					{
+						using (var reader = command.ExecuteReader())
+						{
+							while (reader.Read())
+							{
+								result += reader.GetString(0) + Environment.NewLine;
+							}
+						}
+					}
+					
+					// drop sproc
+					using (var command = new SqlCommand(@"DROP PROCEDURE dbo.GenerateInsert;", connection))
+					{
+						command.ExecuteNonQuery();
+					}
+					
+					return result.TrimWhiteSpace();
+
+				default:
+					throw new ApplicationException("object is not a table");
 			}
 		}
 	}

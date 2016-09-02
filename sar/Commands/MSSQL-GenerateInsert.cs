@@ -49,7 +49,7 @@ namespace sar.Commands
 			string database = args[2];
 			string username = args[3];
 			string password = args[4];
-			string table = args[5];
+			string tableName = args[5];
 			string root = @".\";
 			
 			if (args.Length == 7) root = args[6];
@@ -58,53 +58,21 @@ namespace sar.Commands
 			if (!Directory.Exists(root)) Directory.CreateDirectory(root);
 			
 			var connectionString = new ConnectionString(server, database, username, password);
-			int objectCounter = 0;
 
 			Progress.Message = "Opening SQL Connection";
 			using (var connection = new SqlConnection(connectionString.ToString()))
 			{
 				connection.Open();
+				var table = DatabaseObject.GetDatabaseObject(connection, tableName);
 				
-				Progress.Message = "Adding GenerateInsert sproc";
-				var sproc = Encoding.ASCII.GetString(EmbeddedResource.Get(@"sar.Databases.MSSQL.GenerateInsert.sql"));
-				foreach (var sql in DatabaseHelper.SplitByGO(sproc))
-				{
-					using (var command = new SqlCommand(sql, connection))
-					{
-						command.ExecuteNonQuery();
-					}
-				}
+				Progress.Message = "Getting Insert Script";
+				var insertScript = table.GetInsertScript(connection);
 				
-				Progress.Message = "Generating Insert Script";
-				var script = "";
-				script += "EXECUTE ";
-				script += " dbo.GenerateInsert @ObjectName = N'" + table + "'";
-				script += " ,@PrintGeneratedCode=0";
-				script += " ,@GenerateProjectInfo=0";
-				//script += " ,@GenerateSingleInsertPerRow=1";
-				//script += " ,@OmmitInsertColumnList=1";
-				
-				var insertScript = "";
-				using (var command = new SqlCommand(script, connection))
-				{
-					using (var reader = command.ExecuteReader())
-					{
-						while (reader.Read())
-						{
-							insertScript += reader.GetString(0) + Environment.NewLine;
-						}
-					}
-				}
+				connection.Close();
 				
 				Progress.Message = "Saving Insert Script to file";
-				var filename = "TableInsert." + table + ".sql";
+				var filename = "TableInsert." + tableName + ".sql";
 				File.WriteAllText(root + filename, insertScript);
-				
-				Progress.Message = "Dropping GenerateInsert sproc";
-				using (var command = new SqlCommand(@"DROP PROCEDURE dbo.GenerateInsert;", connection))
-				{
-					command.ExecuteNonQuery();
-				}				connection.Close();
 			}
 			
 			ConsoleHelper.WriteLine("Generated Insert Script", ConsoleColor.DarkYellow);
