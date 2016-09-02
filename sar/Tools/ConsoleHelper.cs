@@ -17,15 +17,35 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
-using System.Security;
+using System.Runtime.InteropServices;
 
 namespace sar.Tools
 {
 	public class ConsoleHelper
 	{
+		#region ConsoleShutdownEvent
+
+		[DllImport("Kernel32")]
+		public static extern bool SetConsoleCtrlHandler(HandlerRoutine Handler, bool Add);
+
+		// A delegate type to be used as the handler routine
+		// for SetConsoleCtrlHandler.
+		public delegate bool HandlerRoutine(CtrlTypes CtrlType);
+
+		// An enumerated type for the control messages
+		// sent to the handler routine.
+		public enum CtrlTypes
+		{
+			CTRL_C_EVENT = 0,
+			CTRL_BREAK_EVENT,
+			CTRL_CLOSE_EVENT,
+			CTRL_LOGOFF_EVENT = 5,
+			CTRL_SHUTDOWN_EVENT
+		}
+		
+		#endregion
+		
 		public const int EXIT_OK = 0;
 		public const int EXIT_ERROR = 1;
 		
@@ -177,7 +197,7 @@ namespace sar.Tools
 			if (ConsoleHelper.ShowDebug)
 			{
 				ConsoleHelper.WriteLine(text, ConsoleColor.Blue);
-			} 
+			}
 		}
 		
 		public static ConsoleKeyInfo ReadKey(string text)
@@ -282,7 +302,7 @@ namespace sar.Tools
 			string output;
 			string error;
 			return ConsoleHelper.Run(filename, arguments, workingDirectory, out output, out error);
-		}		
+		}
 		
 		public static int TryRun(string filename, string arguments, out string output)
 		{
@@ -326,7 +346,7 @@ namespace sar.Tools
 			int result = ConsoleHelper.Run(filename, arguments, Directory.GetCurrentDirectory(), out output, out error);
 			output += "\n" + error;
 			
-			return result;			
+			return result;
 		}
 		
 		public static int Run(string filename, string arguments, string workingDirectory, out string output, out string error)
