@@ -109,6 +109,7 @@
     <Compile Include="Commands\FileRemoveDirectory.cs" />
     <Compile Include="Commands\Help.cs" />
     <Compile Include="Commands\MSSQL-GenerateScripts.cs" />
+    <Compile Include="Commands\MSSQL-GenerateInsert.cs" />
     <Compile Include="Commands\NetSetIP.cs" />
     <Compile Include="Commands\NetListAddaptors.cs" />
     <Compile Include="Commands\AssemblyInfoVersion.cs" />
@@ -223,5 +224,6 @@
     <EmbeddedResource Include="Http\Views\Debug\Header.html" />
     <EmbeddedResource Include="Http\Views\Debug\Info.html" />
     <EmbeddedResource Include="Databases\MSSQL\CreateTable.sql" />
+    <EmbeddedResource Include="Databases\MSSQL\GenerateInsert.sql" />
   </ItemGroup>
 </Project>

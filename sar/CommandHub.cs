@@ -54,6 +54,7 @@ namespace sar.Tools
 			                          	new FanucDownloadPositions(this),
 			                          	new FileOpenFolder(this),
 			                          	new MSSQL_GenerateScripts(this),
+			                          	new MSSQL_GenerateInsert(this),
 			                          	new DirectoryTimestamp(this),
 			                          	new WindowsAutoLogin(this),
 			                          	new WindowsLogin(this),

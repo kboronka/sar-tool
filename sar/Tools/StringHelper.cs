@@ -421,12 +421,13 @@ namespace sar.Tools
 		
 		public static string[] ToLines(this string s)
 		{
-			return s.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+			return s.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+			//return s.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
 		}
 		
 		public static string AppendPrefixTo(this string prefix, string text)
 		{
-			//string[] lines = text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+			//string[] lines = 
 			string[] lines = text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
 			
 			string result = "";

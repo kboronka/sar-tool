@@ -14,6 +14,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 
 namespace sar.Tools
 {
@@ -33,6 +34,28 @@ namespace sar.Tools
 			{
 				return "'" + value.ToString(FileLogger.ISO8601_TIMESTAMP) + "'";
 			}
+		}
+		
+		public static List<string> SplitByGO(string sql)
+		{
+			var lines = sql.ToLines();
+			var result = new List<string>();
+			var newSql = "";
+			
+			foreach (var line in lines)
+			{
+				if (line.ToUpperInvariant() == "GO")
+				{
+					result.Add(newSql.TrimWhiteSpace());
+					newSql = "";
+				}
+				else
+				{
+					newSql += line + Environment.NewLine;
+				}
+			}
+			
+			return result;
 		}
 	}
 }
