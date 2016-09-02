@@ -29,7 +29,7 @@ namespace sar.Commands
 		public MSSQL_GenerateScripts(Base.CommandHub parent) : base(parent, "MSSQL - Generate Scripts",
 		                                                            new List<string> { "mssql-gs" },
 		                                                            "-mssql-gs <server> <database> <username> <password> [destination]",
-		                                                            new List<string> { "-mssql-gs 192.168.0.44 TestDB sa root " + @".\databasescripts\".QuoteDouble(),
+		                                                            new List<string> { "-mssql-gs 192.168.0.44 TestDB sa pw " + @".\databasescripts\".QuoteDouble(),
 		                                                            	"-mssql-gs 192.168.0.44 TestDB sa root" })
 		{
 			
