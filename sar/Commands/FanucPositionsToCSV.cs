@@ -37,6 +37,7 @@ namespace sar.Commands
 		{
 			public string Name;
 			public int Number;
+			public string Configuration;
 			public double x;
 			public double y;
 			public double z;
@@ -49,6 +50,7 @@ namespace sar.Commands
 				int i = 1;
 				this.Number = int.Parse(match.Groups[i++].Value);
 				this.Name = match.Groups[i++].Value;
+				this.Configuration = match.Groups[i++].Value;
 				this.x = double.Parse(match.Groups[i++].Value);
 				this.y = double.Parse(match.Groups[i++].Value);
 				this.z = double.Parse(match.Groups[i++].Value);
@@ -62,6 +64,7 @@ namespace sar.Commands
 				var output = "";
 				output += Number.ToString() + ", ";
 				output += Name + ", ";
+				output += Configuration + ", ";
 				output += x.ToString() + ", ";
 				output += y.ToString() + ", ";
 				output += z.ToString() + ", ";
@@ -99,15 +102,15 @@ namespace sar.Commands
 
 		public static int ExportPositions(string input, string csv)
 		{
-			const string search = @"\s*\[1,(\d*)] = \s*'([^\']*)'\s*Group:[^X]*X:\s*([^\s]*)\s*Y:\s*([^\s]*)\s*Z:\s*([^\s]*)\s*W:\s*([^\s]*)\s*P:\s*([^\s]*)\s*R:\s*([^\s]*)";			
+			const string search = @"\s*\[1,(\d*)] = \s*'([^\']*)'\s*Group:\s\d*\s*Config:\s\d*([^,]*)[^X]*X:\s*([^\s]*)\s*Y:\s*([^\s]*)\s*Z:\s*([^\s]*)\s*W:\s*([^\s]*)\s*P:\s*([^\s]*)\s*R:\s*([^\s]*)";
 
 			var positions = new List<PositionRegister>();
 			var matches = Regex.Matches(input, search);
-			var output = "pr, description, x, y, z, w, p, r" + Environment.NewLine;
+			var output = "pr, description, config, x, y, z, w, p, r" + Environment.NewLine;
 			
 			foreach (Match match in matches)
 			{
-				if (match.Groups.Count == 9)
+				if (match.Groups.Count == 10)
 				{
 					var position = new PositionRegister(match);
 					positions.Add(position);
