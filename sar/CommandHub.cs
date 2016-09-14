@@ -51,6 +51,7 @@ namespace sar.Tools
 			                          	new FanucFixLineNumbers(this),
 			                          	new FanucFTP(this),
 			                          	new FanucPositionsToCSV(this),
+			                          	new FanucDownloadNumericRegisters(this),
 			                          	new FanucDownloadPositions(this),
 			                          	new FileOpenFolder(this),
 			                          	new MSSQL_GenerateScripts(this),

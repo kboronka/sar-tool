@@ -61,7 +61,6 @@ namespace sar.Base
 						while (args.Length == 0 && commandlineActive)
 						{
 							ConsoleHelper.Write("> ", ConsoleColor.White);
-							
 							args = StringHelper.ParseString(ConsoleHelper.ReadLine(), " ");
 						}
 						
@@ -211,15 +210,20 @@ namespace sar.Base
 			
 			var result = new List<string>();
 			int count = 0;
-			foreach (string arg in args)
+			foreach (string originalArg in args)
 			{
+				var arg = originalArg;
+				
+				arg = arg.Replace("(date)", DateTime.Now.ToString(FileLogger.FILE_DATE));
+				arg = arg.Replace("(time)", DateTime.Now.ToString(FileLogger.FILE_TIME));
+				
 				ConsoleHelper.DebugWriteLine("arg[" + count++.ToString() + "] = " + arg);
 				if (arg.Length > 1 && arg.Substring(0, 1) == "/")
 				{
 					switch (arg.ToLower())
 					{
 						case "/q":
-						case "/quite": /*spelling error*/
+							case "/quite": /*spelling error*/
 						case "/quiet":
 							this.NoWarning = true;
 							break;

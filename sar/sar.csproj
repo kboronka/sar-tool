@@ -89,6 +89,7 @@
     <Compile Include="Commands\CodeClean.cs" />
     <Compile Include="Commands\CodeReIndent.cs" />
     <Compile Include="Commands\FanucBackup.cs" />
+    <Compile Include="Commands\FanucDownloadNumericRegisters.cs" />
     <Compile Include="Commands\FanucDownloadPositions.cs" />
     <Compile Include="Commands\FanucFixLineNumbers.cs" />
     <Compile Include="Commands\FanucPositionsToCSV.cs" />
