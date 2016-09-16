@@ -27,6 +27,7 @@
     "lib",
     "sar",
     "sarTesting",
+    "sarCNC",
     "*.*"
   ]
 }
