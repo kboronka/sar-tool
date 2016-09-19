@@ -45,7 +45,7 @@ namespace sar.Timing
 			this.counts = 0;
 			this.total = 0;
 			this.min = long.MaxValue;
-			this.min = long.MinValue;
+			this.max = long.MinValue;
 		}
 		
 		public void Start()
