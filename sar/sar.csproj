@@ -159,6 +159,7 @@
     <Compile Include="S7Siemens\S7Address.cs" />
     <Compile Include="S7Siemens\SimpleSocket.cs" />
     <Compile Include="Databases\MSSQL\Connection.cs" />
+    <Compile Include="Timing\ScanTimeMonitor.cs" />
     <Compile Include="Tools\ActiveDirectory.cs" />
     <Compile Include="Tools\ApplicationInfo.cs" />
     <Compile Include="Tools\AssemblyInfo.cs" />
