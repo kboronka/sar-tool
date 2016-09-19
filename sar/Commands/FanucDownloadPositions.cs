@@ -22,6 +22,7 @@ using System.IO;
 using sar.Tools;
 using sar.Base;
 
+// TODO: add FanucDownloadLoggedImages
 namespace sar.Commands
 {
 	public class FanucDownloadPositions : Command
