@@ -41,6 +41,11 @@ namespace sar.Timing
 			
 			this.time = new Stopwatch();
 			this.time.Start();
+			
+			this.counts = 0;
+			this.total = 0;
+			this.min = long.MaxValue;
+			this.min = long.MinValue;
 		}
 		
 		public void Start()
@@ -50,7 +55,9 @@ namespace sar.Timing
 		
 		public void Stop()
 		{
-			var scantime = time.ElapsedMilliseconds - lastTrigger;
+			var currentTime = time.ElapsedMilliseconds;
+			var scantime = currentTime - lastTrigger;
+			lastTrigger = currentTime;
 			
 			this.counts++;
 			this.total += scantime;
@@ -59,15 +66,15 @@ namespace sar.Timing
 			
 			if (this.log.Ready)
 			{
-				Logger.Log(description + " - " + 
-				           " min: " + this.min.ToString() + 
-				           " avg: " + (this.total / this.counts).ToString() + 
+				Logger.Log(description + " - " +
+				           " min: " + this.min.ToString() +
+				           " avg: " + (this.total / this.counts).ToString() +
 				           " max: " + this.max.ToString());
 				
 				this.counts = 0;
 				this.total = 0;
 				this.min = long.MaxValue;
-				this.min = long.MinValue;
+				this.max = long.MinValue;
 			}
 		}
 	}
