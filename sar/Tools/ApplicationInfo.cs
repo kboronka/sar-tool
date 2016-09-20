@@ -108,6 +108,20 @@ namespace sar.Tools
 				return applicationPath;
 			}
 		}
+
+		private static string desktopPath;
+		public static string DesktopPath
+		{
+			get
+			{
+				if (string.IsNullOrEmpty(desktopPath))
+				{
+					desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\";
+				}
+				
+				return desktopPath;
+			}
+		}
 		
 		[DllImport("kernel32.dll", SetLastError = true, CallingConvention = CallingConvention.Winapi)]
 		[return: MarshalAs(UnmanagedType.Bool)]
