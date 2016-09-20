@@ -24,7 +24,7 @@ CREATE PROCEDURE dbo.GenerateInsert
 , @PopulateTimestampColumn bit = 0
 , @PopulateComputedColumn bit = 0
 , @GenerateProjectInfo bit = 1
-, @GenerateSetNoCount bit = 1
+, @GenerateSetNoCount bit = 0
 , @GenerateStatementTerminator bit = 1
 , @ShowWarnings bit = 1
 , @Debug bit = 0
@@ -113,7 +113,7 @@ Arguments:
   @GenerateProjectInfo bit = 1
     When 0 then no spam is generated at all.
     When 1 then short comments are generated, i.e. SP build number and project page.
-  @GenerateSetNoCount bit = 1
+  @GenerateSetNoCount bit = 0
     When 0 then no SET NOCOUNT ON is generated at the beginning.
     When 1 then SET NOCOUNT ON is generated at the beginning.
   @GenerateStatementTerminator bit = 1
