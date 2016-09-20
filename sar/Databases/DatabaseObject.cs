@@ -75,7 +75,8 @@ namespace sar.Tools
 					}
 					else
 					{
-						throw new MissingMemberException("object " + name + " not found");
+						return null;
+						//throw new MissingMemberException("object " + name + " not found");
 					}
 				}
 			}
