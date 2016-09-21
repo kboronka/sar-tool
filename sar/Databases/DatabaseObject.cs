@@ -82,6 +82,24 @@ namespace sar.Tools
 			}
 		}
 		
+		public static List<string> GetColumnNames(SqlConnection connection, string table)
+		{
+			var result = new List<string>();
+			
+			using (var command = new SqlCommand(@"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N" + table.QuoteSingle(), connection))
+			{
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						result.Add(reader.GetString(0));
+					}
+				}
+			}
+			
+			return result;
+		}
+		
 		#endregion
 		
 		#region members
@@ -208,7 +226,7 @@ namespace sar.Tools
 					script += " ,@GenerateProjectInfo=0";
 					
 					result = @"IF NOT EXISTS (SELECT TOP 1 * FROM [" + this.name + "])" + Environment.NewLine;
-						
+					
 					using (var command = new SqlCommand(script, connection))
 					{
 						using (var reader = command.ExecuteReader())
