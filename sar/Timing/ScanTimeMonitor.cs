@@ -26,6 +26,7 @@ namespace sar.Timing
 		private long logInterval;
 		private Stopwatch time;
 		private long lastTrigger;
+		public long Last { get; private set; }
 		
 		private long total;
 		private long min;
@@ -57,6 +58,8 @@ namespace sar.Timing
 		{
 			var currentTime = time.ElapsedMilliseconds;
 			var scantime = currentTime - lastTrigger;
+			this.Last = scantime;
+			
 			lastTrigger = currentTime;
 			
 			this.counts++;
