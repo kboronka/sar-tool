@@ -16,6 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 using sar.Tools;
 using sar.Base;
@@ -25,9 +26,9 @@ namespace sar.Commands
 	public class FileBackup : Command
 	{
 		public FileBackup(Base.CommandHub parent) : base(parent, "File - Backup",
-		                           new List<string> { "file.backup", "f.bk", "file.mirror", "f.m", "file.copy", "f.c" },
-		                           @"-file.backup [filepath/pattern] [destination]",
-		                           new List<string> { "-file.backup backup.zip \"c:\\backups\\\"" })
+		                                                 new List<string> { "file.backup", "f.bk", "file.mirror", "f.m", "file.copy", "f.c" },
+		                                                 @"-file.backup [filepath/pattern] [destination]",
+		                                                 new List<string> { "-file.backup backup.zip \"c:\\backups\\\"" })
 		{
 		}
 		
@@ -43,7 +44,7 @@ namespace sar.Commands
 			string filePattern = args[1];
 			string root = Directory.GetCurrentDirectory();
 			IO.CheckRootAndPattern(ref root, ref filePattern);
-			List<string> files = IO.GetAllFiles(root, filePattern);
+			var files = IO.GetAllFiles(root, filePattern);
 			
 			ConsoleHelper.DebugWriteLine("pattern: " + filePattern);
 			ConsoleHelper.DebugWriteLine("root: " + root);
@@ -58,33 +59,41 @@ namespace sar.Commands
 			ConsoleHelper.DebugWriteLine("archiveroot: " + archiveroot);
 			if (!Directory.Exists(archiveroot))	Directory.CreateDirectory(archiveroot);
 
+			// ***************************************************************************************
+			// filter
+			// ***************************************************************************************
+			// source path should not contain destination path
+			files = files.Where(f => !f.Contains(archivepath)).ToList();
+			
+			// filter svn files
+			files = files.Where(f => this.commandHub.IncludeSVN || !IO.IsSVN(f)).ToList();
+			
+			// ***************************************************************************************
+			// copy files
+			// ***************************************************************************************
 			int counter = 0;
 			foreach (string file in files)
 			{
-				if (!file.Contains(archivepath))
-				{
-					if (this.commandHub.IncludeSVN || !IO.IsSVN(file))
-					{
-						string fileRelativePath = StringHelper.TrimStart(file, root.Length);
-						string backupFile = archivepath + file.Substring(root.Length);
-						string backupRoot = IO.GetRoot(backupFile);
+				var progress = (counter / (double)files.Count) * 100;
+				
+				Progress.Message = "Coping " + progress.ToString("0") + "% [" + IO.GetFilename(file) + "]";
 
-						
-						Progress.Message = "Coping " + fileRelativePath;
-						counter++;
-						
-						try
-						{
-							if (!Directory.Exists(backupRoot)) Directory.CreateDirectory(backupRoot);
-							if (File.Exists(backupFile)) File.Delete(backupFile);
-							IO.CopyFile(file, backupFile);
-						}
-						catch (Exception ex)
-						{
-							ConsoleHelper.WriteLine(ex.Message, ConsoleColor.Red);
-						}
-					}
+				string fileRelativePath = StringHelper.TrimStart(file, root.Length);
+				string backupFile = archivepath + file.Substring(root.Length);
+				string backupRoot = IO.GetRoot(backupFile);
+				
+				try
+				{
+					if (!Directory.Exists(backupRoot)) Directory.CreateDirectory(backupRoot);
+					if (File.Exists(backupFile)) File.Delete(backupFile);
+					IO.CopyFile(file, backupFile);
 				}
+				catch (Exception ex)
+				{
+					ConsoleHelper.WriteLine(ex.Message, ConsoleColor.Red);
+				}
+
+				counter++;
 			}
 			
 			ConsoleHelper.WriteLine(counter.ToString() + " File" + ((counter != 1) ? "s" : "") + " Copied", ConsoleColor.DarkYellow);
