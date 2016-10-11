@@ -14,8 +14,10 @@
  */
 
 using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 
 using sar.Tools;
 using sar.Base;
@@ -35,17 +37,31 @@ namespace sar.Commands
 		
 		public override int Execute(string[] args)
 		{
-			Progress.Message = "bower is updating";
+			Progress.Message = "bower updating";
 			
 			var nodejs = IO.FindApplication("node.exe", "nodejs");
 			var bower = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\npm\node_modules\bower\bin\bower";
-		
 			
 			if (!File.Exists(bower)) throw new ApplicationException("Bower not found");
 			
+			var p = new Process();
+			p.StartInfo.WorkingDirectory = Directory.GetCurrentDirectory();
+			p.StartInfo.FileName = nodejs;
+			p.StartInfo.Arguments = bower + " update";
+			p.StartInfo.UseShellExecute = false;
+			p.StartInfo.RedirectStandardOutput = true;
+			p.StartInfo.RedirectStandardError = true;
+			p.StartInfo.CreateNoWindow = true;
+			p.OutputDataReceived += new DataReceivedEventHandler((s, e) => { ParseBowerOutput(e.Data); });
+			p.Start();
+			p.BeginOutputReadLine();
+			p.WaitForExit();
+			//ConsoleHelper.WriteLine(p.StandardOutput.ReadToEnd());
+			//ConsoleHelper.WriteLine("error: " + p.StandardError.ReadToEnd());
+			
+			
 			//ConsoleHelper.Run(nodejs, bower + " cache clean");
-			if (ConsoleHelper.Run(nodejs, bower + " install") == ConsoleHelper.EXIT_OK && 
-			    ConsoleHelper.Run(nodejs, bower + " --force --silent update") == ConsoleHelper.EXIT_OK)
+			if (p.ExitCode == ConsoleHelper.EXIT_OK)
 			{
 				ConsoleHelper.WriteLine("Bower update was successfully completed", ConsoleColor.DarkYellow);
 				return ConsoleHelper.EXIT_OK;
@@ -53,6 +69,35 @@ namespace sar.Commands
 			
 			ConsoleHelper.WriteLine("Bower failed to update", ConsoleColor.Red);
 			return ConsoleHelper.EXIT_ERROR;
+		}
+		
+		public static void ParseBowerOutput(string data)
+		{
+			if (String.IsNullOrEmpty(data)) return;
+			
+			var pattern = @"bower\s([^\s]*)\s+([^\s]*)\s";
+			var match = Regex.Match(data, pattern);
+			
+			if (match.Success)
+			{
+				var groups = match.Groups;
+				
+				if (groups.Count == 3)
+				{
+					Progress.Message = "bower updating [" + groups[1].Value + "]";
+						
+					#if DEBUG
+					/*
+					ConsoleHelper.Write("bower ", ConsoleColor.Gray);
+					ConsoleHelper.Write(groups[1].Value + " ", ConsoleColor.Green);
+					ConsoleHelper.Write(groups[2].Value, ConsoleColor.DarkGray);
+					ConsoleHelper.WriteLine();
+					*/
+					#endif
+					
+					
+				}
+			}
 		}
 	}
 }
