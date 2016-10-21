@@ -16,6 +16,7 @@
 
 :BuildEnvironment
 	@echo off
+	setlocal
 	pushd "%~dp0"
 	set SOLUTION=sar.sln
 	set REPO=https://github.com/kboronka/sar-tool

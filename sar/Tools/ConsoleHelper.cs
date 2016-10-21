@@ -410,7 +410,7 @@ namespace sar.Tools
 		{
 			//ServiceHelper.ImpersonateUser(username, domain, password);
 			arguments = StringHelper.TrimWhiteSpace(arguments);
-			Process shell = new Process();
+			var shell = new Process();
 			if (!String.IsNullOrEmpty(domain)) shell.StartInfo.Domain = domain;
 			shell.StartInfo.UserName = username;
 			shell.StartInfo.Password = StringHelper.MakeSecureString(password);
@@ -425,10 +425,10 @@ namespace sar.Tools
 		
 		public static Process FindProcess(string processName)
 		{
-			Process[] foundProcess = Process.GetProcessesByName(processName);
+			var foundProcess = Process.GetProcessesByName(processName);
 			if (foundProcess.Length != 0) return foundProcess[0];
 			
-			Process[] processes = Process.GetProcesses();
+			var processes = Process.GetProcesses();
 			foreach (Process process in processes)
 			{
 				try
@@ -458,12 +458,13 @@ namespace sar.Tools
 			do
 			{
 				found = false;
-				Process process = FindProcess(processName);
+				var process = FindProcess(processName);
 				if (process != null)
 				{
 					found = true;
 					process.Kill();
 				}
+				
 			} while (found);
 		}
 		
@@ -474,7 +475,7 @@ namespace sar.Tools
 		
 		public static bool WaitForProcess_Start(string processName, int timeout)
 		{
-			Stopwatch timer = new Stopwatch();
+			var timer = new Stopwatch();
 			timer.Start();
 			
 			while (!IsProcessRunning(processName) && (!(timer.ElapsedMilliseconds > timeout) || timeout == -1))
@@ -492,7 +493,7 @@ namespace sar.Tools
 		
 		public static bool WaitForProcess_Shutdown(string processName, int timeout)
 		{
-			Stopwatch timer = new Stopwatch();
+			var timer = new Stopwatch();
 			timer.Start();
 			
 			while (IsProcessRunning(processName) && (!(timer.ElapsedMilliseconds > timeout) || timeout == -1))
@@ -513,9 +514,9 @@ namespace sar.Tools
 		
 		public static Color ChangeColorBrightness(Color color, float correctionFactor)
 		{
-			float red = (float)color.R;
-			float green = (float)color.G;
-			float blue = (float)color.B;
+			var red = (float)color.R;
+			var green = (float)color.G;
+			var blue = (float)color.B;
 
 			if (correctionFactor < 0)
 			{
