@@ -21,11 +21,13 @@ namespace sar
 {
 	public static class Logger
 	{
+		public static event LoggerEventHandler OnLog;
 		public static bool LogToConsole { get; set; }
 		
 		public static void Log(Exception ex)
 		{
 			Base.Program.Log(ex);
+			OnLog(new LoggerEventArgs(ex));
 			
 			if (LogToConsole) ConsoleHelper.WriteException(ex);
 		}
@@ -33,6 +35,8 @@ namespace sar
 		public static void Log(string message)
 		{
 			Base.Program.Log(message);
+			OnLog(new LoggerEventArgs(message));
+			
 			if (LogToConsole) ConsoleHelper.WriteLine(message);
 		}
 		

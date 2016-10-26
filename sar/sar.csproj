@@ -82,6 +82,7 @@
     <Compile Include="Base\CommandHub.cs" />
     <Compile Include="Base\Configuration.cs" />
     <Compile Include="Base\Logger.cs" />
+    <Compile Include="Base\LoggerEventArgs.cs" />
     <Compile Include="Base\Program.cs" />
     <Compile Include="CommandHub.cs" />
     <Compile Include="Commands\AppShutdownWait.cs" />
