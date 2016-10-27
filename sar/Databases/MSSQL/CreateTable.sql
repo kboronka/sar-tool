@@ -52,7 +52,7 @@ insert into @sql(s) values ( '  BEGIN' )
 insert into @sql(s) values ( '    CREATE TABLE [' + @table + '] (' )
 
 -- **************************************************
--- primary key
+-- columns
 -- **************************************************
 SET @rows = (SELECT COUNT(*) FROM @Columns)
 SET @row = 1;
