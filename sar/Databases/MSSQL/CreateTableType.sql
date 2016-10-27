@@ -65,7 +65,7 @@ WHILE (@row <= @rows)
 		FROM @Columns c 
 		WHERE row=@row
 		
-		IF @type = 'sql_variant' SET @length = null;
+		IF @type NOT LIKE 'var%' AND @type NOT LIKE 'nvar%' SET @length = null;
 		SET @definition = N'[' + @name + N'] [' + @type + ']' 
 		
 		IF @length>=0 SET @definition = @definition + '(' + cast(@length as varchar) + ')';
