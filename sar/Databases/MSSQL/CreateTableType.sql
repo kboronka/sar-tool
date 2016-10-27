@@ -47,7 +47,7 @@ DECLARE @delimiter nvarchar(1)
 -- **************************************************
 insert into @sql(s) values ( N'IF NOT EXISTS (SELECT * FROM sys.table_types WHERE name=''' + @table +''')' )
 insert into @sql(s) values ( N'  BEGIN' )
-insert into @sql(s) values ( N'    CREATE TABLE [' + @table + '] (' )
+insert into @sql(s) values ( N'    CREATE TYPE [' + @table + '] AS TABLE (' )
 
 -- **************************************************
 -- columns
