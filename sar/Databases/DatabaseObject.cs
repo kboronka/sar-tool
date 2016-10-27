@@ -34,16 +34,13 @@ namespace sar.Tools
 	
 	public class DatabaseObject
 	{
-		private const string LIST_ALL_OBJECTS = @"SELECT name, type FROM sys.objects WHERE type in ('FN', 'IF', 'P', 'TF', 'TR', 'TT', 'U', 'V')  AND name NOT LIKE 'sp[_]%' AND name NOT LIKE 'fn[_]%' AND name NOT LIKE 'sysdiagrams' ORDER BY type, name";
-		private const string LIST_ALL_OBJECTS_2000 = @"SELECT name, xtype FROM sysobjects WHERE xtype in ('FN', 'IF', 'P', 'TF', 'TR', 'TT', 'U', 'V')  AND name NOT LIKE 'sp[_]%' AND name NOT LIKE 'fn[_]%' AND name NOT LIKE 'sysdiagrams' ORDER BY type, name";
-		
 		#region static
 		
 		public static List<DatabaseObject> GetDatabaseObjects(SqlConnection connection)
 		{
 			var result = new List<DatabaseObject>();
-			
-			using (var command = new SqlCommand(LIST_ALL_OBJECTS_2000, connection))
+			var sql = Encoding.ASCII.GetString(EmbeddedResource.Get(@"sar.Databases.MSSQL.GetObjects.sql"));
+			using (var command = new SqlCommand(sql, connection))
 			{
 				using (var reader = command.ExecuteReader())
 				{
@@ -143,8 +140,9 @@ namespace sar.Tools
 					case SqlObjectType.TR:
 						return "Trigger";
 					case SqlObjectType.U:
-					case SqlObjectType.TT:
 						return "Table";
+					case SqlObjectType.TT:
+						return "UserDefinedTableType";
 					case SqlObjectType.V:
 						return "View";
 				}
@@ -168,6 +166,22 @@ namespace sar.Tools
 			switch (this.type)
 			{
 				case SqlObjectType.TT:
+					var createTableTypeScript = Encoding.ASCII.GetString(EmbeddedResource.Get(@"sar.Databases.MSSQL.CreateTableType.sql"));
+					createTableTypeScript = createTableTypeScript.Replace(@"%%TableTypeName%%", this.name);
+					
+					using (var command = new SqlCommand(createTableTypeScript, connection))
+					{
+						using (var reader = command.ExecuteReader())
+						{
+							while (reader.Read())
+							{
+								result += reader.GetString(0) + Environment.NewLine;
+							}
+						}
+					}
+					
+					return result.TrimWhiteSpace();
+					
 				case SqlObjectType.U:
 					var createTableScript = EmbeddedResource.Get(@"sar.Databases.MSSQL.CreateTable.sql");
 					var script = Encoding.ASCII.GetString(createTableScript);

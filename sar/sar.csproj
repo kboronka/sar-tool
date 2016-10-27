@@ -229,5 +229,7 @@
     <EmbeddedResource Include="Http\Views\Debug\Info.html" />
     <EmbeddedResource Include="Databases\MSSQL\CreateTable.sql" />
     <EmbeddedResource Include="Databases\MSSQL\GenerateInsert.sql" />
+    <EmbeddedResource Include="Databases\MSSQL\CreateTableType.sql" />
+    <EmbeddedResource Include="Databases\MSSQL\GetObjects.sql" />
   </ItemGroup>
 </Project>
