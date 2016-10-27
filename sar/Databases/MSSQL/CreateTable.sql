@@ -7,9 +7,6 @@
 -- **************************************************
 
 
-declare @table varchar(100)
-set @table = '%%TableName%%'
-
 DECLARE @sql table
 (
 	s varchar(1000), 
@@ -68,7 +65,10 @@ WHILE (@row <= @rows)
 		WHERE row=@row
 		
 		IF @type = 'sql_variant' SET @length = null;
-		SET @definition = N'[' + @name + N'] [' + @type + ']' + coalesce('(' + cast(@length as varchar) + ')','')
+		SET @definition = N'[' + @name + N'] [' + @type + ']' 
+		
+		IF @length>=0 SET @definition = @definition + '(' + cast(@length as varchar) + ')';
+		IF @length=-1 SET @definition = @definition + '(max)';
 		
 		IF @nullable=1 SET @definition = @definition + ' NULL';
 		IF @nullable=0 SET @definition = @definition + ' NOT NULL';
@@ -146,7 +146,12 @@ WHILE (@row <= @rows)
 		WHERE row=@row
 		
 		IF @type = 'sql_variant' SET @length = null;
-		SET @definition = N'[' + @name + N'] ' + @type +  coalesce('(' + cast(@length as varchar) + ')','')
+		SET @definition = N'[' + @name + N'] [' + @type + ']' 
+
+		IF @length>=0 SET @definition = @definition + '(' + cast(@length as varchar) + ')';
+		IF @length=-1 SET @definition = @definition + '(max)';
+		
+		
 		IF exists (select id from syscolumns where object_name(id)=@table and name=@name and columnproperty(id, name, 'IsIdentity') = 1)
 			SET @definition = @definition + N' ' + 'IDENTITY(' + cast(ident_seed(@table) as varchar) + ',' + cast(ident_incr(@table) as varchar) + ')'
 		
