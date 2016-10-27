@@ -21,7 +21,8 @@ DECLARE @Columns TABLE
 	row int PRIMARY KEY IDENTITY(1,1),
 	name nvarchar(256),
 	type nvarchar(256),
-	length int
+	length int,
+	nullable bit
 )
 
 INSERT INTO @Columns
@@ -29,15 +30,17 @@ INSERT INTO @Columns
 		name=t.COLUMN_NAME
 		,type=t.DATA_TYPE
 		,length=t.CHARACTER_MAXIMUM_LENGTH
+		,nullable=COLUMNPROPERTY(OBJECT_ID(@table, 'U'), t.COLUMN_NAME, 'AllowsNull')
 	FROM information_schema.columns t
 	WHERE table_name = @table
 	ORDER BY ORDINAL_POSITION
-
+	
 DECLARE @row int;
 DECLARE @rows int;
 DECLARE @name nvarchar(256)
 DECLARE @type nvarchar(256)
 DECLARE @length int
+DECLARE @nullable bit
 DECLARE @definition nvarchar(256)
 DECLARE @delimiter nvarchar(1)
 
@@ -55,23 +58,29 @@ SET @rows = (SELECT COUNT(*) FROM @Columns)
 SET @row = 1;
 SET @delimiter = '';
 WHILE (@row <= @rows)
-BEGIN
-	SET @name = (SELECT name FROM @Columns WHERE row = @row)
-	SET @type = (SELECT type FROM @Columns WHERE row = @row)
-	SET @length = (SELECT length FROM @Columns WHERE row = @row)
+	BEGIN
+		SELECT 
+			@name=c.name
+			,@type=c.type
+			,@length=c.length
+			,@nullable=c.nullable
+		FROM @Columns c 
+		WHERE row=@row
+		
+		IF @type = 'sql_variant' SET @length = null;
+		SET @definition = N'[' + @name + N'] [' + @type + ']' + coalesce('(' + cast(@length as varchar) + ')','')
+		
+		IF @nullable=1 SET @definition = @definition + ' NULL';
+		IF @nullable=0 SET @definition = @definition + ' NOT NULL';
+		
 	
-	IF @type = 'sql_variant' SET @type = ''
-	SET @definition = N'[' + @name + N'] ' + @type +  coalesce('(' + cast(@length as varchar) + ')','')
-	
-	
-
-	IF exists (select id from syscolumns where object_name(id)=@table and name=@name and columnproperty(id, name, 'IsIdentity') = 1)
-		SET @definition = @definition + N' ' + 'IDENTITY(' + cast(ident_seed(@table) as varchar) + ',' + cast(ident_incr(@table) as varchar) + ')'
-	
-	insert into @sql(s) values ( '      ' + @delimiter + @definition )
-	SET @delimiter = ','
-	SET @row = @row + 1
-END
+		IF exists (select id from syscolumns where object_name(id)=@table and name=@name and columnproperty(id, name, 'IsIdentity') = 1)
+			SET @definition = @definition + N' ' + 'IDENTITY(' + cast(ident_seed(@table) as varchar) + ',' + cast(ident_incr(@table) as varchar) + ')'
+		
+		insert into @sql(s) values ( '      ' + @delimiter + @definition )
+		SET @delimiter = ','
+		SET @row = @row + 1
+	END
 
 -- **************************************************
 -- primary key
@@ -127,25 +136,29 @@ SET @rows = (SELECT COUNT(*) FROM @Columns)
 SET @row = 1;
 SET @delimiter = '';
 WHILE (@row <= @rows)
-BEGIN
-	SET @name = (SELECT name FROM @Columns WHERE row = @row)
-	SET @type = (SELECT type FROM @Columns WHERE row = @row)
-	SET @length = (SELECT length FROM @Columns WHERE row = @row)
-	
-	IF @type = 'sql_variant' SET @type = ''
-	SET @definition = N'[' + @name + N'] ' + @type +  coalesce('(' + cast(@length as varchar) + ')','')
-	IF exists (select id from syscolumns where object_name(id)=@table and name=@name and columnproperty(id, name, 'IsIdentity') = 1)
-		SET @definition = @definition + N' ' + 'IDENTITY(' + cast(ident_seed(@table) as varchar) + ',' + cast(ident_incr(@table) as varchar) + ')'
-	
-	insert into @sql(s) values ( '' )
-	insert into @sql(s) values ( 'IF NOT EXISTS (SELECT * FROM sys.columns WHERE  object_id = OBJECT_ID(N''' + @table + ''') AND name = ''' + @name + ''')' )
-	insert into @sql(s) values ( '  BEGIN' )
-	insert into @sql(s) values ( '    ALTER TABLE ' + @table )
-	insert into @sql(s) values ( '      ADD ' + @definition )
-	insert into @sql(s) values ( '  END' )
-	
-	SET @row = @row + 1
-END
+	BEGIN
+		SELECT 
+			@name=c.name
+			,@type=c.type
+			,@length=c.length
+			,@nullable=c.nullable
+		FROM @Columns c 
+		WHERE row=@row
+		
+		IF @type = 'sql_variant' SET @length = null;
+		SET @definition = N'[' + @name + N'] ' + @type +  coalesce('(' + cast(@length as varchar) + ')','')
+		IF exists (select id from syscolumns where object_name(id)=@table and name=@name and columnproperty(id, name, 'IsIdentity') = 1)
+			SET @definition = @definition + N' ' + 'IDENTITY(' + cast(ident_seed(@table) as varchar) + ',' + cast(ident_incr(@table) as varchar) + ')'
+		
+		insert into @sql(s) values ( '' )
+		insert into @sql(s) values ( 'IF NOT EXISTS (SELECT * FROM sys.columns WHERE  object_id = OBJECT_ID(N''' + @table + ''') AND name = ''' + @name + ''')' )
+		insert into @sql(s) values ( '  BEGIN' )
+		insert into @sql(s) values ( '    ALTER TABLE ' + @table )
+		insert into @sql(s) values ( '      ADD ' + @definition )
+		insert into @sql(s) values ( '  END' )
+		
+		SET @row = @row + 1
+	END
 
 
 -- **************************************************
