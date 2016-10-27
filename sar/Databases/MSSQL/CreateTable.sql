@@ -6,6 +6,9 @@
 -- http://stackoverflow.com/questions/21547/in-sql-server-how-do-i-generate-a-create-table-statement-for-a-given-table
 -- **************************************************
 
+declare @table varchar(100)
+set @table = '%%TableName%%'
+
 
 DECLARE @sql table
 (
