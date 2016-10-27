@@ -4,6 +4,7 @@ declare @table varchar(100)
  declare @sql table(s varchar(1000), id int identity)
 
  insert into @sql(s) values ('if not exists (select * from sysobjects where name=''' + @table +''' and xtype=''U'')')
+ insert into @sql(s) values ('BEGIN')
  insert into @sql(s) values ('CREATE TABLE [' + @table + '] (')
  insert into @sql(s)
 
@@ -97,6 +98,7 @@ declare @table varchar(100)
  End
 
 
+ insert into @sql(s) values ('END')
  select s from @sql order by id
 
 
