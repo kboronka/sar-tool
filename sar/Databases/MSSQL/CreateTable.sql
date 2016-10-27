@@ -8,7 +8,7 @@
 
 
 declare @table varchar(100)
-set @table = 'AlarmLog'
+set @table = '%%TableName%%'
 
 DECLARE @sql table
 (
