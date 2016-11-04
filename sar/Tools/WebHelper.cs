@@ -12,8 +12,9 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
+ 
 using System;
+using System.IO;
 using System.Net;
 
 namespace sar.Tools
@@ -39,6 +40,23 @@ namespace sar.Tools
 		public static string ReadURL(string url)
 		{
 			return Client.DownloadString(url);
+		}
+		
+		public static string ReadJSON(string url)
+		{
+			var request = WebRequest.Create(url);
+			request.Credentials = CredentialCache.DefaultCredentials;
+			
+			var response = request.GetResponse();
+			var responceStream = response.GetResponseStream ();
+			var reader = new StreamReader(responceStream);
+			
+			string json = reader.ReadToEnd();
+			
+			reader.Close();
+			response.Close();
+			
+			return json;
 		}
 	}
 }
