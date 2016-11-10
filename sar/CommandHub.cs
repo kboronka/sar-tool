@@ -66,6 +66,7 @@ namespace sar.Tools
 			                          	new NetListAdapters(this),
 			                          	new NetSetIP(this),
 			                          	new svnAddExternals(this),
+			                          	new svnGetAssemblyVersion(this),
 			                          	new Bower(this)
 			                          });
 		}

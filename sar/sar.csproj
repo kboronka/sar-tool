@@ -109,6 +109,7 @@
     <Compile Include="Commands\FileLock.cs" />
     <Compile Include="Commands\FileMove.cs" />
     <Compile Include="Commands\FileRemoveDirectory.cs" />
+    <Compile Include="Commands\svnGetAssemblyVersion.cs" />
     <Compile Include="Commands\Help.cs" />
     <Compile Include="Commands\MSSQL-GenerateScripts.cs" />
     <Compile Include="Commands\MSSQL-GenerateInsert.cs" />
