@@ -29,6 +29,7 @@
 
 	
 :Build
+	%SAR% svn.GetAssemblyVersion https://github.com/kboronka/sar-tool/trunk/sar/Properties/AssemblyInfo.cs
 	echo "VERSION.MAJOR.MINOR.BUILD".
 	set /p VERSION="> "
 
