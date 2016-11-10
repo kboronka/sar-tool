@@ -68,7 +68,6 @@ namespace sar.Commands
 			{
 				var version = match.Groups[1].Value;
 				
-				ConsoleHelper.Write("Last Version: ");
 				ConsoleHelper.WriteLine(version, ConsoleColor.White);
 				return ConsoleHelper.EXIT_OK;
 			}
