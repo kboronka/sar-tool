@@ -87,6 +87,7 @@
     <Compile Include="CommandHub.cs" />
     <Compile Include="Commands\AppShutdownWait.cs" />
     <Compile Include="Commands\Bower.cs" />
+    <Compile Include="Commands\svnGetNewAssemblyVersion.cs" />
     <Compile Include="Commands\CodeClean.cs" />
     <Compile Include="Commands\CodeReIndent.cs" />
     <Compile Include="Commands\FanucBackup.cs" />

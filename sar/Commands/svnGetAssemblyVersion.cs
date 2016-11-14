@@ -29,7 +29,7 @@ namespace sar.Commands
 		public svnGetAssemblyVersion(Base.CommandHub parent) : base(parent, "svn Get Assembly Version",
 		                                                            new List<string> { "svn.GetAssemblyVersion" },
 		                                                            @"svn.GetAssemblyVersion <svn/path>",
-		                                                            new List<string> { @"-svn.AddExternals http://svnserver/trunk/Properties/AssemblyInfo.cs" })
+		                                                            new List<string> { @"-svn.GetAssemblyVersion http://svnserver/trunk/Properties/AssemblyInfo.cs" })
 		{
 			
 		}
@@ -38,8 +38,23 @@ namespace sar.Commands
 		{
 			string repo = args[1];
 			
+			Progress.Message = "Reading Assembly Version Number";
+			var version = GetVersion(repo);
+			
+			if (!String.IsNullOrEmpty(version))
+			{								
+				ConsoleHelper.WriteLine(version, ConsoleColor.White);
+				return ConsoleHelper.EXIT_OK;
+			}
+			else
+			{
+				return ConsoleHelper.EXIT_ERROR;
+			}
+		}
+
+		public static string GetVersion(string repo)
+		{
 			// find svn executiable
-			Progress.Message = "finding svn.exe";
 			var svn = IO.FindApplication("svn.exe", @"TortoiseSVN\bin");
 			if (!File.Exists(svn)) throw new ApplicationException("svn.exe not found");
 
@@ -51,30 +66,23 @@ namespace sar.Commands
 			var tempPath = Path.Combine(tempFolder, Guid.NewGuid().ToString() + "." + extension);
 
 
-			// svn checkout --depth empty http://svnserver/trunk/proj
-			Progress.Message = "exporting assembly file";
 			ConsoleHelper.Run(svn, " export " + repo + @" """ + tempPath + @"""");
 			
-			Progress.Message = "getting version number";
 			var content = IO.ReadFile(tempPath);
 			File.Delete(tempPath);
 
-			var pattern = @"AssemblyVersion\s*\(\""(.*)\""\)";
+			const string pattern = @"AssemblyVersion\s*\(\""(.*)\""\)";
 			
 			var regex = new Regex(pattern);
 			var match = regex.Match(content);
 			
 			if (match.Success)
 			{
-				var version = match.Groups[1].Value;
-				
-				ConsoleHelper.WriteLine(version, ConsoleColor.White);
-				return ConsoleHelper.EXIT_OK;
+				var version = match.Groups[1].Value;				
+				return version;
 			}
-			else
-			{
-				return ConsoleHelper.EXIT_ERROR;
-			}
+			
+			return null;
 		}
 	}
 }

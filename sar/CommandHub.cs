@@ -67,6 +67,7 @@ namespace sar.Tools
 			                          	new NetSetIP(this),
 			                          	new svnAddExternals(this),
 			                          	new svnGetAssemblyVersion(this),
+			                          	new svnGetNewAssemblyVersion(this),
 			                          	new Bower(this)
 			                          });
 		}
