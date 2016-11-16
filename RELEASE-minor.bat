@@ -56,7 +56,6 @@
 	svn commit -m "new binaries v%VERSION%"
 	%ZIP% "sar %VERSION%.zip" .\release\*.*
 	echo %ZIP% "sar %VERSION%.zip" .\release\*.*
-	pause
 	svn update
 
 	%SAR% -f.bsd \sar\*.cs "Kevin Boronka"
