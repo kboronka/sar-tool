@@ -44,6 +44,7 @@ namespace sar
 				args = new string[] { "fanuc.downloadPR", "10.240.26.104", @"C:\Temp\posreg.test.csv", @"/pause" };
 				args = new string[] { "svn.GetAssemblyVersion", @"https://github.com/kboronka/sar-tool/trunk/sar/Properties/AssemblyInfo.cs", @"/pause" };
 				args = new string[] { "svn.GetNewAssemblyVersion", @"https://github.com/kboronka/sar-tool/trunk/sar/Properties/AssemblyInfo.cs", @"/pause" };
+				args = new string[] { "dotNetVersions", @"/pause" };
 				
 				*/
 				
