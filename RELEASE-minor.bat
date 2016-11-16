@@ -19,6 +19,7 @@
 	pushd "%~dp0"
 	set SOLUTION=sar.sln
 	set REPO=https://github.com/kboronka/sar-tool
+	set INFO=https://github.com/kboronka/sar-tool/trunk/sar/Properties/AssemblyInfo.cs
 	set CONFIG=Release
 	set BASEPATH=%~dp0
 
@@ -28,9 +29,11 @@
 
 	
 :Build
-	%SAR% svn.GetAssemblyVersion https://github.com/kboronka/sar-tool/trunk/sar/Properties/AssemblyInfo.cs
-	echo "VERSION.MAJOR.MINOR.BUILD".
-	set /p VERSION="> "
+	set VERSION=%~1
+	
+	if "%VERSION%" == "" (
+		for /f %%i in ('%SAR% svn.GetNewAssemblyVersion %INFO%') do set VERSION=%%i
+	)
 
 	call UpdateExternals.bat
 	
