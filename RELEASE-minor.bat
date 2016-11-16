@@ -29,17 +29,17 @@
 
 	
 :Build
+	svn update
+
 	set VERSION=%~1
 	
 	if "%VERSION%" == "" (
 		for /f %%i in ('%SAR% svn.GetNewAssemblyVersion %INFO%') do set VERSION=%%i
 	)
+	
+	echo new version: %VERSION%
 
 	call UpdateExternals.bat
-	
-	svn cleanup
-	svn update
-	svn revert -R .
 		
 	%SAR% -assy.ver \sar\AssemblyInfo.* %VERSION%
 	%SAR% -f.del sar\bin\%CONFIG%\*.* /q /svn
@@ -48,11 +48,7 @@
 	%SAR% -b.net 3.5 %SOLUTION% /p:Configuration=%CONFIG% /p:Platform=\"x86\"
 	if errorlevel 1 goto BuildFailed
 	
-	svn cleanup
-	svn revert -R .
-	
 :BuildComplete
-	svn revert
 	copy sar\bin\%CONFIG%\*.exe release\*.exe
 	copy sar\bin\%CONFIG%\*.pdb release\*.pdb
 	copy license.txt release\license.txt
