@@ -959,7 +959,26 @@ namespace sar.Tools
 			return JSON;
 		}
 		
-		private static string GetJSON(string json, string element)
+		public static List<string> ParseJsonArray(string json, string element)
+		{
+			var jsonArrayMatch = Regex.Match(json, @"\""" + element + @"\"":\[([^\]]*)\]");
+			var jsonArray = jsonArrayMatch.Groups[1].Value;
+			
+			var items = new List<string>();
+			var matches = Regex.Matches(jsonArray, @"{([^}]+)*}");
+			
+			foreach (Match match in matches)
+			{
+				if (match.Groups.Count == 2)
+				{
+					items.Add(match.Groups[1].Value);
+				}
+			}
+			
+			return items;
+		}
+		
+		public static string ParseJsonElement(string json, string element)
 		{
 			var pattern = @"\""" + element + @"\"":([^\,\}]*)";
 			var x = Regex.Match(json, pattern);
@@ -982,7 +1001,7 @@ namespace sar.Tools
 		{
 			try
 			{
-				return int.Parse(GetJSON(json, element));
+				return int.Parse(ParseJsonElement(json, element));
 			}
 			catch
 			{
@@ -994,7 +1013,7 @@ namespace sar.Tools
 		{
 			try
 			{
-				return double.Parse(GetJSON(json, element));
+				return double.Parse(ParseJsonElement(json, element));
 			}
 			catch
 			{
@@ -1006,7 +1025,7 @@ namespace sar.Tools
 		{
 			try
 			{
-				string result = GetJSON(json, element);
+				string result = ParseJsonElement(json, element);
 				if (String.IsNullOrEmpty(result))
 				{
 					return defaultValue;
@@ -1034,7 +1053,7 @@ namespace sar.Tools
 		{
 			try
 			{
-				return GetJSON(json, element) == "true";
+				return ParseJsonElement(json, element) == "true";
 			}
 			catch
 			{
@@ -1046,7 +1065,7 @@ namespace sar.Tools
 		{
 			try
 			{
-				return DateTime.Parse(GetJSON(json, element), null, System.Globalization.DateTimeStyles.RoundtripKind);
+				return DateTime.Parse(ParseJsonElement(json, element), null, System.Globalization.DateTimeStyles.RoundtripKind);
 			}
 			catch
 			{
