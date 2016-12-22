@@ -107,6 +107,21 @@ namespace sar.Tools
 				return new TimeSpan(0, 0, 0);
 			}
 
+			public bool GetAttributeBoolean(string name)
+			{
+				try
+				{
+					string attributeValue = GetAttributeString(name);
+					return (attributeValue == "true");
+				}
+				catch
+				{
+					
+				}
+				
+				return false;
+			}
+			
 			public long GetAttributeLong(string name)
 			{
 				try
@@ -288,6 +303,12 @@ namespace sar.Tools
 				this.WriteElement(element, elementValue);
 			}				
 
+			public void WriteElement(string element, bool value)
+			{
+				string elementValue = value ? "true" : "false";
+				this.WriteElement(element, elementValue);
+			}
+			
 			public void WriteElement(string element, long value)
 			{
 				string elementValue = value.ToString();
