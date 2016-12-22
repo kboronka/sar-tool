@@ -30,24 +30,21 @@ namespace sar.Tools
 		public const string TIME = "HH:mm:ss";
 		public const string TIME_LONG = "HH:mm:ss.fff";
 		
-		public static IFormatProvider NumberFormat = CultureInfo.InvariantCulture.NumberFormat;		
+		public static IFormatProvider NumberFormat = CultureInfo.InvariantCulture.NumberFormat;
 
 		public class Reader : IDisposable
 		{
 			private XmlReader reader;
 			
-			public XmlNodeType NodeType
-			{
+			public XmlNodeType NodeType {
 				get { return reader.NodeType; }
 			}
 			
-			public string Name
-			{
+			public string Name {
 				get { return reader.Name; }
 			}
 			
-			public string Value
-			{
+			public string Value {
 				get { return reader.Value; }
 			}
 			
@@ -64,13 +61,10 @@ namespace sar.Tools
 			
 			public string GetAttributeString(string name)
 			{
-				try
-				{
+				try {
 					string attributeValue = this.reader.GetAttribute(name);
 					return (String.IsNullOrEmpty(attributeValue)) ? "" : this.reader.GetAttribute(name);
-				}
-				catch
-				{
+				} catch {
 					
 				}
 				
@@ -79,13 +73,10 @@ namespace sar.Tools
 			
 			public DateTime GetAttributeTimestamp(string name)
 			{
-				try
-				{
+				try {
 					string attributeValue = this.reader.GetAttribute(name);
 					return DateTime.ParseExact(attributeValue, XML.DATETIME_LONG, DateTimeFormatInfo.InvariantInfo);
-				}
-				catch
-				{
+				} catch {
 					
 				}
 
@@ -94,13 +85,10 @@ namespace sar.Tools
 			
 			public TimeSpan GetAttributeTimeSpan(string name)
 			{
-				try
-				{
+				try {
 					string attributeValue = this.reader.GetAttribute(name);
 					return DateTime.ParseExact(attributeValue, XML.TIME, DateTimeFormatInfo.InvariantInfo).TimeOfDay;
-				}
-				catch
-				{
+				} catch {
 					
 				}
 
@@ -109,13 +97,10 @@ namespace sar.Tools
 
 			public bool GetAttributeBoolean(string name)
 			{
-				try
-				{
+				try {
 					string attributeValue = GetAttributeString(name);
 					return (attributeValue == "true");
-				}
-				catch
-				{
+				} catch {
 					
 				}
 				
@@ -124,13 +109,10 @@ namespace sar.Tools
 			
 			public long GetAttributeLong(string name)
 			{
-				try
-				{
+				try {
 					string attributeValue = GetAttributeString(name);
 					return long.Parse(attributeValue);
-				}
-				catch
-				{
+				} catch {
 					
 				}
 				
@@ -139,14 +121,11 @@ namespace sar.Tools
 			
 			public string GetValueString()
 			{
-				try
-				{
+				try {
 					reader.Read();
 					//TODO: add some error checking to verify element type
 					return reader.Value;
-				}
-				catch
-				{
+				} catch {
 					
 				}
 				
@@ -155,13 +134,10 @@ namespace sar.Tools
 			
 			public DateTime GetValueTimestamp()
 			{
-				try
-				{
+				try {
 					string value = this.GetValueString();
 					return DateTime.ParseExact(value, XML.DATETIME_LONG, DateTimeFormatInfo.InvariantInfo);
-				}
-				catch
-				{
+				} catch {
 					
 				}
 
@@ -170,28 +146,34 @@ namespace sar.Tools
 			
 			public TimeSpan GetValueTimeSpan()
 			{
-				try
-				{
+				try {
 					string value = this.GetValueString();
 					return DateTime.ParseExact(value, XML.TIME, DateTimeFormatInfo.InvariantInfo).TimeOfDay;
-				}
-				catch
-				{
+				} catch {
 					
 				}
 
 				return new TimeSpan(0, 0, 0);
 			}
 
+			public bool GetValueBoolean()
+			{
+				try {
+					string value = this.GetValueString();
+					return (value == "true");
+				} catch {
+					
+				}
+				
+				return false;
+			}
+			
 			public long GetValueLong()
 			{
-				try
-				{
+				try {
 					string value = this.GetValueString();
 					return long.Parse(value);
-				}
-				catch
-				{
+				} catch {
 					
 				}
 				
@@ -208,10 +190,8 @@ namespace sar.Tools
 				this.reader.Close();
 			}
 			
-			private static XmlReaderSettings ReaderSettings
-			{
-				get
-				{
+			private static XmlReaderSettings ReaderSettings {
+				get {
 					var settings = new XmlReaderSettings();
 					settings.CloseInput = true;
 					settings.IgnoreComments = true;
@@ -231,8 +211,7 @@ namespace sar.Tools
 			
 			protected virtual void Dispose(bool disposing)
 			{
-				if(disposing)
-				{
+				if (disposing) {
 
 				}
 			}
@@ -260,7 +239,8 @@ namespace sar.Tools
 			
 			public void WriteAttributeString(string name, string value)
 			{
-				if (!String.IsNullOrEmpty(value)) this.writer.WriteAttributeString(name, value);
+				if (!String.IsNullOrEmpty(value))
+					this.writer.WriteAttributeString(name, value);
 			}
 			
 			public void WriteAttributeString(string name, DateTime value)
@@ -275,6 +255,12 @@ namespace sar.Tools
 				this.WriteAttributeString(name, attributeValue);
 			}
 			
+			public void WriteAttributeString(string name, bool value)
+			{
+				string elementValue = value ? "true" : "false";
+				this.WriteElement(name, elementValue);
+			}
+			
 			public void WriteAttributeString(string name, long value)
 			{
 				string attributeValue = value.ToString();
@@ -283,25 +269,27 @@ namespace sar.Tools
 			
 			public void WriteElement(string element, string value)
 			{
-				if (String.IsNullOrEmpty(value)) return;
-				if (String.IsNullOrEmpty(element)) return;
+				if (String.IsNullOrEmpty(value))
+					return;
+				if (String.IsNullOrEmpty(element))
+					return;
 				
 				this.WriteStartElement(element);
 				this.WriteValue(value);
 				this.WriteEndElement();
-			}	
+			}
 
 			public void WriteElement(string element, DateTime value)
 			{
 				string elementValue = value.ToString(XML.DATETIME_LONG);
 				this.WriteElement(element, elementValue);
-			}	
+			}
 
 			public void WriteElement(string element, TimeSpan value)
 			{
 				string elementValue = value.ToString();
 				this.WriteElement(element, elementValue);
-			}				
+			}
 
 			public void WriteElement(string element, bool value)
 			{
@@ -337,10 +325,8 @@ namespace sar.Tools
 				this.writer.Close();
 			}
 			
-			private static XmlWriterSettings WriterSettings
-			{
-				get
-				{
+			private static XmlWriterSettings WriterSettings {
+				get {
 					var settings = new XmlWriterSettings();
 					settings.CloseOutput = true;
 					settings.Encoding = Encoding.UTF8;
@@ -360,8 +346,7 @@ namespace sar.Tools
 			
 			protected virtual void Dispose(bool disposing)
 			{
-				if(disposing)
-				{
+				if (disposing) {
 
 				}
 			}
