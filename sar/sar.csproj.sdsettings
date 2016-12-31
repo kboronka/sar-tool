@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Properties>
+  <Properties key="CSharpFormatting">
+    <SerializedObject key="PropertyGetBraceStyle">
+      <BraceStyle xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NextLine</BraceStyle>
+    </SerializedObject>
+    <SerializedObject key="PropertySetBraceStyle">
+      <BraceStyle xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NextLine</BraceStyle>
+    </SerializedObject>
+    <SerializedObject key="EventBraceStyle">
+      <BraceStyle xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NextLine</BraceStyle>
+    </SerializedObject>
+    <SerializedObject key="StatementBraceStyle">
+      <BraceStyle xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NextLine</BraceStyle>
+    </SerializedObject>
+    <SerializedObject key="AnonymousMethodBraceStyle">
+      <BraceStyle xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NextLine</BraceStyle>
+    </SerializedObject>
+    <SerializedObject key="PropertyBraceStyle">
+      <BraceStyle xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NextLine</BraceStyle>
+    </SerializedObject>
+    <SerializedObject key="CatchNewLinePlacement">
+      <NewLinePlacement xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NewLine</NewLinePlacement>
+    </SerializedObject>
+    <SerializedObject key="FinallyNewLinePlacement">
+      <NewLinePlacement xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NewLine</NewLinePlacement>
+    </SerializedObject>
+    <SerializedObject key="ElseIfNewLinePlacement">
+      <NewLinePlacement xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NewLine</NewLinePlacement>
+    </SerializedObject>
+    <SerializedObject key="ElseNewLinePlacement">
+      <NewLinePlacement xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NewLine</NewLinePlacement>
+    </SerializedObject>
+    <SerializedObject key="MinimumBlankLinesAroundRegion">
+      <x:Int32 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">2</x:Int32>
+    </SerializedObject>
+    <SerializedObject key="MinimumBlankLinesInsideRegion">
+      <x:Int32 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">1</x:Int32>
+    </SerializedObject>
+  </Properties>
+</Properties>
