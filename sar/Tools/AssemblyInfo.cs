@@ -82,7 +82,7 @@ namespace sar.Tools
 			}
 		}
 		
-		private static string sarVersion;		
+		private static string sarVersion;
 		public static string SarVersion
 		{
 			get
@@ -126,9 +126,19 @@ namespace sar.Tools
 					{
 						string name = assemblyName.Name;
 						
-						if (!name.StartsWith("System") && !name.StartsWith("mscorlib") && !name.StartsWith("Microsoft."))
+						if (!name.StartsWith("System")
+						    && !name.StartsWith("mscorlib")
+						    && !name.StartsWith("Microsoft.")
+						    && !name.StartsWith("CefSharp."))
 						{
-							assemblies.Add(Assembly.Load(assemblyName));
+							try
+							{
+								assemblies.Add(Assembly.Load(assemblyName));
+							}
+							catch
+							{
+								
+							}
 						}
 					}
 				}
