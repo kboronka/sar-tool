@@ -29,7 +29,10 @@ namespace sar.Http
 		#region static
 		
 		[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-		public class SarWebSocketController : Attribute { }
+		public class SarWebSocketController : Attribute
+		{
+
+		}
 		
 		private static Dictionary<string, Type> controllers;
 		private static int nextID;
@@ -61,7 +64,8 @@ namespace sar.Http
 		public static bool WebSocketControllerExists(HttpRequest request)
 		{
 			string[] urlSplit = request.Path.Split('/');
-			if (urlSplit.Length != 1) return false;
+			if (urlSplit.Length != 1)
+				return false;
 			
 			string controllerName = urlSplit[0];
 			return controllers.ContainsKey(controllerName);
@@ -70,7 +74,8 @@ namespace sar.Http
 		public static Type GetWebSocketController(HttpRequest request)
 		{
 			string[] urlSplit = request.Path.Split('/');
-			if (urlSplit.Length != 1) return null;
+			if (urlSplit.Length != 1)
+				return null;
 			
 			string controllerName = urlSplit[0];
 			return (controllers.ContainsKey(controllerName)) ? controllers[controllerName] : null;
@@ -85,7 +90,7 @@ namespace sar.Http
 		public int ID { get; private set; }
 		
 		private bool open;
-		public bool Open 
+		public bool Open
 		{ 
 			get
 			{
@@ -127,7 +132,7 @@ namespace sar.Http
 		public void ReadNewData()
 		{
 			// Read and parse request
-			var buffer = new byte[0] {};
+			var buffer = new byte[0] { };
 			// TODO: add request timeout
 			while (true)
 			{
@@ -141,7 +146,8 @@ namespace sar.Http
 						OnFrameRecived(HttpWebSocketFrame.DecodeFrame(buffer));
 						break;
 					}
-					else if (incomingPacket.Length != 0)
+					else
+					if (incomingPacket.Length != 0)
 					{
 						// wait until entire request is recived
 						Thread.Sleep(1);
@@ -193,8 +199,8 @@ namespace sar.Http
 		#region new connection
 
 		public delegate void ConnectedClientHandler(HttpWebSocket client);
-		private static ConnectedClientHandler clientConnected = null;
-		public static event ConnectedClientHandler ClientConnected
+		private ConnectedClientHandler clientConnected = null;
+		public event ConnectedClientHandler ClientConnected
 		{
 			add
 			{
@@ -206,7 +212,7 @@ namespace sar.Http
 			}
 		}
 		
-		private static void OnNewClient(HttpWebSocket client)
+		private void OnNewClient(HttpWebSocket client)
 		{
 			try
 			{
@@ -227,8 +233,8 @@ namespace sar.Http
 		#region disconnected
 
 		public delegate void ClientDisconnectedHandler(HttpWebSocket client);
-		private static ClientDisconnectedHandler clientDisconnected = null;
-		public static event ClientDisconnectedHandler ClientDisconnected
+		private ClientDisconnectedHandler clientDisconnected = null;
+		public event ClientDisconnectedHandler ClientDisconnected
 		{
 			add
 			{
@@ -240,7 +246,7 @@ namespace sar.Http
 			}
 		}
 		
-		private static void OnDisconnectedClient(HttpWebSocket client)
+		private void OnDisconnectedClient(HttpWebSocket client)
 		{
 			try
 			{
@@ -261,7 +267,7 @@ namespace sar.Http
 
 		public delegate void FrameRecivedHandler(HttpWebSocketFrame frame);
 		private FrameRecivedHandler frameRecived = null;
-		public event FrameRecivedHandler FrameRecived 
+		public event FrameRecivedHandler FrameRecived
 		{
 			add
 			{
