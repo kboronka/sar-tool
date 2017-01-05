@@ -199,8 +199,8 @@ namespace sar.Http
 		#region new connection
 
 		public delegate void ConnectedClientHandler(HttpWebSocket client);
-		private ConnectedClientHandler clientConnected = null;
-		public event ConnectedClientHandler ClientConnected
+		private static ConnectedClientHandler clientConnected = null;
+		public static event ConnectedClientHandler ClientConnected
 		{
 			add
 			{
@@ -212,7 +212,7 @@ namespace sar.Http
 			}
 		}
 		
-		private void OnNewClient(HttpWebSocket client)
+		private static void OnNewClient(HttpWebSocket client)
 		{
 			try
 			{
@@ -233,8 +233,8 @@ namespace sar.Http
 		#region disconnected
 
 		public delegate void ClientDisconnectedHandler(HttpWebSocket client);
-		private ClientDisconnectedHandler clientDisconnected = null;
-		public event ClientDisconnectedHandler ClientDisconnected
+		private static ClientDisconnectedHandler clientDisconnected = null;
+		public static event ClientDisconnectedHandler ClientDisconnected
 		{
 			add
 			{
@@ -246,7 +246,7 @@ namespace sar.Http
 			}
 		}
 		
-		private void OnDisconnectedClient(HttpWebSocket client)
+		private static void OnDisconnectedClient(HttpWebSocket client)
 		{
 			try
 			{
