@@ -26,7 +26,7 @@
       <NewLinePlacement xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NewLine</NewLinePlacement>
     </SerializedObject>
     <SerializedObject key="ElseIfNewLinePlacement">
-      <NewLinePlacement xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NewLine</NewLinePlacement>
+      <NewLinePlacement xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">SameLine</NewLinePlacement>
     </SerializedObject>
     <SerializedObject key="ElseNewLinePlacement">
       <NewLinePlacement xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NewLine</NewLinePlacement>
