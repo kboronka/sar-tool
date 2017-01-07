@@ -347,6 +347,19 @@ namespace sar.Tools
 			return columns.ToArray();
 		}
 		
+		public static string ToCSV(this IEnumerable<string> list)
+		{
+			var line = "";
+			var delimitor = "";
+			foreach (var item in list)
+			{
+				line += delimitor + item;
+				delimitor = ", ";
+			}
+
+			return line;
+		}		
+		
 		#region string extensions
 		
 		public static string QuoteDouble(this string content)
