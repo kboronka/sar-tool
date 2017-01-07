@@ -65,7 +65,7 @@ namespace sar.Http
 			}
 			catch (Exception ex)
 			{
-				Program.Log(ex);
+				Logger.Log(ex);
 			}
 		}
 
@@ -102,7 +102,7 @@ namespace sar.Http
 				}
 				catch (Exception ex)
 				{
-					Program.Log(ex);
+					Logger.Log(ex);
 					Thread.Sleep(2000);
 				}
 			}
@@ -141,7 +141,7 @@ namespace sar.Http
 			}
 			catch (Exception ex)
 			{
-				Program.Log(ex);
+				Logger.Log(ex);
 			}
 		}
 		

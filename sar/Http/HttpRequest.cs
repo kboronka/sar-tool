@@ -147,7 +147,7 @@ namespace sar.Http
 				}
 				catch (Exception ex)
 				{
-					Program.Log(ex);
+					Logger.Log(ex);
 				}
 			}
 			
@@ -173,13 +173,13 @@ namespace sar.Http
 			}
 			catch (ObjectDisposedException ex)
 			{
-				Program.Log(ex);
+				Logger.Log(ex);
 				// The NetworkStream is closed.
 				//this.Disconnect();
 			}
 			catch (IOException ex)
 			{
-				Program.Log(ex);
+				Logger.Log(ex);
 				// The underlying Socket is closed.
 				//this.Disconnect();
 			}
@@ -189,7 +189,7 @@ namespace sar.Http
 			}
 			catch (Exception ex)
 			{
-				Program.Log(ex);
+				Logger.Log(ex);
 			}
 			
 			return new byte[0] {};

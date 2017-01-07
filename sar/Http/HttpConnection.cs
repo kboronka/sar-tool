@@ -199,7 +199,7 @@ namespace sar.Http
 				}
 				catch (Exception ex)
 				{
-					Program.Log(ex);
+					Logger.Log(ex);
 				}
 			}
 			

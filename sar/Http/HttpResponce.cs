@@ -111,13 +111,13 @@ namespace sar.Http
 			}
 			catch (FileNotFoundException ex)
 			{
-				Program.Log(ex);
+				Logger.Log(ex);
 				this.content = ErrorController.Display(this.request, ex, HttpStatusCode.NOTFOUND);
 				this.bytes = this.ConstructResponse(HttpStatusCode.SERVERERROR);
 			}
 			catch (Exception ex)
 			{
-				Program.Log(ex);
+				Logger.Log(ex);
 				this.content = ErrorController.Display(this.request, ex, HttpStatusCode.SERVERERROR);
 				this.bytes = this.ConstructResponse(HttpStatusCode.SERVERERROR);
 			}

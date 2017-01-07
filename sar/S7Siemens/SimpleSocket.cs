@@ -111,12 +111,12 @@ namespace sar.Tools
 				}
 				else
 				{
-					Program.Log(ex);
+					Logger.Log(ex);
 				}
 			}
 			catch (Exception ex)
 			{
-				Program.Log(ex);
+				Logger.Log(ex);
 			}
 			
 		    if(retry)
@@ -140,7 +140,7 @@ namespace sar.Tools
 			}
 			catch (Exception ex)
 			{
-				Program.Log(ex);
+				Logger.Log(ex);
 			}
 			
 			connected = false;
