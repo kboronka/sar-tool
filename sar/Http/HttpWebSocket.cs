@@ -43,6 +43,7 @@ namespace sar.Http
 			
 			foreach (Assembly assembly in AssemblyInfo.Assemblies)
 			{
+				
 				foreach (Type type in assembly.GetTypes())
 				{
 					if (type.Name.EndsWith("WebSocket"))
@@ -101,6 +102,14 @@ namespace sar.Http
 				if (!value && open)
 				{
 					OnDisconnectedClient(this);
+					try
+					{
+						this.socket.Close();
+					}
+					catch
+					{
+						
+					}
 				}
 				
 				open = value;
@@ -157,7 +166,7 @@ namespace sar.Http
 				}
 				catch (Exception ex)
 				{
-					Logger.Log(ex);
+					this.Open = false;
 					return;
 				}
 			}
@@ -184,7 +193,6 @@ namespace sar.Http
 				catch
 				{
 					this.Open = false;
-					// TODO: close connection?
 				}
 			}
 		}
