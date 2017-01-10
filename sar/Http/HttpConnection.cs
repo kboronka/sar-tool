@@ -150,6 +150,13 @@ namespace sar.Http
 						
 						// process request and get responce
 						var request = new HttpRequest(this);
+						
+						if (request.RequestError)
+						{
+							this.Open = false;
+							break;
+						}
+						
 						var response = request.Responce.bytes;
 						
 						// send responce

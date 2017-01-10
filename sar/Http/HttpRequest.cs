@@ -24,7 +24,13 @@ using sar.Tools;
 
 namespace sar.Http
 {
-	public enum HttpMethod {GET, POST, HEAD};
+	public enum HttpMethod
+	{
+		GET,
+		POST,
+		HEAD}
+
+	;
 	
 	public class HttpRequest : HttpBase
 	{
@@ -54,7 +60,7 @@ namespace sar.Http
 
 		#region properties
 
-		public string Path { get; set;}
+		public string Path { get; set; }
 		public string ETag { get; private set; }
 		public HttpSession Session { get; private set; }
 		public HttpResponse Responce { get; private set; }
@@ -98,6 +104,8 @@ namespace sar.Http
 			get { return pdfReader; }
 		}
 		
+		public bool RequestError { get; private set; }
+		
 		#endregion
 		
 		#region constructor
@@ -107,6 +115,7 @@ namespace sar.Http
 			this.encoding = Encoding.ASCII;
 			this.parent = connection.Parent;
 
+			this.RequestError = false;
 			this.ReadRequest(connection.Stream, connection.Socket);
 		}
 		
@@ -119,13 +128,18 @@ namespace sar.Http
 		#region read request
 		
 		private bool incomingRequestRecived;
+		private bool incomingRequestError;
 
 		private void ReadRequest(NetworkStream stream, TcpClient socket)
 		{
 			// Read and parse request
-			var buffer = new byte[0] {};
+			var buffer = new byte[0] { };
+			this.incomingRequestError = false;
+			
 			// TODO: add request timeout
-			while (!incomingRequestRecived)
+			//var timeout = new Timing.Interval(10000);
+
+			while (!incomingRequestRecived && !incomingRequestError)
 			{
 				try
 				{
@@ -147,18 +161,26 @@ namespace sar.Http
 				}
 				catch
 				{
-
+					
 				}
 			}
 			
-			this.Responce = new HttpResponse(this);
+			if (incomingRequestRecived && !incomingRequestError)
+			{
+				this.Responce = new HttpResponse(this);
+			}
+			else
+			{
+				this.RequestError = true;
+			}
 		}
 		
 		public byte[] ReadIncomingPacket(NetworkStream stream, TcpClient socket)
 		{
 			try
 			{
-				if (socket == null || stream == null) return new byte[0] {};
+				if (socket == null || stream == null)
+					return new byte[0] { };
 				
 				lock (socket)
 				{
@@ -173,26 +195,29 @@ namespace sar.Http
 			}
 			catch (ObjectDisposedException ex)
 			{
+				this.incomingRequestError = true;
 				Logger.Log(ex);
 				// The NetworkStream is closed.
 				//this.Disconnect();
 			}
 			catch (IOException ex)
 			{
+				this.incomingRequestError = true;
 				Logger.Log(ex);
 				// The underlying Socket is closed.
 				//this.Disconnect();
 			}
 			catch (SocketException)
 			{
-				
+				this.incomingRequestError = true;
 			}
 			catch (Exception ex)
 			{
+				this.incomingRequestError = true;
 				Logger.Log(ex);
 			}
 			
-			return new byte[0] {};
+			return new byte[0] { };
 		}
 		
 		private void ProcessIncomingBuffer(ref byte[] bufferIn)
@@ -200,7 +225,8 @@ namespace sar.Http
 			Header += StringHelper.GetString(bufferIn);
 			
 			ParseHeader(ref bufferIn);
-			if (!headerRecived) return;
+			if (!headerRecived)
+				return;
 			
 			incomingRequestRecived |= (this.contentLength == 0);
 			ParseData(ref bufferIn);
@@ -209,14 +235,17 @@ namespace sar.Http
 		
 		private void ParseHeader(ref byte[] bufferIn)
 		{
-			if (headerRecived) return;
+			if (headerRecived)
+				return;
 			
 			// Request Line
 			string requestLine = ReadLine(ref bufferIn);
-			if (string.IsNullOrEmpty(requestLine)) throw new InvalidDataException("request line missing");
+			if (string.IsNullOrEmpty(requestLine))
+				throw new InvalidDataException("request line missing");
 			
 			string[] initialRequest = requestLine.Split(' ');
-			if (initialRequest.Length != 3) throw new InvalidDataException("the initial request line should contain three fields");
+			if (initialRequest.Length != 3)
+				throw new InvalidDataException("the initial request line should contain three fields");
 
 			this.fullUrl = CleanUrlString(initialRequest[1]);
 			string[] url = this.fullUrl.Split('#');
@@ -237,7 +266,7 @@ namespace sar.Http
 				case "POST":
 					this.method = HttpMethod.POST;
 					break;
-					//TODO: handle the HEAD request type
+			//TODO: handle the HEAD request type
 				default:
 					throw new InvalidDataException("unknown request type \"" + initialRequest[0] + "\"");
 			}
@@ -256,12 +285,12 @@ namespace sar.Http
 				System.Diagnostics.Debug.WriteLine(line);
 				#endif
 				
-				switch(requestHeader[0].TrimWhiteSpace())
+				switch (requestHeader[0].TrimWhiteSpace())
 				{
 					case "Connection":
 						this.IsWebSocket = requestHeader[1].TrimWhiteSpace() == "Upgrade";
 						break;
-					
+						
 					case "Sec-WebSocket-Key":
 						this.WebSocketKey = requestHeader[1].TrimWhiteSpace();
 						break;
@@ -276,7 +305,8 @@ namespace sar.Http
 						break;
 						
 					case "User-Agent":
-						if (requestHeader[1].Contains("wkhtmltopdf")) this.pdfReader = true;
+						if (requestHeader[1].Contains("wkhtmltopdf"))
+							this.pdfReader = true;
 						break;
 						
 					case "Content-Type":
@@ -313,7 +343,8 @@ namespace sar.Http
 				// examples:
 				// Host: example.com
 				// User-Agent: chrome v17
-				if (this.headerRecived) break;
+				if (this.headerRecived)
+					break;
 			}
 			
 			if (this.Session == null)
@@ -346,7 +377,8 @@ namespace sar.Http
 		
 		private void ParseData(ref byte[] bufferIn)
 		{
-			if (this.method != HttpMethod.POST) return;
+			if (this.method != HttpMethod.POST)
+				return;
 			
 			// initilize data array
 			if (this.bytesRecived == 0)
@@ -367,7 +399,8 @@ namespace sar.Http
 					byte[] newBufferIn = new Byte[bufferIn.Length - i - 1];
 					System.Buffer.BlockCopy(bufferIn, i + 1, newBufferIn, 0, newBufferIn.Length);
 					
-					if (i > 0 && bufferIn[i - 1] == '\r') i--;
+					if (i > 0 && bufferIn[i - 1] == '\r')
+						i--;
 					
 					string line = Encoding.ASCII.GetString(bufferIn, 0, i);
 
