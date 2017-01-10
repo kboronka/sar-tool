@@ -143,7 +143,7 @@ namespace sar.Http
 			// Read and parse request
 			var buffer = new byte[0] { };
 			// TODO: add request timeout
-			while (true)
+			while (!this.request.RequestError)
 			{
 				try
 				{
@@ -167,7 +167,6 @@ namespace sar.Http
 				catch
 				{
 					this.Open = false;
-					Thread.Sleep(100);
 					return;
 				}
 			}

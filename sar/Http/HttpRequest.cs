@@ -128,18 +128,16 @@ namespace sar.Http
 		#region read request
 		
 		private bool incomingRequestRecived;
-		private bool incomingRequestError;
 
 		private void ReadRequest(NetworkStream stream, TcpClient socket)
 		{
 			// Read and parse request
 			var buffer = new byte[0] { };
-			this.incomingRequestError = false;
 			
 			// TODO: add request timeout
 			//var timeout = new Timing.Interval(10000);
 
-			while (!incomingRequestRecived && !incomingRequestError)
+			while (!incomingRequestRecived)
 			{
 				try
 				{
@@ -159,19 +157,10 @@ namespace sar.Http
 					
 					Thread.Sleep(1);
 				}
-				catch
+				catch (Exception ex)
 				{
-					
+					throw (ex);
 				}
-			}
-			
-			if (incomingRequestRecived && !incomingRequestError)
-			{
-				this.Responce = new HttpResponse(this);
-			}
-			else
-			{
-				this.RequestError = true;
 			}
 		}
 		
@@ -195,26 +184,23 @@ namespace sar.Http
 			}
 			catch (ObjectDisposedException ex)
 			{
-				this.incomingRequestError = true;
-				Logger.Log(ex);
+				throw ex;
 				// The NetworkStream is closed.
 				//this.Disconnect();
 			}
 			catch (IOException ex)
 			{
-				this.incomingRequestError = true;
-				Logger.Log(ex);
+				throw ex;
 				// The underlying Socket is closed.
 				//this.Disconnect();
 			}
-			catch (SocketException)
+			catch (SocketException ex)
 			{
-				this.incomingRequestError = true;
+				throw ex;
 			}
 			catch (Exception ex)
 			{
-				this.incomingRequestError = true;
-				Logger.Log(ex);
+				throw ex;
 			}
 			
 			return new byte[0] { };
