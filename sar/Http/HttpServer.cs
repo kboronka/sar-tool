@@ -176,9 +176,8 @@ namespace sar.Http
 					this.connectionWaitHandle.WaitOne();
 					this.connectionWaitHandle.Reset();
 				}
-				catch (Exception ex)
+				catch
 				{
-					//Logger.Log(ex);
 					Thread.Sleep(5000);
 				}
 			}
@@ -221,10 +220,9 @@ namespace sar.Http
 					                      });
 				}
 			}
-			catch (Exception ex)
+			catch
 			{
 				connectionWaitHandle.Set();
-				//Logger.Log(ex);
 			}
 		}
 		

@@ -65,34 +65,5 @@ namespace sar
 				return ConsoleHelper.EXIT_ERROR;
 			}
 		}
-		
-		#region loging functions
-		
-		// TODO: do we really to Log method or is the base class good enough
-		new public static void Log(Exception ex)
-		{
-			try
-			{
-				Logger.Log(ex);
-			}
-			catch
-			{
-				// surpress any error
-			}
-		}
-		
-		new public static void Log(string message)
-		{
-			try
-			{
-				Logger.Log(message);
-			}
-			catch
-			{
-				// surpress any error
-			}
-		}
-		
-		#endregion
 	}
 }

@@ -164,9 +164,10 @@ namespace sar.Http
 					
 					Thread.Sleep(1);
 				}
-				catch (Exception ex)
+				catch
 				{
 					this.Open = false;
+					Thread.Sleep(100);
 					return;
 				}
 			}
@@ -230,9 +231,9 @@ namespace sar.Http
 					handler(client);
 				}
 			}
-			catch (Exception ex)
+			catch
 			{
-				Logger.Log(ex);
+				client.Open = false;
 			}
 		}
 		
@@ -264,9 +265,9 @@ namespace sar.Http
 					handler(client);
 				}
 			}
-			catch (Exception ex)
+			catch
 			{
-				Logger.Log(ex);
+
 			}
 		}
 		
@@ -297,9 +298,10 @@ namespace sar.Http
 					handler(frame);
 				}
 			}
-			catch (Exception ex)
+			catch
 			{
-				Logger.Log(ex);
+				this.Open = false;
+				Thread.Sleep(100);
 			}
 		}
 		

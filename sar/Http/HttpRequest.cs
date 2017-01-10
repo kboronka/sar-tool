@@ -145,9 +145,9 @@ namespace sar.Http
 					
 					Thread.Sleep(1);
 				}
-				catch (Exception ex)
+				catch
 				{
-					Logger.Log(ex);
+
 				}
 			}
 			
