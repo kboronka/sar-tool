@@ -162,6 +162,8 @@ namespace sar.Http
 					throw (ex);
 				}
 			}
+			
+			this.Responce = new HttpResponse(this);
 		}
 		
 		public byte[] ReadIncomingPacket(NetworkStream stream, TcpClient socket)
