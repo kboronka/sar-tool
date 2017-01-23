@@ -60,8 +60,10 @@ namespace sar.Commands
 					{
 						case "vb":
 							counter++;
-							string[] lines = IO.ReadFileLines(file);
-							List<string> newlines = new List<string>();
+							
+							var lines = IO.ReadFileLines(file);
+							var newlines = new List<string>();
+							
 							int level = 0;
 							bool linecontinue = false;
 							//bool levelup = false;
