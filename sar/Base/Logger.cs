@@ -22,24 +22,44 @@ namespace sar
 	public static class Logger
 	{
 		public static event LoggerEventHandler OnLog;
-		public static bool LogToConsole { get; set; }
-		public static string LogFilename;
-
+		
+		private static string logFilename;
 		private static ErrorLogger errorLog;
 		private static FileLogger debugLog;
+		
+		public static bool LogToConsole { get; set; }
+		
+		public static string LogFilename
+		{
+			get
+			{
+				if (String.IsNullOrEmpty(logFilename))
+				{
+					logFilename = (System.Environment.UserInteractive) ? "" : "s.";
+					logFilename += "log";
+				}
+				
+				return logFilename;
+			}
+			set
+			{
+				if (value != logFilename)
+				{
+					// TODO: close old file, open new file
+					logFilename = value;
+				}
+			}
+		}
 		
 		private static ErrorLogger ErrorLog
 		{
 			get
 			{
-
-				if (String.IsNullOrEmpty(LogFilename))
+				if (errorLog == null)
 				{
-					LogFilename = (System.Environment.UserInteractive) ? "" : "s.";
-					LogFilename += "log";
+					errorLog = new ErrorLogger("error." + LogFilename);
 				}
-
-				if (errorLog == null) errorLog = new ErrorLogger("error." + LogFilename);
+				
 				return errorLog;
 			}
 		}
@@ -48,86 +68,111 @@ namespace sar
 		{
 			get
 			{
-				if (String.IsNullOrEmpty(LogFilename))
+				if (debugLog == null)
 				{
-					LogFilename = (System.Environment.UserInteractive) ? "" : "s.";
-					LogFilename += "log";
+					debugLog = new FileLogger("debug." + LogFilename, true);
 				}
 				
-				if (debugLog == null) debugLog = new FileLogger("debug." + LogFilename, true);
 				return debugLog;
 			}
 		}
 		
 		public static void Log(Exception ex)
 		{
-			Log(ex.GetType().ToString() + ": " + ex.Message);
-			ErrorLog.Write(ex);
-			
-			if (OnLog != null)
+			try
 			{
-				try
+				Log(ex.GetType().ToString() + ": " + ex.Message);
+				ErrorLog.Write(ex);
+				
+				if (OnLog != null)
 				{
-					OnLog(new LoggerEventArgs(ex));
+					try
+					{
+						OnLog(new LoggerEventArgs(ex));
+					}
+					catch
+					{
+						
+					}
 				}
-				catch
+				
+				if (LogToConsole)
 				{
-					
+					ConsoleHelper.WriteException(ex);
 				}
+				
+				FlushLogs();
 			}
-			
-			if (LogToConsole)
+			catch
 			{
-				ConsoleHelper.WriteException(ex);
+				
 			}
-			
-			FlushLogs();
 		}
 		
 		public static void Log(string message)
 		{
-			#if DEBUG
-			System.Diagnostics.Debug.WriteLine(message);
-			#endif
-			DebugLog.WriteLine(message);
-
-			if (OnLog != null)
+			try
 			{
-				try
+				#if DEBUG
+				System.Diagnostics.Debug.WriteLine(message);
+				#endif
+				DebugLog.WriteLine(message);
+
+				if (OnLog != null)
 				{
-					OnLog(new LoggerEventArgs(message));
+					try
+					{
+						OnLog(new LoggerEventArgs(message));
+					}
+					catch
+					{
+						
+					}
 				}
-				catch
+				
+				if (LogToConsole)
 				{
-					
+					ConsoleHelper.WriteLine(message);
 				}
 			}
-			
-			if (LogToConsole)
+			catch
 			{
-				ConsoleHelper.WriteLine(message);
+				
 			}
 		}
 		
 		public static void FlushLogs()
-		{
-			errorLog.FlushFile();
-			debugLog.FlushFile();
+		{			try
+			{
+				ErrorLog.FlushFile();
+				DebugLog.FlushFile();
+			}
+			catch
+			{
+				
+			}
 		}
 		
 		public static void LogInfo()
 		{
-			bool logTimestamps = DebugLog.LogTime;
-			DebugLog.LogTime = false;
-			DebugLog.WriteLine(AssemblyInfo.Name + " v" + AssemblyInfo.Version);
-			DebugLog.WriteLine("Path = " + ApplicationInfo.ApplicationPath);
-			DebugLog.WriteLine("Environment.UserInteractive = " + Environment.UserInteractive.ToString());
-			DebugLog.WriteLine("Username = " + System.Security.Principal.WindowsIdentity.GetCurrent().Name);
-			DebugLog.WriteLine(ConsoleHelper.HR);
-			
-			DebugLog.LogTime = logTimestamps;
-			
-			FlushLogs();
+			try
+			{
+				bool logTimestamps = DebugLog.LogTime;
+				DebugLog.LogTime = false;
+				DebugLog.WriteLine(AssemblyInfo.Name + " v" + AssemblyInfo.Version);
+				DebugLog.WriteLine("Path = " + ApplicationInfo.ApplicationPath);
+				DebugLog.WriteLine("Environment.UserInteractive = " + Environment.UserInteractive.ToString());
+				DebugLog.WriteLine("Username = " + System.Security.Principal.WindowsIdentity.GetCurrent().Name);
+				DebugLog.WriteLine(ConsoleHelper.HR);
+				
+				DebugLog.LogTime = logTimestamps;
+				
+				FlushLogs();
+			}
+			catch
+			{
+				
+			}
 		}
 	}
 }

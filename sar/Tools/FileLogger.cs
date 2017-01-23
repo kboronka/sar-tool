@@ -79,7 +79,7 @@ namespace sar.Tools
 				this.deleteOld.Name = "FileLogger DeleteLoop";
 				this.deleteOld.IsBackground = true;
 				this.deleteOld.Priority = ThreadPriority.Lowest;
-				this.deleteOld.Start();					
+				this.deleteOld.Start();
 			}
 			catch
 			{
@@ -163,9 +163,21 @@ namespace sar.Tools
 
 		internal void FlushFile()
 		{
-			lock (this.writer)
+			try
 			{
-				this.writer.Flush();
+				if (this.writer != null)
+				{
+					lock (this.writer)
+					{
+
+						this.writer.Flush();
+						
+					}
+				}
+			}
+			catch
+			{
+				
 			}
 		}
 		
