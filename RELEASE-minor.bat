@@ -49,6 +49,7 @@
 	if errorlevel 1 goto BuildFailed
 	
 :BuildComplete
+	%SAR% -f.del *.zip /q /nosubfolders
 	copy sar\bin\%CONFIG%\*.exe release\*.exe
 	copy sar\bin\%CONFIG%\*.pdb release\*.pdb
 	copy license.txt release\license.txt
