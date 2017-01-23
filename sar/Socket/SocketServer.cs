@@ -157,10 +157,12 @@ namespace sar.Socket
 				this.clients = new List<SocketClient>();
 				
 				this.listenerLoopThread = new Thread(this.ListenerLoop);
+				this.listenerLoopThread.Name = "SocketServer - ListenerLoop";
 				this.listenerLoopThread.IsBackground = true;
 				this.listenerLoopThread.Start();
 				
 				this.clientsLoopThread = new Thread(this.ClientsLoop);
+				this.clientsLoopThread.Name = "SocketServer - ClientsLoop";
 				this.clientsLoopThread.IsBackground = true;
 				this.clientsLoopThread.Start();
 				

@@ -136,6 +136,11 @@ namespace sar.Socket
 				this.incomingLoopThread = new Thread(this.IncomingLoop);
 				this.pingLoopThread = new Thread(this.PingLoop);
 
+				this.connectionLoopThread.Name = "SocketClient - ConnectionLoop";
+				this.outgoingLoopThread.Name = "SocketClient - OutgoingLoop";
+				this.incomingLoopThread.Name = "SocketClient - IncomingLoop";
+				this.pingLoopThread.Name = "SocketClient - PingLoop";
+				
 				this.connectionLoopThread.IsBackground = true;
 				this.outgoingLoopThread.IsBackground = true;
 				this.incomingLoopThread.IsBackground = true;
@@ -194,6 +199,11 @@ namespace sar.Socket
 			this.incomingLoopThread = new Thread(this.IncomingLoop);
 			this.pingLoopThread = new Thread(this.PingLoop);
 			
+			this.connectionLoopThread.Name = "SocketClient - ConnectionLoop";
+			this.outgoingLoopThread.Name = "SocketClient - OutgoingLoop";
+			this.incomingLoopThread.Name = "SocketClient - IncomingLoop";
+			this.pingLoopThread.Name = "SocketClient - PingLoop";
+			
 			this.connectionLoopThread.IsBackground = true;
 			this.outgoingLoopThread.IsBackground = true;
 			this.incomingLoopThread.IsBackground = true;
@@ -229,7 +239,7 @@ namespace sar.Socket
 					this.stream = null;
 					
 					this.memCache = null;
-				
+					
 					this.Log("Dispose Complete");
 				}
 			}
@@ -710,7 +720,7 @@ namespace sar.Socket
 				this.Log("closingIndex == -1");
 				this.Log("appname = " + appname);
 				this.Log("closing element not found: \n" + bufferIn);
-				*/
+				 */
 				return "";
 			}
 			
@@ -775,7 +785,7 @@ namespace sar.Socket
 			{
 				try
 				{
-						this.ServiceOutgoing();
+					this.ServiceOutgoing();
 					Thread.Sleep(1);
 				}
 				catch (Exception ex)
@@ -885,7 +895,7 @@ namespace sar.Socket
 			{
 				try
 				{
-						this.Ping();	
+					this.Ping();
 					Thread.Sleep((this.IsHost ? 10000 : 500));
 				}
 				catch (Exception ex)
