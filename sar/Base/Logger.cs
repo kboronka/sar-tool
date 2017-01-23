@@ -23,31 +23,49 @@ namespace sar
 	{
 		public static event LoggerEventHandler OnLog;
 		public static bool LogToConsole { get; set; }
+
+		private static readonly object loggerLock = new object();
 		
 		public static void Log(Exception ex)
 		{
-			Base.Program.Log(ex);
-			if (OnLog != null) OnLog(new LoggerEventArgs(ex));
-			
-			if (LogToConsole) ConsoleHelper.WriteException(ex);
+			lock (loggerLock)
+			{
+				Base.Program.Log(ex);
+				if (OnLog != null)
+					OnLog(new LoggerEventArgs(ex));
+				
+				if (LogToConsole)
+					ConsoleHelper.WriteException(ex);
+			}
 		}
 		
 		public static void Log(string message)
 		{
-			Base.Program.Log(message);
-			if (OnLog != null) OnLog(new LoggerEventArgs(message));
-			
-			if (LogToConsole) ConsoleHelper.WriteLine(message);
+			lock (loggerLock)
+			{
+				Base.Program.Log(message);
+				if (OnLog != null)
+					OnLog(new LoggerEventArgs(message));
+				
+				if (LogToConsole)
+					ConsoleHelper.WriteLine(message);
+			}
 		}
 		
 		public static void FlushLogs()
 		{
-			Base.Program.FlushLogs();
+			lock (loggerLock)
+			{
+				Base.Program.FlushLogs();
+			}
 		}
 		
 		public static void LogInfo()
 		{
-			Base.Program.LogInfo();
+			lock (loggerLock)
+			{
+				Base.Program.LogInfo();
+			}
 		}
 	}
 }
