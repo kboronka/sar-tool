@@ -14,10 +14,10 @@
  */
 
 using System;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Timers;
 
 using sar.Tools;
 
@@ -49,7 +49,9 @@ namespace sar.Http
 			
 			this.Parent = parent;
 			
+			var clientIp = ((IPEndPoint)socket.Client.RemoteEndPoint).Address.ToString();
 			this.serviceRequestThread = new Thread(this.ServiceRequests);
+			this.serviceRequestThread.Name = "HttpConnection client=" + clientIp;
 			this.serviceRequestThread.IsBackground = true;
 			this.serviceRequestThread.Start();
 

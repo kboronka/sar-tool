@@ -51,6 +51,7 @@ namespace sar.Http
 			this.data = new Dictionary<string, object>();
 			
 			this.expiryLoopThread = new Thread(this.ExpiryLoop);
+			this.expiryLoopThread.Name = "HttpSession " + this.ID;
 			this.expiryLoopThread.IsBackground = true;
 			this.expiryLoopThread.Start();			
 		}

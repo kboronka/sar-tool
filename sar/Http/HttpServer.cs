@@ -89,6 +89,7 @@ namespace sar.Http
 			this.connectionWaitHandle = new AutoResetEvent(false);
 			
 			this.listenerLoopThread = new Thread(this.ListenerLoop);
+			this.listenerLoopThread.Name = "HttpServer Listener";
 			this.listenerLoopThread.IsBackground = true;
 			this.listenerLoopThread.Start();
 		}

@@ -70,11 +70,13 @@ namespace sar.Tools
 				this.writer = new StreamWriter(path, true);
 				
 				this.fileFlush = new Thread(this.FlushLoop);
+				this.fileFlush.Name = "FileLogger FlushLoop";
 				this.fileFlush.IsBackground = true;
 				this.fileFlush.Priority = ThreadPriority.Lowest;
 				this.fileFlush.Start();
 				
 				this.deleteOld = new Thread(this.DeleteLoop);
+				this.deleteOld.Name = "FileLogger DeleteLoop";
 				this.deleteOld.IsBackground = true;
 				this.deleteOld.Priority = ThreadPriority.Lowest;
 				this.deleteOld.Start();					

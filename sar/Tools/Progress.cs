@@ -46,6 +46,7 @@ namespace sar.Tools
 		public static void Start()
 		{
 			messageLoopThread = new Thread(Progress.ProgressMessageLoop);
+			messageLoopThread.Name = "Progress Message";
 			messageLoopThread.IsBackground = true;
 			messageLoopThread.Start();
 		}
