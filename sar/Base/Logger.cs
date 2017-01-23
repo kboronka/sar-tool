@@ -32,10 +32,21 @@ namespace sar
 			{
 				Base.Program.Log(ex);
 				if (OnLog != null)
-					OnLog(new LoggerEventArgs(ex));
+				{
+					try
+					{
+						OnLog(new LoggerEventArgs(ex));
+					}
+					catch
+					{
+						
+					}
+				}
 				
 				if (LogToConsole)
+				{
 					ConsoleHelper.WriteException(ex);
+				}
 			}
 		}
 		
@@ -45,10 +56,21 @@ namespace sar
 			{
 				Base.Program.Log(message);
 				if (OnLog != null)
-					OnLog(new LoggerEventArgs(message));
+				{
+					try
+					{
+						OnLog(new LoggerEventArgs(message));
+					}
+					catch
+					{
+						
+					}
+				}
 				
 				if (LogToConsole)
+				{
 					ConsoleHelper.WriteLine(message);
+				}
 			}
 		}
 		
