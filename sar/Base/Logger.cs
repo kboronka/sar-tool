@@ -23,71 +23,111 @@ namespace sar
 	{
 		public static event LoggerEventHandler OnLog;
 		public static bool LogToConsole { get; set; }
+		public static string LogFilename;
 
-		private static readonly object loggerLock = new object();
+		private static ErrorLogger errorLog;
+		private static FileLogger debugLog;
+		
+		private static ErrorLogger ErrorLog
+		{
+			get
+			{
+
+				if (String.IsNullOrEmpty(LogFilename))
+				{
+					LogFilename = (System.Environment.UserInteractive) ? "" : "s.";
+					LogFilename += "log";
+				}
+
+				if (errorLog == null) errorLog = new ErrorLogger("error." + LogFilename);
+				return errorLog;
+			}
+		}
+		
+		private static FileLogger DebugLog
+		{
+			get
+			{
+				if (String.IsNullOrEmpty(LogFilename))
+				{
+					LogFilename = (System.Environment.UserInteractive) ? "" : "s.";
+					LogFilename += "log";
+				}
+				
+				if (debugLog == null) debugLog = new FileLogger("debug." + LogFilename, true);
+				return debugLog;
+			}
+		}
 		
 		public static void Log(Exception ex)
 		{
-			lock (loggerLock)
+			Log(ex.GetType().ToString() + ": " + ex.Message);
+			ErrorLog.Write(ex);
+			
+			if (OnLog != null)
 			{
-				Base.Program.Log(ex);
-				if (OnLog != null)
+				try
 				{
-					try
-					{
-						OnLog(new LoggerEventArgs(ex));
-					}
-					catch
-					{
-						
-					}
+					OnLog(new LoggerEventArgs(ex));
 				}
-				
-				if (LogToConsole)
+				catch
 				{
-					ConsoleHelper.WriteException(ex);
+					
 				}
 			}
+			
+			if (LogToConsole)
+			{
+				ConsoleHelper.WriteException(ex);
+			}
+			
+			FlushLogs();
 		}
 		
 		public static void Log(string message)
 		{
-			lock (loggerLock)
+			#if DEBUG
+			System.Diagnostics.Debug.WriteLine(message);
+			#endif
+			DebugLog.WriteLine(message);
+
+			if (OnLog != null)
 			{
-				Base.Program.Log(message);
-				if (OnLog != null)
+				try
 				{
-					try
-					{
-						OnLog(new LoggerEventArgs(message));
-					}
-					catch
-					{
-						
-					}
+					OnLog(new LoggerEventArgs(message));
 				}
-				
-				if (LogToConsole)
+				catch
 				{
-					ConsoleHelper.WriteLine(message);
+					
 				}
+			}
+			
+			if (LogToConsole)
+			{
+				ConsoleHelper.WriteLine(message);
 			}
 		}
 		
 		public static void FlushLogs()
 		{
-			lock (loggerLock)
-			{
-				Base.Program.FlushLogs();
-			}
+			errorLog.FlushFile();
+			debugLog.FlushFile();
 		}
 		
 		public static void LogInfo()
 		{
-			lock (loggerLock)
-			{
-				Base.Program.LogInfo();
-			}
+			bool logTimestamps = DebugLog.LogTime;
+			DebugLog.LogTime = false;
+			DebugLog.WriteLine(AssemblyInfo.Name + " v" + AssemblyInfo.Version);
+			DebugLog.WriteLine("Path = " + ApplicationInfo.ApplicationPath);
+			DebugLog.WriteLine("Environment.UserInteractive = " + Environment.UserInteractive.ToString());
+			DebugLog.WriteLine("Username = " + System.Security.Principal.WindowsIdentity.GetCurrent().Name);
+			DebugLog.WriteLine(ConsoleHelper.HR);
+			
+			DebugLog.LogTime = logTimestamps;
+			
+			FlushLogs();
 		}
 	}
 }

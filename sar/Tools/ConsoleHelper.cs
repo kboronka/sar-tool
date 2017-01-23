@@ -88,19 +88,26 @@ namespace sar.Tools
 		
 		public static void Write(string text)
 		{
-			if (Environment.UserInteractive)
+			try
 			{
-				bool timerenabled = Progress.Enabled;
-				Progress.Enabled = false;
-				
-				if (ConsoleHelper.progressVisible)
+				if (Environment.UserInteractive)
 				{
-					Console.Write("\r" + new String(' ', 79) + "\r");
-					ConsoleHelper.progressVisible = false;
+					bool timerenabled = Progress.Enabled;
+					Progress.Enabled = false;
+					
+					if (ConsoleHelper.progressVisible)
+					{
+						Console.Write("\r" + new String(' ', 79) + "\r");
+						ConsoleHelper.progressVisible = false;
+					}
+					
+					Console.Write(text);
+					Progress.Enabled = timerenabled;
 				}
+			}
+			catch
+			{
 				
-				Console.Write(text);
-				Progress.Enabled = timerenabled;
 			}
 		}
 		

@@ -21,121 +21,16 @@ namespace sar.Base
 {
 	public abstract class Program
 	{
-		#region logger
-		
-		#region members
-		
-		public static string LogFilename;
-		private static ErrorLogger errorLog;
-		private static FileLogger debugLog;
-		
-		#endregion
-
-		public static ErrorLogger ErrorLog
-		{
-			get
-			{
-
-				if (String.IsNullOrEmpty(LogFilename))
-				{
-					LogFilename = (System.Environment.UserInteractive) ? "" : "s.";
-					LogFilename += "log";
-				}
-
-				if (errorLog == null) errorLog = new ErrorLogger("error." + LogFilename);
-				return errorLog;
-			}
-		}
-		
-		public static FileLogger DebugLog
-		{
-			get
-			{
-				if (String.IsNullOrEmpty(LogFilename))
-				{
-					LogFilename = (System.Environment.UserInteractive) ? "" : "s.";
-					LogFilename += "log";
-				}
-				 
-				if (debugLog == null) debugLog = new FileLogger("debug." + LogFilename, true);
-				return debugLog;
-			}
-		}
-		
-		public static void LogInfo()
-		{
-			try
-			{
-				bool logTimestamps = DebugLog.LogTime;
-				DebugLog.LogTime = false;
-				DebugLog.WriteLine(AssemblyInfo.Name + " v" + AssemblyInfo.Version);
-				DebugLog.WriteLine("Path = " + ApplicationInfo.ApplicationPath);
-				DebugLog.WriteLine("Environment.UserInteractive = " + Environment.UserInteractive.ToString());
-				DebugLog.WriteLine("Username = " + System.Security.Principal.WindowsIdentity.GetCurrent().Name);
-				DebugLog.WriteLine(ConsoleHelper.HR);
-				
-				DebugLog.LogTime = logTimestamps;
-			}
-			catch
-			{
-				
-			}
-		}
-		
-		public static void FlushLogs()
-		{
-			try
-			{
-				errorLog.FlushFile();
-				debugLog.FlushFile();
-			}
-			catch
-			{
-				
-			}
-		}
-
 		protected static void LogUnhandledException(object sender, UnhandledExceptionEventArgs e)
 		{
 			try
 			{
-				Log((Exception)e.ExceptionObject);
+				Logger.Log((Exception)e.ExceptionObject);
 			}
 			catch
 			{
 				
 			}
 		}
-	
-		public static void Log(Exception ex)
-		{
-			try
-			{
-				Log(ex.GetType().ToString() + ": " + ex.Message);
-				ErrorLog.Write(ex);
-				FlushLogs();
-			}
-			catch
-			{
-				
-			}
-		}
-		
-		public static void Log(string message)
-		{
-			try
-			{	
-				#if DEBUG
-				System.Diagnostics.Debug.WriteLine(message);
-				#endif
-				DebugLog.WriteLine(message);
-			}
-			catch
-			{
-
-			}
-		}
-		
-		#endregion
 	}
 }
