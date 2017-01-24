@@ -45,6 +45,7 @@ namespace sar
 				args = new string[] { "svn.GetAssemblyVersion", @"https://github.com/kboronka/sar-tool/trunk/sar/Properties/AssemblyInfo.cs", @"/pause" };
 				args = new string[] { "svn.GetNewAssemblyVersion", @"https://github.com/kboronka/sar-tool/trunk/sar/Properties/AssemblyInfo.cs", @"/pause" };
 				args = new string[] { "dotNetVersions", @"/pause" };
+				args = new string[] { "r", "test.cs", @"break;\r\n(.*)case", @"break;\n\n\n$1case", @"/pause" };
 				
 				*/
 				
