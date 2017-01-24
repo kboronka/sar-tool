@@ -48,6 +48,8 @@ namespace sar.Commands
 			string search = args[2];
 			string replace = args[3];
 			
+			replace.Replace("\r\n", Environment.NewLine);
+			
 			string root = Directory.GetCurrentDirectory();
 
 			List<IO.SearchResult> results = IO.SearchAndReplaceInFiles(root, filePattern, search, replace);
