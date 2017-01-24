@@ -55,7 +55,7 @@ namespace sar.Http
 			this.serviceRequestThread.IsBackground = true;
 			this.serviceRequestThread.Start();
 
-			
+			// TODO: replace with background thread...
 			timeout = new System.Timers.Timer();
 			timeout.Interval = (MAX_TIME + 20) * 1000;
 			timeout.Start();
