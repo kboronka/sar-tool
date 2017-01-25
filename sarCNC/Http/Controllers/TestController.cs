@@ -81,7 +81,7 @@ namespace sar.CNC.Http
 		public static HttpContent Ul(HttpRequest request)
 		{
 			var data = System.Text.Encoding.ASCII.GetString(request.Data);
-			Program.Log(data);
+			Logger.Log(data);
 			return new HttpContent("ok");
 		}		
 		
@@ -135,7 +135,7 @@ namespace sar.CNC.Http
 				{
 					nc.Add(ncStep);
 					ncString += ncStep + Environment.NewLine;
-					App.Port.SendCommand(ncStep, comment);
+					Engine.Port.SendCommand(ncStep, comment);
 				}
 			}
 			

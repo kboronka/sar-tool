@@ -34,7 +34,7 @@ namespace sar.CNC.Http
 			
 			foreach (var command in commands)
 			{
-				App.Port.SendCommand(command);
+				Engine.Port.SendCommand(command, "");
 			}
 		}
 		
@@ -44,9 +44,9 @@ namespace sar.CNC.Http
 			var frame = new byte[]{ 129, 131, 61, 84, 35, 6, 112, 16, 109 };
 			var msg = HttpWebSocketFrame.DecodeFrame(frame);
 			
-			sar.CNC.Program.Log(StringHelper.ArrayToString("frame", frame));
-			sar.CNC.Program.Log(StringHelper.ArrayToString("mdn", mdn));
-			sar.CNC.Program.Log(StringHelper.ArrayToString("payload", msg.Payload));
+			Logger.Log(StringHelper.ArrayToString("frame", frame));
+			Logger.Log(StringHelper.ArrayToString("mdn", mdn));
+			Logger.Log(StringHelper.ArrayToString("payload", msg.Payload));
 		}
 	}
 }

@@ -26,9 +26,9 @@ namespace sar.CNC
 		
 		private static int motionBuffer = 0;
 		public static int MotionBuffer
-		{ 
+		{
 			get { return motionBuffer; }
-			set	{ motionBuffer = value; }			
+			set	{ motionBuffer = value; }
 		}
 		
 		private static int rxBuffer = 0;
@@ -84,6 +84,7 @@ namespace sar.CNC
 
 		public static void Parse(string data, bool commandQueued)
 		{
+			Logger.Log(data);
 			var re = new Regex(@"<(.*),MPos:(-?\d+.\d+),(-?\d+.\d+),(-?\d+.\d+),WPos:(-?\d+.\d+),(-?\d+.\d+),(-?\d+.\d+),Buf:(\d+),RX:(\d+)>");
 			var reMatch = re.Match(data);
 			

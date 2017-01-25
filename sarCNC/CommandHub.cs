@@ -13,7 +13,6 @@ namespace sar.CNC
 			base.commandList.AddRange(new Command[] {
 			                          	new Install(this),
 			                          	new Uninstall(this),
-			                          	new Run(this),
 			                          	new Start(this),
 			                          	new Stop(this)
 			                          });

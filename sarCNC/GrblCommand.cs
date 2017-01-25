@@ -29,7 +29,7 @@ namespace sar.CNC
 				this.Sent = true;
 				responce = value;
 				sentTimestamp = DateTime.Now;
-				//Program.LogRaw(this.ToJSON());
+				//Logger.LogRaw(this.ToJSON());
 			}
 		}
 		

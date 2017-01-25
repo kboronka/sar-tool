@@ -58,6 +58,8 @@ namespace sar.CNC
 		
 		public GrblPort(string portName)
 		{
+			Logger.Log("Opening Comm Port " + portName);
+			
 			port = new SerialPort(portName, 115200, Parity.None, 8, StopBits.One);
 			readLoopShutdown = false;
 			//serialPort1.DataReceived += new SerialDataReceivedEventHandler(this.serialPort1_DataReceived);
@@ -200,7 +202,7 @@ namespace sar.CNC
 							}
 							
 							// send update to web clients
-							App.SendToWebSocketClients(GrblStatus.ToJSON());
+							GrblWebSocket.SendToWebSocketClients(GrblStatus.ToJSON());
 							
 							// just finished job
 							if (running && !GrblStatus.Running && this.commandQueue.Count == 0)
@@ -248,7 +250,7 @@ namespace sar.CNC
 				}
 				catch (Exception ex)
 				{
-					Program.Log(ex);
+					Logger.Log(ex);
 					Thread.Sleep(2000);
 				}
 			}
@@ -291,7 +293,7 @@ namespace sar.CNC
 			}
 			catch (Exception ex)
 			{
-				Program.Log(ex);
+				Logger.Log(ex);
 			}
 		}
 		

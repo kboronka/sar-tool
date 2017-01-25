@@ -29,12 +29,11 @@ namespace sar.CNC
 		{
 			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(LogUnhandledException);
 			
-			Base.Program.LogInfo();
+			Logger.LogInfo();
+			Logger.LogToConsole = true;
 			
 			try
 			{
-				Program.LogInfo();
-				
 				if (!System.Environment.UserInteractive)
 				{
 					// TODO: run as a service
@@ -49,8 +48,7 @@ namespace sar.CNC
 						ConsoleHelper.ApplicationShortTitle();
 						
 						#if DEBUG
-						var thread = new Thread(Service.StartServices);
-						thread.Start();
+						Engine.Start();
 						#endif
 						
 						hub.ProcessCommands(args);
@@ -62,13 +60,19 @@ namespace sar.CNC
 					}
 					
 					Progress.Stop();
+			
+					Engine.Stop();
+					while (!Engine.Stopped)
+					{
+						Thread.Sleep(100);
+					}
+						
 					return;
 				}
 			}
 			catch (Exception ex)
 			{
-				Program.Log(ex);
-				Base.Program.FlushLogs();
+				Logger.Log(ex);
 			}
 		}
 	}

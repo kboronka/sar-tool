@@ -28,33 +28,12 @@ namespace sar.CNC
 		
 		protected override void OnStart(string[] args)
 		{
-			var thread = new Thread(StartServices);
-			thread.Start();
+			Engine.Start();
 		}
 		
 		protected override void OnStop()
 		{
-			
-		}
-		
-		public static void StartServices()
-		{
-			try
-			{
-				Program.Log("Staring Service");
-				App.Load();
-				Program.Log("Service Startup Complete");
-			}
-			catch (Exception ex)
-			{
-				Program.Log(ex);
-				Base.Program.FlushLogs();
-				
-				if (Environment.UserInteractive)
-				{
-					ConsoleHelper.WriteException(ex);
-				}
-			}
+			Engine.Stop();
 		}
 	}
 }

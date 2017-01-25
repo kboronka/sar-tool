@@ -7,7 +7,7 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
-using System.IO.Ports;
+using System.Collections.Generic;
 
 using sar.Http;
 using sar.Tools;
@@ -65,17 +65,50 @@ using sar.Tools;
 namespace sar.CNC.Http
 {
 	[SarWebSocketController]
-	public class GrblWebSocket : sar.Http.HttpWebSocket
+	public class GrblWebSocket : HttpWebSocket
 	{
 		#region static
+	
+		private static List<HttpWebSocket> clients = new List<HttpWebSocket>();
 		
-		private static GrblWebSocket Singleton { get; set; }
-			
+		public static void Start()
+		{
+			clients = new List<HttpWebSocket>();
+			HttpWebSocket.ClientConnected += AddClient;
+			HttpWebSocket.ClientDisconnected += DropClient;
+		}
+		
+		public static void Stop()
+		{
+			HttpWebSocket.ClientConnected -= AddClient;
+			HttpWebSocket.ClientDisconnected -= DropClient;			
+		}
+		
+		private static void AddClient(HttpWebSocket client)
+		{
+			Logger.Log("Client " + client.ID.ToString() + " Connected");
+			clients.Add(client);
+		}
+		
+		private static void DropClient(HttpWebSocket client)
+		{
+			Logger.Log("Client " + client.ID.ToString() + " Disconnected");
+			clients.Remove(client);
+		}
+		
+		public static void SendToWebSocketClients(string raw)
+		{
+			foreach (var client in clients)
+			{
+				client.SendString(raw);
+			}
+		}
+		
 		#endregion 
 
 		public GrblWebSocket(HttpRequest request) : base(request)
 		{
-			Singleton = this;
+			// do nothing
 		}
 		
 		override public void NewData(byte[] data)
