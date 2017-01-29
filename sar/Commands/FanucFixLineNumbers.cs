@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
@@ -47,7 +48,8 @@ namespace sar.Commands
 			if (!Directory.Exists(path)) Directory.CreateDirectory(path);
 			
 
-			var files = IO.GetAllFiles(path, "*.ls");
+			var files = IO.GetAllFiles(path, "*.ls").Where(f => !f.ToLower().Contains("logbook.ls")).ToList();
+			
 			for (int fileNumber = 0; fileNumber < files.Count; fileNumber++)
 			{
 				var file = files[fileNumber];
