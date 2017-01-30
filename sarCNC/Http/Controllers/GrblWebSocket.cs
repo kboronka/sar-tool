@@ -13,7 +13,7 @@ using sar.Http;
 using sar.Tools;
 
 // https://github.com/grbl/grbl/wiki/Configuring-Grbl-v0.9
-	/*
+/*
 	$$ (view Grbl settings)
 	$# (view # parameters)
 	$G (view parser state)
@@ -60,7 +60,7 @@ using sar.Tools;
 	$130=225.000 (x max travel, mm)
 	$131=125.000 (y max travel, mm)
 	$132=170.000 (z max travel, mm)
-	*/
+ */
 
 namespace sar.CNC.Http
 {
@@ -68,7 +68,7 @@ namespace sar.CNC.Http
 	public class GrblWebSocket : HttpWebSocket
 	{
 		#region static
-	
+		
 		private static List<HttpWebSocket> clients = new List<HttpWebSocket>();
 		
 		public static void Start()
@@ -81,19 +81,25 @@ namespace sar.CNC.Http
 		public static void Stop()
 		{
 			HttpWebSocket.ClientConnected -= AddClient;
-			HttpWebSocket.ClientDisconnected -= DropClient;			
+			HttpWebSocket.ClientDisconnected -= DropClient;
 		}
 		
 		private static void AddClient(HttpWebSocket client)
 		{
-			Logger.Log("Client " + client.ID.ToString() + " Connected");
-			clients.Add(client);
+			if (clients is GrblWebSocket)
+			{
+				Logger.Log("Client " + client.ID.ToString() + " Connected");
+				clients.Add(client);
+			}
 		}
 		
 		private static void DropClient(HttpWebSocket client)
 		{
-			Logger.Log("Client " + client.ID.ToString() + " Disconnected");
-			clients.Remove(client);
+			if (clients is GrblWebSocket)
+			{
+				Logger.Log("Client " + client.ID.ToString() + " Disconnected");
+				clients.Remove(client);
+			}
 		}
 		
 		public static void SendToWebSocketClients(string raw)
@@ -104,16 +110,23 @@ namespace sar.CNC.Http
 			}
 		}
 		
-		#endregion 
+		#endregion
 
-		public GrblWebSocket(HttpRequest request) : base(request)
+		public GrblWebSocket(HttpRequest request)
+			: base(request)
 		{
 			// do nothing
 		}
 		
 		override public void NewData(byte[] data)
 		{
+			var rxBuffer = System.Text.Encoding.ASCII.GetString(data);
+			var commands = rxBuffer.Split('\n');
 			
+			foreach (var command in commands)
+			{
+				Engine.Port.SendCommand(command, "");
+			}
 		}
 	}
 }

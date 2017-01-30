@@ -1,7 +1,7 @@
 var app = angular.module('testApp', ['ngFileUpload', 'ui.bootstrap']);
 
 app.controller("WebSocketController", function($scope, $window) {
-  //var ws = new ReconnectingWebSocket("ws://localhost:81/Test");
+
   $scope.log = {
     messages: [ "init" ]
   };
@@ -105,7 +105,7 @@ app.controller("WebSocketController", function($scope, $window) {
 
   //log("test");
 
-  var ws = new ReconnectingWebSocket("ws://localhost:80/Test", null, {debug: false, reconnectInterval: 100});
+  var ws = new ReconnectingWebSocket("ws://" + window.location.host + "/Grbl", null, {debug: false, reconnectInterval: 100});
   ws.onopen = function() {
     //$scope.console.log("Websocket is open");
     log("Websocket is open");

@@ -26,22 +26,11 @@ namespace sar.CNC.Http
 	public static class TestController
 	{
 		[PrimaryView]
-		public static HttpContent Test(HttpRequest request)
-		{
-			return HttpController.RequestAction("Test", "Show", request);
-		}
-		
-		[ViewAlias("test.html")]
 		public static HttpContent Index(HttpRequest request)
 		{
 			return HttpContent.Read(request, "index.html");
 		}
 
-		public static HttpContent Show(HttpRequest request)
-		{
-			return HttpContent.Read(request, "test.html");
-		}
-		
 		public static HttpContent UpdateTable(HttpRequest request)
 		{
 			var json = new Dictionary<string, object>();

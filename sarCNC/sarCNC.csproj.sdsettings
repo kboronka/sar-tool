@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Properties>
+  <Properties key="CSharpFormatting">
+    <SerializedObject key="PropertyGetBraceStyle">
+      <BraceStyle xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NextLine</BraceStyle>
+    </SerializedObject>
+    <SerializedObject key="PropertySetBraceStyle">
+      <BraceStyle xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NextLine</BraceStyle>
+    </SerializedObject>
+    <SerializedObject key="EventBraceStyle">
+      <BraceStyle xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NextLine</BraceStyle>
+    </SerializedObject>
+    <SerializedObject key="StatementBraceStyle">
+      <BraceStyle xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NextLine</BraceStyle>
+    </SerializedObject>
+    <SerializedObject key="AnonymousMethodBraceStyle">
+      <BraceStyle xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NextLine</BraceStyle>
+    </SerializedObject>
+    <SerializedObject key="PropertyBraceStyle">
+      <BraceStyle xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NextLine</BraceStyle>
+    </SerializedObject>
+    <SerializedObject key="CatchNewLinePlacement">
+      <NewLinePlacement xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NewLine</NewLinePlacement>
+    </SerializedObject>
+    <SerializedObject key="FinallyNewLinePlacement">
+      <NewLinePlacement xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NewLine</NewLinePlacement>
+    </SerializedObject>
+    <SerializedObject key="ElseIfNewLinePlacement">
+      <NewLinePlacement xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">SameLine</NewLinePlacement>
+    </SerializedObject>
+    <SerializedObject key="ElseNewLinePlacement">
+      <NewLinePlacement xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NewLine</NewLinePlacement>
+    </SerializedObject>
+    <SerializedObject key="MinimumBlankLinesAroundRegion">
+      <x:Int32 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">2</x:Int32>
+    </SerializedObject>
+    <SerializedObject key="MinimumBlankLinesInsideRegion">
+      <x:Int32 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">1</x:Int32>
+    </SerializedObject>
+    <SerializedObject key="EventAddBraceStyle">
+      <BraceStyle xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NextLine</BraceStyle>
+    </SerializedObject>
+    <SerializedObject key="EventRemoveBraceStyle">
+      <BraceStyle xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NextLine</BraceStyle>
+    </SerializedObject>
+    <SerializedObject key="AllowEventAddBlockInline">
+      <x:Boolean xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">True</x:Boolean>
+    </SerializedObject>
+    <SerializedObject key="AllowEventRemoveBlockInline">
+      <x:Boolean xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">True</x:Boolean>
+    </SerializedObject>
+    <SerializedObject key="AllowIfBlockInline">
+      <x:Boolean xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">False</x:Boolean>
+    </SerializedObject>
+    <SerializedObject key="MethodBraceStyle">
+      <BraceStyle xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NextLine</BraceStyle>
+    </SerializedObject>
+    <SerializedObject key="EnumBraceStyle">
+      <BraceStyle xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NextLine</BraceStyle>
+    </SerializedObject>
+    <SerializedObject key="StructBraceStyle">
+      <BraceStyle xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NextLine</BraceStyle>
+    </SerializedObject>
+    <SerializedObject key="InterfaceBraceStyle">
+      <BraceStyle xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NextLine</BraceStyle>
+    </SerializedObject>
+    <SerializedObject key="ClassBraceStyle">
+      <BraceStyle xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NextLine</BraceStyle>
+    </SerializedObject>
+    <SerializedObject key="NamespaceBraceStyle">
+      <BraceStyle xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NextLine</BraceStyle>
+    </SerializedObject>
+    <SerializedObject key="MinimumBlankLinesBetweenMembers">
+      <x:Int32 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">0</x:Int32>
+    </SerializedObject>
+    <SerializedObject key="ChainedMethodCallWrapping">
+      <Wrapping xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">WrapAlways</Wrapping>
+    </SerializedObject>
+    <SerializedObject key="ConstructorBraceStyle">
+      <BraceStyle xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NextLine</BraceStyle>
+    </SerializedObject>
+    <SerializedObject key="DestructorBraceStyle">
+      <BraceStyle xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">NextLine</BraceStyle>
+    </SerializedObject>
+    <SerializedObject key="SimpleGetBlockFormatting">
+      <PropertyFormatting xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">ForceOneLine</PropertyFormatting>
+    </SerializedObject>
+    <SerializedObject key="SimpleSetBlockFormatting">
+      <PropertyFormatting xmlns="clr-namespace:ICSharpCode.NRefactory.CSharp;assembly=ICSharpCode.NRefactory.CSharp">ForceOneLine</PropertyFormatting>
+    </SerializedObject>
+    <SerializedObject key="RemoveEndOfLineWhiteSpace">
+      <x:Boolean xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">True</x:Boolean>
+    </SerializedObject>
+  </Properties>
+</Properties>
