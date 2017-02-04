@@ -192,6 +192,8 @@ namespace sar.CNC
 						{
 							MachinePosition.Move(status.MachinePosition);
 						}
+						
+						GrblWebSocket.SendToWebSocketClients(this.ToJSON());
 						Logger.Log("x = " + status.MachinePosition.X.ToString());
 					}
 					
@@ -230,6 +232,18 @@ namespace sar.CNC
 		public void SendCommand(string ncCommand, string comment)
 		{
 			this.queue.Add(ncCommand);
+		}
+		
+		public string ToJSON()
+		{
+			var json = new Dictionary<string, object>();
+			json.Add("wX", this.MachinePosition.X);
+			json.Add("wY", this.MachinePosition.Y);
+			json.Add("wZ", this.MachinePosition.Z);
+
+			json.Add("running", this.queue.Length > 0);
+			json.Add("motionBuffer", this.PlannerBlocksAvailble);
+			json.Add("rxBuffer", this.RxBufferBytesAvailble);
 		}
 	}
 }
