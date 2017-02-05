@@ -11,6 +11,7 @@ using System.Threading;
 using System.IO.Ports;
 using System.Threading;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 using sar;
 using sar.Tools;
@@ -30,13 +31,42 @@ namespace sar.CNC
 		public int FeedRate;
 		public int RPM;
 		
-		
 		private CommandQueue queue;
 		private Thread readLoopThread;
 		private bool loopShutdownRequest = false;
 		private bool loopStopped = false;
 		private GrblInputParser parser;
+		private bool jobActive;
+		private Stopwatch jobTimer;
+		
 
+		
+		public bool JobActive
+		{
+			get  { return jobActive; }
+			set
+			{
+				jobActive = value;
+				
+				if (value)
+				{
+					jobTimer = new Stopwatch();
+					jobTimer.Start();
+					Logger.Log("*****************************************************");
+					Logger.Log("Job Started");
+					Logger.Log("*****************************************************");
+				}
+				else
+				{
+					var totalTime = jobTimer.ElapsedMilliseconds;
+					Logger.Log("*****************************************************");
+					Logger.Log("Job Complete");
+					Logger.Log("Total Time: " + totalTime.ToString() + "ms");
+					Logger.Log("*****************************************************");
+				}
+			}
+		}
+		
 		public Grbl(string portName)
 		{
 			this.parser = new GrblInputParser(portName);
@@ -142,12 +172,12 @@ namespace sar.CNC
 					settings.Add("$25=635.000");	// (homing seek, mm/min)
 					settings.Add("$26=250");		// (homing debounce, msec)
 					settings.Add("$27=1.000");		// (homing pull-off, mm)
-					settings.Add("$100=314.961");	// (x, step/mm)
-					settings.Add("$101=314.961");	// (y, step/mm)
-					settings.Add("$102=314.961");	// (z, step/mm)
-					settings.Add("$110=635.000");	// (x max rate, mm/min)
-					settings.Add("$111=635.000");	// (y max rate, mm/min)
-					settings.Add("$112=635.000");	// (z max rate, mm/min)
+					settings.Add("$100=320.000");	// (x, step/mm)
+					settings.Add("$101=320.000");	// (y, step/mm)
+					settings.Add("$102=320.000");	// (z, step/mm)
+					settings.Add("$110=3000.000");	// (x max rate, mm/min)
+					settings.Add("$111=3000.000");	// (y max rate, mm/min)
+					settings.Add("$112=3000.000");	// (z max rate, mm/min)
 					settings.Add("$120=50.000");	// (x accel, mm/sec^2)
 					settings.Add("$121=50.000");	// (y accel, mm/sec^2)
 					settings.Add("$122=50.000");	// (z accel, mm/sec^2)
@@ -218,8 +248,14 @@ namespace sar.CNC
 
 						this.RxBufferBytesAvailble -= (nextCommand.Length + 2);
 						this.PlannerBlocksAvailble --;
-						this.parser.SendCommand(nextCommand);
+						
+						var message = this.parser.SendCommand(nextCommand);
 						queue.Remove(nextCommand);
+						
+						if (!String.IsNullOrEmpty(message) && message.Contains("[MSG:Pgm End]"))
+						{
+							this.JobActive = false;
+						}
 					}
 					
 					break;

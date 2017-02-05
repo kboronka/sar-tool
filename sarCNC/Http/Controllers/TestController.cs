@@ -91,6 +91,8 @@ namespace sar.CNC.Http
 			var ncString = "";
 			var comment = "";
 			
+			Engine.Port.JobActive = true;
+			
 			foreach (var step in lines)
 			{
 				var ncStep = step.TrimWhiteSpace();

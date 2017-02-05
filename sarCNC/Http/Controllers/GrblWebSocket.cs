@@ -26,7 +26,11 @@ namespace sar.CNC.Http
 		
 		public static void Start()
 		{
-			clients = new List<HttpWebSocket>();
+			lock (clientListLock)
+			{
+				clients = new List<HttpWebSocket>();
+			}
+			
 			HttpWebSocket.ClientConnected += AddClient;
 			HttpWebSocket.ClientDisconnected += DropClient;
 		}
@@ -44,7 +48,14 @@ namespace sar.CNC.Http
 				Logger.Log("Client " + client.ID.ToString() + " Connected");
 				lock (clientListLock)
 				{
-					clients.Add(client);
+					try
+					{
+						clients.Add(client);
+					}
+					catch
+					{
+						
+					}
 				}
 			}
 		}
@@ -56,7 +67,14 @@ namespace sar.CNC.Http
 				Logger.Log("Client " + client.ID.ToString() + " Disconnected");
 				lock (clientListLock)
 				{
-					clients.RemoveAll(c => c.ID == client.ID);
+					try
+					{
+						clients.RemoveAll(c => c.ID == client.ID);
+					}
+					catch
+					{
+						
+					}
 				}
 			}
 		}
@@ -65,9 +83,19 @@ namespace sar.CNC.Http
 		{
 			lock (clientListLock)
 			{
-				foreach (var client in clients)
+				try
 				{
-					client.SendString(raw);
+					foreach (var client in clients.ToArray())
+					{
+						if (client != null && client.Open)
+						{
+							client.SendString(raw);
+						}
+					}
+				}
+				catch
+				{
+					
 				}
 			}
 		}
