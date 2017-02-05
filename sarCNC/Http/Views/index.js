@@ -1,10 +1,10 @@
 var app = angular.module('testApp', ['ngFileUpload', 'ui.bootstrap']);
 
 app.controller("WebSocketController", function($scope, $window) {
-
   $scope.log = {
     messages: [ "init" ]
   };
+
   log = function(message)
   {
     $scope.log.messages.push(message);
@@ -74,10 +74,10 @@ app.controller("WebSocketController", function($scope, $window) {
           $scope.grbl("G91\nG0 Y-" + $scope.setup.jogDistance);
           break;
         case 65:
-          $scope.grbl("G91\nG0 X" + $scope.setup.jogDistance);
+          $scope.grbl("G91\nG0 X-" + $scope.setup.jogDistance);
           break;
         case 68:
-          $scope.grbl("G91\nG0 X-" + $scope.setup.jogDistance);
+          $scope.grbl("G91\nG0 X" + $scope.setup.jogDistance);
           break;
         case 81:
           $scope.grbl("G91\nG0 Z" + $scope.setup.jogDistance);

@@ -126,7 +126,7 @@ namespace sar.CNC
 					settings.Add("$0=10");			// (step pulse, usec)
 					settings.Add("$1=25");			// (step idle delay, msec)
 					settings.Add("$2=0");			// (step port invert mask:00000000)
-					settings.Add("$3=2");			// (dir port invert mask:00000010)
+					settings.Add("$3=3");			// (dir port invert mask:00000011)
 					settings.Add("$4=0");			// (step enable invert, bool)
 					settings.Add("$5=0");			// (limit pins invert, bool)
 					settings.Add("$6=0");			// (probe pin invert, bool)

@@ -1,7 +1,3 @@
-.navbar-right>li>button
-{
-  margin: 10px;
-}
 
 #jog-buttons
 {
@@ -19,8 +15,8 @@
 }
 
 /* 49x42 */
-#jog-xp { top: 42px;  left: 0px;}
-#jog-xn { top: 42px;  left: 98px;}
+#jog-xn { top: 42px;  left: 0px;}
+#jog-xp { top: 42px;  left: 98px;}
 #jog-yp { top: 0px;   left: 49px;}
 #jog-yn { top: 84px;  left: 49px;}
 #jog-zp { top: 0px;   left: 160px;}
@@ -28,6 +24,7 @@
 
 /* left panel */
 .col-fixed-250{
+  margin-top: 5px;
   padding-left:5px;
   width:250px;
   position:fixed;

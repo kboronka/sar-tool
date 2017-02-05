@@ -1,0 +1,10 @@
+.button-bar {
+  width: 100%;
+  display: inline-block;
+}
+
+.button-bar>.button-group>button {
+  margin-top: 5px;
+  margin-bottom: 10px;
+  margin-left: 5px;
+}

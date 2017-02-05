@@ -1,10 +1,12 @@
+<div class="" ng-include="'nav.html'"></div>
+
 <div class="progress">
-    <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="{{ machine.status.commandsTotal }}" style="width: {{ machine.status.commandsComplete / machine.status.commandsTotal * 100 | number:0 }}%;">
-        <span class="sr-only">80% Complete</span>
-    </div>
-    <span class="progress-type" ng-if="machine.status.running">({{ machine.status.commandsComplete }} / {{ machine.status.commandsTotal }}) : {{ machine.currentCommand.comment }} : {{ machine.currentCommand.command }}</span>
-    <span class="progress-type" ng-if="!machine.status.running">({{ machine.status.commandsComplete }} / {{ machine.status.commandsTotal }}) : complete</span>
-    <span class="progress-completed">{{ machine.status.runTime / 60000 | number:1 }}min - {{ machine.status.commandsComplete / machine.status.commandsTotal * 100 | number:0 }}%</span>
+  <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="{{ machine.status.commandsTotal }}" style="width: {{ machine.status.commandsComplete / machine.status.commandsTotal * 100 | number:0 }}%;">
+    <span class="sr-only">80% Complete</span>
+  </div>
+  <span class="progress-type" ng-if="machine.status.running">({{ machine.status.commandsComplete }} / {{ machine.status.commandsTotal }}) : {{ machine.currentCommand.comment }} : {{ machine.currentCommand.command }}</span>
+  <span class="progress-type" ng-if="!machine.status.running">({{ machine.status.commandsComplete }} / {{ machine.status.commandsTotal }}) : complete</span>
+  <span class="progress-completed">{{ machine.status.runTime / 60000 | number:1 }}min - {{ machine.status.commandsComplete / machine.status.commandsTotal * 100 | number:0 }}%</span>
 </div>
 
 <textarea class="form-control" rows="25" id="comment" ng-model="gcode" ng-focus="focus(true);" ng-blur="focus(false);"></textarea>
