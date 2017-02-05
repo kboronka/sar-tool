@@ -124,11 +124,11 @@ namespace sar.CNC.Http
 				{
 					nc.Add(ncStep);
 					ncString += ncStep + Environment.NewLine;
-					Engine.Port.SendCommand(ncStep, comment);
+					Engine.Port.QueueCommand(ncStep);
 				}
 			}
 			
-			return HttpContent.Read(request, "test.html");
+			return HttpContent.Read(request, "index.html");
 		}
 	}
 }

@@ -48,7 +48,6 @@ app.controller("WebSocketController", function($scope, $window) {
 
   $scope.grbl = function(command)
   {
-    console.log(command);
     ws.send(command);
   }
 
@@ -58,16 +57,13 @@ app.controller("WebSocketController", function($scope, $window) {
   }
 
   $scope.keyPress = function(eve){
-    console.log("keypress " + eve.which.toString());
-    if(eve.which === 16){//shift
-        //$rootScope.$broadcast('doShift');
+    if (eve.which === 16) {
         $rootScope.shiftOn = true;
     }
  }
 
  // key press
   angular.element($window).on('keydown', function(e) {
-
     if ($scope.hotkeys)
     {
       switch (e.keyCode) {
@@ -95,20 +91,14 @@ app.controller("WebSocketController", function($scope, $window) {
     }
 
     // estop
-    if (e.keyCode == 27)
-    {
-      // hold
+    if (e.keyCode == 27) {
       $scope.grbl("!");
     }
  });
 
 
-  //log("test");
-
   var ws = new ReconnectingWebSocket("ws://" + window.location.host + "/Grbl", null, {debug: false, reconnectInterval: 100});
   ws.onopen = function() {
-    //$scope.console.log("Websocket is open");
-    log("Websocket is open");
     $scope.$apply();
   };
 
@@ -117,18 +107,8 @@ app.controller("WebSocketController", function($scope, $window) {
     if (evt.data.startsWith("{") && evt.data.endsWith("}"))
     {
       var data = JSON.parse(evt.data);
-      if (data.status)
-      {
+      if (data.status) {
         $scope.machine = data;
-        /*
-        $scope.machine.running = data.status.running;
-        $scope.machine.x = data.status.mX;
-        $scope.machine.y = data.status.mY;
-        $scope.machine.z = data.status.mZ;
-        $scope.work.x = data.status.wX;
-        $scope.work.y = data.status.wY;
-        $scope.work.z = data.status.wZ;
-        */
       }
     }
 
