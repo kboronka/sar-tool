@@ -14,6 +14,7 @@
  */
 
 using System;
+using System.Linq;
 
 using sar.Tools;
 
@@ -28,17 +29,23 @@ namespace sar
 		{
 			try
 			{
-				int count = 0;
-				foreach (var arg in args)
+				if (args.ToList().Exists(a => a == "/debug" || a == "/d" ))
 				{
-					ConsoleHelper.DebugWriteLine("arg[" + count++.ToString() + "] = " + arg);
+					ConsoleHelper.ShowDebug = true;
+					ConsoleHelper.DebugWriteLine("Debug Mode Active");
+					
+					var count = 0;
+					foreach (var arg in args)
+					{
+						ConsoleHelper.DebugWriteLine("arg[" + count++.ToString() + "] = " + arg);
+					}
 				}
+				
 
 				
 				#if DEBUG
 				
 				/*
-
 				args = new string[] { "f.rd", @"C:\Users\kboronka\Documents\Virtual Machines\caches", @"/pause" };
 				args = new string[] { "rdp", "192.168.171.208", @"username", "password", @"/pause" };
 				args = new string[] { "ip.set", "gigabit", "dhcp", @"/debug", @"/pause", @"/admin" };
@@ -53,7 +60,6 @@ namespace sar
 				args = new string[] { "svn.GetNewAssemblyVersion", @"https://github.com/kboronka/sar-tool/trunk/sar/Properties/AssemblyInfo.cs", @"/pause" };
 				args = new string[] { "dotNetVersions", @"/pause" };
 				args = new string[] { "r", "test.cs", @"break;\r\n(.*)case", @"break;\n\n\n$1case", @"/pause" };
-				
 				 */
 				
 				#endif
