@@ -209,15 +209,14 @@ namespace sar.Base
 			#endif
 			
 			var result = new List<string>();
-			int count = 0;
 			foreach (string originalArg in args)
 			{
 				var arg = originalArg;
+				var timestamp = DateTime.Now;
 				
-				arg = arg.Replace("(date)", DateTime.Now.ToString(FileLogger.FILE_DATE));
-				arg = arg.Replace("(time)", DateTime.Now.ToString(FileLogger.FILE_TIME));
+				arg = arg.Replace("(date)", timestamp.ToString(FileLogger.FILE_DATE));
+				arg = arg.Replace("(time)", timestamp.ToString(FileLogger.FILE_TIME));
 				
-				ConsoleHelper.DebugWriteLine("arg[" + count++.ToString() + "] = " + arg);
 				if (arg.Length > 1 && arg.Substring(0, 1) == "/")
 				{
 					switch (arg.ToLower())

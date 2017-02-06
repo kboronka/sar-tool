@@ -285,8 +285,11 @@ namespace sar.Tools
 			var results = new List<SearchResult>();
 			
 			IO.CheckRootAndPattern(ref root, ref filePattern);
+			
+			var files = IO.GetAllFiles(root, filePattern);
+			ConsoleHelper.DebugWriteLine("searching " + files.Count.ToString() + " file" + ((files.Count == 1) ? "" : "s"));
 
-			foreach (string file in IO.GetAllFiles(root, filePattern))
+			foreach (string file in files)
 			{
 				if (!IO.IsSVN(file))
 				{

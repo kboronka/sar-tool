@@ -108,7 +108,18 @@ namespace sar.Commands
 
 				ConsoleHelper.Write("\t" + @"/");
 				ConsoleHelper.Write("admin", ConsoleColor.Yellow);
-				ConsoleHelper.WriteLine(": require elevated rights");				
+				ConsoleHelper.WriteLine(": require elevated rights");
+
+				ConsoleHelper.WriteLine("");
+				ConsoleHelper.WriteLine("\nArgument Placeholders:", ConsoleColor.White);
+				
+				ConsoleHelper.Write("\t" + @"");
+				ConsoleHelper.Write("(date)", ConsoleColor.Yellow);
+				ConsoleHelper.WriteLine(": replaced with current date");
+				
+				ConsoleHelper.Write("\t" + @"");
+				ConsoleHelper.Write("(time)", ConsoleColor.Yellow);
+				ConsoleHelper.WriteLine(": replaced with current time");			
 			}
 			
 			return ConsoleHelper.EXIT_OK;

@@ -1,4 +1,4 @@
-﻿/* Copyright (C) 2013 Kevin Boronka
+/* Copyright (C) 2013 Kevin Boronka
  * 
  * software is distributed under the BSD license
  * 
@@ -28,7 +28,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyCompany ("")]
 [assembly: AssemblyProduct ("SAR Toolkit")]
-[assembly: AssemblyCopyright ("Copyright (c) 2012 Kevin Boronka")]
+[assembly: AssemblyCopyright ("Copyright (c) 2012-2017 Kevin Boronka")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
 // This sets the default COM visibility of types in the assembly to invisible.
@@ -40,4 +40,4 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can use the default the Revision and 
 // Build Numbers by using the '*' as shown below:
-[assembly: AssemblyVersion("1.1.0.476")]
+[assembly: AssemblyVersion ("1.1.0.476")]

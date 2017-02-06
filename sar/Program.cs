@@ -28,6 +28,13 @@ namespace sar
 		{
 			try
 			{
+				int count = 0;
+				foreach (var arg in args)
+				{
+					ConsoleHelper.DebugWriteLine("arg[" + count++.ToString() + "] = " + arg);
+				}
+
+				
 				#if DEBUG
 				
 				/*
@@ -39,7 +46,7 @@ namespace sar
 				args = new string[] { "ip.config", @"/pause" };
 				args = new string[] { "mssql-gs", "192.168.14.110", "TestDB", "sa", "test123", @"\scripts\", @"/pause" };
 				args = new string[] { "f.open", "c:\temp" };
-				args = new string[] { "file.open", @"c:\temp", @"/pause" }; 
+				args = new string[] { "file.open", @"c:\temp", @"/pause" };
 				args = new string[] { "-b.net", "3.5", @"LabelPrinter.sln", "/p:Configuration=Release /p:Platform=\"Any CPU\"" };
 				args = new string[] { "fanuc.downloadPR", "10.240.26.104", @"C:\Temp\posreg.test.csv", @"/pause" };
 				args = new string[] { "svn.GetAssemblyVersion", @"https://github.com/kboronka/sar-tool/trunk/sar/Properties/AssemblyInfo.cs", @"/pause" };
@@ -47,12 +54,12 @@ namespace sar
 				args = new string[] { "dotNetVersions", @"/pause" };
 				args = new string[] { "r", "test.cs", @"break;\r\n(.*)case", @"break;\n\n\n$1case", @"/pause" };
 				
-				*/
+				 */
 				
 				#endif
 				
 				var hub = new CommandHub();
-				Progress.Start();	
+				Progress.Start();
 				if (args.Length == 0) ConsoleHelper.ApplicationTitle();
 				int exitCode = hub.ProcessCommands(args);
 				

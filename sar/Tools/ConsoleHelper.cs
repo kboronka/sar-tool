@@ -50,6 +50,7 @@ namespace sar.Tools
 		public const int EXIT_ERROR = 1;
 		
 		private static bool progressVisible = false;
+		private static object consoleLock = new object();
 
 		#region static properties
 		
@@ -113,15 +114,24 @@ namespace sar.Tools
 		
 		public static void WriteProgress(string text, ConsoleColor colour)
 		{
-			ConsoleHelper.Write(text, colour);
-			ConsoleHelper.progressVisible = true;
+			lock (consoleLock)
+			{
+				ConsoleHelper.Write(text, colour);
+				ConsoleHelper.progressVisible = true;
+			}
 		}
 		
-		public static void Write(string text, ConsoleColor colour)
+		public static void Write(string text, ConsoleColor foreColour)
+		{
+			ConsoleHelper.Write(text, foreColour, ConsoleColor.Black);
+		}
+		
+		public static void Write(string text, ConsoleColor foreColour, ConsoleColor backColour)
 		{
 			if (Environment.UserInteractive && ConsoleHelper.ConsoleRunning)
 			{
-				Console.ForegroundColor = colour;
+				Console.ForegroundColor = foreColour;
+				Console.BackgroundColor = backColour;
 				// utf8 does not work on WindowsXP
 				//Console.OutputEncoding = System.Text.Encoding.UTF8;
 				ConsoleHelper.Write(text);
@@ -148,23 +158,31 @@ namespace sar.Tools
 		{
 			ex = ExceptionHelper.GetInner(ex);
 			
-			ConsoleHelper.Write("error: ", ConsoleColor.Red);
-			ConsoleHelper.WriteLine(ex.Message);
-
-			if (ShowDebug)
+			lock (consoleLock)
 			{
-				ConsoleHelper.WriteLine(ExceptionHelper.GetStackTrace(ex), ConsoleColor.DarkCyan);
+				ConsoleHelper.Write("error: ", ConsoleColor.Red);
+				ConsoleHelper.WriteLine(ex.Message);
+
+				if (ShowDebug)
+				{
+					ConsoleHelper.WriteLine(ExceptionHelper.GetStackTrace(ex), ConsoleColor.DarkCyan);
+				}
 			}
 		}
 		
 		public static void WritePassFail(bool ok)
 		{
-			ConsoleHelper.Write("[", ConsoleColor.White);
-			
-			if (ok) ConsoleHelper.Write("OK", ConsoleColor.DarkGreen);
-			if (!ok) ConsoleHelper.Write("FAIL", ConsoleColor.Red);
-			
-			ConsoleHelper.Write("]", ConsoleColor.White);
+			lock (consoleLock)
+			{
+				ConsoleHelper.Write("[", ConsoleColor.White);
+				
+				if (ok)
+					ConsoleHelper.Write("OK", ConsoleColor.DarkGreen);
+				if (!ok)
+					ConsoleHelper.Write("FAIL", ConsoleColor.Red);
+				
+				ConsoleHelper.Write("]", ConsoleColor.White);
+			}
 		}
 		
 		public static void ApplicationTitle()
@@ -203,7 +221,16 @@ namespace sar.Tools
 		{
 			if (ConsoleHelper.ShowDebug)
 			{
-				ConsoleHelper.WriteLine(text, ConsoleColor.Blue);
+				lock (consoleLock)
+				{
+					Thread.Sleep(20);
+					ConsoleHelper.Write(" ", ConsoleColor.Black, ConsoleColor.Black);
+					ConsoleHelper.Write("*", ConsoleColor.White, ConsoleColor.Red);
+					ConsoleHelper.Write("*", ConsoleColor.Black, ConsoleColor.Yellow);
+					ConsoleHelper.Write("*", ConsoleColor.White, ConsoleColor.Blue);
+					ConsoleHelper.WriteLine(" " + text, ConsoleColor.Yellow);
+					Thread.Sleep(20);
+				}
 			}
 		}
 		
