@@ -75,11 +75,11 @@ namespace sar.Commands
 							foreach (string line in lines)
 							{
 								linenumber++;
-								string newline = StringHelper.TrimWhiteSpace(line);
+								string newline = line.TrimWhiteSpace();
 								
 								// clean string
 								string temp = StringHelper.Remove(line, new List<string> { "Private", "Protected", "Public", "Shared", "Overridable", "Overrides", "Overloads", "Friend", "ReadOnly", "WriteOnly", "Partial", "Shadows", "Default", "NotInheritable" });
-								temp = StringHelper.TrimWhiteSpace(temp);
+								temp = temp.TrimWhiteSpace();
 								
 								// trim meta tags
 								meta = false;
@@ -120,7 +120,7 @@ namespace sar.Commands
 									temp = temp.Substring(0, temp.IndexOf('\''));
 								}
 								
-								temp = StringHelper.TrimWhiteSpace(temp);
+								temp = temp.TrimWhiteSpace();
 								
 								string firstword = StringHelper.FirstWord(temp);
 								string lastword = StringHelper.LastWord(temp);

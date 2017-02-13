@@ -37,7 +37,7 @@ namespace sar.Tools
 		{
 			this.Repository = repo;
 
-			logEntry = StringHelper.TrimWhiteSpace(logEntry);
+			logEntry = logEntry.TrimWhiteSpace();
 			if (String.IsNullOrEmpty(logEntry))
 			{
 				throw new NullReferenceException("unspecified log entry");
@@ -75,7 +75,7 @@ namespace sar.Tools
 			string [] messageLines = Regex.Split(fields[3], @" line.\n");
 			if (messageLines.Length > 1)
 			{
-				this.Message = StringHelper.TrimWhiteSpace(messageLines[1]);
+				this.Message = messageLines[1].TrimWhiteSpace();
 			}
 			else
 			{
@@ -234,7 +234,7 @@ namespace sar.Tools
 			
 			foreach (string logEntry in Regex.Split(result.Output, new String('-', 72)))
 			{
-				string entry = StringHelper.TrimWhiteSpace(logEntry);
+				string entry = logEntry.TrimWhiteSpace();
 				if (!String.IsNullOrEmpty(entry))
 				{
 					list.Add(new SubversionLog(repo, entry));

@@ -385,7 +385,7 @@ namespace sar.Tools
 		
 		public static int Run(string filename, string arguments, string workingDirectory, out string output, out string error)
 		{
-			arguments = StringHelper.TrimWhiteSpace(arguments);
+			arguments = arguments.TrimWhiteSpace();
 			
 			if (ConsoleHelper.ShowDebug)
 			{
@@ -412,7 +412,7 @@ namespace sar.Tools
 			if (!String.IsNullOrEmpty(error))
 			{
 				ConsoleHelper.Write("error:", ConsoleColor.Red);
-				ConsoleHelper.WriteLine(" " + StringHelper.TrimWhiteSpace(error), ConsoleColor.Gray);
+				ConsoleHelper.WriteLine(" " + error.TrimWhiteSpace(), ConsoleColor.Gray);
 				return ConsoleHelper.EXIT_ERROR;
 			}
 			
@@ -427,7 +427,7 @@ namespace sar.Tools
 		
 		public static Process Start(string filename, string arguments)
 		{
-			arguments = StringHelper.TrimWhiteSpace(arguments);
+			arguments = arguments.TrimWhiteSpace();
 
 			ProcessStartInfo info = new ProcessStartInfo();
 			info.FileName = filename;
@@ -443,7 +443,7 @@ namespace sar.Tools
 		public static Process StartAs(string filename, string arguments, string domain, string username, string password)
 		{
 			//ServiceHelper.ImpersonateUser(username, domain, password);
-			arguments = StringHelper.TrimWhiteSpace(arguments);
+			arguments = arguments.TrimWhiteSpace();
 			var shell = new Process();
 			if (!String.IsNullOrEmpty(domain)) shell.StartInfo.Domain = domain;
 			shell.StartInfo.UserName = username;

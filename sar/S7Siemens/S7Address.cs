@@ -69,7 +69,7 @@ namespace sar.S7Siemens
 			else if (address.Length > 1 && address[0] == 'W') this.length = 2*8;
 			else if (address.Length > 1 && address[0] == 'B') this.length = 1*8;
 			else if (address.Length > 1 && this.area == Areas.DB && address[0] == 'X') this.length = 1;
-			else if (address.Length > 1 && this.area != Areas.DB && StringHelper.IsNumeric(address[0])) this.length = 1;
+			else if (address.Length > 1 && this.area != Areas.DB && address[0].IsNumeric()) this.length = 1;
 			else throw new InvalidDataException("Invalid Address Type");
 
 			if (this.length == 1)
