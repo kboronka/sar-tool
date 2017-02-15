@@ -19,7 +19,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
-using sar.Tools;
+using sar.Timing;
 
 namespace sar.Http
 {
@@ -31,8 +31,10 @@ namespace sar.Http
 		public const int MAX_TIME = 300;
 		#endif
 		
-		private readonly System.Timers.Timer timeout;
-		
+		private Thread serviceRequestThread;
+		private Thread timeoutMonitorThread;
+		private Interval timeout;
+
 		public bool Open { get; private set; }
 		public bool Stopped { get; private set; }
 		
@@ -48,18 +50,20 @@ namespace sar.Http
 			this.Stream = socket.GetStream();
 			
 			this.Parent = parent;
-			
+
+			timeout = new Interval((MAX_TIME + 20) * 1000);
 			var clientIp = ((IPEndPoint)socket.Client.RemoteEndPoint).Address.ToString();
-			this.serviceRequestThread = new Thread(this.ServiceRequests);
-			this.serviceRequestThread.Name = "HttpConnection client=" + clientIp;
+			
+			this.serviceRequestThread = new Thread(this.MonitorTimeout);
+			this.serviceRequestThread.Name = "HttpConnection Service Request " + clientIp;
 			this.serviceRequestThread.IsBackground = true;
 			this.serviceRequestThread.Start();
-
-			// TODO: replace with background thread...
-			timeout = new System.Timers.Timer();
-			timeout.Interval = (MAX_TIME + 20) * 1000;
-			timeout.Start();
-			timeout.Elapsed += delegate { this.Open = false; };
+			
+			this.timeoutMonitorThread = new Thread(this.ServiceRequests);
+			this.timeoutMonitorThread.Name = "HttpConnection Timeout Monitor " + clientIp;
+			this.timeoutMonitorThread.Priority = ThreadPriority.Lowest;
+			this.timeoutMonitorThread.IsBackground = true;
+			this.timeoutMonitorThread.Start();			
 		}
 		
 		~HttpConnection()
@@ -105,11 +109,25 @@ namespace sar.Http
 		}
 		
 		
-		#region service
+		#region timeout monitor
+		
+		private void MonitorTimeout()
+		{
+			while (this.Open)
+			{
+				Thread.Sleep(1000);
+				
+				if (timeout.Ready)
+				{
+					this.Open = false;
+				}
+			}
+		}
+		
+		#endregion
 		
 		#region service request
 		
-		private Thread serviceRequestThread;
 		private bool RequestReady()
 		{
 			lock (Socket)
@@ -138,9 +156,7 @@ namespace sar.Http
 				{
 					if (this.Socket.Connected && this.RequestReady())
 					{
-						// reset timeout
-						timeout.Stop();
-						timeout.Start();
+						timeout.Reset();
 						
 						// return initial header
 						lock (Socket)
@@ -188,9 +204,8 @@ namespace sar.Http
 							while (request.WebSocket.Open && this.Socket.Connected)
 							{
 								// reset timeout
-								timeout.Stop();
-								timeout.Start();
-	
+								timeout.Reset();
+								
 								if (this.RequestReady())
 								{
 									request.WebSocket.ReadNewData();
@@ -229,6 +244,5 @@ namespace sar.Http
 		
 		#endregion
 		
-		#endregion
 	}
 }
