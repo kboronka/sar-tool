@@ -83,8 +83,16 @@ namespace sar.Commands
 			
 			string persistentCommand = "/persistent:no";
 
-			if (persistent) persistentCommand = "/persistent:yes";
-			if (ping && !NetHelper.Ping(hostName, 200)) throw new ApplicationException("Unable to ping " + hostName);
+			if (persistent)
+			{
+				persistentCommand = "/persistent:yes";
+			}
+			
+			if (ping && !NetHelper.Ping(hostName, 200))
+			{
+				throw new ApplicationException("Unable to ping " + hostName);
+			}
+			
 			int exitcode;
 			
 			exitcode = ConsoleHelper.Run("net", @"use " + uncPath + @" /DELETE /y");
