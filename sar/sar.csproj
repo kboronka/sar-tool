@@ -88,6 +88,7 @@
     <Compile Include="CommandHub.cs" />
     <Compile Include="Commands\AppShutdownWait.cs" />
     <Compile Include="Commands\Bower.cs" />
+    <Compile Include="Commands\ExcelOpenNewInstances.cs" />
     <Compile Include="Commands\ListDotNetVersions.cs" />
     <Compile Include="Commands\svnGetNewAssemblyVersion.cs" />
     <Compile Include="Commands\CodeClean.cs" />
