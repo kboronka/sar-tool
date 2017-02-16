@@ -68,7 +68,7 @@ namespace sar.Commands
 				{
 					string filename = databaseObject.Type + "." + databaseObject.Name + ".sql";
 					
-					Progress.Message = "Saving Script " + filename;
+					Progress.Message = "Generating Script [" + databaseObject.Name + "]";
 					
 					IO.WriteFile(root + filename, databaseObject.GetCreateScript(connection));
 					objectCounter++;
