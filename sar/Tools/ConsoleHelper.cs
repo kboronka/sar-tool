@@ -409,7 +409,7 @@ namespace sar.Tools
 			
 			shell.WaitForExit();
 			
-			if (!String.IsNullOrEmpty(error))
+			if (ConsoleHelper.ShowDebug && !String.IsNullOrEmpty(error))
 			{
 				ConsoleHelper.Write("error:", ConsoleColor.Red);
 				ConsoleHelper.WriteLine(" " + error.TrimWhiteSpace(), ConsoleColor.Gray);
