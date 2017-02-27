@@ -139,7 +139,7 @@ namespace sar.Commands
 				
 				
 					
-				ConsoleHelper.Run(@"%windir%\system32\cscript", @"slmgr.vbs /rearm");
+				ConsoleHelper.Run(@"%windir%\system32\cscript.exe", @"slmgr.vbs /rearm");
 				ConsoleHelper.WriteLine("Rearmed - Reboot Required", ConsoleColor.DarkYellow);
 				return ConsoleHelper.EXIT_OK;
 			}
