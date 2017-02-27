@@ -108,14 +108,14 @@ namespace sar.Tools
 						}
 						catch (Exception ex)
 						{
-							ConsoleHelper.WriteException(ex);
+							ConsoleHelper.DebugWriteLine(ex.Message);
 						}
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				ConsoleHelper.WriteException(ex);
+				ConsoleHelper.DebugWriteLine(ex.Message);
 			}
 			
 			return directories;
@@ -247,8 +247,8 @@ namespace sar.Tools
 			CheckRootAndPattern(ref root, ref pattern);
 			
 			var files = new List<string>();
-			
-			foreach (string dir in GetAllDirectories(root))
+			var dirs = GetAllDirectories(root);
+			foreach (string dir in dirs)
 			{
 				try
 				{
@@ -256,10 +256,11 @@ namespace sar.Tools
 				}
 				catch (Exception ex)
 				{
-					ConsoleHelper.WriteException(ex);
+					ConsoleHelper.DebugWriteLine(ex.Message);
 				}
 			}
 			
+			ConsoleHelper.DebugWriteLine("files = " + files.Count.ToString());
 			return files;
 		}
 		
@@ -518,7 +519,7 @@ namespace sar.Tools
 		public static void WriteFileLines(string filepath, List<string> lines, Encoding encoding)
 		{
 			WriteFile(filepath, LinesToString(lines), encoding);
-		}		
+		}
 		
 		public static void WriteFile(string filepath, string text, Encoding encoding)
 		{
@@ -613,6 +614,40 @@ namespace sar.Tools
 			return files[0];
 		}
 		
+		public static string FindSystemApplication(string filename)
+		{
+			// check application name
+			if (String.IsNullOrEmpty(filename))
+			{
+				throw new NullReferenceException("application filename was not specified");
+			}
+			
+			if (filename.Length <= 4)
+			{
+				throw new InvalidDataException("application filename too short");
+			}
+			
+			string extension = filename.Substring(filename.Length - 4, 4);
+			
+			if (extension != ".exe" && extension != ".com" && extension != ".bat")
+			{
+				throw new InvalidDataException("application filename must end in .exe, .com, or .bat");
+			}
+			
+			// search in program files folders
+
+			var files = IO.GetAllFiles(Environment.SystemDirectory + @"\", filename);
+			
+			if (files.Exists(f => f.EndsWith(filename)))
+			{
+				return files.Find(f => f.EndsWith(filename));
+			}
+			else
+			{
+				throw new FileNotFoundException("unable to locate " + filename);
+			}
+		}
+
 		public static string FindFile(string root, string filepattern)
 		{
 			// check application name
