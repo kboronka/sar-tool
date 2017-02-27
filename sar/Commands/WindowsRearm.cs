@@ -48,98 +48,12 @@ namespace sar.Commands
 			
 			if (this.commandHub.NoWarning || ConsoleHelper.Confirm("Caution: Rearm Activation? (y/n) "))
 			{
-				/*
-				string token = IO.Windows + @"\ServiceProfiles\NetworkService\AppData\Roaming\Microsoft\SoftwareProtectionPlatform\tokens.dat";
-				List<string> files = new List<string>();
-				List<string> tempfiles = new List<string>();
-
-				files.AddRange(Directory.GetFiles(IO.System32, "*.C7483456-A289-439d-8115-601632D005A0"));
-				if (File.Exists(token)) files.Add(token);
-				
-				foreach (string file in files)
-				{
-					tempfiles.Add(IO.Temp + Guid.NewGuid().ToString() + ".temp");
-				}
-				
-				if (files.Count != 3)
-				{
-					throw new FileNotFoundException("Files not found");
-				}
-				
-				#if DEBUG
-				foreach (string file in files)
-				{
-					ConsoleHelper.DebugWriteLine(file.Substring(file.LastIndexOf('\\') + 1));
-				}
-				#endif
-				
-				try
-				{
-					if (ConsoleHelper.Shell("net stop sppsvc") != ConsoleHelper.EXIT_OK) throw new Exception("failed to stop sppsvc");
-				}
-				catch (Exception ex)
-				{
-					ConsoleHelper.WriteLine(ex.Message, ConsoleColor.Red);
-				}
-				
-				Thread.Sleep(1000);
-				
-				for (int i = 0; i < files.Count; i++)
-				{
-					try
-					{
-						ConsoleHelper.WriteLine(files[i], ConsoleColor.Yellow);
-						File.Copy(files[i], tempfiles[i]);
-						File.Delete(files[i]);
-					}
-					catch (Exception ex)
-					{
-						ConsoleHelper.WriteLine(ex.Message, ConsoleColor.Red);
-					}
-				}
-				
-				try
-				{
-					if (ConsoleHelper.Shell("net start sppsvc") != ConsoleHelper.EXIT_OK) throw new Exception("failed to stop sppsvc");
-				}
-				catch (Exception ex)
-				{
-					ConsoleHelper.WriteLine(ex.Message, ConsoleColor.Red);
-				}
-				
-				
-				if (ConsoleHelper.Shell("slmgr /dlv") != ConsoleHelper.EXIT_OK) throw new Exception("failed to slmgr /dlv");
-				
-				try
-				{
-					if (ConsoleHelper.Shell("net stop sppsvc") != ConsoleHelper.EXIT_OK) throw new Exception("failed to stop sppsvc");
-				}
-				catch (Exception ex)
-				{
-					ConsoleHelper.WriteLine(ex.Message, ConsoleColor.Red);
-				}
-				
-				for (int i = 0; i < files.Count; i++)
-				{
-					try
-					{
-						File.Move(tempfiles[i], files[i]);
-					}
-					catch (Exception ex)
-					{
-						ConsoleHelper.WriteLine(ex.Message, ConsoleColor.Red);
-					}
-				}
-
-				
-				ConsoleHelper.Shell("slmgr /ipk D4F6K-QK3RD-TMVMJ-BBMRX-3MBMV");
-				*/
+				Progress.Message = "finding cscript.exe";
+				var cscript = IO.FindSystemApplication("cscript.exe");
 				
 				Progress.Message = "Rearming Windows Activation";
 				
-				
-					
-				ConsoleHelper.Run(@"%windir%\system32\cscript.exe", @"slmgr.vbs /rearm");
+				ConsoleHelper.Run(cscript, @"slmgr.vbs /rearm");				
 				ConsoleHelper.WriteLine("Rearmed - Reboot Required", ConsoleColor.DarkYellow);
 				return ConsoleHelper.EXIT_OK;
 			}
