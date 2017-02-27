@@ -136,7 +136,10 @@ namespace sar.Commands
 				*/
 				
 				Progress.Message = "Rearming Windows Activation";
-				ConsoleHelper.Run("slmgr /rearm");
+				
+				
+					
+				ConsoleHelper.Run(@"cscript %windir%\system32\slmgr.vbs /rearm");
 				ConsoleHelper.WriteLine("Rearmed - Reboot Required", ConsoleColor.DarkYellow);
 				return ConsoleHelper.EXIT_OK;
 			}
