@@ -94,8 +94,6 @@ namespace sar.Commands
 					ConsoleHelper.WriteLine();
 					*/
 					#endif
-					
-					
 				}
 			}
 		}
