@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace sar.Tools
 {
@@ -1020,7 +1021,7 @@ namespace sar.Tools
 				return defaultValue;
 			}
 		}
-				
+		
 		public static string GetJSON(this string json, string element, string defaultValue)
 		{
 			try
@@ -1070,6 +1071,34 @@ namespace sar.Tools
 			catch
 			{
 				return defaultValue;
+			}
+		}
+		
+		public static IEnumerable<string> GetJsonStringArray(this string json)
+		{
+			if (String.IsNullOrEmpty(json))
+			{
+				throw new ApplicationException("invalid json string array");
+			}
+			
+			if (json.Length < 2)
+			{
+				throw new ApplicationException("invalid json string array");
+			}
+			
+			if (json[0] != '[' || json[json.Length - 1] != ']')
+			{
+				throw new ApplicationException("invalid json string array");
+			}
+			
+			var strings = json.Substring(1, json.Length - 2).Split(',');
+			
+			foreach (var s in strings)
+			{
+				if (s.Length > 2 && s[0] == '"' && s[s.Length - 1] == '"')
+				{
+					yield return s.Substring(1, s.Length - 2);
+				}
 			}
 		}
 	}
