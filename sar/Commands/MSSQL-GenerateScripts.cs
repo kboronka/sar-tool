@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 
 using sar.Base;
 using sar.Databases.MSSQL;
@@ -64,7 +65,8 @@ namespace sar.Commands
 				connection.Open();
 				
 				Progress.Message = "Generating Scripts";
-				foreach (DatabaseObject databaseObject in DatabaseObject.GetDatabaseObjects(connection))
+				var objects = DatabaseObject.GetDatabaseObjects(connection).Where(o => o.Name.StartsWith("SqlQueryNotificationStoredProcedure-")).ToList();
+				foreach (DatabaseObject databaseObject in objects)
 				{
 					string filename = databaseObject.Type + "." + databaseObject.Name + ".sql";
 					
