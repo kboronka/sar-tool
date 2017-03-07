@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 using sar.Base;
@@ -63,21 +64,41 @@ namespace sar.Commands
 			using (var connection = new SqlConnection(connectionString.ToString()))
 			{
 				connection.Open();
-				var table = DatabaseObject.GetDatabaseObject(connection, tableName);
 				
-				Progress.Message = "Getting Insert Script";
-				var insertScript = table.GetInsertScript(connection);
+				var tables = new List<string>();
+				if (!String.IsNullOrEmpty(tableName))
+				{
+					tables.Add(tableName);
+				}
+				else
+				{
+					var objects = DatabaseObject.GetDatabaseObjects(connection);
+					tables = objects.Where(o => (o.Type == "Table" || o.Type == "UserDefinedTableType")).Select(t => t.Name).ToList();
+				}
+				
+				foreach (var t in tables)
+				{
+					var table = DatabaseObject.GetDatabaseObject(connection, t);
+					
+					if (table != null)
+					{
+						Progress.Message = "Generating Script [" + table.Name + "]";
+						var insertScript = table.GetInsertScript(connection);
+						
+						connection.Close();
+						
+						Progress.Message = "Saving Insert Script to file";
+						var filename = "TableInsert." + table.Name + ".sql";
+						File.WriteAllText(root + filename, insertScript);
+					}
+					
+					ConsoleHelper.WriteLine("Generated Insert Script", ConsoleColor.DarkYellow);
+				}
 				
 				connection.Close();
 				
-				Progress.Message = "Saving Insert Script to file";
-				var filename = "TableInsert." + tableName + ".sql";
-				File.WriteAllText(root + filename, insertScript);
+				return ConsoleHelper.EXIT_OK;
 			}
-			
-			ConsoleHelper.WriteLine("Generated Insert Script", ConsoleColor.DarkYellow);
-			
-			return ConsoleHelper.EXIT_OK;
 		}
 	}
 }
