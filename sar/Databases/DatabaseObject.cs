@@ -42,6 +42,8 @@ namespace sar.Tools
 			var sql = Encoding.ASCII.GetString(EmbeddedResource.Get(@"sar.Databases.MSSQL.GetObjects.sql"));
 			using (var command = new SqlCommand(sql, connection))
 			{
+				command.CommandTimeout = 600; 	// 10 minutes
+				
 				using (var reader = command.ExecuteReader())
 				{
 					while (reader.Read())
@@ -63,6 +65,8 @@ namespace sar.Tools
 			
 			using (var command = new SqlCommand(@"SELECT name, xtype FROM sysobjects WHERE name = " + name.QuoteSingle(), connection))
 			{
+				command.CommandTimeout = 600;	// 10 minutes
+				
 				using (var reader = command.ExecuteReader())
 				{
 					if (reader.Read())
@@ -85,6 +89,8 @@ namespace sar.Tools
 			
 			using (var command = new SqlCommand(@"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N" + table.QuoteSingle(), connection))
 			{
+				command.CommandTimeout = 600;	// 10 minutes
+				
 				using (var reader = command.ExecuteReader())
 				{
 					while (reader.Read())
@@ -171,6 +177,8 @@ namespace sar.Tools
 					
 					using (var command = new SqlCommand(createTableTypeScript, connection))
 					{
+						command.CommandTimeout = 600;	// 10 minutes
+						
 						using (var reader = command.ExecuteReader())
 						{
 							while (reader.Read())
@@ -189,6 +197,8 @@ namespace sar.Tools
 					
 					using (var command = new SqlCommand(script, connection))
 					{
+						command.CommandTimeout = 600;	// 10 minutes
+						
 						using (var reader = command.ExecuteReader())
 						{
 							while (reader.Read())
@@ -203,6 +213,8 @@ namespace sar.Tools
 				default:
 					using (var command = new SqlCommand("sp_helptext " + this.name.QuoteSingle(), connection))
 					{
+						command.CommandTimeout = 600;	// 10 minutes
+						
 						using (var reader = command.ExecuteReader())
 						{
 							while (reader.Read())
@@ -229,6 +241,7 @@ namespace sar.Tools
 					{
 						using (var command = new SqlCommand(sql, connection))
 						{
+							command.CommandTimeout = 600;	// 10 minutes
 							command.ExecuteNonQuery();
 						}
 					}
@@ -243,6 +256,8 @@ namespace sar.Tools
 					
 					using (var command = new SqlCommand(script, connection))
 					{
+						command.CommandTimeout = 600;	// 10 minutes
+						
 						using (var reader = command.ExecuteReader())
 						{
 							while (reader.Read())
@@ -255,6 +270,7 @@ namespace sar.Tools
 					// drop sproc
 					using (var command = new SqlCommand(@"DROP PROCEDURE dbo.GenerateInsert;", connection))
 					{
+						command.CommandTimeout = 600;	// 10 minutes
 						command.ExecuteNonQuery();
 					}
 					
