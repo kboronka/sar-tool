@@ -199,10 +199,10 @@ namespace sar.Tools
 			
 			try
 			{
-				var tmp = new byte[] {0};
+				var tmp = new byte[] {};
 
 				s.Blocking = false;
-				s.Send(tmp, 1, 0);
+				s.Send(tmp, 0, 0);
 				return s.Connected;
 			}
 			catch (SocketException e)
