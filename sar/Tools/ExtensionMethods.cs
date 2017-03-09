@@ -17,6 +17,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+using System.Net.Sockets;
+using System.Net;
+using System.IO;
 
 namespace sar.Tools
 {
@@ -172,7 +175,7 @@ namespace sar.Tools
 			}
 		}
 		
-				public static string ToCSV(this IEnumerable<string> list)
+		public static string ToCSV(this IEnumerable<string> list)
 		{
 			var line = "";
 			var delimitor = "";
@@ -183,6 +186,43 @@ namespace sar.Tools
 			}
 
 			return line;
+		}
+		
+		
+		/// <summary>
+		///  Determine whether a socket is still connected
+		/// </summary>		
+		public static bool IsConnected(this TcpClient socket)
+		{
+			// solution posted by Carsten
+			// http://stackoverflow.com/questions/7650402/how-to-test-for-a-broken-connection-of-tcpclient-after-being-connected
+			
+			var blockingState = socket.Client.Blocking;
+			
+			try
+			{
+				var tmp = new byte[1];
+
+				socket.Client.Blocking = false;
+				socket.Client.Send(tmp, 0, 0);
+				return true;
+			}
+			catch (SocketException e)
+			{
+				const int WSAEWOULDBLOCK = 10035;
+				if (e.NativeErrorCode.Equals(WSAEWOULDBLOCK))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			finally
+			{
+				socket.Client.Blocking = blockingState;
+			}
 		}
 	}
 }
