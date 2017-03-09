@@ -185,42 +185,29 @@ namespace sar.Tools
 
 			return line;
 		}
+			
+		/// <summary>
+		///  Determine whether data is ready to be read
+		/// </summary>
+		public static bool IsDataAvailable(this System.Net.Sockets.Socket s)
+		{
+			return s.Poll(1000, SelectMode.SelectRead) && (s.Available > 0);
+		}
 		
+		/// <summary>
+		///  Determine whether data is ready to be read
+		/// </summary>
+		public static bool IsDataAvailable(this TcpClient tcp)
+		{
+			return tcp.Client.IsDataAvailable();
+		}
 		
 		/// <summary>
 		///  Determine whether a socket is still connected
 		/// </summary>
 		public static bool IsConnected(this System.Net.Sockets.Socket s)
 		{
-			// solution posted by Carsten
-			// http://stackoverflow.com/questions/7650402/how-to-test-for-a-broken-connection-of-tcpclient-after-being-connected
-			
-			var blockingState = s.Blocking;
-			
-			try
-			{
-				var tmp = new byte[] {};
-
-				s.Blocking = false;
-				s.Send(tmp, 0, 0);
-				return s.Connected;
-			}
-			catch (SocketException e)
-			{
-				const int WSAEWOULDBLOCK = 10035;
-				if (e.NativeErrorCode.Equals(WSAEWOULDBLOCK))
-				{
-					return s.Connected;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			finally
-			{
-				s.Blocking = blockingState;
-			}
+			return (s.Poll(1000, SelectMode.SelectRead) && (s.Available == 0));
 		}
 		
 		/// <summary>
