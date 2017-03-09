@@ -201,18 +201,18 @@ namespace sar.Tools
 			
 			try
 			{
-				var tmp = new byte[1];
+				var tmp = new byte[] {};
 
 				socket.Client.Blocking = false;
 				socket.Client.Send(tmp, 0, 0);
-				return true;
+				return socket.Connected;
 			}
 			catch (SocketException e)
 			{
 				const int WSAEWOULDBLOCK = 10035;
 				if (e.NativeErrorCode.Equals(WSAEWOULDBLOCK))
 				{
-					return true;
+					return socket.Connected;
 				}
 				else
 				{
