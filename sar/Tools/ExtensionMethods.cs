@@ -18,8 +18,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Net.Sockets;
-using System.Net;
-using System.IO;
 
 namespace sar.Tools
 {
@@ -192,27 +190,27 @@ namespace sar.Tools
 		/// <summary>
 		///  Determine whether a socket is still connected
 		/// </summary>		
-		public static bool IsConnected(this TcpClient socket)
+		public static bool IsConnected(this System.Net.Sockets.Socket s)
 		{
 			// solution posted by Carsten
 			// http://stackoverflow.com/questions/7650402/how-to-test-for-a-broken-connection-of-tcpclient-after-being-connected
 			
-			var blockingState = socket.Client.Blocking;
+			var blockingState = s.Blocking;
 			
 			try
 			{
 				var tmp = new byte[] {0};
 
-				socket.Client.Blocking = false;
-				socket.Client.Send(tmp, 1, 0);
-				return socket.Connected;
+				s.Blocking = false;
+				s.Send(tmp, 1, 0);
+				return s.Connected;
 			}
 			catch (SocketException e)
 			{
 				const int WSAEWOULDBLOCK = 10035;
 				if (e.NativeErrorCode.Equals(WSAEWOULDBLOCK))
 				{
-					return socket.Connected;
+					return s.Connected;
 				}
 				else
 				{
@@ -221,7 +219,7 @@ namespace sar.Tools
 			}
 			finally
 			{
-				socket.Client.Blocking = blockingState;
+				s.Blocking = blockingState;
 			}
 		}
 	}
