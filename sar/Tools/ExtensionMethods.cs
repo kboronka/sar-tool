@@ -201,10 +201,10 @@ namespace sar.Tools
 			
 			try
 			{
-				var tmp = new byte[] {};
+				var tmp = new byte[] {0};
 
 				socket.Client.Blocking = false;
-				socket.Client.Send(tmp, 0, 0);
+				socket.Client.Send(tmp, 1, 0);
 				return socket.Connected;
 			}
 			catch (SocketException e)
