@@ -189,7 +189,7 @@ namespace sar.Tools
 		
 		/// <summary>
 		///  Determine whether a socket is still connected
-		/// </summary>		
+		/// </summary>
 		public static bool IsConnected(this System.Net.Sockets.Socket s)
 		{
 			// solution posted by Carsten
@@ -221,6 +221,14 @@ namespace sar.Tools
 			{
 				s.Blocking = blockingState;
 			}
+		}
+		
+		/// <summary>
+		///  Determine whether a socket is still connected
+		/// </summary>
+		public static bool IsConnected(this TcpClient tcp)
+		{
+			return tcp.Client.IsConnected();
 		}
 	}
 }
