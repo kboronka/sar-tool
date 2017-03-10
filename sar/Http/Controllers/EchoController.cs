@@ -41,7 +41,7 @@ namespace sar.Http
 				
 				if (Encoding.ASCII.GetString(request.Data) == "error") throw new ApplicationException("error test");
 				
-				return new HttpContent(result.ToJSON());
+				return new HttpContent(result.ToJson());
 			}
 			catch (Exception ex)
 			{
