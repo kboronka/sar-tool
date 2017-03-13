@@ -16,6 +16,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Security;
 
@@ -41,12 +42,18 @@ namespace sar.Tools
 
 		public static string GetString(byte[] bytes)
 		{
-			/*
-			char[] chars = new char[bytes.Length / sizeof(char)];
-			System.Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
-			return new string(chars);
-			 */
-			return (bytes == null) ? "" : System.Text.Encoding.UTF8.GetString(bytes);
+			if (bytes == null)
+			{
+				return null;
+			}
+			
+			// UTF8 byte order mark is: 0xEF,0xBB,0xBF
+			if (bytes.Length >= 2 && bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF)
+			{
+				return System.Text.Encoding.UTF8.GetString(bytes.Skip(3).ToArray());
+			}
+			
+			return System.Text.Encoding.UTF8.GetString(bytes);
 		}
 		
 		public static string TrimStart(string input)
@@ -236,7 +243,7 @@ namespace sar.Tools
 			line += "]";
 			
 			return line;
-		}		
+		}
 		
 		public static string AddQuotes(string input)
 		{
@@ -346,8 +353,8 @@ namespace sar.Tools
 			}
 
 			return columns.ToArray();
-		}		
-				
+		}
+		
 		#region environment variable helpers
 		
 		
