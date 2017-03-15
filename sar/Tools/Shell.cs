@@ -142,7 +142,7 @@ namespace sar.Tools
 		
 		public static void RunHiddenElevated(string fileName, string arguments, string workingDirectory)
 		{
-			ProcessStartInfo processInfo = new ProcessStartInfo();
+			var processInfo = new ProcessStartInfo();
 			processInfo.Verb = "runas";
 			processInfo.WorkingDirectory = workingDirectory;
 			processInfo.Arguments = arguments;
@@ -159,6 +159,6 @@ namespace sar.Tools
 			{
 				//Do nothing. the user canceled the UAC window
 			}
-		}		
+		}
 	}
 }
