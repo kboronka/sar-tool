@@ -41,18 +41,27 @@ namespace sar.Commands
 			}
 			
 			string path = args[1];
+			var deleteShell = (path.ToLower() == "explorer.exe");
 			
-			if (!File.Exists(path)) throw new FileNotFoundException("unable to find file: " + path);
+			if (!deleteShell && !File.Exists(path))
+			{
+				throw new FileNotFoundException("unable to find file: " + path);
+			}
 			
 			RegistryKey winLoginKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon", true);
-
 			if (winLoginKey == null) throw new KeyNotFoundException("Winlogin key was not found");
 
 
 			winLoginKey.SetValue("Shell", path, RegistryValueKind.String);
 			ConsoleHelper.WriteLine((string)winLoginKey.GetValue("Shell", path));
-			
 			var newShell = (string)winLoginKey.GetValue("Shell");
+			
+			if (deleteShell)
+			{
+				winLoginKey.DeleteValue("Shell");
+			}
+			
+			
 			
 			winLoginKey.Close();
 
