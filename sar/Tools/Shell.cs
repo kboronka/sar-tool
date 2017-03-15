@@ -139,5 +139,26 @@ namespace sar.Tools
 				//Do nothing. the user canceled the UAC window
 			}
 		}
+		
+		public static void RunHiddenElevated(string fileName, string arguments, string workingDirectory)
+		{
+			ProcessStartInfo processInfo = new ProcessStartInfo();
+			processInfo.Verb = "runas";
+			processInfo.WorkingDirectory = workingDirectory;
+			processInfo.Arguments = arguments;
+			processInfo.FileName = fileName;
+			processInfo.UseShellExecute = false;
+			processInfo.WindowStyle = ProcessWindowStyle.Hidden;
+			processInfo.CreateNoWindow = true;
+
+			try
+			{
+				Process.Start(processInfo);
+			}
+			catch (Win32Exception)
+			{
+				//Do nothing. the user canceled the UAC window
+			}
+		}		
 	}
 }
