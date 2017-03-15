@@ -122,7 +122,7 @@ namespace sar.Tools
 			return results;
 		}
 		
-		public static void RunElevated(string fileName, string arguments, string workingDirectory)
+		public static bool RunElevated(string fileName, string arguments, string workingDirectory)
 		{
 			ProcessStartInfo processInfo = new ProcessStartInfo();
 			processInfo.Verb = "runas";
@@ -133,14 +133,16 @@ namespace sar.Tools
 			try
 			{
 				Process.Start(processInfo);
+				return true;
 			}
 			catch (Win32Exception)
 			{
 				//Do nothing. the user canceled the UAC window
+				return false;
 			}
 		}
 		
-		public static void RunHiddenElevated(string fileName, string arguments, string workingDirectory)
+		public static bool RunHiddenElevated(string fileName, string arguments, string workingDirectory)
 		{
 			var processInfo = new ProcessStartInfo();
 			processInfo.Verb = "runas";
@@ -154,10 +156,12 @@ namespace sar.Tools
 			try
 			{
 				Process.Start(processInfo);
+				return true;
 			}
 			catch (Win32Exception)
 			{
 				//Do nothing. the user canceled the UAC window
+				return false;
 			}
 		}
 	}
