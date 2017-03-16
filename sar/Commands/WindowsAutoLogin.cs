@@ -27,8 +27,8 @@ namespace sar.Commands
 	{
 		public WindowsAutoLogin(Base.CommandHub parent) : base(parent, "Windows - Set AutoLogin", new List<string> { "windows.autologin", "win.autologin" },
 		                                                       @"-windows.autologin [domain\username] [password]",
-		                                                       new List<string>() { @"-windows.login ./Username Password",
-		                                                       	@"-windows.login mydomain\username Password"})
+		                                                       new List<string>() { @"-windows.autologin ./Username Password",
+		                                                       	@"-windows.autologin mydomain\username Password"})
 		{
 			
 		}
@@ -57,7 +57,10 @@ namespace sar.Commands
 			winLoginKey.SetValue("DefaultUserName", username, RegistryValueKind.String);
 			winLoginKey.SetValue("DefaultPassword", password, RegistryValueKind.String);
 			if (!String.IsNullOrEmpty(domain)) winLoginKey.SetValue("DefaultDomainName", domain, RegistryValueKind.String);
-			winLoginKey.SetValue("AutoAdminLogon", "1", RegistryValueKind.String);
+			
+			
+			var autoAdminLogon = !String.IsNullOrEmpty(username) ? "1" : "0";
+			winLoginKey.SetValue("AutoAdminLogon", autoAdminLogon, RegistryValueKind.String);
 			winLoginKey.Close();
 
 			ConsoleHelper.WriteLine("AutoLogin set to " + username + ".", ConsoleColor.DarkYellow);
