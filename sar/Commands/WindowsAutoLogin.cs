@@ -15,7 +15,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Microsoft.Win32;
 
 using sar.Tools;
