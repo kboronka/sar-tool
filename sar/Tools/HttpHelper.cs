@@ -989,6 +989,7 @@ namespace sar.Tools
 		
 		public static string BytesToJson(byte[] data)
 		{
+			// TODO: check for { }
 			var json = StringHelper.GetString(data);
 			//json = System.Text.Encoding.ASCII.GetString(data);
 			
