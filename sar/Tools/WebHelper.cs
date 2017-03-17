@@ -37,26 +37,33 @@ namespace sar.Tools
 			Client.DownloadFile(url, localfile);
 		}
 		
-		public static string ReadURL(string url)
+		public static string ReadUrl(string url)
 		{
 			return Client.DownloadString(url);
 		}
 		
-		public static string ReadJSON(string url)
+		public static string ReadJson(string url)
 		{
 			var request = WebRequest.Create(url);
 			request.Credentials = CredentialCache.DefaultCredentials;
-			
 			var response = request.GetResponse();
-			var responceStream = response.GetResponseStream ();
-			var reader = new StreamReader(responceStream);
+			var responceStream = response.GetResponseStream();
 			
-			string json = reader.ReadToEnd();
-			
-			reader.Close();
-			response.Close();
-			
-			return json;
+			try
+			{
+				var data = new byte[responceStream.Length];
+				responceStream.Read(data, 0, data.Length);
+
+				return HttpHelper.BytesToJson(data);
+			}
+			catch
+			{
+				return "";
+			}
+			finally
+			{
+				response.Close();
+			}
 		}
 	}
 }
