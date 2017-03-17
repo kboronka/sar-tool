@@ -111,7 +111,7 @@ namespace sar.Base
 						
 						if (this.PauseAfter)
 						{
-							ConsoleHelper.WriteLine("Press anykey to continue", ConsoleColor.Yellow);
+							ConsoleHelper.WriteLine("Press any key to continue.", ConsoleColor.Yellow);
 							ConsoleHelper.ReadKey();
 						}
 					}
@@ -122,7 +122,7 @@ namespace sar.Base
 						ConsoleHelper.WriteException(ex);
 						if (this.PauseAfter)
 						{
-							ConsoleHelper.WriteLine("Press anykey to continue", ConsoleColor.Yellow);
+							ConsoleHelper.WriteLine("Press any key to continue.", ConsoleColor.Yellow);
 							ConsoleHelper.ReadKey();
 						}
 						
@@ -140,7 +140,7 @@ namespace sar.Base
 				
 				if (this.Debug)
 				{
-					ConsoleHelper.WriteLine("Press anykey to continue", ConsoleColor.Yellow);
+					ConsoleHelper.WriteLine("Press any key to continue.", ConsoleColor.Yellow);
 					ConsoleHelper.ReadKey();
 				}
 
