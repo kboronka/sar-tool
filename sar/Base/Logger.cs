@@ -113,9 +113,6 @@ namespace sar
 		{
 			try
 			{
-				#if DEBUG
-				System.Diagnostics.Debug.WriteLine(message);
-				#endif
 				DebugLog.WriteLine(message);
 
 				if (OnLog != null)
