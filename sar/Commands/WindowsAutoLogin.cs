@@ -54,10 +54,12 @@ namespace sar.Commands
 
 			if (ApplicationInfo.IsWow64)
 			{
+				ConsoleHelper.DebugWriteLine("is wow64");
 				localKey = RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, RegistryView.Registry64);
 			}
 			else
 			{
+				ConsoleHelper.DebugWriteLine("is 32bit");
 				localKey = RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, RegistryView.Registry32);
 			}
 			
