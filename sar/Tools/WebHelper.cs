@@ -67,15 +67,5 @@ namespace sar.Tools
 				response.Close();
 			}
 		}
-		
-		private static void CopyTo(this Stream source, Stream destination)
-		{
-			var buffer = new byte[16384];
-			int bytesRead;
-			while ((bytesRead = source.Read(buffer, 0, buffer.Length)) > 0)
-			{
-				destination.Write(buffer, 0, bytesRead);
-			}
-		}
 	}
 }
