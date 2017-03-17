@@ -136,7 +136,7 @@ namespace sar.Http
 			this.stream = stream;
 		}
 		
-		abstract public void NewData(byte[] data);
+		abstract public void NewData(string json);
 		
 		public void ReadNewData()
 		{
@@ -171,7 +171,7 @@ namespace sar.Http
 				}
 			}
 			
-			NewData(HttpWebSocketFrame.DecodeFrame(buffer).Payload);
+			NewData(HttpHelper.BytesToJson(HttpWebSocketFrame.DecodeFrame(buffer).Payload));
 		}
 		
 		private void Send(byte[] data)

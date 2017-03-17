@@ -984,19 +984,25 @@ namespace sar.Tools
 			var pattern = @"\""" + element + @"\"":([^\,\}]*)";
 			var x = Regex.Match(json, pattern);
 			
-			var data = x.Groups[1].Value;
-
-			// render escaped control characters
-			data = Regex.Replace(data, @"([^\\]|^)([\\][n])", m => m.Groups[1].Value + "\n");
-			data = Regex.Replace(data, @"([^\\]|^)([\\][r])", m => m.Groups[1].Value + "\r");
-			data = Regex.Replace(data, @"([^\\]|^)([\\][t])", m => m.Groups[1].Value + "\t");
-			data = Regex.Replace(data, @"([^\\]|^)([\\][b])", m => m.Groups[1].Value + "\b");
-			data = Regex.Replace(data, @"([^\\]|^)([\\][f])", m => m.Groups[1].Value + "\f");
-			data = Regex.Replace(data, @"([^\\]|^)([\\][""])", m => m.Groups[1].Value + @"""");
-			data = Regex.Replace(data, @"([\\][\\])", m => m.Groups[1].Value + "\\");
-			
-			return data;
+			return x.Groups[1].Value;
 		}
+		
+		public static string BytesToJson(byte[] data)
+		{
+			var json = StringHelper.GetString(data);
+			//json = System.Text.Encoding.ASCII.GetString(data);
+			
+			// render escaped control characters
+			json = Regex.Replace(json, @"([^\\]|^)([\\][n])", m => m.Groups[1].Value + "\n");
+			json = Regex.Replace(json, @"([^\\]|^)([\\][r])", m => m.Groups[1].Value + "\r");
+			json = Regex.Replace(json, @"([^\\]|^)([\\][t])", m => m.Groups[1].Value + "\t");
+			json = Regex.Replace(json, @"([^\\]|^)([\\][b])", m => m.Groups[1].Value + "\b");
+			json = Regex.Replace(json, @"([^\\]|^)([\\][f])", m => m.Groups[1].Value + "\f");
+			json = Regex.Replace(json, @"([^\\]|^)([\\][""])", m => m.Groups[1].Value + @"""");
+			json = Regex.Replace(json, @"([\\][\\])", @"\");
+			
+			return json;
+		}		
 		
 		public static int GetJsonValue(this string json, string key, int defaultValue)
 		{

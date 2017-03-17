@@ -32,6 +32,7 @@ namespace sar.Http
 		public string ContentType { get; private set; }
 		public string ETag { get; private set; }
 		public byte[] Data { get; private set; }
+
 		public bool ParsingRequired { get; protected set; }
 		
 		protected bool embedded;

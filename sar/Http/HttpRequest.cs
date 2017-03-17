@@ -88,7 +88,22 @@ namespace sar.Http
 		{
 			get { return data; }
 		}
-
+		
+		private string json;
+		public string Json
+		{
+			get
+			{
+				if (!String.IsNullOrEmpty(json))
+				{
+					return json;
+				}
+				
+				json = HttpHelper.BytesToJson(data);
+				return json;
+			}
+		}
+		
 		public string ProtocolVersion
 		{
 			get { return protocolVersion; }
@@ -254,7 +269,7 @@ namespace sar.Http
 				case "POST":
 					this.method = HttpMethod.POST;
 					break;
-			//TODO: handle the HEAD request type
+					//TODO: handle the HEAD request type
 				default:
 					throw new InvalidDataException("unknown request type \"" + initialRequest[0] + "\"");
 			}
