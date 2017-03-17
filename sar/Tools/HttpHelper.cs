@@ -993,7 +993,7 @@ namespace sar.Tools
 			data = Regex.Replace(data, @"([^\\]|^)([\\][b])", m => m.Groups[1].Value + "\b");
 			data = Regex.Replace(data, @"([^\\]|^)([\\][f])", m => m.Groups[1].Value + "\f");
 			data = Regex.Replace(data, @"([^\\]|^)([\\][""])", m => m.Groups[1].Value + @"""");
-			data = Regex.Replace(data, @"([^\\]|^)([\\][\\])", m => m.Groups[1].Value + "\\");
+			data = Regex.Replace(data, @"([\\][\\])", m => m.Groups[1].Value + "\\");
 			
 			return data;
 		}
