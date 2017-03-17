@@ -171,6 +171,7 @@
     <Compile Include="Tools\AssemblyInfo.cs" />
     <Compile Include="Tools\ConsoleHelper.cs" />
     <Compile Include="Tools\ExtensionMethods.cs" />
+    <Compile Include="Tools\FileCopier.cs" />
     <Compile Include="Tools\WinFormsHelper.cs" />
     <Compile Include="Tools\ErrorLogger.cs" />
     <Compile Include="Tools\ExceptionHandler.cs" />
