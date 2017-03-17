@@ -4,7 +4,7 @@ using System.IO;
 namespace sar.Tools
 {
 	public delegate void ProgressChangeDelegate(double Persentage, ref bool Cancel);
-	public delegate void Completedelegate();
+	public delegate void CompleteDelegate();
 
 	// credit to Anton Semenov: http://stackoverflow.com/questions/6044629/file-copy-with-progress-bar
 	public class FileCopier
@@ -13,7 +13,7 @@ namespace sar.Tools
 		public string Destination { get; set; }
 
 		public event ProgressChangeDelegate OnProgressChanged;
-		public event Completedelegate OnComplete;
+		public event CompleteDelegate OnComplete;
 		
 		public FileCopier(string source, string destination)
 		{
