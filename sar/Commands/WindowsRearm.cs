@@ -24,9 +24,9 @@ namespace sar.Commands
 	public class WindowsRearm : Command
 	{
 		public WindowsRearm(Base.CommandHub parent) : base(parent, "Windows - Activation Trial Rearm",
-		                             new List<string> { "windows.rearm", "win.rearm", "w.rarm" },
-		                             @"-windows.rearm",
-		                             new List<string> { "-windows.rearm" })
+		                                                   new List<string> { "windows.rearm", "win.rearm", "w.rarm" },
+		                                                   @"-windows.rearm",
+		                                                   new List<string> { "-windows.rearm" })
 		{
 		}
 		
@@ -45,12 +45,15 @@ namespace sar.Commands
 			
 			if (this.commandHub.NoWarning || ConsoleHelper.Confirm("Caution: Rearm Activation? (y/n) "))
 			{
-				Progress.Message = "finding cscript.exe";
-				var cscript = IO.FindSystemApplication("cscript.exe");
+				//Progress.Message = "finding cscript.exe";
+				//var cscript = IO.FindSystemApplication("cscript.exe");
 				
 				Progress.Message = "Rearming Windows Activation";
 				
-				ConsoleHelper.Run(cscript, @"slmgr.vbs /rearm");				
+				//ConsoleHelper.Run(cscript, @"slmgr.vbs /rearm");
+				
+				System.Diagnostics.Process.Start(@"cscript //B //Nologo " + Environment.SystemDirectory + @"\slmgr.vbs /rearm");
+
 				ConsoleHelper.WriteLine("Rearmed - Reboot Required", ConsoleColor.DarkYellow);
 				return ConsoleHelper.EXIT_OK;
 			}
