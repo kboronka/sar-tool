@@ -16,6 +16,7 @@
 using System;
 using System.Windows.Forms;
 
+using sar;
 using Base=sar.Base;
 using sar.Tools;
 using sar.Http;
@@ -32,7 +33,7 @@ namespace sar.Testing
 		{
 			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(LogUnhandledException);
 			
-			Base.Program.LogInfo();
+			Logger.LogInfo();
 			
 			#if DEBUG
 			var server = new HttpServer(ApplicationInfo.CurrentDirectory + @"..\..\Http\Views\");

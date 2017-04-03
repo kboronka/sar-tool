@@ -36,7 +36,7 @@ namespace sar.Testing
 		{
 			InitializeComponent();
 			
-			socketServer = new SocketServer(911, Program.ErrorLog, Program.DebugLog);
+			socketServer = new SocketServer(911);
 			
 			this.Text = "sar-tool testing:" + Program.port.ToString();
 			
@@ -88,7 +88,7 @@ namespace sar.Testing
 			}
 			catch (Exception ex)
 			{
-				Program.Log(ex);
+				Logger.Log(ex);
 				Tools.ExceptionHandler.Display(ex);
 			}
 		}
@@ -141,13 +141,13 @@ namespace sar.Testing
 			var json = new Dictionary<string, object>();
 			json.Add("test", @"c:\test\ 102/103 ""abc efg""");
 			
-			var jsonString = json.ToJSON();
+			var jsonString = json.ToJson();
 			
-			var decodeJsonString = jsonString.GetJSON("test", "abc");
+			var decodeJsonString = jsonString.GetJsonValue("test", "abc");
 			json = new Dictionary<string, object>();
 			json.Add("test", decodeJsonString);
 			
-			var jsonString2 = json.ToJSON();
+			var jsonString2 = json.ToJson();
 			
 			System.Diagnostics.Debug.WriteLine(jsonString);
 			System.Diagnostics.Debug.WriteLine(jsonString2);
@@ -159,7 +159,7 @@ namespace sar.Testing
 			{
 				for (var i = 0; i<100; i++)
 				{
-					using(var client = new SocketClient("127.0.0.1", 911, Program.ErrorLog, Program.DebugLog))
+					using(var client = new SocketClient("127.0.0.1", 911))
 					{
 						client.SetValue("sarTesting", AssemblyInfo.Version, true);
 						

@@ -14,7 +14,10 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Text;
 
+using sar;
 using sar.Http;
 using sar.Tools;
 
@@ -25,12 +28,20 @@ namespace sar_testing.Http
 	{
 		#region static
 		
+		public static List<TestWebSocket> clients = new List<TestWebSocket>();
 		private static TestWebSocket Singleton { get; set; }
 
 		public static void JogForward()
 		{
 			TestMessage();
-			if (Singleton != null) Singleton.Send(HttpWebSocketFrame.EncodeFrame("jog +").EncodedFrame);
+			foreach (var c in clients)
+			{
+				if (c.Open)
+				{
+					var text = Encoding.ASCII.GetString(HttpWebSocketFrame.EncodeFrame("jog +").EncodedFrame);
+					c.SendString(text);
+				}
+			}
 		}
 		
 		#endregion 
@@ -40,7 +51,7 @@ namespace sar_testing.Http
 			Singleton = this;
 		}
 		
-		override public void NewData(byte[] data)
+		override public void NewData(string json)
 		{
 			
 		}
@@ -51,9 +62,9 @@ namespace sar_testing.Http
 			var frame = new byte[]{ 129, 131, 61, 84, 35, 6, 112, 16, 109 };
 			var msg = HttpWebSocketFrame.DecodeFrame(frame);
 			
-			sar.Testing.Program.Log(StringHelper.ArrayToString("frame", frame));
-			sar.Testing.Program.Log(StringHelper.ArrayToString("mdn", mdn));
-			sar.Testing.Program.Log(StringHelper.ArrayToString("payload", msg.Payload));
+			Logger.Log(StringHelper.ArrayToString("frame", frame));
+			Logger.Log(StringHelper.ArrayToString("mdn", mdn));
+			Logger.Log(StringHelper.ArrayToString("payload", msg.Payload));
 		}
 	}
 }
