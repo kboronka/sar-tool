@@ -143,7 +143,7 @@ namespace sar.Testing
 			
 			var jsonString = json.ToJson();
 			
-			var decodeJsonString = jsonString.GetJsonValue("test", "abc");
+			var decodeJsonString = jsonString.JsonGetKeyValue("test", "abc");
 			json = new Dictionary<string, object>();
 			json.Add("test", decodeJsonString);
 			
@@ -175,6 +175,21 @@ namespace sar.Testing
 		void JogForwardClick(object sender, EventArgs e)
 		{
 			sar_testing.Http.TestWebSocket.JogForward();
+		}
+		
+		void Button8Click(object sender, EventArgs e)
+		{
+			//{"command":"manual-entry-submit","param1":[{"id":17,"dataType":1,"description":"Test Var1","value":"34.1","$$hashKey":"00I","passFailId":1},{"id":18,"dataType":1,"description":"Test Var2","value":"33.1","$$hashKey":"00J","passFailId":2},{"id":19,"dataType":1,"description":"Test Var3","value":"3.5","$$hashKey":"00K","passFailId":1}],"param2":-1,"param3":""}
+			var json = "{\"command\":\"test\",\"param1\":[{\"id\":17,\"dataType\":1,\"description\":\"Test Var1\",\"value\":\"34.1\",\"$$hashKey\":\"00I\",\"passFailId\":1},{\"id\":18,\"dataType\":1,\"description\":\"Test Var2\",\"value\":\"33.1\",\"$$hashKey\":\"00J\",\"passFailId\":2},{\"id\":19,\"dataType\":1,\"description\":\"Test Var3\",\"value\":\"3.5\",\"$$hashKey\":\"00K\",\"passFailId\":1}],"+
+				"\"param2\":-1," + 
+				"\"param3\":true," + 
+				"\"param4\":\"\"}";
+			
+			var kvp = json.JsonToKeyValuePairs();
+			var param4 = json.JsonGetKeyValue("param4", "na");
+			var param3 = json.JsonGetKeyValue("param3", false);
+			var param2 = json.JsonGetKeyValue("param2", 1);
+			//var param1 = json.JsonGetKeyValue("param1", new List<Dictionary<string, object>>());
 		}
 	}
 }
