@@ -32,16 +32,14 @@ namespace sar.Socket
 		private long sourceID;
 		private DateTime timestamp;
 		private DateTime lastUpdate;
-		private ErrorLogger errorLog;
 		
-		public SocketValue(string name, ErrorLogger errorLog)
+		public SocketValue(string name)
 		{
 			this.name = name;
 			this.data = "";
 			this.timestamp = new DateTime(2001, 1, 1);
 			this.lastUpdate = new DateTime(2001, 1, 1);
-			this.sourceID = 0;	
-			this.errorLog = errorLog;		
+			this.sourceID = 0;		
 		}
 		
 		#region properties
@@ -116,7 +114,7 @@ namespace sar.Socket
 			}
 			catch (Exception ex)
 			{
-				if (this.errorLog != null) this.errorLog.Write(ex);
+				Logger.Log(ex);
 			}
 		}
 

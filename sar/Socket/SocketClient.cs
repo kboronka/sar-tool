@@ -120,7 +120,7 @@ namespace sar.Socket
 
 		#region constructors
 
-		public SocketClient(SocketServer parent, TcpClient socket, long clientID, ErrorLogger errorLog, FileLogger debugLog) : base(errorLog, debugLog)
+		public SocketClient(SocketServer parent, TcpClient socket, long clientID) : base()
 		{
 			try
 			{
@@ -181,7 +181,7 @@ namespace sar.Socket
 			}
 		}
 		
-		public SocketClient(string hostname, int port, ErrorLogger errorLog, FileLogger debugLog) : base(errorLog, debugLog)
+		public SocketClient(string hostname, int port) : base()
 		{
 			this.Log("Client Constructor");
 

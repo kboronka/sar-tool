@@ -148,7 +148,7 @@ namespace sar.Socket
 		
 		#region constructor
 		
-		public SocketServer(int port, ErrorLogger errorLog, FileLogger debugLog) : base(errorLog, debugLog)
+		public SocketServer(int port) : base()
 		{
 			try
 			{
@@ -350,7 +350,7 @@ namespace sar.Socket
 			{
 				if (this.listener.Pending())
 				{
-					var client = new SocketClient(this, this.listener.AcceptTcpClient(), ++this.lastClientID, this.ErrorLog, this.DebugLog);
+					var client = new SocketClient(this, this.listener.AcceptTcpClient(), ++this.lastClientID);
 					this.clients.Add(client);
 					this.OnNewClient(client);
 				}

@@ -27,10 +27,8 @@ namespace sar.Socket
 {
 	public abstract class SocketMemCache : System.IDisposable
 	{
-		public SocketMemCache(ErrorLogger errorLog, FileLogger debugLog)
+		public SocketMemCache()
 		{
-			this.errorLogger = errorLog;
-			this.debugLog = debugLog;
 		}
 
 		public void Dispose()
@@ -72,7 +70,7 @@ namespace sar.Socket
 		{
 			if (!this.memCache.ContainsKey(member))
 			{
-				this.memCache[member] = new SocketValue(member, this.errorLogger);
+				this.memCache[member] = new SocketValue(member);
 				this.memCache[member].DataChanged += new SocketValue.DataChangedHandler(this.OnMemCacheChanged);
 			}
 			
@@ -187,31 +185,14 @@ namespace sar.Socket
 
 		#region logger
 		
-		FileLogger debugLog;
-		ErrorLogger errorLogger;
-		
-		public FileLogger DebugLog
-		{
-			get { return this.debugLog; }
-			private set { this.debugLog = value; }
-		}
-		
-		public ErrorLogger ErrorLog
-		{
-			get { return this.errorLogger; }
-			private set { this.errorLogger = value; }
-		}
-		
 		protected void Log(string line)
 		{
-			if (this.debugLog == null) return;
-			this.debugLog.WriteLine(this.ToString() + ": " + line);
+			Logger.Log(this.ToString() + ": " + line);
 		}
 		
 		protected void Log(Exception ex)
 		{
-			if (this.errorLogger != null) this.errorLogger.Write(ex);
-			this.Log("error: " + ex.Message);
+			Logger.Log(ex);
 		}
 		
 		#endregion		
