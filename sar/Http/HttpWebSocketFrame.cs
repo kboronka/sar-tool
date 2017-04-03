@@ -141,13 +141,13 @@ namespace sar.Http
 			{
 				payloadStartByte = 4;
 				
-				payloadLength = BitConverter.ToUInt16(IO.SubSet(message, 2, 2), 0);
+				payloadLength = BitConverter.ToUInt16(IO.ReverseBytes(IO.SubSet(message, 2, 2)), 0);
 				
 			}
 			else if (payloadLength == 127)
 			{
 				payloadStartByte = 8;
-				payloadLength = BitConverter.ToUInt16(IO.SubSet(message, 4, 4), 0);
+				payloadLength = BitConverter.ToUInt16(IO.ReverseBytes(IO.SubSet(message, 4, 4)), 0);
 			}
 			
 			var maskKey = new byte[] {};
