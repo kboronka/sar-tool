@@ -960,32 +960,233 @@ namespace sar.Tools
 			return JSON;
 		}
 		
-		public static List<string> ParseJsonArray(string json, string element)
+		public static Dictionary<string, object> JsonToKeyValuePairs(this string json)
 		{
-			var jsonArrayMatch = Regex.Match(json, @"\""" + element + @"\"":\[([^\]]*)\]");
-			var jsonArray = jsonArrayMatch.Groups[1].Value;
+			var kvp = new Dictionary<string, object>();
+			var depth = 0;
+			var stringDepth = 0;
 			
-			var items = new List<string>();
-			var matches = Regex.Matches(jsonArray, @"{([^}]+)*}");
+			var keyStart = -1;
+			var keyEnd = -1;
+			var key = "";
 			
-			foreach (Match match in matches)
+			var valueStart = -1;
+			var valueEnd = -1;
+			var value = "";
+			
+			for (var i = 0; i < json.Length; i++)
 			{
-				if (match.Groups.Count == 2)
+				var c = json[i];
+				
+				if (c == '{' && stringDepth == 0)
 				{
-					items.Add(match.Groups[1].Value);
+					depth++;
+				}
+				else if (c == '[' && depth > 0  && stringDepth == 0)
+				{
+					depth++;
+				}
+				else if (c == ']' && depth > 0 && stringDepth == 0)
+				{
+					depth--;
+				}
+				else if (c == '"' && depth > 0 && stringDepth == 0)
+				{
+					stringDepth++;
+					
+					if (keyStart == -1 && depth == 1)
+					{
+						// start of key
+						keyStart = i;
+					}
+				}
+				else if (c == '"' && depth > 0 && stringDepth == 1)
+				{
+					stringDepth--;
+					
+					if (keyEnd == -1 && depth == 1)
+					{
+						// end of a key
+						keyEnd = i;
+						key = ValueStringToString(json.Substring(keyStart, keyEnd - keyStart + 1));
+					}
+				}
+				else if (c == ':' && stringDepth == 0)
+				{
+					if (valueStart == -1 && depth == 1)
+					{
+						// start of value
+						valueStart = i + 1;
+					}
+				}
+				else if (c == ',' && stringDepth == 0)
+				{
+					if (valueEnd == -1 && depth == 1)
+					{
+						// end of value
+						valueEnd = i - 1;
+						value = json.Substring(valueStart, valueEnd - valueStart + 1);
+						kvp.Add(key, ValueStringToObject(value));
+						
+						// prep for next key
+						keyStart = -1;
+						keyEnd = -1;
+						key = "";
+						valueStart = -1;
+						valueEnd = -1;
+						value = "";
+					}
+				}
+				else if (c == '}' && stringDepth == 0)
+				{
+					if (depth == 1)
+					{
+						valueEnd = i - 1;
+						value = json.Substring(valueStart, valueEnd - valueStart + 1);
+						
+						kvp.Add(key, ValueStringToObject(value));
+					}
+					
+					depth--;
 				}
 			}
 			
-			return items;
+			if (stringDepth != 0 && depth != 0)
+			{
+				throw new ApplicationException("Invalid json string");
+			}
+			
+			return kvp;
 		}
 		
-		public static string ParseJsonElement(string json, string element)
+		public static List<object> JsonToArray(this string json)
 		{
-			var pattern = @"\""" + element + @"\"":([^\,\}]*)";
-			var x = Regex.Match(json, pattern);
+			var kvpa = new List<object>();
+			var depth = 0;
+			var stringDepth = 0;
 			
-			return x.Groups[1].Value;
+			var valueStart = -1;
+			var valueEnd = -1;
+			var value = "";
+			
+			for (var i = 0; i < json.Length; i++)
+			{
+				var c = json[i];
+				
+
+				if (c == '[' && stringDepth == 0)
+				{
+					depth++;
+					
+					if (depth == 1)
+					{
+						valueStart = i + 1;
+					}
+				}
+				else if (c == ']' && stringDepth == 0)
+				{
+					if (depth == 1)
+					{
+						valueEnd = i - 1;
+						value = json.Substring(valueStart, valueEnd - valueStart + 1);
+						kvpa.Add(ValueStringToObject(value));
+					}
+					
+					depth--;
+				}
+				else if (c == ',' && depth == 1 && stringDepth == 0)
+				{
+					if (depth == 1)
+					{
+						valueEnd = i - 1;
+						value = json.Substring(valueStart, valueEnd - valueStart + 1);
+						kvpa.Add(ValueStringToObject(value));
+						valueStart = i + 1;
+					}
+				}
+				else if (c == '{' && stringDepth == 0)
+				{
+					depth++;
+				}
+				else if (c == '}' && stringDepth == 0)
+				{
+					depth--;
+				}
+				else if (c == '"' && depth > 0 && stringDepth == 0)
+				{
+					stringDepth++;
+				}
+				else if (c == '"' && depth > 0 && stringDepth == 1)
+				{
+					stringDepth--;
+				}
+			}
+			
+			if (stringDepth != 0 && depth != 0)
+			{
+				throw new ApplicationException("Invalid json string");
+			}
+			
+			return kvpa;
 		}
+		
+		private static object ValueStringToObject(string value)
+		{
+			value = value.TrimWhiteSpace();
+			
+			if (value.Length == 0)
+			{
+				return null;
+			}
+			
+			var firstCharacter = value[0];
+			
+			if (firstCharacter == '"')
+			{
+				return ValueStringToString(value);
+			}
+			else if (firstCharacter == '{')
+			{
+				return value.JsonToKeyValuePairs();
+			}
+			else if (firstCharacter == '[')
+			{
+				return value.JsonToArray();
+			}
+			else if (value.IsNumeric())
+			{
+				if (value.Contains('.'))
+				{
+					return double.Parse(value);
+				}
+				
+				return int.Parse(value);
+			}
+			else if (value == "true")
+			{
+				return true;
+			}
+			else if (value == "false")
+			{
+				return false;
+			}
+			else if (value == "null")
+			{
+				return null;
+			}
+			else
+			{
+				// TODO: are timestamps handeled?
+				// should we throw an exception here?
+				return null;
+			}
+		}
+		
+		private static string ValueStringToString(string value)
+		{
+			return value.Substring(1, value.Length - 2);
+		}
+		
 		
 		public static string BytesToJson(byte[] data)
 		{
@@ -1003,53 +1204,43 @@ namespace sar.Tools
 			json = Regex.Replace(json, @"([\\][\\])", @"\");
 			
 			return json;
-		}		
-		
-		public static int GetJsonValue(this string json, string key, int defaultValue)
-		{
-			try
-			{
-				return int.Parse(ParseJsonElement(json, key));
-			}
-			catch
-			{
-				return defaultValue;
-			}
 		}
 		
-		public static double GetJsonValue(this string json, string key, double defaultValue)
+		public static int JsonGetKeyValue(this string json, string key, int defaultValue)
 		{
 			try
 			{
-				return double.Parse(ParseJsonElement(json, key));
-			}
-			catch
-			{
-				return defaultValue;
-			}
-		}
-		
-		public static string GetJsonValue(this string json, string key, string defaultValue)
-		{
-			try
-			{
-				string result = ParseJsonElement(json, key);
-				if (String.IsNullOrEmpty(result))
+				var kvp = json.JsonToKeyValuePairs();
+				
+				if (kvp.ContainsKey(key))
 				{
-					return defaultValue;
-				}
-				if (result.StartsWith(@"""", StringComparison.InvariantCulture) && result.EndsWith(@"""", StringComparison.InvariantCulture))
-				{
-					result = StringHelper.TrimStart(result);
-					result = StringHelper.TrimEnd(result);
-
-					return result;
+					return (int)kvp[key];
 				}
 				else
 				{
 					return defaultValue;
 				}
+			}
+			catch
+			{
+				return defaultValue;
+			}
+		}
+		
+		public static double JsonGetKeyValue(this string json, string key, double defaultValue)
+		{
+			try
+			{
+				var kvp = json.JsonToKeyValuePairs();
 				
+				if (kvp.ContainsKey(key))
+				{
+					return (double)kvp[key];
+				}
+				else
+				{
+					return defaultValue;
+				}
 			}
 			catch
 			{
@@ -1057,11 +1248,20 @@ namespace sar.Tools
 			}
 		}
 		
-		public static bool GetJsonValue(this string json, string key, bool defaultValue)
+		public static string JsonGetKeyValue(this string json, string key, string defaultValue)
 		{
 			try
 			{
-				return ParseJsonElement(json, key) == "true";
+				var kvp = json.JsonToKeyValuePairs();
+				
+				if (kvp.ContainsKey(key))
+				{
+					return (string)kvp[key];
+				}
+				else
+				{
+					return defaultValue;
+				}
 			}
 			catch
 			{
@@ -1069,11 +1269,41 @@ namespace sar.Tools
 			}
 		}
 		
-		public static DateTime GetJsonValue(this string json, string key, DateTime defaultValue)
+		public static bool JsonGetKeyValue(this string json, string key, bool defaultValue)
 		{
 			try
 			{
-				return DateTime.Parse(ParseJsonElement(json, key), null, System.Globalization.DateTimeStyles.RoundtripKind);
+				var kvp = json.JsonToKeyValuePairs();
+				
+				if (kvp.ContainsKey(key))
+				{
+					return (bool)kvp[key];
+				}
+				else
+				{
+					return defaultValue;
+				}
+			}
+			catch
+			{
+				return defaultValue;
+			}
+		}
+		
+		public static DateTime JsonGetKeyValue(this string json, string key, DateTime defaultValue)
+		{
+			try
+			{
+				var kvp = json.JsonToKeyValuePairs();
+				
+				if (kvp.ContainsKey(key))
+				{
+					return DateTime.Parse((string)kvp[key], null, System.Globalization.DateTimeStyles.RoundtripKind);
+				}
+				else
+				{
+					return defaultValue;
+				}
 			}
 			catch
 			{
