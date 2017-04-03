@@ -143,7 +143,7 @@ namespace sar.Testing
 			
 			var jsonString = json.ToJson();
 			
-			var decodeJsonString = jsonString.JsonGetKeyValue("test", "abc");
+			var decodeJsonString = jsonString.GetJsonValue("test", "abc");
 			json = new Dictionary<string, object>();
 			json.Add("test", decodeJsonString);
 			
@@ -185,11 +185,11 @@ namespace sar.Testing
 				"\"param3\":true," + 
 				"\"param4\":\"\"}";
 			
-			var kvp = json.JsonToKeyValuePairs();
-			var param4 = json.JsonGetKeyValue("param4", "na");
-			var param3 = json.JsonGetKeyValue("param3", false);
-			var param2 = json.JsonGetKeyValue("param2", 1);
-			//var param1 = json.JsonGetKeyValue("param1", new List<Dictionary<string, object>>());
+			var kvp = json.GetJsonKeyValuePairs();
+			var param4 = json.GetJsonValue("param4", "na");
+			var param3 = json.GetJsonValue("param3", false);
+			var param2 = json.GetJsonValue("param2", 1);
+			//var param1 = json.GetJsonValue("param1", new List<Dictionary<string, object>>());
 		}
 	}
 }

@@ -960,7 +960,7 @@ namespace sar.Tools
 			return JSON;
 		}
 		
-		public static Dictionary<string, object> JsonToKeyValuePairs(this string json)
+		public static Dictionary<string, object> GetJsonKeyValuePairs(this string json)
 		{
 			var kvp = new Dictionary<string, object>();
 			var depth = 0;
@@ -1008,7 +1008,7 @@ namespace sar.Tools
 					{
 						// end of a key
 						keyEnd = i;
-						key = ValueStringToString(json.Substring(keyStart, keyEnd - keyStart + 1));
+						key = TrimJsonString(json.Substring(keyStart, keyEnd - keyStart + 1));
 					}
 				}
 				else if (c == ':' && stringDepth == 0)
@@ -1026,7 +1026,7 @@ namespace sar.Tools
 						// end of value
 						valueEnd = i - 1;
 						value = json.Substring(valueStart, valueEnd - valueStart + 1);
-						kvp.Add(key, ValueStringToObject(value));
+						kvp.Add(key, ValueToObject(value));
 						
 						// prep for next key
 						keyStart = -1;
@@ -1044,7 +1044,7 @@ namespace sar.Tools
 						valueEnd = i - 1;
 						value = json.Substring(valueStart, valueEnd - valueStart + 1);
 						
-						kvp.Add(key, ValueStringToObject(value));
+						kvp.Add(key, ValueToObject(value));
 					}
 					
 					depth--;
@@ -1059,7 +1059,7 @@ namespace sar.Tools
 			return kvp;
 		}
 		
-		public static List<object> JsonToArray(this string json)
+		public static List<object> GetJsonArray(this string json)
 		{
 			var kvpa = new List<object>();
 			var depth = 0;
@@ -1089,7 +1089,7 @@ namespace sar.Tools
 					{
 						valueEnd = i - 1;
 						value = json.Substring(valueStart, valueEnd - valueStart + 1);
-						kvpa.Add(ValueStringToObject(value));
+						kvpa.Add(ValueToObject(value));
 					}
 					
 					depth--;
@@ -1100,7 +1100,7 @@ namespace sar.Tools
 					{
 						valueEnd = i - 1;
 						value = json.Substring(valueStart, valueEnd - valueStart + 1);
-						kvpa.Add(ValueStringToObject(value));
+						kvpa.Add(ValueToObject(value));
 						valueStart = i + 1;
 					}
 				}
@@ -1130,7 +1130,7 @@ namespace sar.Tools
 			return kvpa;
 		}
 		
-		private static object ValueStringToObject(string value)
+		private static object ValueToObject(string value)
 		{
 			value = value.TrimWhiteSpace();
 			
@@ -1143,15 +1143,15 @@ namespace sar.Tools
 			
 			if (firstCharacter == '"')
 			{
-				return ValueStringToString(value);
+				return TrimJsonString(value);
 			}
 			else if (firstCharacter == '{')
 			{
-				return value.JsonToKeyValuePairs();
+				return value.GetJsonKeyValuePairs();
 			}
 			else if (firstCharacter == '[')
 			{
-				return value.JsonToArray();
+				return value.GetJsonArray();
 			}
 			else if (value.IsNumeric())
 			{
@@ -1182,7 +1182,7 @@ namespace sar.Tools
 			}
 		}
 		
-		private static string ValueStringToString(string value)
+		private static string TrimJsonString(string value)
 		{
 			return value.Substring(1, value.Length - 2);
 		}
@@ -1206,11 +1206,11 @@ namespace sar.Tools
 			return json;
 		}
 		
-		public static int JsonGetKeyValue(this string json, string key, int defaultValue)
+		public static int GetJsonValue(this string json, string key, int defaultValue)
 		{
 			try
 			{
-				var kvp = json.JsonToKeyValuePairs();
+				var kvp = json.GetJsonKeyValuePairs();
 				
 				if (kvp.ContainsKey(key))
 				{
@@ -1227,11 +1227,11 @@ namespace sar.Tools
 			}
 		}
 		
-		public static double JsonGetKeyValue(this string json, string key, double defaultValue)
+		public static double GetJsonValue(this string json, string key, double defaultValue)
 		{
 			try
 			{
-				var kvp = json.JsonToKeyValuePairs();
+				var kvp = json.GetJsonKeyValuePairs();
 				
 				if (kvp.ContainsKey(key))
 				{
@@ -1248,11 +1248,11 @@ namespace sar.Tools
 			}
 		}
 		
-		public static string JsonGetKeyValue(this string json, string key, string defaultValue)
+		public static string GetJsonValue(this string json, string key, string defaultValue)
 		{
 			try
 			{
-				var kvp = json.JsonToKeyValuePairs();
+				var kvp = json.GetJsonKeyValuePairs();
 				
 				if (kvp.ContainsKey(key))
 				{
@@ -1269,11 +1269,11 @@ namespace sar.Tools
 			}
 		}
 		
-		public static bool JsonGetKeyValue(this string json, string key, bool defaultValue)
+		public static bool GetJsonValue(this string json, string key, bool defaultValue)
 		{
 			try
 			{
-				var kvp = json.JsonToKeyValuePairs();
+				var kvp = json.GetJsonKeyValuePairs();
 				
 				if (kvp.ContainsKey(key))
 				{
@@ -1290,11 +1290,11 @@ namespace sar.Tools
 			}
 		}
 		
-		public static DateTime JsonGetKeyValue(this string json, string key, DateTime defaultValue)
+		public static DateTime GetJsonValue(this string json, string key, DateTime defaultValue)
 		{
 			try
 			{
-				var kvp = json.JsonToKeyValuePairs();
+				var kvp = json.GetJsonKeyValuePairs();
 				
 				if (kvp.ContainsKey(key))
 				{
