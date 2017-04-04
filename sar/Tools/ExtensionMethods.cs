@@ -23,14 +23,22 @@ namespace sar.Tools
 {
 	public static class ExtensionMethods
 	{
-		public static T GetAttribute<T>(this Enum value) where T : Attribute {
+		public static T GetAttribute<T>(this Enum value) where T : Attribute
+		{
 			var type = value.GetType();
 			var memberInfo = type.GetMember(value.ToString());
 			var attributes = memberInfo[0].GetCustomAttributes(typeof(T), false);
 			return (T)attributes[0];
 		}
 		
-		public static string Description(this Enum value) {
+		public static bool IsA<T>(this object obj)
+		{
+			// from http://stackoverflow.com/questions/811614/c-sharp-is-keyword-and-checking-for-not
+			return obj is T;
+		}
+		
+		public static string Description(this Enum value)
+		{
 			var attribute = value.GetAttribute<DescriptionAttribute>();
 			return attribute == null ? value.ToString() : attribute.Description;
 		}
@@ -146,7 +154,8 @@ namespace sar.Tools
 		{
 			foreach (var b in byteArray)
 			{
-				if (b != 0) return true;
+				if (b != 0)
+					return true;
 			}
 			
 			return false;
@@ -185,7 +194,7 @@ namespace sar.Tools
 
 			return line;
 		}
-			
+		
 		/// <summary>
 		///  Determine whether data is ready to be read
 		/// </summary>
@@ -214,7 +223,7 @@ namespace sar.Tools
 			
 			try
 			{
-				var tmp = new byte[] {};
+				var tmp = new byte[] { };
 
 				s.Blocking = false;
 				s.Send(tmp, 0, 0);
