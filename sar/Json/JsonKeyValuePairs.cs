@@ -175,6 +175,20 @@ namespace sar.Json
 			}
 			
 			return (this[key] is JsonKeyValuePairs);
-		}		
+		}
+		
+		public override string ToString()
+		{
+			var text = "";
+			var delimitor = "";
+			
+			foreach (var key in this.Keys)
+			{
+				text += delimitor + key;
+				delimitor = ", ";
+			}
+			
+			return "[" + text + "]";
+		}
 	}
 }
