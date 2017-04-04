@@ -138,6 +138,7 @@
     <Compile Include="Commands\WindowsShellReplacement.cs" />
     <Compile Include="Http\HttpWebSocket.cs" />
     <Compile Include="Http\HttpWebSocketFrame.cs" />
+    <Compile Include="Json\JsonKeyValuePairs.cs" />
     <Compile Include="Timing\Interval.cs" />
     <Compile Include="Databases\DatabaseHelper.cs" />
     <Compile Include="Databases\DatabaseObject.cs" />
@@ -218,6 +219,7 @@
     <Folder Include="Http\Views\Debug" />
     <Folder Include="Databases\MSSQL" />
     <Folder Include="Databases" />
+    <Folder Include="Json" />
     <Folder Include="Timing" />
     <Folder Include="S7Siemens" />
     <Folder Include="Socket" />
