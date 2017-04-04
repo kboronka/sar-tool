@@ -139,6 +139,7 @@
     <Compile Include="Http\HttpMimeTypes.cs" />
     <Compile Include="Http\HttpWebSocket.cs" />
     <Compile Include="Http\HttpWebSocketFrame.cs" />
+    <Compile Include="Json\JsonArray.cs" />
     <Compile Include="Json\JsonHelper.cs" />
     <Compile Include="Json\JsonKeyValuePairs.cs" />
     <Compile Include="Timing\Interval.cs" />

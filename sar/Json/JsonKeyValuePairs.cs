@@ -126,5 +126,55 @@ namespace sar.Json
 				throw new ApplicationException("Invalid json string");
 			}
 		}
+		
+		public bool ValidateStringKey(string key)
+		{
+			if (!this.ContainsKey(key))
+			{
+				return false;
+			}
+			
+			return (this[key] is string);
+		}
+		
+		public bool ValidateIntKey(string key)
+		{
+			if (!this.ContainsKey(key))
+			{
+				return false;
+			}
+			
+			return (this[key] is int);
+		}
+		
+		public bool ValidateBoolKey(string key)
+		{
+			if (!this.ContainsKey(key))
+			{
+				return false;
+			}
+			
+			return (this[key] is bool);
+		}
+
+		public bool ValidateArrayKey(string key)
+		{
+			if (!this.ContainsKey(key))
+			{
+				return false;
+			}
+			
+			return (this[key] is JsonArray);
+		}
+		
+		public bool ValidateObjectKey(string key)
+		{
+			if (!this.ContainsKey(key))
+			{
+				return false;
+			}
+			
+			return (this[key] is JsonKeyValuePairs);
+		}		
 	}
 }
