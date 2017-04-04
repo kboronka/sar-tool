@@ -136,8 +136,10 @@
     <Compile Include="Commands\WindowsRearm.cs" />
     <Compile Include="Commands\WindowsRestart.cs" />
     <Compile Include="Commands\WindowsShellReplacement.cs" />
+    <Compile Include="Http\HttpMimeTypes.cs" />
     <Compile Include="Http\HttpWebSocket.cs" />
     <Compile Include="Http\HttpWebSocketFrame.cs" />
+    <Compile Include="Json\HttpHelper.cs" />
     <Compile Include="Json\JsonKeyValuePairs.cs" />
     <Compile Include="Timing\Interval.cs" />
     <Compile Include="Databases\DatabaseHelper.cs" />
@@ -186,7 +188,6 @@
     <Compile Include="Tools\FileLogger.cs" />
     <Compile Include="Tools\EmbeddedResource.cs" />
     <Compile Include="Tools\FTPHelper.cs" />
-    <Compile Include="Tools\HttpHelper.cs" />
     <Compile Include="Tools\IO.cs" />
     <Compile Include="Tools\LogForm.cs" />
     <Compile Include="Tools\LogForm.Designer.cs">

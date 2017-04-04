@@ -48,7 +48,7 @@ namespace sar.Http
 			this.embedded = true;
 
 			string extension = IO.GetFileExtension(path).ToLower();
-			this.ContentType = HttpHelper.GetMimeType(extension);
+			this.ContentType = HttpMimeTypes.GetMimeType(extension);
 			this.Data = data;
 			this.ETag = GetETag(this.Data);
 			this.ParsingRequired = false;
