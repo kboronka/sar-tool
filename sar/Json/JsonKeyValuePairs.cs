@@ -26,7 +26,12 @@ namespace sar.Json
 	/// </summary>
 	public class JsonKeyValuePairs : Dictionary<string, object>
 	{
-		public JsonKeyValuePairs(string json)
+		public JsonKeyValuePairs() : base()
+		{
+			
+		}
+		
+		public JsonKeyValuePairs(string json) : base()
 		{
 			var depth = 0;
 			var stringDepth = 0;
