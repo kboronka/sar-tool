@@ -15,7 +15,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Linq;
 
@@ -23,7 +22,7 @@ using sar.Tools;
 
 namespace sar.Json
 {
-	public static class HttpHelper
+	public static class JsonHelper
 	{
 		private static string ToJson(this object value)
 		{

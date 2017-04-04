@@ -172,7 +172,7 @@ namespace sar.Http
 				}
 			}
 			
-			NewData(HttpHelper.BytesToJson(HttpWebSocketFrame.DecodeFrame(buffer).Payload));
+			NewData(JsonHelper.BytesToJson(HttpWebSocketFrame.DecodeFrame(buffer).Payload));
 		}
 		
 		private void Send(byte[] data)

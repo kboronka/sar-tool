@@ -100,7 +100,7 @@ namespace sar.Http
 					return json;
 				}
 				
-				json = HttpHelper.BytesToJson(data);
+				json = JsonHelper.BytesToJson(data);
 				return json;
 			}
 		}

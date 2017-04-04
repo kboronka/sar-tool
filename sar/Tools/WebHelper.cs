@@ -57,7 +57,7 @@ namespace sar.Tools
 				responceStream.CopyTo(ms);
 				byte[] data = ms.ToArray();
 
-				return HttpHelper.BytesToJson(data);
+				return JsonHelper.BytesToJson(data);
 			}
 			catch
 			{

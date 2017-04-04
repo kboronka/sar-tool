@@ -78,7 +78,7 @@ namespace sar.Json
 					{
 						// end of a key
 						keyEnd = i;
-						key = HttpHelper.TrimJsonString(json.Substring(keyStart, keyEnd - keyStart + 1));
+						key = JsonHelper.TrimJsonString(json.Substring(keyStart, keyEnd - keyStart + 1));
 					}
 				}
 				else if (c == ':' && stringDepth == 0)
@@ -96,7 +96,7 @@ namespace sar.Json
 						// end of value
 						valueEnd = i - 1;
 						value = json.Substring(valueStart, valueEnd - valueStart + 1);
-						this.Add(key, HttpHelper.ValueToObject(value));
+						this.Add(key, JsonHelper.ValueToObject(value));
 						
 						// prep for next key
 						keyStart = -1;
@@ -114,7 +114,7 @@ namespace sar.Json
 						valueEnd = i - 1;
 						value = json.Substring(valueStart, valueEnd - valueStart + 1);
 						
-						this.Add(key, HttpHelper.ValueToObject(value));
+						this.Add(key, JsonHelper.ValueToObject(value));
 					}
 					
 					depth--;
