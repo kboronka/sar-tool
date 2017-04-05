@@ -36,6 +36,7 @@ namespace sar.Timing
 				}
 			}
 		}
+		
 		public long ElapsedMilliseconds
 		{
 			get
@@ -43,6 +44,36 @@ namespace sar.Timing
 				lock (time)
 				{
 					return time.ElapsedMilliseconds - lastTrigger;
+				}
+			}
+		}
+		
+		/// <summary>
+		///  Returns number of milliseconds remianing before interval is ready
+		/// </summary>
+		public long Remaining
+		{
+			get
+			{
+				lock (time)
+				{
+					var elapsedTime = Math.Min(time.ElapsedMilliseconds - lastTrigger, this.setPoint);
+					return this.setPoint - elapsedTime;
+				}
+			}
+		}
+		
+		/// <summary>
+		///  Returns a percentage (0 - 100).  100% = Ready. 
+		/// </summary>
+		public double PercentComplete
+		{
+			get
+			{
+				lock (time)
+				{
+					var elapsedTime = Math.Min(time.ElapsedMilliseconds - lastTrigger, this.setPoint);
+					return elapsedTime / this.setPoint;
 				}
 			}
 		}
@@ -82,7 +113,7 @@ namespace sar.Timing
 			this.time.Start();
 			this.setPoint = setPoint;
 			this.lastTrigger = time.ElapsedMilliseconds - setPoint + firstRunDelay;
-		}		
+		}
 		
 		public Interval(long setPoint)
 		{
@@ -101,8 +132,8 @@ namespace sar.Timing
 				this.lastTrigger += setPoint;
 				
 				var timeToNextTrigger = time.ElapsedMilliseconds - this.lastTrigger;
-					
-				if (timeToNextTrigger > setPoint ||timeToNextTrigger < 0)
+				
+				if (timeToNextTrigger > setPoint || timeToNextTrigger < 0)
 				{
 					this.lastTrigger = time.ElapsedMilliseconds;
 				}
