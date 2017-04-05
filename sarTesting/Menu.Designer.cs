@@ -43,6 +43,7 @@ namespace sar.Testing
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.button1 = new System.Windows.Forms.Button();
 			this.ConnectToSPS = new System.Windows.Forms.Button();
 			this.button2 = new System.Windows.Forms.Button();
@@ -56,6 +57,14 @@ namespace sar.Testing
 			this.jogStatus = new System.Windows.Forms.TextBox();
 			this.jogForward = new System.Windows.Forms.Button();
 			this.button8 = new System.Windows.Forms.Button();
+			this.buttonPause = new System.Windows.Forms.Button();
+			this.buttonContinue = new System.Windows.Forms.Button();
+			this.labelIntervalValue = new System.Windows.Forms.Label();
+			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.labelIntervalPercent = new System.Windows.Forms.Label();
+			this.timerInterval = new System.Windows.Forms.Timer(this.components);
+			this.labelIntervalElapsed = new System.Windows.Forms.Label();
+			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// button1
@@ -70,9 +79,9 @@ namespace sar.Testing
 			// 
 			// ConnectToSPS
 			// 
-			this.ConnectToSPS.Location = new System.Drawing.Point(629, 181);
+			this.ConnectToSPS.Location = new System.Drawing.Point(639, 180);
 			this.ConnectToSPS.Name = "ConnectToSPS";
-			this.ConnectToSPS.Size = new System.Drawing.Size(113, 24);
+			this.ConnectToSPS.Size = new System.Drawing.Size(103, 24);
 			this.ConnectToSPS.TabIndex = 5;
 			this.ConnectToSPS.Text = "ConnectSPS";
 			this.ConnectToSPS.UseVisualStyleBackColor = true;
@@ -136,18 +145,18 @@ namespace sar.Testing
 			// 
 			// button7
 			// 
-			this.button7.Location = new System.Drawing.Point(531, 276);
+			this.button7.Location = new System.Drawing.Point(400, 180);
 			this.button7.Name = "button7";
-			this.button7.Size = new System.Drawing.Size(113, 19);
+			this.button7.Size = new System.Drawing.Size(113, 23);
 			this.button7.TabIndex = 17;
 			this.button7.Text = "Send Email";
 			this.button7.UseVisualStyleBackColor = true;
 			// 
 			// MakeSocket
 			// 
-			this.MakeSocket.Location = new System.Drawing.Point(387, 181);
+			this.MakeSocket.Location = new System.Drawing.Point(520, 181);
 			this.MakeSocket.Name = "MakeSocket";
-			this.MakeSocket.Size = new System.Drawing.Size(103, 23);
+			this.MakeSocket.Size = new System.Drawing.Size(113, 23);
 			this.MakeSocket.TabIndex = 18;
 			this.MakeSocket.Text = "MakeSocket";
 			this.MakeSocket.UseVisualStyleBackColor = true;
@@ -173,19 +182,83 @@ namespace sar.Testing
 			// 
 			// button8
 			// 
-			this.button8.Location = new System.Drawing.Point(430, 67);
+			this.button8.Location = new System.Drawing.Point(400, 137);
 			this.button8.Name = "button8";
-			this.button8.Size = new System.Drawing.Size(75, 23);
+			this.button8.Size = new System.Drawing.Size(113, 23);
 			this.button8.TabIndex = 21;
 			this.button8.Text = "button8";
 			this.button8.UseVisualStyleBackColor = true;
 			this.button8.Click += new System.EventHandler(this.Button8Click);
 			// 
+			// buttonPause
+			// 
+			this.buttonPause.Location = new System.Drawing.Point(4, 90);
+			this.buttonPause.Name = "buttonPause";
+			this.buttonPause.Size = new System.Drawing.Size(75, 23);
+			this.buttonPause.TabIndex = 22;
+			this.buttonPause.Text = "Pause";
+			this.buttonPause.UseVisualStyleBackColor = true;
+			this.buttonPause.Click += new System.EventHandler(this.ButtonPauseClick);
+			// 
+			// buttonContinue
+			// 
+			this.buttonContinue.Location = new System.Drawing.Point(85, 90);
+			this.buttonContinue.Name = "buttonContinue";
+			this.buttonContinue.Size = new System.Drawing.Size(75, 23);
+			this.buttonContinue.TabIndex = 23;
+			this.buttonContinue.Text = "Continue";
+			this.buttonContinue.UseVisualStyleBackColor = true;
+			this.buttonContinue.Click += new System.EventHandler(this.ButtonContinueClick);
+			// 
+			// labelIntervalValue
+			// 
+			this.labelIntervalValue.Location = new System.Drawing.Point(5, 40);
+			this.labelIntervalValue.Name = "labelIntervalValue";
+			this.labelIntervalValue.Size = new System.Drawing.Size(155, 18);
+			this.labelIntervalValue.TabIndex = 24;
+			this.labelIntervalValue.Text = "Interval Remaining Time";
+			// 
+			// groupBox1
+			// 
+			this.groupBox1.Controls.Add(this.labelIntervalElapsed);
+			this.groupBox1.Controls.Add(this.labelIntervalPercent);
+			this.groupBox1.Controls.Add(this.buttonContinue);
+			this.groupBox1.Controls.Add(this.labelIntervalValue);
+			this.groupBox1.Controls.Add(this.buttonPause);
+			this.groupBox1.Location = new System.Drawing.Point(12, 137);
+			this.groupBox1.Name = "groupBox1";
+			this.groupBox1.Size = new System.Drawing.Size(167, 119);
+			this.groupBox1.TabIndex = 25;
+			this.groupBox1.TabStop = false;
+			this.groupBox1.Text = "Interval";
+			// 
+			// labelIntervalPercent
+			// 
+			this.labelIntervalPercent.Location = new System.Drawing.Point(4, 58);
+			this.labelIntervalPercent.Name = "labelIntervalPercent";
+			this.labelIntervalPercent.Size = new System.Drawing.Size(155, 18);
+			this.labelIntervalPercent.TabIndex = 25;
+			this.labelIntervalPercent.Text = "Interval Percent";
+			// 
+			// timerInterval
+			// 
+			this.timerInterval.Enabled = true;
+			this.timerInterval.Tick += new System.EventHandler(this.IntervalTick);
+			// 
+			// labelIntervalElapsed
+			// 
+			this.labelIntervalElapsed.Location = new System.Drawing.Point(5, 22);
+			this.labelIntervalElapsed.Name = "labelIntervalElapsed";
+			this.labelIntervalElapsed.Size = new System.Drawing.Size(155, 18);
+			this.labelIntervalElapsed.TabIndex = 26;
+			this.labelIntervalElapsed.Text = "Interval Elapsed Time";
+			// 
 			// Menu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(780, 487);
+			this.ClientSize = new System.Drawing.Size(757, 487);
+			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.button8);
 			this.Controls.Add(this.jogForward);
 			this.Controls.Add(this.jogStatus);
@@ -201,6 +274,8 @@ namespace sar.Testing
 			this.Controls.Add(this.button1);
 			this.Name = "Menu";
 			this.Text = "Menu";
+			this.Load += new System.EventHandler(this.MenuLoad);
+			this.groupBox1.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -218,5 +293,12 @@ namespace sar.Testing
 		private System.Windows.Forms.TextBox jogStatus;
 		private System.Windows.Forms.Button jogForward;
 		private System.Windows.Forms.Button button8;
+		private System.Windows.Forms.Button buttonPause;
+		private System.Windows.Forms.Button buttonContinue;
+		private System.Windows.Forms.Label labelIntervalValue;
+		private System.Windows.Forms.GroupBox groupBox1;
+		private System.Windows.Forms.Timer timerInterval;
+		private System.Windows.Forms.Label labelIntervalPercent;
+		private System.Windows.Forms.Label labelIntervalElapsed;
 	}
 }

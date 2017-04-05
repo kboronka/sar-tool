@@ -23,6 +23,9 @@ namespace sar.Timing
 		private Stopwatch time;
 		private long setPoint;
 		private long lastTrigger;
+		private bool paused;
+		private long pauseStartTime;
+		private long pauseTime;
 		
 		#region properties
 		
@@ -41,9 +44,11 @@ namespace sar.Timing
 		{
 			get
 			{
+				var pauseTime = this.PausedTime;
+				
 				lock (time)
 				{
-					return time.ElapsedMilliseconds - lastTrigger;
+					return (time.ElapsedMilliseconds - lastTrigger) - pauseTime;
 				}
 			}
 		}
@@ -55,26 +60,19 @@ namespace sar.Timing
 		{
 			get
 			{
-				lock (time)
-				{
-					var elapsedTime = Math.Min(time.ElapsedMilliseconds - lastTrigger, this.setPoint);
-					return this.setPoint - elapsedTime;
-				}
+				return this.SetPoint - Math.Min(this.ElapsedMilliseconds, this.SetPoint);
 			}
 		}
 		
 		/// <summary>
-		///  Returns a percentage (0 - 100).  100% = Ready. 
+		///  Returns a percentage (0 - 100).  100% = Ready.
 		/// </summary>
 		public double PercentComplete
 		{
 			get
 			{
-				lock (time)
-				{
-					var elapsedTime = Math.Min(time.ElapsedMilliseconds - lastTrigger, this.setPoint);
-					return elapsedTime / this.setPoint;
-				}
+				var elapsedTime = (double)Math.Min(this.ElapsedMilliseconds, this.SetPoint);
+				return (elapsedTime / (double)this.SetPoint) * 100.0;
 			}
 		}
 		
@@ -103,6 +101,33 @@ namespace sar.Timing
 			}
 		}
 		
+		public bool Paused
+		{
+			get
+			{
+				return this.paused;
+			}
+		}
+		
+		/// <summary>
+		///  Returns number of milliseconds interval has been paused
+		/// </summary>
+		public long PausedTime
+		{
+			get
+			{
+				lock (time)
+				{
+					if (this.paused)
+					{
+						return this.pauseTime + (time.ElapsedMilliseconds - this.pauseStartTime);
+					}
+					
+					return this.pauseTime;
+				}
+			}
+		}
+		
 		#endregion
 		
 		#region constructor
@@ -113,14 +138,13 @@ namespace sar.Timing
 			this.time.Start();
 			this.setPoint = setPoint;
 			this.lastTrigger = time.ElapsedMilliseconds - setPoint + firstRunDelay;
+			this.paused = false;
+			this.pauseTime = 0;
 		}
 		
-		public Interval(long setPoint)
+		public Interval(long setPoint) : this(setPoint, setPoint)
 		{
-			this.time = new Stopwatch();
-			this.time.Start();
-			this.setPoint = setPoint;
-			this.lastTrigger = time.ElapsedMilliseconds;
+
 		}
 		
 		#endregion
@@ -129,13 +153,38 @@ namespace sar.Timing
 		{
 			lock (time)
 			{
-				this.lastTrigger += setPoint;
+				this.lastTrigger += setPoint + pauseTime;
+				this.pauseTime = 0;
 				
 				var timeToNextTrigger = time.ElapsedMilliseconds - this.lastTrigger;
 				
 				if (timeToNextTrigger > setPoint || timeToNextTrigger < 0)
 				{
 					this.lastTrigger = time.ElapsedMilliseconds;
+				}
+			}
+		}
+		
+		public void Pause()
+		{
+			lock (time)
+			{
+				if (!this.paused)
+				{
+					this.paused = true;
+					this.pauseStartTime = time.ElapsedMilliseconds;
+				}
+			}
+		}
+		
+		public void Continue()
+		{
+			lock (time)
+			{
+				if (this.paused)
+				{
+					this.paused = false;
+					this.pauseTime += (time.ElapsedMilliseconds - this.pauseStartTime);
 				}
 			}
 		}

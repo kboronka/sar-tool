@@ -33,6 +33,7 @@ namespace sar.Testing
 		private SocketServer socketServer;
 		private Thread loop;
 		private bool shutdown = false;
+		private Interval interval;
 		
 		public Menu()
 		{
@@ -56,7 +57,7 @@ namespace sar.Testing
 				textBox3.Text = ExceptionHelper.GetStackTrace(ex);
 			}
 			
-			
+			this.interval = new Interval(10000);
 			this.loop = new Thread(this.TestLoop);
 			this.loop.IsBackground = true;
 			this.loop.Start();
@@ -192,6 +193,29 @@ namespace sar.Testing
 			var param3 = json.GetJsonValue("param3", false);
 			var param2 = json.GetJsonValue("param2", 1);
 			//var param1 = json.GetJsonValue("param1", new List<Dictionary<string, object>>());
+		}
+		
+		void MenuLoad(object sender, EventArgs e)
+		{
+	
+		}
+		
+		void IntervalTick(object sender, EventArgs e)
+		{
+			var ready = interval.Ready;
+			this.labelIntervalElapsed.Text = interval.ElapsedMilliseconds.ToString("0000") + " ms";
+			this.labelIntervalValue.Text = interval.Remaining.ToString("0000") + " ms";
+			this.labelIntervalPercent.Text = interval.PercentComplete.ToString("00.0") + "%";
+		}
+		
+		void ButtonPauseClick(object sender, EventArgs e)
+		{
+			this.interval.Pause();
+		}
+		
+		void ButtonContinueClick(object sender, EventArgs e)
+		{
+			this.interval.Continue();
 		}
 	}
 }
