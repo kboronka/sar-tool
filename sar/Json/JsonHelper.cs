@@ -94,6 +94,26 @@ namespace sar.Json
 			{
 				return ((bool[][])value).ToJson();
 			}
+			else if (value is List<object>)
+			{
+				return ((List<object>)value).ToJson();
+			}
+			else if (value is List<string>)
+			{
+				return ((List<string>)value).OfType<object>().ToList().ToJson();
+			}
+			else if (value is List<int>)
+			{
+				return ((List<int>)value).OfType<object>().ToList().ToJson();
+			}
+			else if (value is List<long>)
+			{
+				return ((List<long>)value).OfType<object>().ToList().ToJson();
+			}
+			else if (value is List<double>)
+			{
+				return ((List<double>)value).OfType<object>().ToList().ToJson();
+			}
 			else if (value is Dictionary<string, object>)
 			{
 				return ((Dictionary<string, object>)value).ToJson();
@@ -357,6 +377,22 @@ namespace sar.Json
 			return JSON;
 		}
 
+		public static string ToJson(this List<object> obj)
+		{
+			string JSON = "[";
+			string delimitor = "";
+			
+			foreach (object i in obj)
+			{
+				JSON += delimitor;
+				JSON += i.ToJson();
+				delimitor = ", \n";
+			}
+			
+			JSON += "]";
+			return JSON;
+		}
+		
 		public static string ToJson(this Dictionary<string, object> obj)
 		{
 			string JSON = "{";
