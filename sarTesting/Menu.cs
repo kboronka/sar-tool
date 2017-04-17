@@ -193,6 +193,15 @@ namespace sar.Testing
 			var param3 = json.GetJsonValue("param3", false);
 			var param2 = json.GetJsonValue("param2", 1);
 			//var param1 = json.GetJsonValue("param1", new List<Dictionary<string, object>>());
+			
+			List<string> testList = new List<string>();
+			testList.Add("test1");
+			testList.Add("\"test\" 1");
+			
+			kvp.Add("groups", testList);
+			
+			
+			var output = kvp.ToJson();
 		}
 		
 		void MenuLoad(object sender, EventArgs e)

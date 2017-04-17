@@ -94,33 +94,13 @@ namespace sar.Json
 			{
 				return ((bool[][])value).ToJson();
 			}
-			else if (value is List<object>)
+			else if (value is IEnumerable<object>)
 			{
-				return ((List<object>)value).ToJson();
-			}
-			else if (value is List<string>)
-			{
-				return ((List<string>)value).OfType<object>().ToList().ToJson();
-			}
-			else if (value is List<int>)
-			{
-				return ((List<int>)value).OfType<object>().ToList().ToJson();
-			}
-			else if (value is List<long>)
-			{
-				return ((List<long>)value).OfType<object>().ToList().ToJson();
-			}
-			else if (value is List<double>)
-			{
-				return ((List<double>)value).OfType<object>().ToList().ToJson();
+				return ((IEnumerable<object>)value).ToJson();
 			}
 			else if (value is Dictionary<string, object>)
 			{
 				return ((Dictionary<string, object>)value).ToJson();
-			}
-			else if (value is List<Dictionary<string, object>>)
-			{
-				return ((List<Dictionary<string, object>>)value).ToJson();
 			}
 
 			return "unknown";
@@ -361,23 +341,7 @@ namespace sar.Json
 			return @"""" + obj.ToString(FileLogger.DATETIMESTAMP) + @"""";
 		}
 		
-		public static string ToJson(this List<Dictionary<string, object>> obj)
-		{
-			string JSON = "[";
-			string delimitor = "";
-			
-			foreach (Dictionary<string, object> dictionary in obj)
-			{
-				JSON += delimitor;
-				JSON += dictionary.ToJson();
-				delimitor = ", \n";
-			}
-			
-			JSON += "]";
-			return JSON;
-		}
-
-		public static string ToJson(this List<object> obj)
+		public static string ToJson(this IEnumerable<object> obj)
 		{
 			string JSON = "[";
 			string delimitor = "";

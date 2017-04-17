@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -148,8 +149,8 @@ namespace sar.Http
 		
 		protected HttpContent() : this(Encoding.ASCII.GetBytes(""), "text/plain") { }
 		public HttpContent(string content) : this(Encoding.ASCII.GetBytes(content), "text/plain") { }
-		public HttpContent(Dictionary<string, object> json) : this(Encoding.ASCII.GetBytes(json.ToJson()), "application/json") { }
-		public HttpContent(List<Dictionary<string, object>> json) : this(Encoding.ASCII.GetBytes(json.ToJson()), "application/json") { }
+		public HttpContent(Dictionary<string, object> kvp) : this(Encoding.ASCII.GetBytes(kvp.ToJson()), "application/json") { }
+		public HttpContent(List<Dictionary<string, object>> list) : this(Encoding.ASCII.GetBytes(list.ToJson()), "application/json") { }
 
 
 		public HttpContent(byte[] content, string contentType)
