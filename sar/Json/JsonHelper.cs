@@ -350,7 +350,7 @@ namespace sar.Json
 			{
 				JSON += delimitor;
 				JSON += i.ToJson();
-				delimitor = ", \n";
+				delimitor = ",";
 			}
 			
 			JSON += "]";
@@ -366,7 +366,7 @@ namespace sar.Json
 			{
 				JSON += delimitor;
 				JSON += @"""" + key + @""":" + obj[key].ToJson() ;
-				delimitor = ", \n";
+				delimitor = ",";
 			}
 			
 			JSON += "}";
