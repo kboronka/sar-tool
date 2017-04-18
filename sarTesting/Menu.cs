@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
@@ -202,6 +203,10 @@ namespace sar.Testing
 			
 			
 			var output = kvp.ToJson();
+			
+			var kvp2 = new JsonKeyValuePairs(output);
+			var t2 = (List<object>)kvp2["groups"];
+			var t3 = t2.OfType<string>().ToList();
 		}
 		
 		void MenuLoad(object sender, EventArgs e)
