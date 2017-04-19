@@ -7,7 +7,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>sar.CNC</RootNamespace>
     <AssemblyName>sar.CNC</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -47,6 +47,9 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
     <Reference Include="sar">
       <HintPath>..\release\sar.exe</HintPath>
     </Reference>
@@ -98,6 +101,7 @@
     <Folder Include="Commands" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Http\Views\index.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

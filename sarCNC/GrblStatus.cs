@@ -11,7 +11,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-using sar.Tools;
+using sar.Json;
 
 namespace sar.CNC
 {
@@ -127,7 +127,7 @@ namespace sar.CNC
 			json.Add("status", statusJSON);
 			if (currentCommand != null)	json.Add("currentCommand", currentCommand.NamedParameters);
 			
-			return json.ToJSON();
+			return json.ToJson();
 		}
 	}
 }

@@ -108,9 +108,8 @@ namespace sar.CNC.Http
 			// do nothing
 		}
 		
-		override public void NewData(byte[] data)
+		override public void NewData(string rxBuffer)
 		{
-			var rxBuffer = System.Text.Encoding.ASCII.GetString(data);
 			var commands = rxBuffer.Split('\n');
 			
 			foreach (var command in commands)

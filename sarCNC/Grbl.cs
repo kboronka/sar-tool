@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 
 using sar;
-using sar.Tools;
+using sar.Json;
 using sar.Timing;
 
 using sar.CNC.Http;
@@ -286,7 +286,7 @@ namespace sar.CNC
 						WorkCoordinate.Offset(status.WorkCoordinateOffset);
 					}
 					
-					GrblWebSocket.SendToWebSocketClients(this.NamedParameters.ToJSON());
+					GrblWebSocket.SendToWebSocketClients(this.NamedParameters.ToJson());
 					break;
 			}
 		}
