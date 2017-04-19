@@ -223,7 +223,7 @@ namespace sar.Http
 				}
 				catch (Exception ex)
 				{
-					Logger.Log(ex);
+					//Logger.Log(ex);
 					this.Open = false;
 				}
 			}
