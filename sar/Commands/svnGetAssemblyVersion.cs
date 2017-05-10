@@ -66,7 +66,7 @@ namespace sar.Commands
 			var tempPath = Path.Combine(tempFolder, Guid.NewGuid().ToString() + "." + extension);
 
 
-			ConsoleHelper.Run(svn, " export " + repo + @" """ + tempPath + @"""");
+			ConsoleHelper.Run(svn, " export " + repo.QuoteDouble() + " " + tempPath.QuoteDouble());
 			
 			var content = IO.ReadFile(tempPath);
 			File.Delete(tempPath);
