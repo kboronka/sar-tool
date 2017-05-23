@@ -31,7 +31,7 @@ namespace sar.Commands
 		public MSSQL_GenerateInsert(Base.CommandHub parent) : base(parent, "MSSQL - Generate Insert",
 		                                                           new List<string> { "mssql-gi" },
 		                                                           "-mssql-gi <server> <database> <username> <password> <table> [destination]",
-		                                                           new List<string> { "-mssql-gs 192.168.0.44 TestDB sa root TableXYZ " + @".\databasescripts\".QuoteDouble(),
+		                                                           new List<string> { "-mssql-gi 192.168.0.44 TestDB sa root TableXYZ " + @".\databasescripts\".QuoteDouble(),
 		                                                           	"-mssql-gi 192.168.0.44 TestDB sa root TableXYZ" })
 		{
 			
