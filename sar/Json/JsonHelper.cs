@@ -299,6 +299,26 @@ namespace sar.Json
 			return JSON;
 		}
 		
+		public static bool IsJson(this string obj)
+		{
+			if (String.IsNullOrEmpty(obj) || obj.Length < 2)
+			{
+				return false;
+			}
+			
+			if (obj[0] == '[' && obj[obj.Length - 1] == ']')
+			{
+				return true;
+			}
+			
+			if (obj[0] == '{' && obj[obj.Length - 1] == '}')
+			{
+				return true;
+			}
+			
+			return false;
+		}
+		
 		public static string ToJson(this bool obj)
 		{
 			return obj ? @"true" : @"false";
