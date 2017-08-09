@@ -134,9 +134,6 @@
     <Compile Include="Commands\WindowsRearm.cs" />
     <Compile Include="Commands\WindowsRestart.cs" />
     <Compile Include="Commands\WindowsShellReplacement.cs" />
-    <Compile Include="Net\TimedWebClient.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Http\HttpMimeTypes.cs" />
     <Compile Include="Http\HttpWebSocket.cs" />
     <Compile Include="Http\HttpWebSocketFrame.cs" />
