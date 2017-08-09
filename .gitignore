@@ -13,3 +13,6 @@ sar/obj/Debug/sar.exe
 sar/obj/Debug/sar.csproj.GenerateResource.Cache
 sar/bin/Debug/sar.pdb
 sar/bin/Debug/sar.exe
+sarTesting/Http/Views/assets/
+sar/obj/
+sar/bin/
