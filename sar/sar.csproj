@@ -134,6 +134,9 @@
     <Compile Include="Commands\WindowsRearm.cs" />
     <Compile Include="Commands\WindowsRestart.cs" />
     <Compile Include="Commands\WindowsShellReplacement.cs" />
+    <Compile Include="Net\TimedWebClient.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Http\HttpMimeTypes.cs" />
     <Compile Include="Http\HttpWebSocket.cs" />
     <Compile Include="Http\HttpWebSocketFrame.cs" />
@@ -179,7 +182,9 @@
     <Compile Include="Tools\FileCopier.cs" />
     <Compile Include="Tools\WinFormsHelper.cs" />
     <Compile Include="Tools\ErrorLogger.cs" />
-    <Compile Include="Tools\ExceptionHandler.cs" />
+    <Compile Include="Tools\ExceptionHandler.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Tools\ExceptionHandler.Designer.cs">
       <DependentUpon>ExceptionHandler.cs</DependentUpon>
     </Compile>
@@ -188,7 +193,9 @@
     <Compile Include="Tools\EmbeddedResource.cs" />
     <Compile Include="Tools\FTPHelper.cs" />
     <Compile Include="Tools\IO.cs" />
-    <Compile Include="Tools\LogForm.cs" />
+    <Compile Include="Tools\LogForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Tools\LogForm.Designer.cs">
       <DependentUpon>LogForm.cs</DependentUpon>
     </Compile>
@@ -207,24 +214,7 @@
     <Compile Include="Tools\WebHelper.cs" />
     <Compile Include="Tools\XmlHelper.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Commands" />
-    <Folder Include="Base" />
-    <Folder Include="Http" />
-    <Folder Include="Http\libs" />
-    <Folder Include="Http\Controllers" />
-    <Folder Include="Http\libs\art" />
-    <Folder Include="Http\Views" />
-    <Folder Include="Http\Views\Error" />
-    <Folder Include="Http\Views\Debug" />
-    <Folder Include="Databases\MSSQL" />
-    <Folder Include="Databases" />
-    <Folder Include="Json" />
-    <Folder Include="Timing" />
-    <Folder Include="S7Siemens" />
-    <Folder Include="Socket" />
-    <Folder Include="Tools" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Tools\ExceptionHandler.resx">
       <DependentUpon>ExceptionHandler.cs</DependentUpon>

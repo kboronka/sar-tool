@@ -18,35 +18,40 @@ using System.IO;
 using System.Net;
 
 using sar.Json;
+using sar.Net;
 
 namespace sar.Tools
 {
 	public static class WebHelper
 	{
-		private static WebClient client;
-		
-		private static WebClient Client
+        public const int DEFAULT_HTTP_TIMEOUT = 100000;
+        private static TimeoutWebClient client;
+
+        private static TimeoutWebClient Client
 		{
 			get
 			{
-				if (client == null) client = new WebClient();
+                if (client == null) client = new TimeoutWebClient(DEFAULT_HTTP_TIMEOUT);
 				return client;
 			}
 		}
-		
-		public static void Download(string url, string localfile)
+
+        public static void Download(string url, string localfile, int timeoutMs = DEFAULT_HTTP_TIMEOUT)
 		{
+            client.Timeout = timeoutMs;
 			Client.DownloadFile(url, localfile);
 		}
-		
-		public static string ReadUrl(string url)
+
+        public static string ReadUrl(string url, int timeoutMs = DEFAULT_HTTP_TIMEOUT)
 		{
+            client.Timeout = timeoutMs;
 			return Client.DownloadString(url);
 		}
-		
-		public static string ReadJson(string url)
+
+        public static string ReadJson(string url, int timeoutMs = DEFAULT_HTTP_TIMEOUT)
 		{
 			var request = WebRequest.Create(url);
+            request.Timeout = timeoutMs;
 			request.Credentials = CredentialCache.DefaultCredentials;
 			var response = request.GetResponse();
 			var responceStream = response.GetResponseStream();

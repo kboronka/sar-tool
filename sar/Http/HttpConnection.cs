@@ -221,7 +221,7 @@ namespace sar.Http
 					Thread.Sleep(1);
 					this.Open &= this.Socket.Connected;
 				}
-				catch (Exception ex)
+				catch (Exception)
 				{
 					//Logger.Log(ex);
 					this.Open = false;
