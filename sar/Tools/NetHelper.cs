@@ -22,6 +22,7 @@ using System.Text.RegularExpressions;
 using System.Net.NetworkInformation;
 using System.Threading;
 using sar.Tools;
+using System.Net;
 
 
 namespace sar.Tools
@@ -83,6 +84,38 @@ namespace sar.Tools
 			
 			return null;
 		}
+
+        public static int[] GetActiveTcpListenerPorts()
+        {
+            var usedPorts = new List<int>();
+            var ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
+            var listeners = ipGlobalProperties.GetActiveTcpListeners();
+            IEnumerator myEnum = listeners.GetEnumerator();
+
+            while (myEnum.MoveNext())
+            {
+                var ip = (IPEndPoint)myEnum.Current;
+                usedPorts.Add(ip.Port);
+            }
+
+            return usedPorts.ToArray();
+        }
+
+        public static int[] GetActiveTcpConnectionPorts()
+        {
+            var usedPorts = new List<int>();
+            var ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
+            var listeners = ipGlobalProperties.GetActiveTcpConnections();
+            IEnumerator myEnum = listeners.GetEnumerator();
+
+            while (myEnum.MoveNext())
+            {
+                var ip = (IPEndPoint)myEnum.Current;
+                usedPorts.Add(ip.Port);
+            }
+
+            return usedPorts.ToArray();
+        }
 		
 		public static List<NetworkAdapter> Adapters()
 		{
