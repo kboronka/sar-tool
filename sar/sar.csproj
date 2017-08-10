@@ -140,6 +140,9 @@
     <Compile Include="Json\JsonArray.cs" />
     <Compile Include="Json\JsonHelper.cs" />
     <Compile Include="Json\JsonKeyValuePairs.cs" />
+    <Compile Include="Net\WebClientEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Timing\Interval.cs" />
     <Compile Include="Databases\DatabaseHelper.cs" />
     <Compile Include="Databases\DatabaseObject.cs" />

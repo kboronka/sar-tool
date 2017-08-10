@@ -24,31 +24,30 @@ namespace sar.Tools
 {
 	public static class WebHelper
 	{
-        public const int DEFAULT_HTTP_TIMEOUT = 100000;
-        private static TimeoutWebClient client;
+        private static WebClientEx client;
 
-        private static TimeoutWebClient Client
+        private static WebClientEx Client
 		{
 			get
 			{
-                if (client == null) client = new TimeoutWebClient(DEFAULT_HTTP_TIMEOUT);
+                if (client == null) client = new WebClientEx(WebClientEx.DEFAULT_HTTP_TIMEOUT);
 				return client;
 			}
 		}
 
-        public static void Download(string url, string localfile, int timeoutMs = DEFAULT_HTTP_TIMEOUT)
+        public static void Download(string url, string localfile, int timeoutMs = WebClientEx.DEFAULT_HTTP_TIMEOUT)
 		{
             client.Timeout = timeoutMs;
 			Client.DownloadFile(url, localfile);
 		}
 
-        public static string ReadUrl(string url, int timeoutMs = DEFAULT_HTTP_TIMEOUT)
+        public static string ReadUrl(string url, int timeoutMs = WebClientEx.DEFAULT_HTTP_TIMEOUT)
 		{
             client.Timeout = timeoutMs;
 			return Client.DownloadString(url);
 		}
 
-        public static string ReadJson(string url, int timeoutMs = DEFAULT_HTTP_TIMEOUT)
+        public static string ReadJson(string url, int timeoutMs = WebClientEx.DEFAULT_HTTP_TIMEOUT)
 		{
 			var request = WebRequest.Create(url);
             request.Timeout = timeoutMs;
