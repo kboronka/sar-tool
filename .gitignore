@@ -16,3 +16,4 @@ sar/bin/Debug/sar.exe
 sarTesting/Http/Views/assets/
 sar/obj/
 sar/bin/
+*.zip
