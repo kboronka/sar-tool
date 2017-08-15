@@ -136,13 +136,14 @@
     <Compile Include="Commands\WindowsShellReplacement.cs" />
     <Compile Include="FSM\Command.cs" />
     <Compile Include="FSM\CommandQueue.cs" />
+    <Compile Include="FSM\StateMachine.cs" />
     <Compile Include="Http\HttpMimeTypes.cs" />
     <Compile Include="Http\HttpWebSocket.cs" />
     <Compile Include="Http\HttpWebSocketFrame.cs" />
     <Compile Include="Json\JsonArray.cs" />
     <Compile Include="Json\JsonHelper.cs" />
     <Compile Include="Json\JsonKeyValuePairs.cs" />
-    <Compile Include="Net\WebClientEx.cs"  />
+    <Compile Include="Net\WebClientEx.cs" />
     <Compile Include="Timing\Interval.cs" />
     <Compile Include="Databases\DatabaseHelper.cs" />
     <Compile Include="Databases\DatabaseObject.cs" />
