@@ -42,7 +42,7 @@ namespace sar.FSM
 			commands.Add(new Command(command, paramerter));
 		}
 
-		private Command DequeueCommand()
+		public Command DequeueCommand()
 		{
 			if (commands.Count == 0)
 			{
