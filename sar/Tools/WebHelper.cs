@@ -37,13 +37,13 @@ namespace sar.Tools
 
         public static void Download(string url, string localfile, int timeoutMs = WebClientEx.DEFAULT_HTTP_TIMEOUT)
 		{
-            client.Timeout = timeoutMs;
+            Client.Timeout = timeoutMs;
 			Client.DownloadFile(url, localfile);
 		}
 
         public static string ReadUrl(string url, int timeoutMs = WebClientEx.DEFAULT_HTTP_TIMEOUT)
 		{
-            client.Timeout = timeoutMs;
+            Client.Timeout = timeoutMs;
 			return Client.DownloadString(url);
 		}
 
