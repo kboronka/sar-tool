@@ -113,6 +113,9 @@ namespace sar
 		{
 			try
 			{
+				message = message.Replace("\r", @"\r");
+				message = message.Replace("\n", @"\n");
+				
 				DebugLog.WriteLine(message);
 
 				if (OnLog != null)
