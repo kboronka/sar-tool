@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace sar.FSM
 {
@@ -23,36 +24,49 @@ namespace sar.FSM
 	/// </summary>
 	public class CommandQueue
 	{
+		private readonly object queueLock = new object();
 		private readonly List<Command> commands;
 		
 		public bool Available { get { return commands.Count > 0; } }
 		
 		public CommandQueue()
 		{
-			commands = new List<Command>();
+			lock (queueLock)
+			{
+				commands = new List<Command>();
+			}
 		}
 		
 		public void QueueCommand(Enum command)
 		{
-			commands.Add(new Command(command));
+			lock (queueLock)
+			{
+				commands.Add(new Command(command));
+			}
 		}
 		
-		public void QueueCommand(Enum command, object paramerter)
+		public void QueueCommand(Enum command, params object[] paramerters)
 		{
-			commands.Add(new Command(command, paramerter));
+			lock (queueLock)
+			{
+				commands.Add(new Command(command, paramerters));
+			}
 		}
 
 		public Command DequeueCommand()
 		{
-			if (commands.Count == 0)
+			lock (queueLock)
 			{
-				return null;
+				if (commands.Count == 0)
+				{
+					return null;
+				}
+				
+				var currentCommand = commands[0];
+				commands.RemoveAt(0);
+				
+				return currentCommand;
 			}
-			
-			var currentCommand = commands[commands.Count - 1];
-			commands.RemoveAt(commands.Count - 1);
-			
-			return currentCommand;
 		}
-	}
+	}	
 }
