@@ -59,7 +59,7 @@ namespace sar.FSM
 			{
 				if (commands.Count == 0)
 				{
-						return null;
+					return null;
 				}
 				
 				var currentCommand = commands[0];
