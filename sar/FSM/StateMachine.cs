@@ -14,6 +14,7 @@
  */
 
 using System;
+using System.Threading;
 
 namespace sar.FSM
 {
@@ -24,6 +25,7 @@ namespace sar.FSM
 	{
 		public CommandQueue CommandQueue;
 
+		protected Thread stateMachineThread;
 		protected bool loopStopRequested;
 		protected bool loopStopped;
 		

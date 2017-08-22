@@ -136,6 +136,8 @@
     <Compile Include="Commands\WindowsShellReplacement.cs" />
     <Compile Include="FSM\Command.cs" />
     <Compile Include="FSM\CommandQueue.cs" />
+    <Compile Include="FSM\Message.cs" />
+    <Compile Include="FSM\MessageQueue.cs" />
     <Compile Include="FSM\StateMachine.cs" />
     <Compile Include="Http\HttpMimeTypes.cs" />
     <Compile Include="Http\HttpWebSocket.cs" />
