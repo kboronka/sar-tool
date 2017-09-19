@@ -28,6 +28,7 @@ namespace sar.FSM
 	public class Message<T>
 	{
 		private int timeout;
+		private object recivedLock = new object();
 		public bool Sent { get; set; }
 		public bool Recived { get; set; }
 		
@@ -73,11 +74,16 @@ namespace sar.FSM
 		
 		public void ResponceRecived(JsonKeyValuePairs kvp)
 		{
-			this.Recived = true;
-			
-			if (this.ResponceCallback != null)
+			lock (recivedLock)
 			{
-				this.ResponceCallback(kvp);
+				if (this.Expired) return;
+				
+				this.Recived = true;
+				
+				if (this.ResponceCallback != null)
+				{
+					this.ResponceCallback(kvp);
+				}
 			}
 		}
 		
@@ -89,9 +95,9 @@ namespace sar.FSM
 			{
 				Thread.Sleep(10);
 				
-				try
+				lock (recivedLock)
 				{
-					if (timeoutTimer.Ready)
+					if (!Recived && timeoutTimer.Ready)
 					{
 						Expired = true;
 						
@@ -100,10 +106,6 @@ namespace sar.FSM
 							this.TimeoutCallback(PayLoad);
 						}
 					}
-				}
-				catch
-				{
-					return;
 				}
 			}
 		}
