@@ -62,12 +62,6 @@ namespace sar.FSM
 			timeoutThread.Start();
 		}
 		
-		~Message()
-		{
-			// TODO: remove this is debug code
-			Logger.Log("Message Destructor Called");
-		}
-		
 		public void RequestSent()
 		{
 			this.Sent = true;
