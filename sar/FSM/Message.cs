@@ -27,12 +27,11 @@ namespace sar.FSM
 	/// </summary>
 	public class Message<T>
 	{
-		private int timeout;
+		private readonly int timeout;
 		private object recivedLock = new object();
 		public bool Sent { get; set; }
 		public bool Recived { get; set; }
 		
-		private bool shutdownLoop;
 		private Thread timeoutThread;
 		public bool Expired { get; private set; }
 
@@ -46,11 +45,6 @@ namespace sar.FSM
 		public Message(T payload)
 		{
 			this.PayLoad = payload;
-		}
-		
-		~Message()
-		{
-			shutdownLoop = true;
 		}
 		
 		public Message(T payload, MessageCallback responceCallback, int timeout, MessageExpiredCallback timeoutCallback)
@@ -91,17 +85,17 @@ namespace sar.FSM
 		{
 			var timeoutTimer = new Interval(timeout);
 			
-			while (!shutdownLoop && !Expired)
+			while (!Expired)
 			{
 				Thread.Sleep(10);
 				
 				lock (recivedLock)
 				{
-					if (!Recived && timeoutTimer.Ready)
+					if (timeoutTimer.Ready)
 					{
 						Expired = true;
 						
-						if (this.TimeoutCallback != null)
+						if (!Recived && this.TimeoutCallback != null)
 						{
 							this.TimeoutCallback(PayLoad);
 						}
