@@ -29,6 +29,7 @@ namespace sar.FSM
 	{
 		private readonly int timeout;
 		private object recivedLock = new object();
+		
 		public bool Sent { get; set; }
 		public bool Recived { get; set; }
 		
@@ -61,6 +62,12 @@ namespace sar.FSM
 			timeoutThread.Start();
 		}
 		
+		~Message()
+		{
+			// TODO: remove this is debug code
+			Logger.Log("Message Destructor Called");
+		}
+		
 		public void RequestSent()
 		{
 			this.Sent = true;
@@ -68,16 +75,20 @@ namespace sar.FSM
 		
 		public void ResponceRecived(JsonKeyValuePairs kvp)
 		{
-			lock (recivedLock)
+			try
 			{
-				if (this.Expired) return;
-				
+				Monitor.Enter(recivedLock);
+
 				this.Recived = true;
 				
-				if (this.ResponceCallback != null)
+				if (!this.Expired && this.ResponceCallback != null)
 				{
 					this.ResponceCallback(kvp);
 				}
+			}
+			finally
+			{
+				Monitor.Exit(recivedLock);
 			}
 		}
 		
@@ -87,19 +98,31 @@ namespace sar.FSM
 			
 			while (!Expired)
 			{
-				Thread.Sleep(10);
+				Thread.Sleep(200);
 				
-				lock (recivedLock)
+				if (Monitor.TryEnter(recivedLock, 500))
 				{
-					if (timeoutTimer.Ready)
+					try
 					{
-						Expired = true;
-						
-						if (!Recived && this.TimeoutCallback != null)
+						if (timeoutTimer.Ready)
 						{
-							this.TimeoutCallback(PayLoad);
+							Expired = true;
+							
+							if (!Recived && this.TimeoutCallback != null)
+							{
+								this.TimeoutCallback(PayLoad);
+							}
 						}
 					}
+					finally
+					{
+						Monitor.Exit(recivedLock);
+					}
+				}
+				else
+				{
+					// The lock was not acquired.
+					return;
 				}
 			}
 		}
