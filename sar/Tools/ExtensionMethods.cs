@@ -214,27 +214,29 @@ namespace sar.Tools
 		/// <summary>
 		///  Determine whether a socket is still connected
 		/// </summary>
-		public static bool IsConnected(this System.Net.Sockets.Socket s)
+		public static bool IsConnected(this System.Net.Sockets.Socket socket)
 		{
 			// solution posted by Carsten
 			// http://stackoverflow.com/questions/7650402/how-to-test-for-a-broken-connection-of-tcpclient-after-being-connected
 			
-			var blockingState = s.Blocking;
+			if (socket == null) return false;
+			
+			var blockingState = socket.Blocking;
 			
 			try
 			{
 				var tmp = new byte[] { };
 
-				s.Blocking = false;
-				s.Send(tmp, 0, 0);
-				return s.Connected;
+				socket.Blocking = false;
+				socket.Send(tmp, 0, 0);
+				return socket.Connected;
 			}
 			catch (SocketException e)
 			{
 				const int WSAEWOULDBLOCK = 10035;
 				if (e.NativeErrorCode.Equals(WSAEWOULDBLOCK))
 				{
-					return s.Connected;
+					return socket.Connected;
 				}
 				else
 				{
@@ -243,7 +245,7 @@ namespace sar.Tools
 			}
 			finally
 			{
-				s.Blocking = blockingState;
+				socket.Blocking = blockingState;
 			}
 		}
 		
