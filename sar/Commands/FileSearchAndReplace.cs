@@ -56,12 +56,12 @@ namespace sar.Commands
 			ConsoleHelper.DebugWriteLine("search = " + search);
 			ConsoleHelper.DebugWriteLine("replace = " + replace);
 
-			List<IO.SearchResult> results = IO.SearchAndReplaceInFiles(root, filePattern, search, replace);
+			List<SearchResults> results = IO.SearchAndReplaceInFiles(root, filePattern, search, replace);
 			
 			
 			int files = 0;
 			int changes = 0;
-			foreach (IO.SearchResult result in results)
+			foreach (SearchResults result in results)
 			{
 				if (result.Matches.Count > 0)
 				{

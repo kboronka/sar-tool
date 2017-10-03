@@ -91,6 +91,7 @@
     <Compile Include="Commands\Bower.cs" />
     <Compile Include="Commands\ExcelOpenNewInstances.cs" />
     <Compile Include="Commands\ListDotNetVersions.cs" />
+    <Compile Include="Commands\StyleCheck.cs" />
     <Compile Include="Commands\svnGetNewAssemblyVersion.cs" />
     <Compile Include="Commands\CodeClean.cs" />
     <Compile Include="Commands\CodeReIndent.cs" />
@@ -183,6 +184,10 @@
     <Compile Include="Tools\ConsoleHelper.cs" />
     <Compile Include="Tools\ExtensionMethods.cs" />
     <Compile Include="Tools\FileCopier.cs" />
+    <Compile Include="Tools\SearchResultMatch.cs" />
+    <Compile Include="Tools\SearchResults.cs">
+      <DependentUpon>IO.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tools\WinFormsHelper.cs" />
     <Compile Include="Tools\ErrorLogger.cs" />
     <Compile Include="Tools\ExceptionHandler.cs" />

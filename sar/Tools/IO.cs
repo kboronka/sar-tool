@@ -275,15 +275,9 @@ namespace sar.Tools
 
 		#region searching within files
 		
-		public struct SearchResult
+		public static List<SearchResults> SearchAndReplaceInFiles(string root, string filePattern, string search, string replace)
 		{
-			public string FilePath;
-			public List<Match> Matches;
-		}
-		
-		public static List<SearchResult> SearchAndReplaceInFiles(string root, string filePattern, string search, string replace)
-		{
-			var results = new List<SearchResult>();
+			var results = new List<SearchResults>();
 			
 			IO.CheckRootAndPattern(ref root, ref filePattern);
 			
@@ -294,7 +288,7 @@ namespace sar.Tools
 			{
 				if (!IO.IsSVN(file))
 				{
-					SearchResult result = IO.SearchAndReplaceInFile(file, search, replace);
+					SearchResults result = SearchAndReplaceInFile(file, search, replace);
 					if (result.Matches.Count > 0)
 					{
 						results.Add(result);
@@ -305,16 +299,14 @@ namespace sar.Tools
 			return results;
 		}
 		
-		public static SearchResult SearchAndReplaceInFile(string path, string search, string replace)
+		public static SearchResults SearchAndReplaceInFile(string path, string search, string replace)
 		{
-			var result = new SearchResult();
-			result.FilePath = path;
-			result.Matches = new List<Match>();
-			
+			var result = new SearchResults(path);
 			string content = ReadFileAsUtf8(path);
 			
 			string newcontent;
 			string lastResult = content;
+			int maxItems = 10000;
 			
 			do
 			{
@@ -323,12 +315,17 @@ namespace sar.Tools
 				
 				if (match.Success)
 				{
-					if (ConsoleHelper.ShowDebug) ConsoleHelper.DebugWriteLine("found in " + GetFilename(path) + " @ ln#" + GetLineNumber(newcontent, match.Index).ToString());
+					var lineNumber = GetLineNumber(newcontent, match.Index);
+					result.Matches.Add(new SearchResultMatch(match, lineNumber));
 					
-					result.Matches.Add(match);
+					if (ConsoleHelper.ShowDebug)
+					{
+						ConsoleHelper.DebugWriteLine("found in " + GetFilename(path) + " @ ln#" + lineNumber.ToString());
+					}
+
 					lastResult = Regex.Replace(lastResult, search, replace);
 				}
-			} while (lastResult != newcontent);
+			} while (lastResult != newcontent && maxItems-- > 0);
 			
 			
 			if (newcontent != content)
@@ -346,9 +343,9 @@ namespace sar.Tools
 			return result;
 		}
 
-		public static List<SearchResult> SearchInFiles(string root, string filePattern, string search)
+		public static List<SearchResults> SearchInFiles(string root, string filePattern, string search)
 		{
-			var results = new List<SearchResult>();
+			var results = new List<SearchResults>();
 			
 			IO.CheckRootAndPattern(ref root, ref filePattern);
 
@@ -356,7 +353,7 @@ namespace sar.Tools
 			{
 				if (!IO.IsSVN(file))
 				{
-					SearchResult result = IO.SearchInFile(file, search);
+					SearchResults result = SearchInFile(file, search);
 					if (result.Matches.Count > 0)
 					{
 						results.Add(result);
@@ -367,19 +364,17 @@ namespace sar.Tools
 			return results;
 		}
 		
-		public static SearchResult SearchInFile(string path, string search)
+		public static SearchResults SearchInFile(string path, string search)
 		{
-			var result = new SearchResult();
-			result.FilePath = path;
-			result.Matches = new List<Match>();
-			
+			var result = new SearchResults(path);
 			string content = ReadFileAsUtf8(path);
 			
 			MatchCollection matches = Regex.Matches(content, search);
 			
 			foreach (Match match in matches)
 			{
-				result.Matches.Add(match);
+				var lineNumber = GetLineNumber(content, match.Index);
+				result.Matches.Add(new SearchResultMatch(match, lineNumber));
 			}
 			
 			return result;
