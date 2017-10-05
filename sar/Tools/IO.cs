@@ -288,47 +288,42 @@ namespace sar.Tools
 			{
 				if (!IO.IsSVN(file))
 				{
-					SearchResults result = SearchAndReplaceInFile(file, search, replace);
-					if (result.Matches.Count > 0)
-					{
-						results.Add(result);
-					}
+					var fileResults = new SearchResults(file);
+					var searchResults = SearchAndReplaceInFile(file, search, replace);
+					fileResults.AddResults(searchResults);
+					results.Add(fileResults);
 				}
 			}
 			
 			return results;
 		}
 		
-		public static SearchResults SearchAndReplaceInFile(string path, string search, string replace)
+		public static List<SearchResultMatch> SearchAndReplace(ref string content, string search, string replace, string reason)
 		{
-			var result = new SearchResults(path);
-			string content = ReadFileAsUtf8(path);
+			var result = new List<SearchResultMatch>();
 			
-			string newcontent;
-			string lastResult = content;
-			int maxItems = 10000;
-			
-			do
+			var matches = Regex.Matches(content, search);
+			foreach (Match match in matches)
 			{
-				newcontent = lastResult;
-				Match match = Regex.Match(newcontent, search);
-				
-				if (match.Success)
-				{
-					var lineNumber = GetLineNumber(newcontent, match.Index);
-					result.Matches.Add(new SearchResultMatch(match, lineNumber));
-					
-					if (ConsoleHelper.ShowDebug)
-					{
-						ConsoleHelper.DebugWriteLine("found in " + GetFilename(path) + " @ ln#" + lineNumber.ToString());
-					}
-
-					lastResult = Regex.Replace(lastResult, search, replace);
-				}
-			} while (lastResult != newcontent && maxItems-- > 0);
+				var lineNumber = GetLineNumber(content, match.Index);
+				content = Regex.Replace(content, search, replace);
+				result.Add(new SearchResultMatch(match, lineNumber, reason));
+			}
 			
+			return result;
+		}
+		
+		public static List<SearchResultMatch> SearchAndReplaceInFile(string path, string search, string replace)
+		{
+			return SearchAndReplaceInFile(path, search, replace, "");
+		}
+		
+		public static List<SearchResultMatch> SearchAndReplaceInFile(string path, string search, string replace, string reason)
+		{
+			string content = ReadFileAsUtf8(path);
+			var result = SearchAndReplace(ref content, search, replace, reason);
 			
-			if (newcontent != content)
+			if (result.Count > 0)
 			{
 				// make file not readonly
 				File.SetAttributes(path, FileAttributes.Normal);
@@ -336,7 +331,7 @@ namespace sar.Tools
 				// write new content back to file
 				using(var writer = new StreamWriter(path, false, Encoding.UTF8))
 				{
-					writer.Write(newcontent);
+					writer.Write(content);
 				}
 			}
 			

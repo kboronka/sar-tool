@@ -62,6 +62,8 @@ namespace sar
 				args = new string[] { "r", "test.cs", @"break;\r\n(.*)case", @"break;\n\n\n$1case", @"/pause" };
 				 */
 				
+				//args = new string[] { "c.c", @"C:\Users\kboronka\Desktop\manual-owms", @"/pause" };
+				args = new string[] { "c.c", @"C:\Users\kboronka\Desktop\Manual", @"/pause" };
 				#endif
 				
 				var hub = new CommandHub();

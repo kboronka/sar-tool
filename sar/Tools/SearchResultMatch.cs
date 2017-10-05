@@ -10,11 +10,19 @@ namespace sar.Tools
 	{
 		public int LineNumbrer { get; private set; }
 		public Match Match { get; private set; }
+		public string Reason { get; private set; }
 		
-		public SearchResultMatch(Match match, int lineNumber)
+		public SearchResultMatch(Match match, int lineNumber, string reason)
 		{
 			this.Match = match;
 			this.LineNumbrer = lineNumber;
+			this.Reason = reason;
+		}
+		
+		public SearchResultMatch(Match match, int lineNumber)
+			: this (match, lineNumber, "")
+		{
+
 		}
 	}
 }

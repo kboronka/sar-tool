@@ -16,5 +16,10 @@ namespace sar.Tools
 			this.FilePath = filepath;
 			this.Matches = new List<SearchResultMatch>();
 		}
+		
+		public void AddResults(List<SearchResultMatch> matches)
+		{
+			this.Matches.AddRange(matches);
+		}
 	}
 }

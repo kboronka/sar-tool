@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 
 using sar.Tools;
@@ -26,8 +27,8 @@ namespace sar.Commands
 	{
 		public CodeClean(Base.CommandHub parent) : base(parent, "Code - Clean",
 		                                                new List<string> { "code.clean", "c.clean", "c.c" },
-		                                                @"-code.reindent [filepath/pattern]",
-		                                                new List<string> { "-code.clean *.vb" })
+		                                                @"-code.code path",
+		                                                new List<string> { @"-code.clean *c:\code\" })
 		{
 		}
 		
@@ -40,73 +41,70 @@ namespace sar.Commands
 			}
 			
 			Progress.Message = "Searching";
-			string filePattern = args[1];
-			string root = Directory.GetCurrentDirectory();
-			IO.CheckRootAndPattern(ref root, ref filePattern);
-			List<string> files = IO.GetAllFiles(root, filePattern);
+			string root = args[1];
+			if (!Directory.Exists(root))
+			{
+				throw new DirectoryNotFoundException("directory: " + root.QuoteDouble() +
+				                                     " does not exists");
+			}
 			
-			ConsoleHelper.DebugWriteLine("pattern: " + filePattern);
-			ConsoleHelper.DebugWriteLine("root: " + root);
-			if (files.Count == 0) throw new FileNotFoundException("unable to find any files that match pattern: \"" + filePattern + "\" in root: \"" + root + "\"");
+			List<string> files = IO.GetAllFiles(root, "*.*");
+			if (files.Count == 0)
+			{
+				throw new FileNotFoundException("unable to find any files in root: " +
+				                                root.QuoteDouble());
+			}
 
-			int counter = 0;
-			int changes = 0;
+			var fileChangeResults = new List<SearchResults>();
 			foreach (string file in files)
 			{
 				try
 				{
 					Progress.Message = "Cleaning " + IO.GetFilename(file);
+					var changes = new SearchResults(file);
 					
 					switch (IO.GetFileExtension(file).ToLower())
 					{
 						case "vb":
-							counter++;
-							// fix short line continuations (less than 40 characters)
-							changes += IO.SearchAndReplaceInFile(file, @"[\s]*[_][\s]*[\n\r][\s]*(.{1,45}[\n\r])", @" $1").Matches.Count;
-
-							// fix the "_ Then" or _ Handles lines
-							changes += IO.SearchAndReplaceInFile(file, @"[\s]*[_]{1}[\s]*[\n\r][\s]*(Then|Handles)", @" $1").Matches.Count;
-
-							// fix the "_ '" lines
-							changes += IO.SearchAndReplaceInFile(file, @"[\s]*[_]{1}[\s]*[\n\r][\s]*(')", @" $1").Matches.Count;
+							changes.AddResults(VBStyleRules.FixShortLines(file));
+							changes.AddResults(VBStyleRules.FixLineContinuations(file));
+							changes.AddResults(VBStyleRules.FixEmptyLines(file));
+							fileChangeResults.Add(changes);
+							break;
+						case "cs":
+							// skip automatically generated source
+							if (file.Contains(".Designer.cs") || file == "AssemblyInfo.cs")
+							{
+								continue;
+							}
 							
-							// fix the "_ )" lines
-							changes += IO.SearchAndReplaceInFile(file, @"[\s]*[_]{1}[\s]*[\n\r][\s]*(\))", @"$1").Matches.Count;
-
-							// fix the "_ (" lines
-							changes += IO.SearchAndReplaceInFile(file, @"[\s]*[_]{1}[\s]*[\n\r][\s]*(\()", @"$1").Matches.Count;
-							
-							// fix the "_ =" lines
-							changes += IO.SearchAndReplaceInFile(file, @"[\s]*[_]{1}[\s]*[\n\r][\s]*=[\s]*", @" = ").Matches.Count;
-
-							// fix the "= _ " lines
-							changes += IO.SearchAndReplaceInFile(file, @"=[\s]*[_]{1}[\s]*[\n\r][\s]*", @"= ").Matches.Count;
-
-							// remove empty lines after "Then"
-							changes += IO.SearchAndReplaceInFile(file, @"Then\r*\n\s*\r*\n(\s*)(\S)", "Then\r\n$1$2").Matches.Count;
-							
-							
-								
-							// remove the xml documentation
-							changes += IO.SearchAndReplaceInFile(file, @"[\n\r][\s]*[\']{3}[^\n\r]*", @"").Matches.Count;
-
-							// remove extra white space
-							changes += IO.SearchAndReplaceInFile(file, @"\r*\n\s*\n(\s*)(End|Else|Next|Catch|Finally)", "\r\n$1$2").Matches.Count;
-							changes += IO.SearchAndReplaceInFile(file, @"(\r*\n\s*)(Do|Case|If|Else|For|Select|Private Sub|Public Sub|Private Function|Public Function|Public Class|Try|Catch)([^\r\n]*)\r*\n\r*\n", "$1$2$3\r\n").Matches.Count;
-							changes += IO.SearchAndReplaceInFile(file, @"\r*\n(\r*\n\s*)(Loop|End)", "$1$2").Matches.Count;
-
-							// one space between methods
-							//changes += IO.SearchAndReplaceInFile(file, @"(End Sub|End Function)\r*\n([^\n\r])(\S*)\s(?:(?!Class)\w)", "$1\r\n\r\n$2$3").Matches.Count;
-							changes += IO.SearchAndReplaceInFile(file, @"(End Sub|End Function)\r*\n(\t*)(\S\w*\s)((?!Class))", "$1\r\n\r\n$2$3").Matches.Count;
-							changes += IO.SearchAndReplaceInFile(file, @"(End Sub|End Function)\r*\n\r*\n[\r\n]+(\s*)(\S)", "$1\r\n\r\n$2$3").Matches.Count;
-
-							// one space between #Region start and first line
-							changes += IO.SearchAndReplaceInFile(file, @"(#Region[^(\r|\n)]*)\r*\n([\t]*[\S]{1,})", "$1\r\n\r\n$2").Matches.Count;
-							changes += IO.SearchAndReplaceInFile(file, @"(#Region[^(\r|\n)]*)\r*\n(\t*)\r*\n\t*\r*\n", "$1\r\n$2\r\n").Matches.Count;
-							
+							string content = IO.ReadFileAsUtf8(file);
+							var strings = CSStyleRules.RemoveStrings(ref content);
+							changes.AddResults(CSStyleRules.FixSemicolon(ref content));
+							changes.AddResults(CSStyleRules.FixSwitchStatements(ref content));
+							changes.AddResults(CSStyleRules.FixBraces(ref content));
+							changes.AddResults(CSStyleRules.FixBrackets(ref content));
+							changes.AddResults(CSStyleRules.FixEmptyLines(ref content));
+							changes.AddResults(CSStyleRules.FixSpaces(ref content));
+							fileChangeResults.Add(changes);
+							CSStyleRules.RevertStrings(ref content, strings);
+							CSStyleRules.Save(changes, content);
 							break;
 						default:
 							break;
+					}
+					
+					if (changes.Matches.Count > 0)
+					{
+						ConsoleHelper.WriteLine("");
+						ConsoleHelper.WriteLine(IO.GetFilename(file), ConsoleColor.Yellow);
+						
+						foreach (var change in changes.Matches)
+						{
+							ConsoleHelper.Write("  +line ");
+							ConsoleHelper.Write(change.LineNumbrer.ToString(), ConsoleColor.White);
+							ConsoleHelper.WriteLine(": " + change.Reason);
+						}
 					}
 				}
 				catch (Exception ex)
@@ -115,8 +113,6 @@ namespace sar.Commands
 				}
 			}
 			
-			
-			ConsoleHelper.WriteLine(changes.ToString() + " line" + ((changes != 1) ? "s" : "") + " cleaned", ConsoleColor.DarkYellow);
 			return ConsoleHelper.EXIT_OK;
 		}
 	}
