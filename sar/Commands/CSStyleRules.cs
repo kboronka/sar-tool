@@ -84,7 +84,7 @@ namespace sar.Commands
 			}
 			
 			// remove comment strings
-			matches = Regex.Matches(content, @"\/\/.*?\r\n");
+			matches = Regex.Matches(content, @"\/\/.*?(?=\r\n)");
 			foundStrings = new List<string>();
 			foreach (Match match in matches)
 			{
@@ -214,6 +214,16 @@ namespace sar.Commands
 			                                     @"\r\n[ |\t]*\r\n([ |\t]*)\)",
 			                                     "\r\n$1)",
 			                                     "removed empty lines before closing bracket"));
+			// remove space after '('
+			results.AddRange(IO.SearchAndReplace(ref content,
+			                                     @"\([ |\t]([^ ^\r^\n]{1})",
+			                                     "($1",
+			                                     "remove space after '('"));
+			// remove whitespace before ')'
+			results.AddRange(IO.SearchAndReplace(ref content,
+			                                     @"[ |\t|\r|\n]+\)",
+			                                     ")",
+			                                     "remove whitespace before ')'"));			
 			return results;
 		}
 		
@@ -227,34 +237,46 @@ namespace sar.Commands
 			                                     @",([^ |^\r\n|^\t]{1})",
 			                                     ", $1",
 			                                     "added space after ','"));
-			
 			// remove extra spaces after comma (exception: it's a line continuation, and there are comments on the same line
 			results.AddRange(IO.SearchAndReplace(ref content,
 			                                     @",[ |\t]{2,}(?![ |\t])(?!\/\/)",
 			                                     ", ",
-			                                     "remove extra spaces after ','"));						
+			                                     "remove extra spaces after ','"));
+			// remove extra spaces after comma (exception: it's a line continuation, and there are comments on the same line
+			results.AddRange(IO.SearchAndReplace(ref content,
+			                                     @"[ |\t]+,",
+			                                     ",",
+			                                     "remove extra spaces before ','"));
+			
 			
 			// add a space before =
 			results.AddRange(IO.SearchAndReplace(ref content,
 			                                     @"([^ ^\+^\!^=^\*^\-^\&^>^<^\|]{1})=",
 			                                     "$1 =",
 			                                     "added space before '='"));
-			
 			// add a space after =
 			results.AddRange(IO.SearchAndReplace(ref content,
 			                                     @"(?<!operator .)=([^ ^=^>^\r^\n]{1})",
 			                                     "= $1",
 			                                     "added space after '='"));
-			
 			// remove extra spaces after =
 			results.AddRange(IO.SearchAndReplace(ref content,
 			                                     @"=[ |\t]{2,}",
 			                                     "= ",
-			                                     "remove extra spaces after '='"));			
+			                                     "remove extra spaces after '='"));
 			
+			// remove extra spaces after math opeators
+			results.AddRange(IO.SearchAndReplace(ref content,
+			                                     @"([\+\-\*\/\>\<])[ |\t]{2,}(?![ |\t])(?!\/\/)",
+			                                     "$1 ",
+			                                     "remove extra spaces after math opeators"));
+			// remove extra spaces before math opeators
 			
-			
-			
+			results.AddRange(IO.SearchAndReplace(ref content,
+			                                     @"(?<=\S)[ \t]{2,}([\,\+\-\*\/\>\<])(?!\/)",
+			                                     " $1",
+			                                     "remove extra spaces before math opeators"));
+						                                     
 			return results;
 		}
 	}
