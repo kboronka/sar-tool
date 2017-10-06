@@ -84,7 +84,7 @@ namespace sar.Commands
 			}
 			
 			// remove comment strings
-			matches = Regex.Matches(content, @"\/\/.*?(?=\r\n)");
+			matches = Regex.Matches(content, @"\/\/.*");
 			foundStrings = new List<string>();
 			foreach (Match match in matches)
 			{
@@ -114,7 +114,7 @@ namespace sar.Commands
 			
 			// remove empty characters after semicolons
 			results.AddRange(IO.SearchAndReplace(ref content,
-			                                     @";[ |\t]+\r\n",
+			                                     @";[ \t]+\r\n",
 			                                     ";\r\n",
 			                                     "removed empty characters after semicolon"));
 
@@ -127,11 +127,11 @@ namespace sar.Commands
 			
 			// two empty lines between cases statements
 			results.AddRange(IO.SearchAndReplace(ref content,
-			                                     @"break;\r\n\s*\r\n([ |\t]+)case",
+			                                     @"break;\r\n\s*\r\n([ \t]+)case",
 			                                     "break;\r\n$1case",
 			                                     "removed empty lines before case"));
 			results.AddRange(IO.SearchAndReplace(ref content,
-			                                     @"break;\r\n\s*\r\n([ |\t]+)default",
+			                                     @"break;\r\n\s*\r\n([ \t]+)default",
 			                                     "break;\r\n$1default",
 			                                     "removed empty lines before default case"));
 			
@@ -144,27 +144,27 @@ namespace sar.Commands
 			
 			// no empty lines between case statements
 			results.AddRange(IO.SearchAndReplace(ref content,
-			                                     @"break;\r\n\s*\r\n([ |\t]+)case",
-			                                     "break;\r\n$1case",
+			                                     @"\r\n\s*\r\n([ \t]+)case",
+			                                     "\r\n$1case",
 			                                     "removed empty lines before case"));
 			results.AddRange(IO.SearchAndReplace(ref content,
-			                                     @"break;\r\n\s*\r\n([ |\t]+)default",
-			                                     "break;\r\n$1default",
+			                                     @"\r\n\s*\r\n([ \t]+)default",
+			                                     "\r\n$1default",
 			                                     "removed empty lines before default case"));
 			// remove all double empty lines
 			results.AddRange(IO.SearchAndReplace(ref content,
-			                                     @"\r\n[ |\t]*\r\n([ |\t]*)\r\n",
+			                                     @"\r\n[ \t]*\r\n([ \t]*)\r\n",
 			                                     "\r\n$1\r\n",
 			                                     "removed double empty lines"));
 
 			// add empty line after #region
 			results.AddRange(IO.SearchAndReplace(ref content,
-			                                     @"(#region.*)\r\n([ |\t]*)((?![ |\t])(?!\r\n))",
+			                                     @"(#region.*)\r\n([ \t]*)((?![ \t])(?!\r\n))",
 			                                     "$1\r\n\r\n$2$3",
 			                                     "added empty line after #region"));
 			// add empty line after #endregion
 			results.AddRange(IO.SearchAndReplace(ref content,
-			                                     @"(#endregion)\r\n([ |\t]*)((?![ |\t])(?!\r\n))",
+			                                     @"(#endregion)\r\n([ \t]*)((?![ \t])(?!\r\n))",
 			                                     "$1\r\n\r\n$2$3",
 			                                     "added empty line after #endregion"));
 			
@@ -178,25 +178,25 @@ namespace sar.Commands
 			
 			// remove whitespace after closing brace
 			results.AddRange(IO.SearchAndReplace(ref content,
-			                                     @"}[ |\t]+\r\n",
+			                                     @"}[ \t]+\r\n",
 			                                     "}\r\n",
 			                                     "removed empty characters after closing brace"));
 
 			// remove empty lines before a closing brace
 			results.AddRange(IO.SearchAndReplace(ref content,
-			                                     @"([^(?:#endregion)|^(?:{)])\r\n[ |\t]*\r\n([ |\t]*)}",
+			                                     @"([^(?:#endregion)|^(?:{)])\r\n[ \t]*\r\n([ \t]*)}",
 			                                     "$1\r\n$2}",
 			                                     "removed empty lines before closing brace"));
 
 			// add empty line after a closing brace
 			results.AddRange(IO.SearchAndReplace(ref content,
-			                                     @"}\r\n(\t*)((?![ |\t])(?!\r\n)(?!})(?!set)(?!catch)(?!finally)(?!else)(?!public .* .* {).{2})",
+			                                     @"}\r\n(\t*)((?![ \t])(?!\r\n)(?!})(?!set)(?!catch)(?!finally)(?!else)(?!public .* .* {).{2})",
 			                                     "}\r\n\r\n$1$2",
 			                                     "added empty line after closing brace"));
 			
 			// remove empty line prior to set, catch, finally or else
 			results.AddRange(IO.SearchAndReplace(ref content,
-			                                     @"}\r\n[ |\t]*\r\n([ |\t]*(?:(?:set)|(?:catch)|(?:finally)|(?:else)|(?:else if \(.*\)))\r\n*[ |\t]*{)",
+			                                     @"}\r\n[ \t]*\r\n([ \t]*(?:(?:set)|(?:catch)|(?:finally)|(?:else)|(?:else if \(.*\)))\r\n*[ \t]*{)",
 			                                     "}\r\n$1",
 			                                     "removed empty line"));
 			
@@ -211,19 +211,24 @@ namespace sar.Commands
 
 			// remove empty lines before a closing backet
 			results.AddRange(IO.SearchAndReplace(ref content,
-			                                     @"\r\n[ |\t]*\r\n([ |\t]*)\)",
+			                                     @"\r\n[ \t]*\r\n([ \t]*)\)",
 			                                     "\r\n$1)",
 			                                     "removed empty lines before closing bracket"));
 			// remove space after '('
 			results.AddRange(IO.SearchAndReplace(ref content,
-			                                     @"\([ |\t]([^ ^\r^\n]{1})",
+			                                     @"\([ \t]([^ ^\r^\n]{1})",
 			                                     "($1",
 			                                     "remove space after '('"));
 			// remove whitespace before ')'
 			results.AddRange(IO.SearchAndReplace(ref content,
 			                                     @"[ |\t|\r|\n]+\)",
 			                                     ")",
-			                                     "remove whitespace before ')'"));			
+			                                     "remove whitespace before ')'"));
+			// remove whitespace before '('
+			results.AddRange(IO.SearchAndReplace(ref content,
+			                                     @"(?<!if)(?<!catch)(?<!for)(?<!foreach)(?<!while)(?<!lock)(?<!using)(?<!return)(?<!switch)(?<!case)(?<![\:\?])(?<![\&\|])(?<!\[\=\,\+\-\*\/\>\<])(?<=\w)[ \t]+\(",
+			                                     "(",
+			                                     "remove whitespace before '('"));
 			return results;
 		}
 		
@@ -239,12 +244,12 @@ namespace sar.Commands
 			                                     "added space after ','"));
 			// remove extra spaces after comma (exception: it's a line continuation, and there are comments on the same line
 			results.AddRange(IO.SearchAndReplace(ref content,
-			                                     @",[ |\t]{2,}(?![ |\t])(?!\/\/)",
+			                                     @",[ \t]{2,}(?![ \t])(?!\/\/)",
 			                                     ", ",
 			                                     "remove extra spaces after ','"));
 			// remove extra spaces after comma (exception: it's a line continuation, and there are comments on the same line
 			results.AddRange(IO.SearchAndReplace(ref content,
-			                                     @"[ |\t]+,",
+			                                     @"[ \t]+,",
 			                                     ",",
 			                                     "remove extra spaces before ','"));
 			
@@ -261,13 +266,13 @@ namespace sar.Commands
 			                                     "added space after '='"));
 			// remove extra spaces after =
 			results.AddRange(IO.SearchAndReplace(ref content,
-			                                     @"=[ |\t]{2,}",
+			                                     @"=[ \t]{2,}",
 			                                     "= ",
 			                                     "remove extra spaces after '='"));
 			
 			// remove extra spaces after math opeators
 			results.AddRange(IO.SearchAndReplace(ref content,
-			                                     @"([\+\-\*\/\>\<])[ |\t]{2,}(?![ |\t])(?!\/\/)",
+			                                     @"([\+\-\*\/\>\<])[ \t]{2,}(?![ \t])(?!\/\/)",
 			                                     "$1 ",
 			                                     "remove extra spaces after math opeators"));
 			// remove extra spaces before math opeators
@@ -276,7 +281,7 @@ namespace sar.Commands
 			                                     @"(?<=\S)[ \t]{2,}([\,\+\-\*\/\>\<])(?!\/)",
 			                                     " $1",
 			                                     "remove extra spaces before math opeators"));
-						                                     
+			
 			return results;
 		}
 	}

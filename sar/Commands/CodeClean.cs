@@ -73,7 +73,7 @@ namespace sar.Commands
 							break;
 						case "cs":
 							// skip automatically generated source
-							if (file.Contains(".Designer.cs") || file == "AssemblyInfo.cs")
+							if (file.Contains(".Designer.cs") || file.Contains("AssemblyInfo.cs"))
 							{
 								continue;
 							}
