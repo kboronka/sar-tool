@@ -267,8 +267,15 @@ namespace sar.Tools
 		private static int GetLineNumber(string content, int index)
 		{
 			int lines = 1;
-			for (int i = 0; i <= index - 1; i++)
-				if (content[i] == '\n') lines++;
+			
+			for (int i = 0; i <= index - 1 && i <= content.Length - 1; i++)
+			{
+				if (content[i] == '\n')
+				{
+					lines++;
+				}
+			}
+				
 			
 			return lines;
 		}
