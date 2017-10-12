@@ -60,12 +60,11 @@ namespace sar
 				args = new string[] { "svn.GetNewAssemblyVersion", @"https://github.com/kboronka/sar-tool/trunk/sar/Properties/AssemblyInfo.cs", @"/pause" };
 				args = new string[] { "dotNetVersions", @"/pause" };
 				args = new string[] { "r", "test.cs", @"break;\r\n(.*)case", @"break;\n\n\n$1case", @"/pause" };
+				args = new string[] { "c.c", @"C:\Users\kboronka\Desktop\Manual", @"/pause" };
 				
 				 */
 				
-				#endif
-				
-				args = new string[] { "c.c", @"C:\Users\kboronka\Desktop\Manual", @"/pause" };
+				#endif				
 				
 				var hub = new CommandHub();
 				Progress.Start();
