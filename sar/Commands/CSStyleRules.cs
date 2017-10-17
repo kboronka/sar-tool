@@ -185,7 +185,7 @@ namespace sar.Commands
 			
 			// remove empty line prior to set, catch, finally or else
 			results.AddRange(IO.SearchAndReplace(ref content,
-			                                     @"}\r\n[ \t]*\r\n([ \t]*(?:(?:set)|(?:private set)|(?:protected set)|(?:catch)|(?:finally)|(?:else)|(?:else if \(.*\)))\r\n*[ \t]*{)",
+			                                     @"}\r\n[ \t]*\r\n([ \t]*(?:(?:set)|(?:private set)|(?:protected set)|(?:catch)|(?:remove)|(?:finally)|(?:else)|(?:else if \(.*\)))\r\n*[ \t]*{)",
 			                                     "}\r\n$1",
 			                                     "removed empty line"));
 			return results;
@@ -209,7 +209,7 @@ namespace sar.Commands
 
 			// add empty line after a closing brace
 			results.AddRange(IO.SearchAndReplace(ref content,
-			                                     @"}\r\n(\t*)((?![ \t])(?!\r\n)(?!})(?!set)(?!private set)(?!protected set)(?!catch)(?!finally)(?!else)(?!public .* .* {).{2})",
+			                                     @"}\r\n(\t*)((?![ \t])(?!\r\n)(?!})(?!set)(?!private set)(?!protected set)(?!remove)(?!catch)(?!finally)(?!else)(?!public .* .* {).{2})",
 			                                     "}\r\n\r\n$1$2",
 			                                     "added empty line after closing brace"));
 			
@@ -292,6 +292,23 @@ namespace sar.Commands
 			                                     @"(?<=\S)[ \t]{2,}([\,\+\-\*\/\>\<])(?!\/)",
 			                                     " $1",
 			                                     "remove extra spaces before math opeators"));
+			
+			// add extra space before equality opeator
+			results.AddRange(IO.SearchAndReplace(ref content,
+			                                     @"([^ ]{1})((?:==)|(?:\>=)|(?:\<=)|(?:\!=))",
+			                                     "$1 $2",
+			                                     "add extra space before equality opeator"));
+			
+			// remove extra space before equality opeator
+			results.AddRange(IO.SearchAndReplace(ref content,
+			                                     @"([ \t]{2,})((?:==)|(?:\>=)|(?:\<=)|(?:\!=))",
+			                                     " $2",
+			                                     "remove extra space before equality opeator"));
+			// remove extra space after equality opeator
+			results.AddRange(IO.SearchAndReplace(ref content,
+			                                     @"((?:==)|(?:\>=)|(?:\<=)|(?:\!=))([ \t]{2,})",
+			                                     "$1 ",
+			                                     "remove extra space after equality opeator"));
 			// this doesn't work
 //			// add space after math operator
 //			results.AddRange(IO.SearchAndReplace(ref content,
