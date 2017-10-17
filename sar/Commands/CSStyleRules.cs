@@ -183,7 +183,11 @@ namespace sar.Commands
 			                                     "$1\r\n\r\n$2$3",
 			                                     "added empty line after #endregion"));
 			
-			// TODO: remove empty lines between get {} and set {}
+			// remove empty line prior to set, catch, finally or else
+			results.AddRange(IO.SearchAndReplace(ref content,
+			                                     @"}\r\n[ \t]*\r\n([ \t]*(?:(?:set)|(?:private set)|(?:protected set)|(?:catch)|(?:finally)|(?:else)|(?:else if \(.*\)))\r\n*[ \t]*{)",
+			                                     "}\r\n$1",
+			                                     "removed empty line"));
 			return results;
 		}
 		
@@ -208,13 +212,6 @@ namespace sar.Commands
 			                                     @"}\r\n(\t*)((?![ \t])(?!\r\n)(?!})(?!set)(?!catch)(?!finally)(?!else)(?!public .* .* {).{2})",
 			                                     "}\r\n\r\n$1$2",
 			                                     "added empty line after closing brace"));
-			
-			// remove empty line prior to set, catch, finally or else
-			results.AddRange(IO.SearchAndReplace(ref content,
-			                                     @"}\r\n[ \t]*\r\n([ \t]*(?:(?:set)|(?:catch)|(?:finally)|(?:else)|(?:else if \(.*\)))\r\n*[ \t]*{)",
-			                                     "}\r\n$1",
-			                                     "removed empty line"));
-			
 			
 			return results;
 		}
@@ -291,11 +288,16 @@ namespace sar.Commands
 			                                     "$1 ",
 			                                     "remove extra spaces after math opeators"));
 			// remove extra spaces before math opeators
-			
 			results.AddRange(IO.SearchAndReplace(ref content,
 			                                     @"(?<=\S)[ \t]{2,}([\,\+\-\*\/\>\<])(?!\/)",
 			                                     " $1",
 			                                     "remove extra spaces before math opeators"));
+			// this doesn't work
+//			// add space after math operator
+//			results.AddRange(IO.SearchAndReplace(ref content,
+//			                                     @"([\+\-\*\/])(?:[ \t]{0})(?![ \t])(?!\/\/)(?![\+\-\*\/\=\)\n\r])",
+//			                                     "$1 ",
+//			                                     "add space after math operator"));
 			
 			return results;
 		}
