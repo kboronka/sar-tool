@@ -209,7 +209,7 @@ namespace sar.Commands
 
 			// add empty line after a closing brace
 			results.AddRange(IO.SearchAndReplace(ref content,
-			                                     @"}\r\n(\t*)((?![ \t])(?!\r\n)(?!})(?!set)(?!catch)(?!finally)(?!else)(?!public .* .* {).{2})",
+			                                     @"}\r\n(\t*)((?![ \t])(?!\r\n)(?!})(?!set)|(?!private set)|(?!protected set)(?!catch)(?!finally)(?!else)(?!public .* .* {).{2})",
 			                                     "}\r\n\r\n$1$2",
 			                                     "added empty line after closing brace"));
 			
