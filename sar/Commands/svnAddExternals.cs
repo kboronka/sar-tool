@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -20,7 +20,6 @@ using System.Text;
 
 using sar.Tools;
 using sar.Base;
-
 
 namespace sar.Commands
 {
@@ -49,7 +48,6 @@ namespace sar.Commands
 			string tempFolder = ApplicationInfo.DataDirectory + Guid.NewGuid().ToString();
 			Directory.CreateDirectory(tempFolder);
 
-
 			// svn checkout --depth empty http://svnserver/trunk/proj
 			Progress.Message = "checking out files";
 			ConsoleHelper.Run(svn, " export --depth files --force " + externalRoot + @" """ + tempFolder + @"""");
@@ -58,8 +56,6 @@ namespace sar.Commands
 			IO.IncludeSubFolders = false;
 			string root = tempFolder;
 			List<string> files = IO.GetAllFiles(root, filePattern);
-			
-			
 
 			string output = "";
 			string error = "";
@@ -81,7 +77,7 @@ namespace sar.Commands
 				var line = filename + " " + externalRoot + @"/" + filename;
 				var duplicate = false;
 				
-				for (var i=0; i<externals.Count; i++)
+				for (var i = 0; i<externals.Count; i++)
 				{
 					if (externals[i].StartsWith(filename + " "))
 					{
@@ -100,7 +96,7 @@ namespace sar.Commands
 			IO.WriteFileLines(tempFile, externals, Encoding.ASCII);
 			
 			//svn propset svn:externals -F b:\externals.txt
-			Progress.Message = "propset running";			
+			Progress.Message = "propset running";
 			ConsoleHelper.Run(svn, @" propset svn:externals -F """ + tempFile + @""" .");
 			
 			// delete tempFolder

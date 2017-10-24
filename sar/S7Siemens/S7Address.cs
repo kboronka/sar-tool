@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -47,7 +47,6 @@ namespace sar.S7Siemens
 			//else if (address.Length >= 2 && address.Substring(0, 2) == "VL") this.AddressArea = AddressArea.VL;
 			else throw new InvalidDataException("Invalid Address");
 			
-			
 			if (this.area == Areas.DB)
 			{
 				address = address.Substring(2);
@@ -56,14 +55,12 @@ namespace sar.S7Siemens
 				
 				if (address.Substring(0, 2) != "DB") throw new InvalidDataException("Invalid DB Address");
 				address = address.Substring(2);
-				
 			}
 			else
 			{
 				address = address.Substring(1);
 				this.dataBlock = 0;
 			}
-
 			
 			if (address.Length > 1 && address[0] == 'D') this.length = 4*8;
 			else if (address.Length > 1 && address[0] == 'W') this.length = 2*8;
@@ -92,7 +89,6 @@ namespace sar.S7Siemens
 
 			// non bit address verification
 			if (this.length != 1 && address.IndexOf('.') != -1) throw new InvalidDataException("Invalid non-bit address location");
-			
 
 			var startAddress = double.Parse(address);
 			this.byteAdddress = (ushort)Math.Floor(startAddress);
@@ -165,7 +161,7 @@ namespace sar.S7Siemens
 			{
 				if (this.length == 1*8) address += "B";
 				if (this.length == 2*8) address += "W";
-				if (this.length == 4*8) address += "D";				
+				if (this.length == 4*8) address += "D";
 				address += this.byteAdddress.ToString();
 				
 				if (this.transportType == TransportType.Bit) address += "." + this.bitAddress.ToString();

@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -175,7 +175,6 @@ namespace sar.Tools
 			
 			return input;
 		}
-
 		
 		public static bool StartsWith(string input, List<string> words)
 		{
@@ -208,7 +207,7 @@ namespace sar.Tools
 			{
 				if (!String.IsNullOrEmpty(substring))
 				{
-					if ((substring.Substring(0,1) == "\"" || pervious.Length > 0) && substring.Substring(substring.Length - 1,1) != "\"")
+					if ((substring.Substring(0, 1) == "\"" || pervious.Length > 0) && substring.Substring(substring.Length - 1,1) != "\"")
 					{
 						pervious = pervious + substring + " ";
 					}
@@ -295,7 +294,7 @@ namespace sar.Tools
 			return secure;
 		}
 		
-		public static byte[] CombineByteArrays(params byte[][] arrays )
+		public static byte[] CombineByteArrays(params byte[][] arrays)
 		{
 			int sum = 0;
 			int offset = 0;
@@ -306,9 +305,8 @@ namespace sar.Tools
 			}
 			
 			var result = new byte[sum];
-
 			
-			foreach ( byte[] array in arrays )
+			foreach (byte[] array in arrays)
 			{
 				System.Buffer.BlockCopy(array, 0, result, offset, array.Length);
 				offset += array.Length;
@@ -357,7 +355,6 @@ namespace sar.Tools
 		
 		#region environment variable helpers
 		
-		
 		public static void AllVariables(EnvironmentVariableTarget target)
 		{
 			foreach (DictionaryEntry var in Environment.GetEnvironmentVariables(target))
@@ -368,7 +365,7 @@ namespace sar.Tools
 			}
 		}
 		
-		
 		#endregion
+
 	}
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -19,7 +19,6 @@ using System.Linq;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-
 
 using sar.Tools;
 using sar.Json;
@@ -152,7 +151,6 @@ namespace sar.Http
 		public HttpContent(Dictionary<string, object> kvp) : this(Encoding.ASCII.GetBytes(kvp.ToJson()), "application/json") { }
 		public HttpContent(List<Dictionary<string, object>> list) : this(Encoding.ASCII.GetBytes(list.ToJson()), "application/json") { }
 
-
 		public HttpContent(byte[] content, string contentType)
 		{
 			this.baseContent = new Dictionary<string, HttpContent>();
@@ -164,6 +162,7 @@ namespace sar.Http
 		}
 		
 		public HttpContent(HttpCachedFile file) : this(file, new Dictionary<string, HttpContent>()) { }
+
 		public HttpContent(HttpCachedFile file, Dictionary<string, HttpContent> baseContent)
 		{
 			this.baseContent = baseContent;
@@ -185,7 +184,6 @@ namespace sar.Http
 		{
 			return StringHelper.GetString(Render(cache, baseContent));
 		}
-
 
 		public const string INCLUDE_RENDER_SYNTAX = @"\<%@ Include:\s*([^@]+)\s*\%\>";
 		public const string CONTENT_RENDER_SYNTAX = @"\<%@ Content:\s*([^@]+)\s*\%\>";
@@ -228,7 +226,6 @@ namespace sar.Http
 			
 			return this.content;
 		}
-
 		
 		#endregion
 		

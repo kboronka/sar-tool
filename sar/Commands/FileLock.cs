@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -50,7 +50,7 @@ namespace sar.Commands
 			IO.CheckRootAndPattern(ref root, ref filePattern);
 			List<string> files = IO.GetAllFiles(root, filePattern);
 			
-			Progress.Message = "Waiting for lock";			
+			Progress.Message = "Waiting for lock";
 			if (!IO.WaitForFileSystem(root, timeout, true))
 			{
 				ConsoleHelper.WriteLine("File System Not Found", ConsoleColor.DarkYellow);

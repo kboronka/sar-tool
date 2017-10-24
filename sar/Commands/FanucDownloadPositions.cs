@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -44,7 +44,7 @@ namespace sar.Commands
 			string csv = args[2];
 			string root = Directory.GetCurrentDirectory();
 
-			IO.CheckRootAndPattern(ref root, ref csv);			
+			IO.CheckRootAndPattern(ref root, ref csv);
 			string filename = IO.GetFilename(csv);
 			string filepath = root + filename;
 			var files = FTPHelper.GetFileList(ip);
@@ -52,7 +52,6 @@ namespace sar.Commands
 			if (!files.Contains("posreg.va")) throw new FileNotFoundException("posreg.va not found on ftp server");
 			
 			var input = StringHelper.GetString(FTPHelper.DownloadBytes(ip, "posreg.va"));
-			
 				
 			if (File.Exists(filepath)) File.Delete(filepath);
 
@@ -62,7 +61,6 @@ namespace sar.Commands
 			
 			return ConsoleHelper.EXIT_OK;
 		}
-		
 		
 	}
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -42,6 +42,7 @@ namespace sar.Http
 		private HttpMethod method;
 		
 		public string Header { get; private set; }
+
 		private string fullUrl;
 		
 		private string query;
@@ -175,7 +176,7 @@ namespace sar.Http
 				}
 				catch (Exception ex)
 				{
-					throw (ex);
+					throw(ex);
 				}
 			}
 			
@@ -197,7 +198,6 @@ namespace sar.Http
 						stream.Read(packetBytes, 0, packetBytes.Length);
 						return packetBytes;
 					}
-					
 				}
 			}
 			catch (ObjectDisposedException ex)
@@ -294,33 +294,26 @@ namespace sar.Http
 					case "Connection":
 						this.IsWebSocket = requestHeader[1].TrimWhiteSpace() == "Upgrade";
 						break;
-						
 					case "Sec-WebSocket-Key":
 						this.WebSocketKey = requestHeader[1].TrimWhiteSpace();
 						break;
-						
 					case "Sec-WebSocket-Protocol":
 						this.WebSocketProtocol = requestHeader[1].TrimWhiteSpace();
 						break;
-
 					case "Content-Length":
 						this.contentLength = requestHeader[1].ToInt();
 						this.bytesRecived = 0;
 						break;
-						
 					case "User-Agent":
 						if (requestHeader[1].Contains("wkhtmltopdf"))
 							this.pdfReader = true;
 						break;
-						
 					case "Content-Type":
 						this.contentType = requestHeader[1].TrimWhiteSpace();
 						break;
-						
 					case "If-None-Match":
 						this.ETag = requestHeader[1].TrimWhiteSpace();
 						break;
-
 					case "Cookie":
 						sessionID = requestHeader[1].TrimWhiteSpace();
 						var matches = Regex.Matches(requestHeader[1], @"sarSession=([^;]+)");

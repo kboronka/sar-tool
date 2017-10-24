@@ -27,6 +27,7 @@ namespace sar.CNC
 				}
 			}
 		}
+
 		public CommandQueue()
 		{
 			commands = new List<string>();
@@ -68,6 +69,5 @@ namespace sar.CNC
 			return "";
 		}
 		
-
 	}
 }

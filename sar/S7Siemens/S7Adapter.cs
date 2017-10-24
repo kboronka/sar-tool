@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -36,11 +36,11 @@ namespace sar.S7Siemens
 		
 		private bool connected;
 		
-		private static readonly byte[] CONNECT_TO_ADAPTER = 	new byte[] { 0x11, 0xE0, 0x00, 0x00, 0x00, 0x01, 0x00, 0xC0, 0x01, 0x09, 0xC1, 0x02, 0x4B, 0x54, 0xC2, 0x02, 0x03, 0x02 };
-		private static readonly byte[] CONNECTED_TO_ADAPTER =	new byte[] { 0x11, 0xD0, 0x00, 0x01, 0x00, 0x00, 0x00, 0xC0, 0x01, 0x09, 0xC1, 0x02, 0x4B, 0x54, 0xC2, 0x02, 0x03, 0x02 };
-		private static readonly byte[] EXCHANGE_PDU_PARAMETER =	new byte[] { 0xF0, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0xF0 };
-		private static readonly byte[] TPKT =					new byte[] { 0x03, 0x00, 0x00, 0x1F };
-		private static readonly byte[] TPKT_PDU =				new byte[] { 0x03, 0x00, 0x00, 0x19 };
+		private static readonly byte[] CONNECT_TO_ADAPTER = new byte[] { 0x11, 0xE0, 0x00, 0x00, 0x00, 0x01, 0x00, 0xC0, 0x01, 0x09, 0xC1, 0x02, 0x4B, 0x54, 0xC2, 0x02, 0x03, 0x02 };
+		private static readonly byte[] CONNECTED_TO_ADAPTER = new byte[] { 0x11, 0xD0, 0x00, 0x01, 0x00, 0x00, 0x00, 0xC0, 0x01, 0x09, 0xC1, 0x02, 0x4B, 0x54, 0xC2, 0x02, 0x03, 0x02 };
+		private static readonly byte[] EXCHANGE_PDU_PARAMETER = new byte[] { 0xF0, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0xF0 };
+		private static readonly byte[] TPKT = new byte[] { 0x03, 0x00, 0x00, 0x1F };
+		private static readonly byte[] TPKT_PDU = new byte[] { 0x03, 0x00, 0x00, 0x19 };
 
 		#region constructors
 		
@@ -150,6 +150,7 @@ namespace sar.S7Siemens
 		#endregion
 
 		#region Reading from PLC
+
 		public bool ReadBit(string address)
 		{
 			var data = ReadBytesRaw(address, 1);
@@ -218,13 +219,13 @@ namespace sar.S7Siemens
 			var data = IO.ReverseBytes(ReadBytesRaw(address, length));
 			
 			string output = "";
-			for (var i=2; i<data.Length && i<(data[1]+2); i++)
+			for (var i = 2; i<data.Length && i<(data[1]+2); i++)
 			{
 				output += Convert.ToChar(data[i]);
 			}
 			
 			return output;
-		}		
+		}
 		
 		public byte[] ReadBytes(string address, ushort bytes)
 		{
@@ -252,8 +253,6 @@ namespace sar.S7Siemens
 			var tpdu = new byte[] {};
 			var response = new byte[] {};
 			var data = new byte[] {};
-			
-
 			
 			// maximum page size = 220 bytes
 			if (bytes <= MAX_BYTES_PER_PAGE)
@@ -316,20 +315,22 @@ namespace sar.S7Siemens
 				return data;
 			}
 		}
+
 		#endregion
 
 		#region Writing to PLC
+
 		public void WriteFloats(string address, float[] data)
 		{
 			var returnByte = new byte[data.Length * 4];
 			Buffer.BlockCopy(data, 0, returnByte, 0, returnByte.Length);
 			WriteBytes(address, returnByte);
-
 		}
+
 		public void WriteDints(string address, Int32[] data)
 		{
 			var returnByte = new byte[] { };
-			var tmpByte = new byte[4] { 0, 0,0,0 };
+			var tmpByte = new byte[4] { 0, 0, 0, 0 };
 			Array.Resize(ref returnByte, (data.Length) * 4);
 			int cnt = 0;
 			foreach (var _data in data)
@@ -341,21 +342,22 @@ namespace sar.S7Siemens
 				returnByte[cnt]     = tmpByte[3];
 				cnt = cnt + 4;
 			}
+
 			WriteBytes(address, returnByte);
 		}
 		
 		public void WriteInts(string address, Int16[] data)
 		{
 			var returnByte = new byte[]{};
-			var tmpByte = new byte[2]{0,0};
+			var tmpByte = new byte[2]{0, 0};
 			Array.Resize(ref returnByte, (data.Length)*2);
 			int cnt = 0;
 			foreach (var _data in data)
 			{
-				tmpByte= BitConverter.GetBytes(_data);
+				tmpByte = BitConverter.GetBytes(_data);
 				returnByte[cnt + 1] = tmpByte[0];
 				returnByte[cnt]     = tmpByte[1];
-				cnt =cnt+2;
+				cnt = cnt+2;
 			}
 			
 			WriteBytes(address, returnByte);
@@ -382,7 +384,6 @@ namespace sar.S7Siemens
 			if (bytes < 1) throw new IndexOutOfRangeException("min bytes = 1");
 			
 			if (bytes != data.Length) throw new ArgumentException("data size does not match address");
-
 			
 			// send read request message
 			var message = ReadWriteMessage(Action.Write, address);
@@ -512,8 +513,6 @@ namespace sar.S7Siemens
 				Debug.WriteLine(StringHelper.ArrayToString(title, data));
 			}
 		}
-		
-
 
 		private byte[] ExtractTPDU(byte[] message)
 		{

@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -131,9 +131,8 @@ namespace sar.Http
 							case "port":
 								this.port = (int)reader.GetValueLong();
 								break;
-								
 							case "wwwroot":
-								this.root =  reader.GetValueString();
+								this.root = reader.GetValueString();
 								this.root = Path.GetFullPath(this.root);
 								break;
 						}
@@ -173,7 +172,7 @@ namespace sar.Http
 			{
 				try
 				{
-					IAsyncResult result =  this.listener.BeginAcceptTcpClient(this.AcceptTcpClientCallback, this.listener);
+					IAsyncResult result = this.listener.BeginAcceptTcpClient(this.AcceptTcpClientCallback, this.listener);
 					this.connectionWaitHandle.WaitOne();
 					this.connectionWaitHandle.Reset();
 				}
@@ -195,7 +194,6 @@ namespace sar.Http
 			
 			this.listener = null;
 		}
-
 		
 		private void AcceptTcpClientCallback(IAsyncResult ar)
 		{
@@ -230,5 +228,6 @@ namespace sar.Http
 		#endregion
 		
 		#endregion
+
 	}
 }

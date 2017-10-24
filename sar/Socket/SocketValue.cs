@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -39,7 +39,7 @@ namespace sar.Socket
 			this.data = "";
 			this.timestamp = new DateTime(2001, 1, 1);
 			this.lastUpdate = new DateTime(2001, 1, 1);
-			this.sourceID = 0;		
+			this.sourceID = 0;
 		}
 		
 		#region properties
@@ -62,6 +62,7 @@ namespace sar.Socket
 				
 				OnDataChange(this);
 			}
+
 			get { return this.data; }
 		}
 		
@@ -78,6 +79,7 @@ namespace sar.Socket
 		public long SourceID
 		{
 			set { this.sourceID = value; }
+
 			get { return this.sourceID; }
 		}
 		

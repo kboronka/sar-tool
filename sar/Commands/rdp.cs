@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -31,7 +31,6 @@ namespace sar.Commands
 		{
 		}
 		
-		
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -43,7 +42,6 @@ namespace sar.Commands
 			string host = args[1];
 			string username = args[2];
 			string password = args[3];
-			
 						
 			Progress.Message = "Launching rdp session to " + host;
 			ConsoleHelper.Run(Environment.SystemDirectory + @"\cmdkey.exe", "/generic:TERMSRV/" + host + " /user:" + username + " /pass:" + password);

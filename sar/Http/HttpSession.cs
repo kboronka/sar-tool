@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -53,7 +53,7 @@ namespace sar.Http
 			this.expiryLoopThread = new Thread(this.ExpiryLoop);
 			this.expiryLoopThread.Name = "HttpSession " + this.ID;
 			this.expiryLoopThread.IsBackground = true;
-			this.expiryLoopThread.Start();			
+			this.expiryLoopThread.Start();
 		}
 
 		~HttpSession()
@@ -145,7 +145,6 @@ namespace sar.Http
 				Logger.Log(ex);
 			}
 		}
-		
 		
 		#endregion
 

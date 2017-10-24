@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -48,7 +48,7 @@ namespace sar.Commands
 				output += value;
 								
 				return output;
-			}			
+			}
 		}
 		
 		public FanucDownloadNumericRegisters(Base.CommandHub parent) : base(parent, "Fanuc Download Numeric Registers",
@@ -80,7 +80,6 @@ namespace sar.Commands
 			if (!files.Contains("numreg.va")) throw new FileNotFoundException("numreg.va not found on ftp server");
 			
 			var input = StringHelper.GetString(FTPHelper.DownloadBytes(ip, "numreg.va"));
-			
 			
 			if (File.Exists(filepath)) File.Delete(filepath);
 

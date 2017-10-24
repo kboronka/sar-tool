@@ -26,6 +26,7 @@ namespace sar.CNC
 		public PositionVector MachinePosition { get; private set; }
 		public PositionVector WorkCoordinateOffset { get; private set; }
 		public PositionVector WorkCoordinate { get; private set; }
+
 		public int PlannerBlocksAvailble;
 		public int RxBufferBytesAvailble;
 		public int FeedRate;
@@ -38,8 +39,6 @@ namespace sar.CNC
 		private GrblInputParser parser;
 		private bool jobActive;
 		private Stopwatch jobTimer;
-		
-
 		
 		public bool JobActive
 		{
@@ -136,7 +135,6 @@ namespace sar.CNC
 					
 					state = ProcessState.CheckIfOnline;
 					break;
-					
 				case ProcessState.CheckIfOnline:
 					if (this.parser.Open)
 					{
@@ -150,7 +148,6 @@ namespace sar.CNC
 					}
 					
 					break;
-					
 				case ProcessState.CheckSettings:
 					var settings = new List<string>();
 					settings.Add("$0=10");			// (step pulse, usec)
@@ -213,8 +210,6 @@ namespace sar.CNC
 					
 					state = ProcessState.Idle;
 					break;
-					
-
 				case ProcessState.Idle:
 					if (statusCheck.Ready)
 					{
@@ -226,8 +221,6 @@ namespace sar.CNC
 					}
 					
 					break;
-					
-					
 				case ProcessState.WriteOutput:
 					state = ProcessState.Idle;
 					while (this.PlannerBlocksAvailble > 0)
@@ -259,13 +252,11 @@ namespace sar.CNC
 					}
 					
 					break;
-					
 				case ProcessState.CheckStatus:
 					state = ProcessState.Idle;
 					
 					var status = this.parser.ReadStaus();
 					if (status == null) return;
-
 					
 					this.PlannerBlocksAvailble = status.PlannerBlocksAvailble;
 					this.RxBufferBytesAvailble = status.RxBufferBytesAvailble;
@@ -290,7 +281,6 @@ namespace sar.CNC
 					break;
 			}
 		}
-		
 		
 		public void QueueCommand(string ncCommand)
 		{

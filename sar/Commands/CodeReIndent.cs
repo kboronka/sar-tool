@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -130,8 +130,7 @@ namespace sar.Commands
 									// ******************** Level Down Before Print *************************** //
 									// single level
 									if (StringHelper.StartsWith(temp, new List<string>() { "Loop", "Next", "End", "End If", "ElseIf", "#End If", "#ElseIf", "#Else", "Catch", "Finally", "End Try", "End Select", "End Sub", "End Function", "End Enum", "Case" }) ||
-									    (firstword == "Else" && !temp.StartsWith("Else :"))
-									   )
+									    (firstword == "Else" && !temp.StartsWith("Else :")))
 									{
 										level--;
 									}
@@ -162,7 +161,7 @@ namespace sar.Commands
 									if (correction < 0) correction = 0;
 									newlines.Add(new String('\t', correction) + (linecontinue ? new String(' ', 2) : "") + newline);
 									
-									linecontinue = StringHelper.EndsWith(temp, new List<string>() { "_" } ) & !meta;
+									linecontinue = StringHelper.EndsWith(temp, new List<string>() { "_" }) & !meta;
 									
 									// ******************** Level Up after line *************************** //
 									if (StringHelper.EndsWith(temp, new List<string>() { "Then", "Else", "#ElseIf", "#Else" }) ||
@@ -216,7 +215,6 @@ namespace sar.Commands
 					ConsoleHelper.WriteException(ex);
 				}
 			}
-			
 			
 			ConsoleHelper.WriteLine(counter.ToString() + " File" + ((counter != 1) ? "s" : "") + " Checked", ConsoleColor.DarkYellow);
 			return ConsoleHelper.EXIT_OK;

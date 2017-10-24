@@ -1,4 +1,4 @@
-/* Copyright (C) 2016 Kevin Boronka
+﻿/* Copyright (C) 2016 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -17,7 +17,7 @@ using System;
 using System.ServiceProcess;
 using System.Threading;
 
-using Base=sar.Base;
+using Base = sar.Base;
 using sar.Tools;
 
 namespace sar.CNC
@@ -56,7 +56,6 @@ namespace sar.CNC
 					catch (Exception ex)
 					{
 						ConsoleHelper.WriteException(ex);
-
 					}
 					
 					Progress.Stop();

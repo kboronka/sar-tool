@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -73,7 +73,6 @@ namespace sar.Http
 				{
 					sessions += session.Key + " - " + session.Value.CreationDate.ToString() + "\n";
 				}
-				
 				
 				baseContent.Add("TotalSessions", new HttpContent(totalSessions));
 				baseContent.Add("Sessions", new HttpContent(sessions));

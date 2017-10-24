@@ -62,7 +62,6 @@ namespace sar.CNC
 				{
 					port.Close();
 				}
-				
 			}
 		}
 		
@@ -142,6 +141,7 @@ namespace sar.CNC
 			{
 				Logger.Log("  time -> " + totalTime.ToString() + "ms");
 			}
+
 			return responce;
 		}
 		

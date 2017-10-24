@@ -41,7 +41,7 @@ namespace sar.CNC
 			root += @"\views";
 			#endif
 			Engine.HttpServer = new HttpServer(root);
-			Engine.HttpServer.FavIcon = "favicon.ico";		
+			Engine.HttpServer.FavIcon = "favicon.ico";
 			Logger.Log("HTTP server running on port " + Engine.HttpServer.Port.ToString());
 
 			// load settings from XML
@@ -50,7 +50,7 @@ namespace sar.CNC
 			// TODO: find the correct comm port automatically
 			Logger.Log("Starting GRBL");
 			var serialPorts = SerialPort.GetPortNames();
-			Engine.Parameters.CommPort = serialPorts[0];			
+			Engine.Parameters.CommPort = serialPorts[0];
 			
 			// create grbl object
 			Port = new Grbl(Engine.Parameters.CommPort);

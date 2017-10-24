@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -62,11 +62,11 @@ namespace sar_testing.Http
 			int alternate = 1;
 			
 			var rand = new Random();
-			rand.Next(100,220);
+			rand.Next(100, 220);
 			
-			int offset = rand.Next(100,220);
+			int offset = rand.Next(100, 220);
 			
-			for (int columnNumber=1; columnNumber<=10; columnNumber++)
+			for (int columnNumber = 1; columnNumber <= 10; columnNumber++)
 			{
 				if (alternate > 2) alternate = 1;
 				var labelJSON = new Dictionary<string, object>();

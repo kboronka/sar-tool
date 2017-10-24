@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -31,7 +31,6 @@ namespace sar.Commands
 		{
 		}
 		
-		
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -52,7 +51,6 @@ namespace sar.Commands
 			
 			if (foundDirectories.Count == 0) throw new ApplicationException("\"" + filePattern + "\" Folders not found in \"" + root + "\"");
 			
-			
 			var subDirectories = new List<string>();
 			var files = new List<string>();
 			
@@ -62,7 +60,7 @@ namespace sar.Commands
 				{
 					foreach (string subDirectory in IO.GetAllDirectories(directory))
 					{
-						ConsoleHelper.Write("found: " , ConsoleColor.Cyan);
+						ConsoleHelper.Write("found: ", ConsoleColor.Cyan);
 						ConsoleHelper.WriteLine(StringHelper.TrimStart(subDirectory, root.Length));
 					}
 				}
@@ -80,7 +78,6 @@ namespace sar.Commands
 				
 				files.AddRange(IO.GetAllFiles(directory));
 			}
-
 
 			if (!this.commandHub.NoWarning)
 			{

@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -177,7 +177,6 @@ namespace sar.Socket
 				this.Log(ex);
 			}
 		}
-		
 
 		protected override void Dispose(bool disposing)
 		{
@@ -196,7 +195,6 @@ namespace sar.Socket
 		{
 			
 		}
-		
 		
 		public override void Stop()
 		{
@@ -266,8 +264,6 @@ namespace sar.Socket
 						}
 
 						break;
-						
-						
 					case "get":
 						lock (this.memCache)
 						{
@@ -275,7 +271,6 @@ namespace sar.Socket
 						}
 						
 						break;
-						
 					case "get-all":
 						lock (this.memCache)
 						{
@@ -300,6 +295,7 @@ namespace sar.Socket
 		#region service
 		
 		#region listners
+
 		private Thread listenerLoopThread;
 		private bool listenerLoopShutdown = false;
 		
@@ -329,7 +325,6 @@ namespace sar.Socket
 					Thread.Sleep(5000);
 				}
 			}
-			
 			
 			// shutdown listner
 			try
@@ -382,7 +377,6 @@ namespace sar.Socket
 					Thread.Sleep(5000);
 				}
 			}
-			
 			
 			// shutdown clients
 			try

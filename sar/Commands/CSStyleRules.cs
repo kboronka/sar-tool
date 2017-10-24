@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -124,7 +124,7 @@ namespace sar.Commands
 					content = content.Replace(match.Value, placeholder);
 					strings.Add(placeholder, match.Value);
 				}
-			}			
+			}
 			
 			return strings;
 		}
@@ -233,7 +233,6 @@ namespace sar.Commands
 		public static List<SearchResultMatch> FixBrackets(ref string content)
 		{
 			var results = new List<SearchResultMatch>();
-			
 
 			// remove empty lines before a closing backet
 			results.AddRange(IO.SearchAndReplace(ref content,
@@ -258,7 +257,6 @@ namespace sar.Commands
 			return results;
 		}
 		
-		
 		public static List<SearchResultMatch> FixSpaces(ref string content)
 		{
 			var results = new List<SearchResultMatch>();
@@ -278,7 +276,6 @@ namespace sar.Commands
 			                                     @"[ \t]+,",
 			                                     ",",
 			                                     "remove extra spaces before ','"));
-			
 			
 			// add a space before =
 			results.AddRange(IO.SearchAndReplace(ref content,

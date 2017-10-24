@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration.Install;
 using System.Reflection;
@@ -26,7 +26,7 @@ namespace sar.CNC.Commands
 			
 			Progress.Message = "Uninstalling Service";
 			
-			var installArgs = new List<string>();		
+			var installArgs = new List<string>();
 			installArgs.Add(@"/u");
 			installArgs.Add(@"/LogToConsole = false");
 			installArgs.Add(Assembly.GetExecutingAssembly().Location);

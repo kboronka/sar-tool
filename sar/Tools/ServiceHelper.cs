@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -63,8 +63,7 @@ namespace sar.Tools
 				results = Shell.Run(installUtil, "/i " + IO.GetFilename(serviceFilePath), IO.GetRoot(serviceFilePath));
 			}
 			
-			if (results.ExitCode != Shell.EXIT_OK) throw new Exception ("Failed to install " + serviceName);
-			
+			if (results.ExitCode != Shell.EXIT_OK) throw new Exception("Failed to install " + serviceName);
 		}
 		
 		public static void Uninstall(string dotNetVersion, string serviceFilePath)
@@ -78,7 +77,7 @@ namespace sar.Tools
 			string dotNetFolder = IO.FindDotNetFolder(dotNetVersion);
 			string installUtil = IO.FindFile(dotNetFolder, "Installutil.exe");
 			ShellResults results = Shell.Run(installUtil, "/u " + IO.GetFilename(serviceFilePath), IO.GetRoot(serviceFilePath));
-			if (results.ExitCode != Shell.EXIT_OK) throw new Exception ("Failed to uninstall " + serviceName);
+			if (results.ExitCode != Shell.EXIT_OK) throw new Exception("Failed to uninstall " + serviceName);
 		}
 		
 		public static bool TryUninstall(string serviceFilePath)
@@ -125,7 +124,7 @@ namespace sar.Tools
 			{
 				if (!String.IsNullOrEmpty(results.Output)) ConsoleHelper.DebugWriteLine("output: " + results.Output);
 				if (!String.IsNullOrEmpty(results.Error)) ConsoleHelper.DebugWriteLine("output: " + results.Error);
-				throw new Exception ("Failed to start " + serviceName);
+				throw new Exception("Failed to start " + serviceName);
 			}
 		}
 		
@@ -154,7 +153,7 @@ namespace sar.Tools
 			if (results.ExitCode != Shell.EXIT_OK)
 			{
 				ConsoleHelper.DebugWriteLine(results.Output);
-				throw new Exception ("Failed to stop " + serviceName);
+				throw new Exception("Failed to stop " + serviceName);
 			}
 		}
 		
@@ -170,7 +169,6 @@ namespace sar.Tools
 				return false;
 			}
 		}
-
 		
 		// group type enum
 		public enum SECURITY_IMPERSONATION_LEVEL : int
@@ -182,16 +180,16 @@ namespace sar.Tools
 		}
 		
 		// obtains user token
-		[DllImport("advapi32.dll", SetLastError=true)]
+		[DllImport("advapi32.dll", SetLastError = true)]
 		public static extern bool LogonUser(string pszUsername, string pszDomain, string pszPassword,
 		                                    int dwLogonType, int dwLogonProvider, ref IntPtr phToken);
 
 		// closes open handes returned by LogonUser
-		[DllImport("kernel32.dll", CharSet=CharSet.Auto)]
+		[DllImport("kernel32.dll", CharSet = CharSet.Auto)]
 		public extern static bool CloseHandle(IntPtr handle);
 
 		// creates duplicate token handle
-		[DllImport("advapi32.dll", CharSet=CharSet.Auto, SetLastError=true)]
+		[DllImport("advapi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 		public extern static bool DuplicateToken(IntPtr ExistingTokenHandle,
 		                                         int SECURITY_IMPERSONATION_LEVEL, ref IntPtr DuplicateTokenHandle);
 		

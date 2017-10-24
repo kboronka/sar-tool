@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -64,7 +64,6 @@ namespace sar.Commands
 			
 			var tempPath = Path.Combine(tempFolder, Guid.NewGuid().ToString() + "." + extension);
 
-
 			ConsoleHelper.Run(svn, " export " + repo.QuoteDouble() + " " + tempPath.QuoteDouble());
 			
 			var content = IO.ReadFile(tempPath);
@@ -77,7 +76,7 @@ namespace sar.Commands
 			
 			if (match.Success)
 			{
-				var version = match.Groups[1].Value;				
+				var version = match.Groups[1].Value;
 				return version;
 			}
 			

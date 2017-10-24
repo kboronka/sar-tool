@@ -50,7 +50,6 @@ namespace sar.CNC
 			}
 		}
 		
-		
 		private static Stopwatch runStopWatch;
 		private static long runTime = 0;
 
@@ -100,7 +99,6 @@ namespace sar.CNC
 				motionBuffer = Convert.ToInt32(reMatch.Groups[8].Value);
 				rxBuffer = Convert.ToInt32(reMatch.Groups[9].Value);
 			}
-			
 			
 			if (runStopWatch != null)
 			{

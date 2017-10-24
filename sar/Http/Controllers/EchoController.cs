@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -38,7 +38,7 @@ namespace sar.Http
 				var result = new Dictionary<string, object>();
 				result.Add("request", Encoding.ASCII.GetString(request.Data));
 				result.Add("guid", Guid.NewGuid().ToString());
-				result.Add("html", @"<h1 class=""page-header"">" + request.Data + @"</h1><br/>" );
+				result.Add("html", @"<h1 class=""page-header"">" + request.Data + @"</h1><br/>");
 				
 				if (Encoding.ASCII.GetString(request.Data) == "error") throw new ApplicationException("error test");
 				

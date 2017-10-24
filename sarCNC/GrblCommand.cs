@@ -13,7 +13,6 @@ namespace sar.CNC
 		private bool completed = false;
 		private bool active = false;
 		
-		
 		private DateTime queuedTimestamp;
 		private DateTime sentTimestamp;
 		
@@ -21,6 +20,7 @@ namespace sar.CNC
 		public string Comment { get; private set; }
 		public string Command { get; private set; }
 		public bool Active { get; set; }
+
 		public string Responce
 		{
 			get { return responce; }

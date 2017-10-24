@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -100,7 +100,7 @@ namespace sar.Http
 			if (File.Exists(filePath))
 			{
 				var request = filePath.Substring(server.Root.Length + 1).ToLower();
-				var newFile = new HttpCachedFile(filePath);				
+				var newFile = new HttpCachedFile(filePath);
 				this.cache.Add(request, newFile);
 				
 				return newFile;

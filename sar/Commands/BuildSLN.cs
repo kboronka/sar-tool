@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -27,7 +27,7 @@ namespace sar.Commands
 		public BuildSLN(Base.CommandHub parent) : base(parent, "Build - .NET soultion",
 		                                               new List<string> { "build.net", "b.net" },
 		                                               "-b.net [.net version] [solution_path] [msbuild arguments]",
-		                                               new List<string> { "-b.net 3.5 sar.sln /p:Configuration=Release /p:Platform=\"x86\"" })
+		                                               new List<string> { "-b.net 3.5 sar.sln /p:Configuration = Release /p:Platform = \"x86\"" })
 		{
 			
 		}
@@ -88,7 +88,6 @@ namespace sar.Commands
 			{
 				throw new ApplicationException("unsupported project type");
 			}
-		
 
 		string arguments = "\"" + soultionPath + "\"";
 		

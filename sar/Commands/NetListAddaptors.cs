@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -30,7 +30,6 @@ namespace sar.Commands
 		{
 		}
 		
-		
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -53,7 +52,6 @@ namespace sar.Commands
 				ConsoleHelper.Write(adapter.IPAddress + " " + adapter.SubnetMask);
 				ConsoleHelper.WriteLine();
 			}
-			
 			
 			return ConsoleHelper.EXIT_OK;
 		}

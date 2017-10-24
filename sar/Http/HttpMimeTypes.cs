@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -27,6 +27,7 @@ namespace sar.Http
 		{
 			IDictionary<string, string> mimeTypes = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) {
 				#region list of mime types
+
 				{".323", "text/h323"},
 				{".3g2", "video/3gpp2"},
 				{".3gp", "video/3gpp"},
@@ -591,8 +592,10 @@ namespace sar.Http
 				{".woff", "application/font-woff"},
 				{".woff2", "application/font-woff2"},
 				{".json", "text/plain"}
+
 				// {".json", "application/json"}
 				#endregion
+
 			};
 			
 			if (extension == null)

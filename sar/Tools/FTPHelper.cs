@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -62,7 +62,6 @@ namespace sar.Tools
 
 			var ftpResponce = (FtpWebResponse)ftpRequest.GetResponse();
 			var ftpStream = ftpResponce.GetResponseStream();
-
 			
 
 			var buffer = new Byte[2048];
@@ -87,6 +86,6 @@ namespace sar.Tools
 			var writeStream = new FileStream(root + @"\" + file, FileMode.Create);
 			writeStream.Write(buffer, 0, buffer.Length);
 			writeStream.Close();
-		}		
+		}
 	}
 }

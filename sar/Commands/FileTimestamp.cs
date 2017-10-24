@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -66,6 +66,6 @@ namespace sar.Commands
 			
 			ConsoleHelper.WriteLine("file renamed to " + filepathNew, ConsoleColor.DarkYellow);
 			return ConsoleHelper.EXIT_OK;
-		}		
+		}
 	}
 }

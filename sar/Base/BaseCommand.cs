@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -28,7 +28,7 @@ namespace sar.Base
 		private string name;
 		
 		private List<string> commands;
-		private delegate int FunctionPointer (string[] args);
+		private delegate int FunctionPointer(string[] args);
 		public Delegate function;
 		
 		protected CommandHub commandHub;

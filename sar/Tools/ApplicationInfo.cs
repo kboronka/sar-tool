@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -127,8 +127,7 @@ namespace sar.Tools
 		[return: MarshalAs(UnmanagedType.Bool)]
 		private static extern bool IsWow64Process(
 			[In] IntPtr hProcess,
-			[Out] out bool wow64Process
-		);
+			[Out] out bool wow64Process);
 
 		private static bool isWow64;
 		private static bool isWow64completed;
@@ -214,6 +213,5 @@ namespace sar.Tools
 				}
 			}
 		}
-		
 	}
 }

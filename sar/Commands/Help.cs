@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -92,19 +92,19 @@ namespace sar.Commands
 				
 				ConsoleHelper.Write("\t" + @"/");
 				ConsoleHelper.Write("svn", ConsoleColor.Yellow);
-				ConsoleHelper.WriteLine(": include svn folders");		
+				ConsoleHelper.WriteLine(": include svn folders");
 				
 				ConsoleHelper.Write("\t" + @"/");
 				ConsoleHelper.Write("nosubfolders", ConsoleColor.Yellow);
-				ConsoleHelper.WriteLine(": do not search subfolders");	
+				ConsoleHelper.WriteLine(": do not search subfolders");
 
 				ConsoleHelper.Write("\t" + @"/");
 				ConsoleHelper.Write("loop", ConsoleColor.Yellow);
-				ConsoleHelper.WriteLine(": run command in an endless loop");				
+				ConsoleHelper.WriteLine(": run command in an endless loop");
 
 				ConsoleHelper.Write("\t" + @"/");
 				ConsoleHelper.Write("pause", ConsoleColor.Yellow);
-				ConsoleHelper.WriteLine(": pause after command completes");	
+				ConsoleHelper.WriteLine(": pause after command completes");
 
 				ConsoleHelper.Write("\t" + @"/");
 				ConsoleHelper.Write("admin", ConsoleColor.Yellow);
@@ -119,7 +119,7 @@ namespace sar.Commands
 				
 				ConsoleHelper.Write("\t" + @"");
 				ConsoleHelper.Write("(time)", ConsoleColor.Yellow);
-				ConsoleHelper.WriteLine(": replaced with current time");			
+				ConsoleHelper.WriteLine(": replaced with current time");
 			}
 			
 			return ConsoleHelper.EXIT_OK;

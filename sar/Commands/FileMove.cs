@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -79,7 +79,6 @@ namespace sar.Commands
 							string fileRelativePath = StringHelper.TrimStart(originalFile, searchRoot.Length);
 							string backupFile = archiveRoot + originalFile.Substring(searchRoot.Length);
 							string backupRoot = IO.GetRoot(backupFile);
-
 							
 							Progress.Message = "Moving " + fileRelativePath;
 							counter++;

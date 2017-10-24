@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -134,7 +134,6 @@ namespace sar.Tools
 					V	// View
 				 */
 				
-				
 				switch (this.type)
 				{
 					case SqlObjectType.FN:
@@ -152,12 +151,12 @@ namespace sar.Tools
 					case SqlObjectType.V:
 						return "View";
 				}
+
 				return this.name;
 			}
 		}
 
 		#endregion
-
 		
 		private DatabaseObject(string name, SqlObjectType type)
 		{
@@ -189,7 +188,6 @@ namespace sar.Tools
 					}
 					
 					return result.TrimWhiteSpace();
-					
 				case SqlObjectType.U:
 					var createTableScript = EmbeddedResource.Get(@"sar.Databases.MSSQL.CreateTable.sql");
 					var script = Encoding.ASCII.GetString(createTableScript);
@@ -209,7 +207,6 @@ namespace sar.Tools
 					}
 					
 					return result.TrimWhiteSpace();
-
 				default:
 					using (var command = new SqlCommand("sp_helptext " + this.name.QuoteSingle(), connection))
 					{
@@ -275,7 +272,6 @@ namespace sar.Tools
 					}
 					
 					return result.TrimWhiteSpace();
-
 				default:
 					throw new ApplicationException("object is not a table");
 			}

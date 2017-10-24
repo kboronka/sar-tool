@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -70,7 +70,6 @@ namespace sar.Testing
 			this.loop.Join();
 		}
 		
-		
 		private void TestLoop()
 		{
 			var logTrigger = new Interval(1000, 5000);
@@ -82,7 +81,6 @@ namespace sar.Testing
 				Thread.Sleep(670);
 			}
 		}
-		
 		
 		void Button1Click(object sender, EventArgs e)
 		{
@@ -141,7 +139,6 @@ namespace sar.Testing
 
 			System.Diagnostics.Debug.WriteLine(data);
 			
-			
 			var json = new Dictionary<string, object>();
 			json.Add("test", @"c:\test\ 102/103 ""abc efg""");
 			
@@ -159,7 +156,7 @@ namespace sar.Testing
 		
 		void MakeSocketClick(object sender, EventArgs e)
 		{
-			for (var x=0;x<1000; x++)
+			for (var x = 0;x<1000; x++)
 			{
 				for (var i = 0; i<100; i++)
 				{
@@ -200,7 +197,6 @@ namespace sar.Testing
 			testList.Add("\"test\" 1");
 			
 			kvp.Add("groups", testList);
-			
 			
 			var output = kvp.ToJson();
 			

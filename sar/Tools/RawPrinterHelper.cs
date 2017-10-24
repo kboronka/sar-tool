@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -83,7 +83,7 @@ namespace sar.Tools
                 ClosePrinter(printerHandle);
             }
             
-			Int32 dwError = 0;            
+			Int32 dwError = 0;
             if (success == false) dwError = Marshal.GetLastWin32Error();
 
             return success;

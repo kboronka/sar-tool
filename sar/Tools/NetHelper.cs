@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -23,7 +23,6 @@ using System.Net.NetworkInformation;
 using System.Threading;
 using sar.Tools;
 using System.Net;
-
 
 namespace sar.Tools
 {
@@ -55,7 +54,6 @@ namespace sar.Tools
 			{
 				found = Ping(ip);
 				if (found != expected) Thread.Sleep(10);
-				
 			} while (found != expected && (!(timer.ElapsedMilliseconds > timeout) || timeout == -1));
 			
 			return (found == expected);
@@ -138,15 +136,14 @@ namespace sar.Tools
 				end = ipconfig.IndexOf(next + ":", start + 1);
 				if (end < start) end = ipconfig.Length;
 				
-				
 				string details = ipconfig.Substring(start, end - start);
 
-				string mediaState = 		StringHelper.RegexFindString(details, "Media State . . . . . . . . . . . : (.+)\n");
-				string physicalAddress = 	StringHelper.RegexFindString(details, "Physical Address. . . . . . . . . : (.+)\n");
-				string DHCP = 				StringHelper.RegexFindString(details, "DHCP Enabled. . . . . . . . . . . : (.+)\n");
-				string ip = 				StringHelper.RegexFindString(details, "IPv4 Address. . . . . . . . . . . : (.+)\n");
-				string mask = 				StringHelper.RegexFindString(details, "Subnet Mask . . . . . . . . . . . : (.+)\n");
-				string gateway = 			StringHelper.RegexFindString(details, "Default Gateway . . . . . . . . . : (.+)\n");
+				string mediaState = StringHelper.RegexFindString(details, "Media State . . . . . . . . . . . : (.+)\n");
+				string physicalAddress = StringHelper.RegexFindString(details, "Physical Address. . . . . . . . . : (.+)\n");
+				string DHCP = StringHelper.RegexFindString(details, "DHCP Enabled. . . . . . . . . . . : (.+)\n");
+				string ip = StringHelper.RegexFindString(details, "IPv4 Address. . . . . . . . . . . : (.+)\n");
+				string mask = StringHelper.RegexFindString(details, "Subnet Mask . . . . . . . . . . . : (.+)\n");
+				string gateway = StringHelper.RegexFindString(details, "Default Gateway . . . . . . . . . : (.+)\n");
 				
 				if (!string.IsNullOrEmpty(ip) && ip.Contains("("))
 				{
@@ -175,7 +172,6 @@ namespace sar.Tools
 				ConsoleHelper.DebugWriteLine("gateway:\t" + StringHelper.AddQuotes(gateway));
 				ConsoleHelper.DebugWriteLine(ConsoleHelper.HR);
 			} while (!String.IsNullOrEmpty(name));
-
 			
 			return adapters;
 		}

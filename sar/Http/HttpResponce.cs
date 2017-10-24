@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -181,7 +181,6 @@ namespace sar.Http
 				
 				response += eol;
 			}
-			
 			
 			return (contentBytes.Length > 0) ? StringHelper.CombineByteArrays(Encoding.ASCII.GetBytes(response), contentBytes) : Encoding.ASCII.GetBytes(response);
 		}

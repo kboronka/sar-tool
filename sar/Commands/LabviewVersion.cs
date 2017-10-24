@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -56,7 +56,6 @@ namespace sar.Commands
 			ConsoleHelper.DebugWriteLine("pattern: " + filePattern);
 			ConsoleHelper.DebugWriteLine("root: " + root);
 			if (files.Count == 0) throw new FileNotFoundException("unable to find any files that match pattern: \"" + filePattern + "\" in root: \"" + root + "\"");
-
 			
 			int changes = 0;
 			int counter = 0;

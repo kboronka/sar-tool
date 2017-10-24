@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -130,7 +130,6 @@ namespace sar.Tools
 			
 			string pattern = "*.*";
 			
-			
 			// handle filepaths in root
 			if (!Directory.Exists(root) && root.Contains("*"))
 			{
@@ -238,7 +237,6 @@ namespace sar.Tools
 				pattern = pattern.Substring(pattern.LastIndexOf(@"\") + 1, pattern.Length - pattern.LastIndexOf(@"\") - 1);
 			}
 			
-			
 			if (root.Substring(root.Length - 1) != "\\") root += "\\";
 		}
 		
@@ -275,7 +273,6 @@ namespace sar.Tools
 					lines++;
 				}
 			}
-				
 			
 			return lines;
 		}
@@ -410,7 +407,7 @@ namespace sar.Tools
 			return encoding;
 		}
 		
-		private static FileStream WaitForFile (string path, FileMode mode, FileAccess access, FileShare share)
+		private static FileStream WaitForFile(string path, FileMode mode, FileAccess access, FileShare share)
 		{
 			// check if file is locked by another application
 			for (int attempts = 0; attempts < 10; attempts++)
@@ -487,7 +484,6 @@ namespace sar.Tools
 			
 			WriteFileLines(filepath, linesList);
 		}
-		
 		
 		public static string LinesToString(string[] lines)
 		{
@@ -659,7 +655,6 @@ namespace sar.Tools
 				throw new NullReferenceException("root was not specified");
 			}
 			
-			
 			IO.CheckRootAndPattern(ref root, ref filepattern);
 			List<string> files = IO.GetAllFiles(root, filepattern);
 			
@@ -686,7 +681,7 @@ namespace sar.Tools
 			
 			foreach (string path in Directory.GetDirectories(msbuildFolder))
 			{
-				string version = path.Remove(0,path.LastIndexOf('\\')+1).Substring(1,3);
+				string version = path.Remove(0, path.LastIndexOf('\\')+1).Substring(1, 3);
 				string msBuildPath = path + @"\MSBuild.exe";
 				string vbcBuildPath = path + @"\vbc.exe";
 				string cbcBuildPath = path + @"\cbc.exe";
@@ -708,7 +703,7 @@ namespace sar.Tools
 			
 			foreach (string path in Directory.GetDirectories(msbuildFolder))
 			{
-				string version = path.Remove(0,path.LastIndexOf('\\')+1).Substring(1,3);
+				string version = path.Remove(0, path.LastIndexOf('\\')+1).Substring(1, 3);
 				string msBuildPath = path + @"\MSBuild.exe";
 				string vbcBuildPath = path + @"\vbc.exe";
 				string cbcBuildPath = path + @"\cbc.exe";
@@ -863,7 +858,6 @@ namespace sar.Tools
 
 			RNGCryptoServiceProvider randomData = new RNGCryptoServiceProvider();
 
-
 			File.SetAttributes(path, FileAttributes.Normal);
 			FileStream stream = new FileStream(path, FileMode.Open);
 			stream.Position = 0;
@@ -1007,5 +1001,6 @@ namespace sar.Tools
 		}
 		
 		#endregion
+
 	}
 }

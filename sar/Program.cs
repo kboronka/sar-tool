@@ -58,7 +58,9 @@ namespace sar
 				args = new string[] { "dotNetVersions", @"/pause" };
 				args = new string[] { "r", "test.cs", @"break;\r\n(.*)case", @"break;\n\n\n$1case", @"/pause" };
 				args = new string[] { "c.c", @"C:\Users\kboronka\Desktop\Manual", @"/pause" };
+				args = new string[] { "c.c", @"C:\Users\kboronka\Documents\SharpDevelop Projects\sar", @"/pause" };
 				 */
+				
 				
 				#endif				
 				

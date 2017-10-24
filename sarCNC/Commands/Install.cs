@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration.Install;
 using System.Reflection;
@@ -29,7 +29,6 @@ namespace sar.CNC.Commands
 			var installArgs = new List<string>();
 			installArgs.Add(@"/LogToConsole = false");
 			installArgs.Add(Assembly.GetExecutingAssembly().Location);
-			
 			
 			ManagedInstallerClass.InstallHelper(installArgs.ToArray());
 			

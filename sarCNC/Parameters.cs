@@ -45,7 +45,6 @@ namespace sar.CNC
 							case "CommPort":
 								CommPort = reader.GetValueString();
 								break;
-								
 							case "CamFile":
 								CamFiles.Add(reader.GetValueString());
 								break;
@@ -81,5 +80,6 @@ namespace sar.CNC
 		}
 		
 		#endregion
+
 	}
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Kevin Boronka
+﻿/* Copyright (C) 2017 Kevin Boronka
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -42,7 +42,6 @@ namespace sar.Http
 		public NetworkStream Stream { get; private set; }
 		public TcpClient Socket { get; set; }
 		
-		
 		public HttpConnection(HttpServer parent, TcpClient socket)
 		{
 			this.Open = true;
@@ -63,7 +62,7 @@ namespace sar.Http
 			this.timeoutMonitorThread.Name = "HttpConnection Timeout Monitor " + clientIp;
 			this.timeoutMonitorThread.Priority = ThreadPriority.Lowest;
 			this.timeoutMonitorThread.IsBackground = true;
-			this.timeoutMonitorThread.Start();			
+			this.timeoutMonitorThread.Start();
 		}
 		
 		~HttpConnection()
@@ -107,7 +106,6 @@ namespace sar.Http
 
 			disposed = true;
 		}
-		
 		
 		#region timeout monitor
 		
@@ -196,7 +194,6 @@ namespace sar.Http
 								// TODO: close connection?
 							}
 						}
-						
 						
 						if (request.IsWebSocket)
 						{
