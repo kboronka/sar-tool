@@ -263,4 +263,7 @@
     <EmbeddedResource Include="Databases\MSSQL\CreateTableType.sql" />
     <EmbeddedResource Include="Databases\MSSQL\GetObjects.sql" />
   </ItemGroup>
+  <PropertyGroup>
+    <PreBuildEvent>"$(SolutionDir)release\sar.exe" c.c "$(ProjectDir)."</PreBuildEvent>
+  </PropertyGroup>
 </Project>
