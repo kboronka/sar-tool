@@ -48,7 +48,6 @@ namespace sar.Tools
 			cpu = new PerformanceCounter("Process", "% Processor Time", p.ProcessName);
 		}
 
-
 		private static Preformance Singleton
 		{
 			get

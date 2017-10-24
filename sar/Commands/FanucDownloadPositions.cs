@@ -17,8 +17,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-using sar.Tools;
 using sar.Base;
+using sar.Tools;
 
 // TODO: add FanucDownloadLoggedImages
 namespace sar.Commands
@@ -61,7 +61,6 @@ namespace sar.Commands
 			
 			return ConsoleHelper.EXIT_OK;
 		}
-		
 	}
 }
 

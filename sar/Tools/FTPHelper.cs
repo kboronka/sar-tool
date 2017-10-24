@@ -62,7 +62,6 @@ namespace sar.Tools
 
 			var ftpResponce = (FtpWebResponse)ftpRequest.GetResponse();
 			var ftpStream = ftpResponce.GetResponseStream();
-			
 
 			var buffer = new Byte[2048];
 			int bytesread = 0;

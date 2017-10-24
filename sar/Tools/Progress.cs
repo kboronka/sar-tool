@@ -14,8 +14,9 @@
  */
 
 using System;
-using System.Timers;
 using System.Threading;
+using System.Timers;
+
 using sar.Tools;
 
 namespace sar.Tools

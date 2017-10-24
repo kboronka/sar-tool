@@ -15,10 +15,11 @@
 
 using System;
 using System.Collections.Generic;
+
 using Microsoft.Win32;
 
-using sar.Tools;
 using sar.Base;
+using sar.Tools;
 
 namespace sar.Commands
 {

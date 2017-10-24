@@ -18,8 +18,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 
-using sar.Tools;
 using sar.Base;
+using sar.Tools;
 
 namespace sar.Commands
 {
