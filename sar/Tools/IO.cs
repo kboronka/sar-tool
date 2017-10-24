@@ -262,7 +262,7 @@ namespace sar.Tools
 			return files;
 		}
 		
-		private static int GetLineNumber(string content, int index)
+		public static int GetLineNumber(string content, int index)
 		{
 			int lines = 1;
 			

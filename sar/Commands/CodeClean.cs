@@ -80,6 +80,7 @@ namespace sar.Commands
 							
 							string content = IO.ReadFileAsUtf8(file);
 							var strings = CSStyleRules.RemoveStrings(ref content);
+							changes.AddResults(CSStyleRules.SortUsingDirectives(ref content));
 							changes.AddResults(CSStyleRules.FixSemicolon(ref content));
 							changes.AddResults(CSStyleRules.FixSwitchStatements(ref content));
 							changes.AddResults(CSStyleRules.FixBraces(ref content));

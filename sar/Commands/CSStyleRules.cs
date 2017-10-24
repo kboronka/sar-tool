@@ -29,6 +29,8 @@ namespace sar.Commands
 	/// </summary>
 	public static class CSStyleRules
 	{
+		private static long placholderID;
+		
 		public static void Save(SearchResults results, string content)
 		{
 			if (results.Matches.Count > 0)
@@ -44,7 +46,6 @@ namespace sar.Commands
 			}
 		}
 		
-		private static long placholderID;
 		private static string GeneratePlaceholder()
 		{
 			return "PLACEHOLDER" + (placholderID++).ToString("0000000");
@@ -329,5 +330,76 @@ namespace sar.Commands
 			
 			return results;
 		}
+		
+		public static List<SearchResultMatch> SortUsingDirectives(ref string content)
+		{
+			var results = new List<SearchResultMatch>();
+			
+			// get all using directives
+			var matches = Regex.Matches(content, @"^using (.*);\r\n", RegexOptions.Multiline);
+			
+			if (matches.Count > 1)
+			{
+				var firstLine = IO.GetLineNumber(content, matches[0].Index);
+				var lastLine = IO.GetLineNumber(content, matches[matches.Count - 1].Index);
+				
+				var beforeLength = matches[matches.Count - 1].Index - matches[0].Index + matches[matches.Count - 1].Value.Length;
+				var before = content.Substring(matches[0].Index, beforeLength);
+				
+				var namespaces = new Dictionary<string, Match>();
+				foreach (Match match in matches)
+				{
+					var name = match.Groups[1].Value;
+					if (!namespaces.ContainsKey(name))
+					{
+						namespaces.Add(name, match);
+					}
+				}
+				
+				// get all toplevel namespaces
+				var topLevelNamespaces = new List<string>();
+				foreach (var name in namespaces.Keys)
+				{
+					var topLevel = name.Split('.')[0];
+					if (!topLevelNamespaces.Contains(topLevel))
+					{
+						topLevelNamespaces.Add(topLevel);
+					}
+				}
+				
+				topLevelNamespaces.Sort();
+				if (topLevelNamespaces.Contains("System"))
+				{
+					topLevelNamespaces.RemoveAll(t => t == "System");
+					topLevelNamespaces.Insert(0, "System");
+				}
+				
+				// re-generate list of using directives
+				var after = "";
+				for (var i = 0; i < topLevelNamespaces.Count; i++)
+				{
+					foreach (var name in namespaces.Where(n => n.Key.StartsWith(topLevelNamespaces[i])).OrderBy(n => n.Key))
+					{
+						after += "using " + name.Key + ";" + Environment.NewLine;
+					}
+					
+					if (i != topLevelNamespaces.Count - 1)
+					{
+						after += Environment.NewLine;
+					}
+				}
+			
+				if (after != before)
+				{
+					var lineNumber = IO.GetLineNumber(content, matches[0].Index);
+					results.Add(new SearchResultMatch(matches[0], lineNumber, "order or spacing of using directives"));
+					
+					content = content.Replace(before, after);
+				}
+			}
+			
+			return results;
+		}
+		
 	}
 }
