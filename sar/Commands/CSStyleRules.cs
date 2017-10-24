@@ -98,7 +98,7 @@ namespace sar.Commands
 				}
 			}
 			
-			// remove comment strings
+			// remove single line comments
 			matches = Regex.Matches(content, @"\/\/.*");
 			foundStrings = new List<string>();
 			foreach (Match match in matches)
@@ -111,6 +111,20 @@ namespace sar.Commands
 					strings.Add(placeholder, match.Value);
 				}
 			}
+			
+			// remove multi-line comments
+			matches = Regex.Matches(content, @"\/\*(?:.|\n)*(?:\s*\*\/)");
+			foundStrings = new List<string>();
+			foreach (Match match in matches)
+			{
+				if (!foundStrings.Contains(match.Value))
+				{
+					foundStrings.Add(match.Value);
+					placeholder = @"// " + GeneratePlaceholder();
+					content = content.Replace(match.Value, placeholder);
+					strings.Add(placeholder, match.Value);
+				}
+			}			
 			
 			return strings;
 		}
