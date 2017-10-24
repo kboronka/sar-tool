@@ -18,9 +18,6 @@ using System.Linq;
 
 using sar.Tools;
 
-// binary download: https://sar-tool.googlecode.com/svn/trunk/release/sar.exe
-// release download: https://sar-tool.googlecode.com/svn/tags/
-
 namespace sar
 {
 	public class Program : Base.Program
@@ -61,7 +58,6 @@ namespace sar
 				args = new string[] { "dotNetVersions", @"/pause" };
 				args = new string[] { "r", "test.cs", @"break;\r\n(.*)case", @"break;\n\n\n$1case", @"/pause" };
 				args = new string[] { "c.c", @"C:\Users\kboronka\Desktop\Manual", @"/pause" };
-				
 				 */
 				
 				#endif				
