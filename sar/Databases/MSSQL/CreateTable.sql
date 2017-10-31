@@ -62,16 +62,15 @@ SET @row = 1;
 SET @delimiter = '';
 WHILE (@row <= @rows)
 	BEGIN
-		SELECT 
-			@name=c.name
-			,@type=c.type
-			,@length=c.length
-			,@nullable=c.nullable
-		FROM @Columns c 
-		WHERE row=@row
+		SELECT @name = c.name,
+		       @type = c.type,
+		       @length = c.length,
+		       @nullable = c.nullable
+		  FROM @Columns c 
+		 WHERE row=@row
 		
 		IF @type = 'sql_variant' SET @length = null;
-		SET @line = N'[' + @name + N'] ' + @type 
+		SET @line = '[' + @name + '] ' + @type 
 		
 		IF @length>=0 SET @line = @line + '(' + cast(@length as varchar) + ')';
 		IF @length=-1 SET @line = @line + '(max)';
@@ -81,7 +80,7 @@ WHILE (@row <= @rows)
 		
 	
 		IF exists (select id from syscolumns where object_name(id)=@table and name=@name and columnproperty(id, name, 'IsIdentity') = 1) BEGIN
-			SET @definition = @definition + N' ' + 'IDENTITY(' + cast(ident_seed(@table) as varchar) + ',' + cast(ident_incr(@table) as varchar) + ')'
+			SET @line = @line + N' ' + 'IDENTITY(' + cast(ident_seed(@table) as varchar) + ',' + cast(ident_incr(@table) as varchar) + ')'
     END
 		
 		IF @row < @rows OR @PrimaryKeyName IS NOT null BEGIN
@@ -131,34 +130,34 @@ insert into @sql(s) values ( '' )
 -- **************************************************
 -- add missing columns
 -- **************************************************
+DECLARE @ident varchar(max)
 SET @rows = (SELECT COUNT(*) FROM @Columns)
 SET @row = 1;
 SET @delimiter = '';
 WHILE (@row <= @rows)
 	BEGIN
-		SELECT 
-			@name=c.name
-			,@type=c.type
-			,@length=c.length
-			,@nullable=c.nullable
-		FROM @Columns c 
-		WHERE row=@row
+		SELECT @name = c.name,
+		       @type = c.type,
+		       @length = c.length,
+		       @nullable = c.nullable
+		  FROM @Columns c 
+		 WHERE row=@row
 		
 		IF @type = 'sql_variant' SET @length = null;
-		SET @definition = N'[' + @name + N'] [' + @type + ']' 
+		SET @line = N'[' + @name + N'] [' + @type + ']' 
 
-		IF @length>=0 SET @definition = @definition + '(' + cast(@length as varchar) + ')';
-		IF @length=-1 SET @definition = @definition + '(max)';
+		IF @length>=0 SET @line = @line + '(' + cast(@length as varchar) + ')';
+		IF @length=-1 SET @line = @line + '(max)';
 		
-		
-		IF exists (select id from syscolumns where object_name(id)=@table and name=@name and columnproperty(id, name, 'IsIdentity') = 1)
-			SET @definition = @definition + N' ' + 'IDENTITY(' + cast(ident_seed(@table) as varchar) + ',' + cast(ident_incr(@table) as varchar) + ')'
+    IF exists (select id from syscolumns where object_name(id)=@table and name=@name and columnproperty(id, name, 'IsIdentity') = 1) BEGIN
+			SET @ident = 'IDENTITY(' + cast(ident_seed(@table) as varchar) + ',' + cast(ident_incr(@table) as varchar) + ')'
+    END		
 		
 		insert into @sql(s) values ( '' )
 		insert into @sql(s) values ( 'IF NOT EXISTS (SELECT * FROM sys.columns WHERE  object_id = OBJECT_ID(N''' + @table + ''') AND name = ''' + @name + ''') BEGIN' )
-		insert into @sql(s) values ( '  ALTER TABLE ' + @table + ' ADD ' + @definition )
-		insert into @sql(s) values ( 'ELSE' )
-		insert into @sql(s) values ( '  ALTER TABLE ' + @table + ' ALTER COLUMN ' + @definition )
+		insert into @sql(s) values ( '  ALTER TABLE ' + @table + ' ADD ' + @line + ' ' + @ident )
+		insert into @sql(s) values ( 'END ELSE BEGIN' )
+		insert into @sql(s) values ( '  ALTER TABLE ' + @table + ' ALTER COLUMN ' + @line )
 		insert into @sql(s) values ( 'END' )
 
 		SET @row = @row + 1
