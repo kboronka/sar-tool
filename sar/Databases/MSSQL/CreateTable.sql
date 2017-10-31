@@ -47,9 +47,8 @@ DECLARE @delimiter nvarchar(1)
 -- **************************************************
 -- create table
 -- **************************************************
-insert into @sql(s) values ( 'IF NOT EXISTS (SELECT * FROM sysobjects WHERE name=''' + @table +''' AND xtype=''U'')' )
-insert into @sql(s) values ( '  BEGIN' )
-insert into @sql(s) values ( '    CREATE TABLE [' + @table + '] (' )
+insert into @sql(s) values ( 'IF NOT EXISTS (SELECT * FROM sysobjects WHERE name=''' + @table +''' AND xtype=''U'') BEGIN' )
+insert into @sql(s) values ( '  CREATE TABLE [' + @table + '] (' )
 
 -- **************************************************
 -- columns
@@ -105,10 +104,8 @@ IF @PrimaryKeyName is not null
 			FROM information_schema.key_column_usage p
 			WHERE table_name = @table AND CONSTRAINT_NAME LIKE N'PK_%'
 			ORDER BY ordinal_position
-
-
 		
-		insert into @sql(s) values ('      ' + @delimiter + 'PRIMARY KEY (')
+		insert into @sql(s) values ('    ' + @delimiter + 'PRIMARY KEY (')
 
 		SET @row = 1;
 		SET @delimiter = '';
@@ -117,16 +114,16 @@ IF @PrimaryKeyName is not null
 			SET @name = (SELECT name FROM @PrimaryKeyColumns WHERE row = @row)
 			SET @definition = N'[' + @name + N'] '
 			
-			insert into @sql(s) values ( '        ' + @delimiter + @definition )
+			insert into @sql(s) values ( '      ' + @delimiter + @definition )
 			SET @delimiter = ','
 			SET @row = @row + 1
 		END
 		
-		insert into @sql(s) values ( '      ' + ')' )
+		insert into @sql(s) values ( '    ' + ')' )
 	END
 
-insert into @sql(s) values ( '    )' )
-insert into @sql(s) values ( '  END' )
+insert into @sql(s) values ( '  )' )
+insert into @sql(s) values ( 'END' )
 insert into @sql(s) values ( '' )
 -- **************************************************
 -- end of create table
@@ -159,12 +156,15 @@ WHILE (@row <= @rows)
 			SET @definition = @definition + N' ' + 'IDENTITY(' + cast(ident_seed(@table) as varchar) + ',' + cast(ident_incr(@table) as varchar) + ')'
 		
 		insert into @sql(s) values ( '' )
-		insert into @sql(s) values ( 'IF NOT EXISTS (SELECT * FROM sys.columns WHERE  object_id = OBJECT_ID(N''' + @table + ''') AND name = ''' + @name + ''')' )
-		insert into @sql(s) values ( '  BEGIN' )
-		insert into @sql(s) values ( '    ALTER TABLE ' + @table )
-		insert into @sql(s) values ( '      ADD ' + @definition )
-		insert into @sql(s) values ( '  END' )
-		
+		insert into @sql(s) values ( 'IF NOT EXISTS (SELECT * FROM sys.columns WHERE  object_id = OBJECT_ID(N''' + @table + ''') AND name = ''' + @name + ''') BEGIN' )
+		insert into @sql(s) values ( '  ALTER TABLE ' + @table + ' ADD ' + @definition )
+		insert into @sql(s) values ( 'END' )
+    
+    IF @type = 'varchar' OR @type = 'nvarchar' BEGIN
+      insert into @sql(s) values ( '' )
+      insert into @sql(s) values ( 'ALTER TABLE ' + @table + ' ALTER COLUMN ' + @definition )
+    END
+
 		SET @row = @row + 1
 	END
 
@@ -233,10 +233,9 @@ WHILE (@row <= @rows)
 			SET @definition = @definition + ' ON DELETE ' + @DeleteAction
 		
 		insert into @sql(s) values ( '' )
-		insert into @sql(s) values ( '' + 'IF NOT EXISTS (SELECT * FROM sys.objects o WHERE o.object_id = object_id(N''['+ @SC_Name +'].['+ @FK_Name +']'') AND OBJECTPROPERTY(o.object_id, N''IsForeignKey'') = 1)' )
-		insert into @sql(s) values ( '  ' + 'BEGIN' )
-		insert into @sql(s) values ( '    ' + 'ALTER TABLE ' +  @definition )
-		insert into @sql(s) values ( '  ' + 'END' )
+		insert into @sql(s) values ( '' + 'IF NOT EXISTS (SELECT * FROM sys.objects o WHERE o.object_id = object_id(N''['+ @SC_Name +'].['+ @FK_Name +']'') AND OBJECTPROPERTY(o.object_id, N''IsForeignKey'') = 1) BEGIN' )
+		insert into @sql(s) values ( '  ' + 'ALTER TABLE ' +  @definition )
+		insert into @sql(s) values ( 'END' )
 		SET @row = @row + 1
 	END
 
