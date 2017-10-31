@@ -7,7 +7,7 @@
 -- **************************************************
 
 declare @table varchar(100)
-set @table = '%%TableName%%'
+set @table = 'AlarmActions'
 
 
 DECLARE @sql table
@@ -158,12 +158,9 @@ WHILE (@row <= @rows)
 		insert into @sql(s) values ( '' )
 		insert into @sql(s) values ( 'IF NOT EXISTS (SELECT * FROM sys.columns WHERE  object_id = OBJECT_ID(N''' + @table + ''') AND name = ''' + @name + ''') BEGIN' )
 		insert into @sql(s) values ( '  ALTER TABLE ' + @table + ' ADD ' + @definition )
+		insert into @sql(s) values ( 'ELSE' )
+		insert into @sql(s) values ( '  ALTER TABLE ' + @table + ' ALTER COLUMN ' + @definition )
 		insert into @sql(s) values ( 'END' )
-    
-    IF @type = 'varchar' OR @type = 'nvarchar' BEGIN
-      insert into @sql(s) values ( '' )
-      insert into @sql(s) values ( 'ALTER TABLE ' + @table + ' ALTER COLUMN ' + @definition )
-    END
 
 		SET @row = @row + 1
 	END
