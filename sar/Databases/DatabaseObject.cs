@@ -141,13 +141,13 @@ namespace sar.Tools
 					case SqlObjectType.TF:
 						return "Function";
 					case SqlObjectType.P:
-						return "StoredProcedure";
+						return "Procedure";
 					case SqlObjectType.TR:
 						return "Trigger";
 					case SqlObjectType.U:
 						return "Table";
 					case SqlObjectType.TT:
-						return "UserDefinedTableType";
+						return "Type";
 					case SqlObjectType.V:
 						return "View";
 				}

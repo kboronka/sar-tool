@@ -72,7 +72,7 @@ namespace sar.Commands
 				else
 				{
 					var objects = DatabaseObject.GetDatabaseObjects(connection);
-					tables = objects.Where(o => (o.Type == "Table" || o.Type == "UserDefinedTableType")).Select(t => t.Name).ToList();
+					tables = objects.Where(o => (o.Type == "Table" || o.Type == "Type")).Select(t => t.Name).ToList();
 				}
 				
 				foreach (var t in tables)
