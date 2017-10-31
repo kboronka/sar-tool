@@ -274,7 +274,7 @@ WHILE (@row <= @rows) BEGIN
      WHERE i.object_id = OBJECT_ID(@table) 
        AND i.index_id = @index_id;
 	
-  SET @line = '       ON ' + QUOTENAME(@table) + ' (';
+  SET @line = '      ON ' + QUOTENAME(@table) + ' (';
   
   SELECT @line = @line +
          QUOTENAME(c.name) + 
@@ -289,6 +289,7 @@ WHILE (@row <= @rows) BEGIN
    ORDER BY ic.key_ordinal;
     
   SET @line = LEFT(@line, LEN(@line) - 1); -- remove last comma
+  insert into @sql values (@line + ')');
 
   -- optional INCLUDE clause
   IF EXISTS (SELECT ic.column_id FROM sys.index_columns AS ic WHERE ic.object_id = OBJECT_ID(@table) AND ic.index_id = @index_id AND ic.is_included_column = 1) BEGIN
