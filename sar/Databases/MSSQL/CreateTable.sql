@@ -7,7 +7,7 @@
 -- **************************************************
 
 declare @table varchar(100)
-set @table = 'AlarmActions'
+set @table = '%%TableName%%'
 
 
 DECLARE @sql table
