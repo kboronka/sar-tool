@@ -6,9 +6,10 @@
 -- http://stackoverflow.com/questions/21547/in-sql-server-how-do-i-generate-a-create-table-statement-for-a-given-table
 -- **************************************************
 
-declare @table varchar(100)
-set @table = '%%TableName%%'
+DECLARE @table varchar(100)
+DECLARE @line varchar(max)
 
+set @table = '%%TableName%%'
 
 DECLARE @sql table
 (
@@ -235,6 +236,86 @@ WHILE (@row <= @rows)
 		insert into @sql(s) values ( 'END' )
 		SET @row = @row + 1
 	END
+
+
+-- **************************************************
+-- add indexes
+-- **************************************************
+DECLARE @index_id VARCHAR(100)
+DECLARE @index_name VARCHAR(50)
+
+DECLARE @Indexes TABLE (
+  row int PRIMARY KEY IDENTITY(1,1),
+  id int,
+  name nvarchar(256))
+
+INSERT INTO @Indexes
+  SELECT i.index_id AS ID, 
+         i.name AS Name
+    FROM sys.indexes AS i
+   WHERE i.object_id = OBJECT_ID(@table)
+     AND i.type IN (1, 2)
+     AND i.is_primary_key = 0
+     AND i.is_unique_constraint = 0;
+
+SET @rows = (SELECT COUNT(*) FROM @Indexes)
+SET @row = 1;
+WHILE (@row <= @rows) BEGIN
+	SELECT @index_id = id,
+         @index_name = name
+    FROM @Indexes where row = @row
+	
+  insert into @sql(s) values ( '' )
+  insert into @sql(s) values ( 'IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N''' + @table +''') AND name = ''' + @index_name + ''') BEGIN' )
+
+  insert into @sql
+    SELECT '  CREATE'
+           + CASE WHEN i.is_unique = 1 THEN ' UNIQUE' ELSE '' END
+           + CASE WHEN i.type = 1 THEN ' CLUSTERED' ELSE '' END
+           + ' INDEX ' + QUOTENAME(i.name)
+      FROM sys.indexes AS i
+     WHERE i.object_id = OBJECT_ID(@table) 
+       AND i.index_id = @index_id;
+	
+  SET @line = '       ON ' + QUOTENAME(@table) + ' (';
+  
+  SELECT @line = @line +
+         QUOTENAME(c.name) + 
+         CASE WHEN ic.is_descending_key = 1 THEN ' DESC' ELSE '' END+ 
+         + ', '
+    FROM sys.index_columns AS ic
+   INNER JOIN sys.columns AS c 
+      ON c.column_id = ic.column_id AND c.object_id = ic.object_id
+   WHERE ic.object_id = OBJECT_ID(@table)
+     AND ic.index_id = @index_id 
+     AND ic.is_included_column = 0
+   ORDER BY ic.key_ordinal;
+    
+  SET @line = LEFT(@line, LEN(@line) - 1); -- remove last comma
+
+  -- optional INCLUDE clause
+  IF EXISTS (SELECT ic.column_id FROM sys.index_columns AS ic WHERE ic.object_id = OBJECT_ID(@table) AND ic.index_id = @index_id AND ic.is_included_column = 1) BEGIN
+    SET @line = '  INCLUDE (';
+		
+		SELECT @line = @line + QUOTENAME(c.name) +
+           CASE WHEN ic.is_descending_key = 1 THEN ' DESC' ELSE '' END +
+           ', '
+      FROM sys.index_columns AS ic
+     INNER JOIN sys.columns AS c 
+        ON c.column_id = ic.column_id AND c.object_id = ic.object_id
+     WHERE ic.object_id = OBJECT_ID(@table)
+       AND ic.index_id = @index_id
+       AND ic.is_included_column = 1
+     ORDER BY ic.key_ordinal;
+
+    SET @line = LEFT(@line, LEN(@line) - 1); -- remove last comma
+    insert into @sql values (@line + ')');
+	END
+	
+  insert into @sql(s) values ( 'END' )
+	SET @row = @row + 1
+END
+
 
 
 SELECT s FROM @sql WHERE s is not null order by id
