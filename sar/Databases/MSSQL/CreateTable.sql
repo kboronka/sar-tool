@@ -45,6 +45,9 @@ DECLARE @nullable bit
 DECLARE @definition nvarchar(256)
 DECLARE @delimiter nvarchar(1)
 
+DECLARE @PrimaryKeyName nvarchar(256);
+SET @PrimaryKeyName = (SELECT constraint_name FROM information_schema.table_constraints WHERE table_name = @table and constraint_type='PRIMARY KEY')
+
 -- **************************************************
 -- create table
 -- **************************************************
@@ -68,19 +71,24 @@ WHILE (@row <= @rows)
 		WHERE row=@row
 		
 		IF @type = 'sql_variant' SET @length = null;
-		SET @definition = N'[' + @name + N'] [' + @type + ']' 
+		SET @line = N'[' + @name + N'] ' + @type 
 		
-		IF @length>=0 SET @definition = @definition + '(' + cast(@length as varchar) + ')';
-		IF @length=-1 SET @definition = @definition + '(max)';
+		IF @length>=0 SET @line = @line + '(' + cast(@length as varchar) + ')';
+		IF @length=-1 SET @line = @line + '(max)';
 		
-		IF @nullable=1 SET @definition = @definition + ' NULL';
-		IF @nullable=0 SET @definition = @definition + ' NOT NULL';
+		IF @nullable=1 SET @line = @line + ' NULL';
+		IF @nullable=0 SET @line = @line + ' NOT NULL';
 		
 	
-		IF exists (select id from syscolumns where object_name(id)=@table and name=@name and columnproperty(id, name, 'IsIdentity') = 1)
+		IF exists (select id from syscolumns where object_name(id)=@table and name=@name and columnproperty(id, name, 'IsIdentity') = 1) BEGIN
 			SET @definition = @definition + N' ' + 'IDENTITY(' + cast(ident_seed(@table) as varchar) + ',' + cast(ident_incr(@table) as varchar) + ')'
+    END
 		
-		insert into @sql(s) values ( '      ' + @delimiter + @definition )
+		IF @row < @rows OR @PrimaryKeyName IS NOT null BEGIN
+      SET @line = @line + ','; 
+    END
+    
+    insert into @sql(s) values ( '    ' + @line )
 		SET @delimiter = ','
 		SET @row = @row + 1
 	END
@@ -88,9 +96,6 @@ WHILE (@row <= @rows)
 -- **************************************************
 -- primary key
 -- **************************************************
-DECLARE @PrimaryKeyName nvarchar(256);
-SET @PrimaryKeyName = (SELECT constraint_name FROM information_schema.table_constraints WHERE table_name = @table and constraint_type='PRIMARY KEY')
-
 IF @PrimaryKeyName is not null
 	BEGIN
 		DECLARE @PrimaryKeyColumns TABLE
@@ -100,27 +105,20 @@ IF @PrimaryKeyName is not null
 		)
 		
 		INSERT INTO @PrimaryKeyColumns
-			SELECT 
-				name=p.COLUMN_NAME
-			FROM information_schema.key_column_usage p
-			WHERE table_name = @table AND CONSTRAINT_NAME LIKE N'PK_%'
-			ORDER BY ordinal_position
+           SELECT name = p.COLUMN_NAME
+			       FROM information_schema.key_column_usage p
+			      WHERE table_name = @table AND CONSTRAINT_NAME LIKE N'PK_%'
+			      ORDER BY ordinal_position
 		
-		insert into @sql(s) values ('    ' + @delimiter + 'PRIMARY KEY (')
+    SET @line = '    ' + 'PRIMARY KEY (';
 
-		SET @row = 1;
-		SET @delimiter = '';
-		WHILE (@row <= @rows)
-		BEGIN
-			SET @name = (SELECT name FROM @PrimaryKeyColumns WHERE row = @row)
-			SET @definition = N'[' + @name + N'] '
-			
-			insert into @sql(s) values ( '      ' + @delimiter + @definition )
-			SET @delimiter = ','
-			SET @row = @row + 1
-		END
-		
-		insert into @sql(s) values ( '    ' + ')' )
+		SELECT @line = @line + QUOTENAME(p.COLUMN_NAME) + ', '
+			FROM information_schema.key_column_usage p
+		 WHERE table_name = @table AND CONSTRAINT_NAME LIKE N'PK_%'
+		 ORDER BY ordinal_position
+     
+    SET @line = LEFT(@line, LEN(@line) - 1); -- remove last comma
+    insert into @sql values (@line + ')');
 	END
 
 insert into @sql(s) values ( '  )' )
@@ -211,16 +209,15 @@ SET @rows = (SELECT COUNT(*) FROM @ForeignKeys)
 SET @row = 1;
 WHILE (@row <= @rows)
 	BEGIN
-		Select 
-			@FK_Name=FK_Name
-			,@FK_TableName=FK_TableName
-			,@FK_ColumnName=FK_ColumnName
-			,@RF_TableName=RF_TableName
-			,@RF_ColumnName=RF_ColumnName
-			,@SC_Name=SC_Name
-			,@UpdateAction=UpdateAction
-			,@DeleteAction=DeleteAction
-		FROM @ForeignKeys where row=@row
+		Select @FK_Name=FK_Name,
+           @FK_TableName=FK_TableName,
+           @FK_ColumnName=FK_ColumnName,
+           @RF_TableName=RF_TableName,
+           @RF_ColumnName=RF_ColumnName,
+           @SC_Name=SC_Name,
+           @UpdateAction=UpdateAction,
+           @DeleteAction=DeleteAction
+		  FROM @ForeignKeys where row=@row
 		
 		SET @definition = '['+ @SC_Name +'].['+ @FK_TableName +'] WITH ' + 'CHECK ADD CONSTRAINT ['+@FK_Name+'] FOREIGN KEY(['+@FK_ColumnName+']) REFERENCES ['+@SC_Name+'].['+@RF_TableName+'] (['+@RF_ColumnName+'])'
 	
