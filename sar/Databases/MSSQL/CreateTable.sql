@@ -151,7 +151,9 @@ WHILE (@row <= @rows)
 		
     IF exists (select id from syscolumns where object_name(id)=@table and name=@name and columnproperty(id, name, 'IsIdentity') = 1) BEGIN
 			SET @ident = 'IDENTITY(' + cast(ident_seed(@table) as varchar) + ',' + cast(ident_incr(@table) as varchar) + ')'
-    END		
+    END	ELSE BEGIN
+      SET @ident = ''
+    END
 		
 		insert into @sql(s) values ( '' )
 		insert into @sql(s) values ( 'IF NOT EXISTS (SELECT * FROM sys.columns WHERE  object_id = OBJECT_ID(N''' + @table + ''') AND name = ''' + @name + ''') BEGIN' )
