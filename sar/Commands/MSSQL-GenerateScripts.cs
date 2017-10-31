@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 using sar.Base;
 using sar.Databases.MSSQL;
@@ -27,11 +28,14 @@ namespace sar.Commands
 {
 	public class MSSQL_GenerateScripts : Command
 	{
-		public MSSQL_GenerateScripts(Base.CommandHub parent) : base(parent, "MSSQL - Generate Scripts",
-		                                                            new List<string> { "mssql-gs" },
-		                                                            "-mssql-gs <server> <database> <username> <password> [destination]",
-		                                                            new List<string> { "-mssql-gs 192.168.0.44 TestDB sa root " + @".\databasescripts\".QuoteDouble(),
-		                                                            	"-mssql-gs 192.168.0.44 TestDB sa root" })
+		public MSSQL_GenerateScripts(Base.CommandHub parent)
+			: base(parent, "MSSQL - Generate Scripts",
+			       new List<string> { "mssql-gs" },
+			       "-mssql-gs <server> <database> <username> <password> [destination]",
+			       new List<string> {
+			       	"-mssql-gs 192.168.0.44 TestDB sa root " + @".\databasescripts\".QuoteDouble(),
+			       	"-mssql-gs 192.168.0.44 TestDB sa root"
+			       })
 		{
 			
 		}
@@ -51,10 +55,12 @@ namespace sar.Commands
 			string password = args[4];
 			string root = @".\";
 			
-			if (args.Length == 6) root = args[5];
+			if (args.Length == 6)
+				root = args[5];
 			
 			root = IO.CheckRoot(root);
-			if (!Directory.Exists(root)) Directory.CreateDirectory(root);
+			if (!Directory.Exists(root))
+				Directory.CreateDirectory(root);
 			
 			var connectionString = new ConnectionString(server, database, username, password);
 			int objectCounter = 0;
@@ -72,7 +78,7 @@ namespace sar.Commands
 					
 					Progress.Message = "Generating Script [" + databaseObject.Name + "]";
 					
-					IO.WriteFile(root + filename, databaseObject.GetCreateScript(connection));
+					IO.WriteFile(root + filename, databaseObject.GetCreateScript(connection), Encoding.ASCII);
 					objectCounter++;
 				}
 				

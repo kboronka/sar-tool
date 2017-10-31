@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 using sar.Base;
 using sar.Databases.MSSQL;
@@ -88,7 +89,7 @@ namespace sar.Commands
 						
 						Progress.Message = "Saving Insert Script to file";
 						var filename = "TableInsert." + table.Name + ".sql";
-						File.WriteAllText(root + filename, insertScript);
+						File.WriteAllText(root + filename, insertScript, Encoding.ASCII);
 					}
 					
 					ConsoleHelper.WriteLine("Generated Insert Script", ConsoleColor.DarkYellow);
