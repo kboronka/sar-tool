@@ -52,7 +52,7 @@ namespace sar
 				args = new string[] { "f.open", "c:\temp" };
 				args = new string[] { "file.open", @"c:\temp", @"/pause" };
 				args = new string[] { "-b.net", "3.5", @"LabelPrinter.sln", "/p:Configuration=Release /p:Platform=\"Any CPU\"" };
-				args = new string[] { "fanuc.downloadPR", "10.240.26.104", @"C:\Temp\posreg.test.csv", @"/pause" };
+				args = new string[] { "fanuc.downloadPR", "10.242.217.151", @"test path\SATH-(date)", @"/pause" };
 				args = new string[] { "svn.GetAssemblyVersion", @"https://github.com/kboronka/sar-tool/trunk/sar/Properties/AssemblyInfo.cs", @"/pause" };
 				args = new string[] { "svn.GetNewAssemblyVersion", @"https://github.com/kboronka/sar-tool/trunk/sar/Properties/AssemblyInfo.cs", @"/pause" };
 				args = new string[] { "dotNetVersions", @"/pause" };

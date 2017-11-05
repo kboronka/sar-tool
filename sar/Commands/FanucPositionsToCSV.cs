@@ -119,6 +119,13 @@ namespace sar.Commands
 				}
 			}
 			
+			// create the folder if it's missing
+			var directory = IO.GetFileDirectory(csv);
+			if (!Directory.Exists(directory))
+			{
+				Directory.CreateDirectory(directory);
+			}
+			
 			IO.WriteFile(csv, output, Encoding.ASCII);
 			return positions.Count;
 		}
