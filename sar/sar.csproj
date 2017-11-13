@@ -96,7 +96,7 @@
     <Compile Include="Commands\ListDotNetVersions.cs" />
     <Compile Include="Commands\StyleCheck.cs" />
     <Compile Include="Commands\SvnCheckUncommited.cs" />
-    <Compile Include="Commands\svnGetNewAssemblyVersion.cs" />
+    <Compile Include="Commands\SvnGetNewAssemblyVersion.cs" />
     <Compile Include="Commands\CodeClean.cs" />
     <Compile Include="Commands\CodeReIndent.cs" />
     <Compile Include="Commands\FanucBackup.cs" />
@@ -119,7 +119,7 @@
     <Compile Include="Commands\FileLock.cs" />
     <Compile Include="Commands\FileMove.cs" />
     <Compile Include="Commands\FileRemoveDirectory.cs" />
-    <Compile Include="Commands\svnGetAssemblyVersion.cs" />
+    <Compile Include="Commands\SvnGetAssemblyVersion.cs" />
     <Compile Include="Commands\Help.cs" />
     <Compile Include="Commands\MSSQL-GenerateScripts.cs" />
     <Compile Include="Commands\MSSQL-GenerateInsert.cs" />
@@ -127,7 +127,7 @@
     <Compile Include="Commands\NetListAddaptors.cs" />
     <Compile Include="Commands\AssemblyInfoVersion.cs" />
     <Compile Include="Commands\rdp.cs" />
-    <Compile Include="Commands\svnAddExternals.cs" />
+    <Compile Include="Commands\SvnAddExternals.cs" />
     <Compile Include="Commands\SvnUpdate.cs" />
     <Compile Include="Commands\VBStyleRules.cs">
       <DependentUpon>CodeClean.cs</DependentUpon>

@@ -54,7 +54,7 @@ namespace sar.Commands
 			}
 			else
 			{
-				ConsoleHelper.WriteLine("No uncommited Files found", ConsoleColor.Green);
+				ConsoleHelper.WriteLine("No uncommited Files found", ConsoleColor.DarkYellow);
 				return ConsoleHelper.EXIT_OK;
 			}
 		}

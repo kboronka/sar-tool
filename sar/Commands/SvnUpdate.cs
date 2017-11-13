@@ -61,7 +61,7 @@ namespace sar.Commands
 			}
 			else
 			{
-				ConsoleHelper.WriteLine("svn update completed", ConsoleColor.Green);
+				ConsoleHelper.WriteLine("Repository update completed successfully", ConsoleColor.DarkYellow);
 				return ConsoleHelper.EXIT_OK;
 			}
 		}
