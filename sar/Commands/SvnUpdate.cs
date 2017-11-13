@@ -36,7 +36,8 @@ namespace sar.Commands
 		
 		public override int Execute(string[] args)
 		{
-			Progress.Enabled = false;
+			Progress.Enabled = true;
+			Progress.Message = "Updating repository";
 			
 			// find svn executiable
 			var svn = IO.FindApplication("svn.exe", @"TortoiseSVN\bin");
@@ -44,6 +45,8 @@ namespace sar.Commands
 			
 			string result = "";
 			ConsoleHelper.Run(svn, " status update", out result);
+			
+			Progress.Enabled = false;
 			
 			// check for conflicts
 			var match = Regex.Match(result, @"^C\s{4}.*$");
