@@ -95,6 +95,7 @@
     <Compile Include="Commands\ExcelOpenNewInstances.cs" />
     <Compile Include="Commands\ListDotNetVersions.cs" />
     <Compile Include="Commands\StyleCheck.cs" />
+    <Compile Include="Commands\SvnCheckUncommited.cs" />
     <Compile Include="Commands\svnGetNewAssemblyVersion.cs" />
     <Compile Include="Commands\CodeClean.cs" />
     <Compile Include="Commands\CodeReIndent.cs" />

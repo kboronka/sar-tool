@@ -68,6 +68,7 @@ namespace sar.Tools
 			                          	new svnAddExternals(this),
 			                          	new svnGetAssemblyVersion(this),
 			                          	new svnGetNewAssemblyVersion(this),
+			                          	new SvnCheckUncommited(this),
 			                          	new Bower(this),
 			                          	new ListDotNetVersions(this)
 			                          });
