@@ -44,7 +44,7 @@ namespace sar.Commands
 			string result = "";
 			ConsoleHelper.Run(svn, " status -q", out result);
 			
-			if (!String.IsNullOrEmpty(result))
+			if (!String.IsNullOrEmpty(result) && result.TrimWhiteSpace() != "")
 			{
 				ConsoleHelper.WriteLine("******************************************************", ConsoleColor.White);
 				ConsoleHelper.Write("* ", ConsoleColor.White);
