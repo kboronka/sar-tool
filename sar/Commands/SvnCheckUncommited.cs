@@ -46,10 +46,10 @@ namespace sar.Commands
 			
 			if (!String.IsNullOrEmpty(result) && result.TrimWhiteSpace() != "")
 			{
-				ConsoleHelper.WriteLine("******************************************************", ConsoleColor.White);
+				ConsoleHelper.WriteLine("********************************************************", ConsoleColor.White);
 				ConsoleHelper.Write("* ", ConsoleColor.White);
 				ConsoleHelper.WriteLine("Uncommited Files found, please commit before building.", ConsoleColor.Red);
-				ConsoleHelper.WriteLine("******************************************************", ConsoleColor.White);
+				ConsoleHelper.WriteLine("********************************************************", ConsoleColor.White);
 				return ConsoleHelper.EXIT_ERROR;
 			}
 			else
