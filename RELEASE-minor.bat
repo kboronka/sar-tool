@@ -29,7 +29,8 @@
 
 	
 :Build
-	svn update
+	%SAR% -svn.up
+	if errorlevel 1 goto BuildFailed
 
 	%SAR% -svn.uc
 	if errorlevel 1 goto BuildFailed
