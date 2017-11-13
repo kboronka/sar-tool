@@ -27,9 +27,9 @@ namespace sar.Commands
 	{
 		public SvnUpdate(Base.CommandHub parent)
 			: base(parent, "SVN check for uncommited files",
-			       new List<string> { "svn.uc" },
+			       new List<string> { "svn.up" },
 			       @"svn.un",
-			       new List<string> { @"-svn.uc" })
+			       new List<string> { @"-svn.up" })
 		{
 			
 		}
