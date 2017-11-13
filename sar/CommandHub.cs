@@ -65,10 +65,11 @@ namespace sar.Tools
 			                          	new WindowsShellReplacement(this),
 			                          	new NetListAdapters(this),
 			                          	new NetSetIP(this),
-			                          	new svnAddExternals(this),
-			                          	new svnGetAssemblyVersion(this),
-			                          	new svnGetNewAssemblyVersion(this),
+			                          	new SvnAddExternals(this),
+			                          	new SvnGetAssemblyVersion(this),
+			                          	new SvnGetNewAssemblyVersion(this),
 			                          	new SvnCheckUncommited(this),
+			                          	new SvnUpdate(this),
 			                          	new Bower(this),
 			                          	new ListDotNetVersions(this)
 			                          });

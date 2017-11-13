@@ -21,9 +21,9 @@ using sar.Tools;
 
 namespace sar.Commands
 {
-	public class svnGetNewAssemblyVersion : Command
+	public class SvnGetNewAssemblyVersion : Command
 	{
-		public svnGetNewAssemblyVersion(Base.CommandHub parent) : base(parent, "svn Get New Assembly Version",
+		public SvnGetNewAssemblyVersion(Base.CommandHub parent) : base(parent, "svn Get New Assembly Version",
 		                                                            new List<string> { "svn.GetNewAssemblyVersion" },
 		                                                            @"svn.GetNewAssemblyVersion <svn/path>",
 		                                                            new List<string> { @"-svn.GetNewAssemblyVersion http://svnserver/trunk/Properties/AssemblyInfo.cs" })
@@ -36,7 +36,7 @@ namespace sar.Commands
 			Progress.Enabled = false;
 			
 			string repo = args[1];
-			var version = svnGetAssemblyVersion.GetVersion(repo);
+			var version = SvnGetAssemblyVersion.GetVersion(repo);
 
 			if (!String.IsNullOrEmpty(version))
 			{

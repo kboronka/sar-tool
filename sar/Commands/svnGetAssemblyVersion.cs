@@ -23,9 +23,9 @@ using sar.Tools;
 
 namespace sar.Commands
 {
-	public class svnGetAssemblyVersion : Command
+	public class SvnGetAssemblyVersion : Command
 	{
-		public svnGetAssemblyVersion(Base.CommandHub parent) : base(parent, "svn Get Assembly Version",
+		public SvnGetAssemblyVersion(Base.CommandHub parent) : base(parent, "svn Get Assembly Version",
 		                                                            new List<string> { "svn.GetAssemblyVersion" },
 		                                                            @"svn.GetAssemblyVersion <svn/path>",
 		                                                            new List<string> { @"-svn.GetAssemblyVersion http://svnserver/trunk/Properties/AssemblyInfo.cs" })

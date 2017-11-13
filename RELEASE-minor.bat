@@ -31,6 +31,10 @@
 :Build
 	svn update
 
+	%SAR% -svn.uc
+	if errorlevel 1 goto BuildFailed
+
+
 	set VERSION=%~1
 	
 	if "%VERSION%" == "" (

@@ -16,15 +16,17 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
+
 
 using sar.Base;
 using sar.Tools;
 
 namespace sar.Commands
 {
-	public class SvnCheckUncommited : Command
+	public class SvnUpdate : Command
 	{
-		public SvnCheckUncommited(Base.CommandHub parent)
+		public SvnUpdate(Base.CommandHub parent)
 			: base(parent, "SVN check for uncommited files",
 			       new List<string> { "svn.uc" },
 			       @"svn.un",
@@ -42,19 +44,22 @@ namespace sar.Commands
 			if (!File.Exists(svn)) throw new ApplicationException("svn.exe not found");
 			
 			string result = "";
-			ConsoleHelper.Run(svn, " status -q", out result);
+			ConsoleHelper.Run(svn, " status update", out result);
 			
-			if (!String.IsNullOrEmpty(result) && result.TrimWhiteSpace() != "")
+			// check for conflicts
+			var match = Regex.Match(result, @"^C\s{4}.*$");
+			
+			if (match.Success)
 			{
 				ConsoleHelper.WriteLine("********************************************************", ConsoleColor.White);
 				ConsoleHelper.Write("* ", ConsoleColor.White);
-				ConsoleHelper.WriteLine("Uncommited Files found, please commit before building.", ConsoleColor.Red);
+				ConsoleHelper.WriteLine("SVN merge conflicts detected.  Manual merge required", ConsoleColor.Red);
 				ConsoleHelper.WriteLine("********************************************************", ConsoleColor.White);
 				return ConsoleHelper.EXIT_ERROR;
 			}
 			else
 			{
-				ConsoleHelper.WriteLine("No uncommited Files found", ConsoleColor.Green);
+				ConsoleHelper.WriteLine("svn update completed", ConsoleColor.Green);
 				return ConsoleHelper.EXIT_OK;
 			}
 		}

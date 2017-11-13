@@ -23,9 +23,9 @@ using sar.Tools;
 
 namespace sar.Commands
 {
-	public class svnAddExternals : Command
+	public class SvnAddExternals : Command
 	{
-		public svnAddExternals(Base.CommandHub parent) : base(parent, "svn Get Externals",
+		public SvnAddExternals(Base.CommandHub parent) : base(parent, "svn Get Externals",
 		                                            new List<string> { "svn.AddExternals" },
 		                                            @"svn.AddExternals <svn/path> <filepattern>",
 		                                            new List<string> { @"-svn.AddExternals http://svnserver/trunk/ *.cpp" })
