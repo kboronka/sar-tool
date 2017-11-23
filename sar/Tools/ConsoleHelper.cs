@@ -190,7 +190,7 @@ namespace sar.Tools
 			ConsoleHelper.WriteLine("  " + AssemblyInfo.Copyright);
 			
 			string copyright = " \r\n";
-			copyright += "this software is distributed under the BSD license\r\n";
+			copyright += "this software is distributed under the BSD 2-clause Simplified License\r\n";
 			copyright += "\r\n";
 			copyright += "THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"\r\n";
 			copyright += "AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\r\n";
