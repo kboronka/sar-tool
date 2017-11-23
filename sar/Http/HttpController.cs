@@ -122,7 +122,7 @@ namespace sar.Http
 			this.type = controller;
 			this.actions = new Dictionary<string, MethodInfo>();
 			
-			if (controller.Assembly == Assembly.GetEntryAssembly())
+			if (controller.Assembly == AssemblyInfo.Assembly)
 			{
 				foreach (object obj in controller.GetCustomAttributes(false))
 				{

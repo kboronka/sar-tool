@@ -24,20 +24,6 @@ namespace sar.Tools
 {
 	public class AssemblyInfo
 	{
-		private static string name;
-		public static string Name
-		{
-			get
-			{
-				if (string.IsNullOrEmpty(AssemblyInfo.name))
-				{
-					AssemblyInfo.name = System.Reflection.Assembly.GetEntryAssembly().GetName().Name;
-				}
-				
-				return AssemblyInfo.name;
-			}
-		}
-		
 		private static Assembly assembly;
 		public static Assembly Assembly
 		{
@@ -58,19 +44,7 @@ namespace sar.Tools
 					{
 						if (AssemblyInfo.assembly == null)
 						{
-							AssemblyInfo.assembly = Assembly.GetEntryAssembly();
-						}
-					}
-					catch
-					{
-						
-					}
-					
-					try
-					{
-						if (AssemblyInfo.assembly == null)
-						{
-							AssemblyInfo.assembly = Assembly.GetExecutingAssembly();
+							AssemblyInfo.assembly = Assembly.GetCallingAssembly();
 						}
 					}
 					catch
@@ -80,6 +54,24 @@ namespace sar.Tools
 				}
 				
 				return AssemblyInfo.assembly;
+			}
+			set
+			{
+				AssemblyInfo.assembly = value;
+			}
+		}
+		
+		private static string name;
+		public static string Name
+		{
+			get
+			{
+				if (string.IsNullOrEmpty(AssemblyInfo.name))
+				{
+					AssemblyInfo.name = AssemblyInfo.Assembly.GetName().Name;
+				}
+				
+				return AssemblyInfo.name;
 			}
 		}
 		
@@ -102,7 +94,7 @@ namespace sar.Tools
 				}
 				
 				return AssemblyInfo.product;
-			}
+			}		
 		}
 
 		private static string company;
@@ -112,7 +104,7 @@ namespace sar.Tools
 			{
 				if (string.IsNullOrEmpty(AssemblyInfo.company))
 				{
-					object[] attributes = Assembly.GetEntryAssembly().GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
+					object[] attributes = AssemblyInfo.Assembly.GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
 					AssemblyInfo.company = attributes.Length == 0 ? "" : ((AssemblyCompanyAttribute)attributes[0]).Company;
 				}
 				
@@ -127,7 +119,7 @@ namespace sar.Tools
 			{
 				if (string.IsNullOrEmpty(AssemblyInfo.version))
 				{
-					AssemblyInfo.version = Assembly.GetEntryAssembly().GetName().Version.ToString();
+					AssemblyInfo.version = AssemblyInfo.Assembly.GetName().Version.ToString();
 				}
 				
 				return AssemblyInfo.version;
@@ -155,7 +147,7 @@ namespace sar.Tools
 			{
 				if (string.IsNullOrEmpty(AssemblyInfo.copyright))
 				{
-					object[] attributes = Assembly.GetEntryAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
+					object[] attributes = AssemblyInfo.Assembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
 					AssemblyInfo.copyright = attributes.Length == 0 ? "" : ((AssemblyCopyrightAttribute)attributes[0]).Copyright;
 				}
 				
@@ -168,13 +160,13 @@ namespace sar.Tools
 		{
 			get
 			{
-				List<string> locations = new List<string>();
+				var locations = new List<string>();
 				if (assemblies == null || assemblies.Count == 0)
 				{
 					assemblies = new List<Assembly>();
 					//assemblies.Add(Assembly.GetExecutingAssembly());
-					assemblies.Add(Assembly.GetEntryAssembly());
-					foreach (AssemblyName assemblyName in Assembly.GetEntryAssembly().GetReferencedAssemblies())
+					assemblies.Add(AssemblyInfo.Assembly);
+					foreach (AssemblyName assemblyName in AssemblyInfo.Assembly.GetReferencedAssemblies())
 					{
 						string name = assemblyName.Name;
 						
