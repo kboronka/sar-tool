@@ -89,10 +89,14 @@
     <Compile Include="CommandHub.cs" />
     <Compile Include="Commands\AppShutdownWait.cs" />
     <Compile Include="Commands\Bower.cs" />
+    <Compile Include="Commands\HashCache.cs" />
     <Compile Include="Commands\CSStyleRules.cs">
       <DependentUpon>CodeClean.cs</DependentUpon>
     </Compile>
     <Compile Include="Commands\ExcelOpenNewInstances.cs" />
+    <Compile Include="Commands\HashCacheRules.cs">
+      <DependentUpon>HashCache.cs</DependentUpon>
+    </Compile>
     <Compile Include="Commands\ListDotNetVersions.cs" />
     <Compile Include="Commands\StyleCheck.cs" />
     <Compile Include="Commands\SvnCheckUncommited.cs" />

@@ -52,14 +52,17 @@ namespace sar
 				args = new string[] { "f.open", "c:\temp" };
 				args = new string[] { "file.open", @"c:\temp", @"/pause" };
 				args = new string[] { "-b.net", "3.5", @"LabelPrinter.sln", "/p:Configuration=Release /p:Platform=\"Any CPU\"" };
-				args = new string[] { "fanuc.downloadPR", "10.242.217.151", @"test path\SATH-(date)", @"/pause" };
+				args = new string[] { "fanuc.downloadPR", "10.242.217.151", @"test path\TEST-(date)", @"/pause" };
 				args = new string[] { "svn.GetAssemblyVersion", @"https://github.com/kboronka/sar-tool/trunk/sar/Properties/AssemblyInfo.cs", @"/pause" };
 				args = new string[] { "svn.GetNewAssemblyVersion", @"https://github.com/kboronka/sar-tool/trunk/sar/Properties/AssemblyInfo.cs", @"/pause" };
 				args = new string[] { "dotNetVersions", @"/pause" };
 				args = new string[] { "r", "test.cs", @"break;\r\n(.*)case", @"break;\n\n\n$1case", @"/pause" };
 				args = new string[] { "c.c", @"C:\Users\kboronka\Desktop\Manual", @"/pause" };
 				args = new string[] { "c.c", @"C:\Users\kboronka\Documents\SharpDevelop Projects\sar", @"/pause" };
+				args = new string[] { "hc", @"C:\Users\kboronka\Desktop\Test\Test", @"C:\Users\kboronka\Desktop\Test\Test\Views", @"/pause" };
+				
 				 */
+				
 				
 				#endif				
 				

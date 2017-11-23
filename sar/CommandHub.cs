@@ -71,7 +71,8 @@ namespace sar.Tools
 			                          	new SvnCheckUncommited(this),
 			                          	new SvnUpdate(this),
 			                          	new Bower(this),
-			                          	new ListDotNetVersions(this)
+			                          	new ListDotNetVersions(this),
+			                          	new HashCache(this)
 			                          });
 		}
 	}
