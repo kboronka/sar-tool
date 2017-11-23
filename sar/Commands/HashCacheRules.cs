@@ -51,7 +51,7 @@ namespace sar.Commands
 
 			// href
 			// example: <link rel="stylesheet" href="/Content/Junk/app/junk.css" />
-			var search = @" href\s*=\s*\""(.*?)(?:\?[vh]=.*?)*\""";
+			var search = @" href\s*=\s*\""([^#].*?)(?:\?[vh]=.*?)*\""";
 			var replace = " href=" + "$1?h=**HASH**".QuoteDouble();
 			results.AddRange(ProcessMatches(ref content, search, replace, contentRoot, "href"));
 
