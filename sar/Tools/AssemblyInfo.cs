@@ -45,8 +45,26 @@ namespace sar.Tools
 			{
 				if (string.IsNullOrEmpty(AssemblyInfo.product))
 				{
-					object[] attributes = Assembly.GetEntryAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false);
-					AssemblyInfo.product = attributes.Length == 0 ? "" : ((AssemblyProductAttribute)attributes[0]).Product;
+					var assembly = Assembly.GetEntryAssembly();
+					if (assembly == null)
+					{
+						assembly = Assembly.GetEntryAssembly();
+					}
+					
+					if (assembly == null)
+					{
+						assembly = Assembly.GetExecutingAssembly();
+					}
+					
+					if (assembly != null)
+					{
+						object[] attributes = Assembly.GetEntryAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false);
+						AssemblyInfo.product = attributes.Length == 0 ? "" : ((AssemblyProductAttribute)attributes[0]).Product;
+					}
+					else
+					{
+						AssemblyInfo.product = "unknown";
+					}
 				}
 				
 				return AssemblyInfo.product;
