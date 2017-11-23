@@ -38,6 +38,51 @@ namespace sar.Tools
 			}
 		}
 		
+		private static Assembly assembly;
+		public static Assembly Assembly
+		{
+			get
+			{
+				if (AssemblyInfo.assembly == null)
+				{
+					try
+					{
+						AssemblyInfo.assembly = Assembly.GetEntryAssembly();
+					}
+					catch
+					{
+						
+					}
+					
+					try
+					{
+						if (AssemblyInfo.assembly == null)
+						{
+							AssemblyInfo.assembly = Assembly.GetEntryAssembly();
+						}
+					}
+					catch
+					{
+						
+					}
+					
+					try
+					{
+						if (AssemblyInfo.assembly == null)
+						{
+							AssemblyInfo.assembly = Assembly.GetExecutingAssembly();
+						}
+					}
+					catch
+					{
+						
+					}
+				}
+				
+				return AssemblyInfo.assembly;
+			}
+		}
+		
 		private static string product;
 		public static string Product
 		{
@@ -45,20 +90,9 @@ namespace sar.Tools
 			{
 				if (string.IsNullOrEmpty(AssemblyInfo.product))
 				{
-					var assembly = Assembly.GetEntryAssembly();
-					if (assembly == null)
+					if (AssemblyInfo.Assembly != null)
 					{
-						assembly = Assembly.GetEntryAssembly();
-					}
-					
-					if (assembly == null)
-					{
-						assembly = Assembly.GetExecutingAssembly();
-					}
-					
-					if (assembly != null)
-					{
-						object[] attributes = Assembly.GetEntryAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false);
+						object[] attributes = AssemblyInfo.Assembly.GetCustomAttributes(typeof(AssemblyProductAttribute), false);
 						AssemblyInfo.product = attributes.Length == 0 ? "" : ((AssemblyProductAttribute)attributes[0]).Product;
 					}
 					else
