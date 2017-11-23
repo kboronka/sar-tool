@@ -63,7 +63,6 @@ namespace sar
 				
 				 */
 				
-				
 				#endif				
 				
 				var hub = new CommandHub();
