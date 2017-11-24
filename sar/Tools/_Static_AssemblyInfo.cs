@@ -22,7 +22,7 @@ using System.Reflection;
 
 namespace sar.Tools
 {
-	public class AssemblyInfo
+	public static class AssemblyInfo
 	{
 		private static Assembly assembly;
 		public static Assembly Assembly

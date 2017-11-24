@@ -258,7 +258,6 @@ namespace sar.Tools
 				}
 			}
 			
-			ConsoleHelper.DebugWriteLine("files = " + files.Count.ToString());
 			return files;
 		}
 		

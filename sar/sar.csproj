@@ -80,11 +80,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationHelper\ApplicationDetails.cs" />
+    <Compile Include="ApplicationHelper\Logger.cs" />
+    <Compile Include="ApplicationHelper\LoggerEventArgs.cs" />
+    <Compile Include="ApplicationHelper\AssemblyDetails.cs" />
     <Compile Include="Base\BaseCommand.cs" />
     <Compile Include="Base\CommandHub.cs" />
     <Compile Include="Base\Configuration.cs" />
     <Compile Include="Base\Logger.cs" />
-    <Compile Include="Base\LoggerEventArgs.cs" />
     <Compile Include="Base\Program.cs" />
     <Compile Include="CommandHub.cs" />
     <Compile Include="Commands\AppShutdownWait.cs" />
@@ -191,8 +194,8 @@
     <Compile Include="Databases\MSSQL\Connection.cs" />
     <Compile Include="Timing\ScanTimeMonitor.cs" />
     <Compile Include="Tools\ActiveDirectory.cs" />
-    <Compile Include="Tools\ApplicationInfo.cs" />
-    <Compile Include="Tools\AssemblyInfo.cs" />
+    <Compile Include="Tools\_Static_ApplicationInfo.cs" />
+    <Compile Include="Tools\_Static_AssemblyInfo.cs" />
     <Compile Include="Tools\ConsoleHelper.cs" />
     <Compile Include="Tools\ExtensionMethods.cs" />
     <Compile Include="Tools\FileCopier.cs" />
@@ -208,7 +211,7 @@
     </Compile>
     <Compile Include="Tools\ExceptionHelper.cs" />
     <Compile Include="Tools\FileLogger.cs" />
-    <Compile Include="Tools\EmbeddedResource.cs" />
+    <Compile Include="Tools\_Static_EmbeddedResource.cs" />
     <Compile Include="Tools\FTPHelper.cs" />
     <Compile Include="Tools\IO.cs" />
     <Compile Include="Tools\LogForm.cs" />
@@ -245,6 +248,7 @@
     <Folder Include="Json" />
     <Folder Include="FSM" />
     <Folder Include="Net" />
+    <Folder Include="ApplicationHelper" />
     <Folder Include="Timing" />
     <Folder Include="S7Siemens" />
     <Folder Include="Socket" />
@@ -270,6 +274,6 @@
     <EmbeddedResource Include="Databases\MSSQL\GetObjects.sql" />
   </ItemGroup>
   <PropertyGroup>
-    <PreBuildEvent>"$(SolutionDir)release\sar.exe" c.c "$(ProjectDir)."</PreBuildEvent>
+    <PreBuildEvent>echo "$(SolutionDir)release\sar.exe" c.c "$(ProjectDir)."</PreBuildEvent>
   </PropertyGroup>
 </Project>

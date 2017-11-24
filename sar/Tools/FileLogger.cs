@@ -47,25 +47,32 @@ namespace sar.Tools
 		
 		#endregion
 		
-		public FileLogger(string filename, bool logTimstamp)
+		public FileLogger(string root, string filename, bool logTimstamp)
 		{
 			try
 			{
 				this.filename = filename;
 				this.logTime = logTimstamp;
+				this.root = root;
+				
+				// create the directory if it does not exist
+				if (!Directory.Exists(this.root))
+				{
+					Directory.CreateDirectory(this.root);
+				}
 				
 				// no filename
-				if (String.IsNullOrEmpty(filename)) this.filename = AssemblyInfo.Name + ".log";
-				
-				// no file extension
-				if (!this.filename.EndsWith(".log")) this.filename += ".log";
-
-				// root = C:\ProgramData\Company\Product
-				this.root = ApplicationInfo.CommonDataDirectory;
-				if (!Directory.Exists(this.root)) Directory.CreateDirectory(this.root);
+				if (String.IsNullOrEmpty(filename))
+				{
+					throw new ApplicationException("Log filename not specified");
+				}
 				
 				string path = this.root + DateTime.Today.ToString(FILETIMESTAMP) + "." + this.filename;
-				if (!File.Exists(path)) this.printSeperator = false;
+				
+				if (!File.Exists(path)) 
+				{
+					this.printSeperator = false;
+				}
 				
 				this.writer = new StreamWriter(path, true);
 				
@@ -196,11 +203,11 @@ namespace sar.Tools
 				try
 				{
 					this.DeleteOldFiles();
-					Thread.Sleep(50000);
+					Thread.Sleep(600000);		// 1 hou
 				}
 				catch
 				{
-					Thread.Sleep(5000);
+					Thread.Sleep(90000);		// 1.5 minutes
 				}
 			}
 		}

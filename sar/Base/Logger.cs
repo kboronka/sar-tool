@@ -19,20 +19,47 @@ using sar.Tools;
 
 namespace sar
 {
+	/// <summary>
+	/// A static wrapper around the ApplicationHelper.Logger class.
+	/// </summary>
 	public static class Logger
 	{
-		public static event LoggerEventHandler OnLog;
+		private static ApplicationHelper.Logger logger;
+
+		private static ApplicationHelper.Logger LoggerLocal
+		{
+			get
+			{
+				if (logger == null)
+				{
+					var assembly = ApplicationHelper.AssemblyDetails.GetAssembly();
+					var assemblyDetail = new ApplicationHelper.AssemblyDetails(assembly);
+					var app = new ApplicationHelper.ApplicationDetails(assemblyDetail);
+					logger = new ApplicationHelper.Logger(app);
+				}
+				
+				return logger;
+			}
+		}
+
+		public static event ApplicationHelper.LoggerEventHandler OnLog
+		{
+			add
+			{
+				LoggerLocal.OnLog += value;
+			}
+			remove
+			{
+				LoggerLocal.OnLog -= value;				
+			}
+		}
 		
 		private static string logFilename;
-		private static ErrorLogger errorLog;
-		private static FileLogger debugLog;
-		
-		public static bool LogToConsole { get; set; }
-		
 		public static string LogFilename
 		{
 			get
 			{
+				
 				if (String.IsNullOrEmpty(logFilename))
 				{
 					logFilename = (System.Environment.UserInteractive) ? "" : "s.";
@@ -51,128 +78,36 @@ namespace sar
 			}
 		}
 		
-		private static ErrorLogger ErrorLog
+		public static bool LogToConsole
 		{
 			get
 			{
-				if (errorLog == null)
-				{
-					errorLog = new ErrorLogger("error." + LogFilename);
-				}
-				
-				return errorLog;
+				return LoggerLocal.LogToConsole;
 			}
-		}
-		
-		private static FileLogger DebugLog
-		{
-			get
+			set
 			{
-				if (debugLog == null)
-				{
-					debugLog = new FileLogger("debug." + LogFilename, true);
-				}
-				
-				return debugLog;
+				LoggerLocal.LogToConsole  = value;
 			}
 		}
 		
 		public static void Log(Exception ex)
 		{
-			try
-			{
-				Log(ex.GetType().ToString() + ": " + ex.Message);
-				ErrorLog.Write(ex);
-				
-				if (OnLog != null)
-				{
-					try
-					{
-						OnLog(new LoggerEventArgs(ex));
-					}
-					catch
-					{
-						
-					}
-				}
-				
-				if (LogToConsole)
-				{
-					ConsoleHelper.WriteException(ex);
-				}
-				
-				FlushLogs();
-			}
-			catch
-			{
-				
-			}
+			LoggerLocal.Log(ex);
 		}
 		
 		public static void Log(string message)
 		{
-			try
-			{
-				message = message.Replace("\r", @"\r");
-				message = message.Replace("\n", @"\n");
-				
-				DebugLog.WriteLine(message);
-
-				if (OnLog != null)
-				{
-					try
-					{
-						OnLog(new LoggerEventArgs(message));
-					}
-					catch
-					{
-						
-					}
-				}
-				
-				if (LogToConsole)
-				{
-					ConsoleHelper.WriteLine(message);
-				}
-			}
-			catch
-			{
-				
-			}
+			LoggerLocal.Log(message);
 		}
 		
 		public static void FlushLogs()
-		{			try
-			{
-				ErrorLog.FlushFile();
-				DebugLog.FlushFile();
-			}
-			catch
-			{
-				
-			}
+		{
+			LoggerLocal.FlushLogs();
 		}
 		
 		public static void LogInfo()
 		{
-			try
-			{
-				bool logTimestamps = DebugLog.LogTime;
-				DebugLog.LogTime = false;
-				DebugLog.WriteLine(AssemblyInfo.Name + " v" + AssemblyInfo.Version);
-				DebugLog.WriteLine("Path = " + ApplicationInfo.ApplicationPath);
-				DebugLog.WriteLine("Environment.UserInteractive = " + Environment.UserInteractive.ToString());
-				DebugLog.WriteLine("Username = " + System.Security.Principal.WindowsIdentity.GetCurrent().Name);
-				DebugLog.WriteLine(ConsoleHelper.HR);
-				
-				DebugLog.LogTime = logTimestamps;
-				
-				FlushLogs();
-			}
-			catch
-			{
-				
-			}
+			LoggerLocal.LogInfo();
 		}
 	}
 }

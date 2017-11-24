@@ -19,8 +19,9 @@ namespace sar.Tools
 {
 	public class ErrorLogger : FileLogger
 	{
-		public ErrorLogger(string filename) : base(filename, false)
+		public ErrorLogger(string root, string filename) : base(root, filename, false)
 		{
+			
 		}
 		
 		public void Write(Exception ex)

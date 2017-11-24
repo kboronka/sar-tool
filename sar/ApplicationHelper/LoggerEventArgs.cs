@@ -15,7 +15,7 @@
 
 using System;
 
-namespace sar
+namespace sar.ApplicationHelper
 {
 	// event delegate
 	public delegate void LoggerEventHandler(LoggerEventArgs e);

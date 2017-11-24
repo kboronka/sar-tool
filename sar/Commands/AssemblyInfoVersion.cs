@@ -75,7 +75,6 @@ namespace sar.Commands
 			ConsoleHelper.DebugWriteLine("filePattern = " + filePattern);
 			
 			var files = IO.GetAllFiles(root, filePattern);
-			ConsoleHelper.DebugWriteLine("files = " + files.Count.ToString());
 			var changedFiles = new List<string>();
 			
 			foreach (string file in files)
