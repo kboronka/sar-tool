@@ -44,7 +44,6 @@ namespace sar
 				
 				/*
 				args = new string[] { "f.rd", @"C:\Users\kboronka\Documents\Virtual Machines\caches", @"/pause" };
-				args = new string[] { "rdp", "192.168.171.208", @"username", "password", @"/pause" };
 				args = new string[] { "ip.set", "gigabit", "dhcp", @"/debug", @"/pause", @"/admin" };
 				args = new string[] { "ip.set", "gigabit", "192.168.14.111", "255.255.255.0", @"/debug", @"/pause", @"/admin" };
 				args = new string[] { "ip.config", @"/pause" };
@@ -56,11 +55,8 @@ namespace sar
 				args = new string[] { "svn.GetAssemblyVersion", @"https://github.com/kboronka/sar-tool/trunk/sar/Properties/AssemblyInfo.cs", @"/pause" };
 				args = new string[] { "svn.GetNewAssemblyVersion", @"https://github.com/kboronka/sar-tool/trunk/sar/Properties/AssemblyInfo.cs", @"/pause" };
 				args = new string[] { "dotNetVersions", @"/pause" };
-				args = new string[] { "r", "test.cs", @"break;\r\n(.*)case", @"break;\n\n\n$1case", @"/pause" };
-				args = new string[] { "c.c", @"C:\Users\kboronka\Desktop\Manual", @"/pause" };
 				args = new string[] { "c.c", @"C:\Users\kboronka\Documents\SharpDevelop Projects\sar", @"/pause" };
-				args = new string[] { "hc", @"C:\Users\kboronka\Desktop\Test\Test", @"C:\Users\kboronka\Desktop\Test\Test\Views", @"/pause" };
-				
+				args = new string[] { "hc", @"C:\Users\kboronka\Desktop\Test\Test", @"C:\Users\kboronka\Desktop\Test\Test\Views", @"/pause" };			
 				 */
 				
 				#endif				

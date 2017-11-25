@@ -181,11 +181,18 @@ namespace sar.Commands
 			                                     @"\r\n\s*\r\n([ \t]+)default",
 			                                     "\r\n$1default",
 			                                     "removed empty lines before default case"));
-			// remove all double empty lines
-			results.AddRange(IO.SearchAndReplace(ref content,
-			                                     @"\r\n[ \t]*\r\n([ \t]*)\r\n",
-			                                     "\r\n$1\r\n",
-			                                     "removed double empty lines"));
+			
+			var emptylines = new List<SearchResultMatch>();
+			do
+			{
+				emptylines = IO.SearchAndReplace(ref content,
+				                                 @"\r\n[ \t]*\r\n([ \t]*)\r\n",
+				                                 "\r\n$1\r\n",
+				                                 "removed double empty lines");
+				
+				// remove all double empty lines
+				results.AddRange(emptylines);
+			} while (emptylines.Count > 0);
 
 			// add empty line after #region
 			results.AddRange(IO.SearchAndReplace(ref content,
@@ -388,7 +395,7 @@ namespace sar.Commands
 						after += Environment.NewLine;
 					}
 				}
-			
+				
 				if (after != before)
 				{
 					var lineNumber = IO.GetLineNumber(content, matches[0].Index);
