@@ -88,6 +88,7 @@ namespace sar.Commands
 				results.Add(new SearchResultMatch(match, lineNumber, reason));
 				
 				var file = match.Groups[1].Value;
+				file = file.Replace(@"\.\", @"\");
 				
 				if (!String.IsNullOrEmpty(file) && !file.Contains("#") && !file.Contains("{"))
 				{
