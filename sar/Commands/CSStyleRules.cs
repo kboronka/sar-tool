@@ -307,7 +307,7 @@ namespace sar.Commands
 			
 			// add extra space before equality opeator
 			results.AddRange(IO.SearchAndReplace(ref content,
-			                                     @"([^ ]{1})((?:==)|(?:\>=)|(?:\<=)|(?:\!=))",
+			                                     @"([^ \<\>]{1})((?:==)|(?:\>=)|(?:\<=)|(?:\!=))",
 			                                     "$1 $2",
 			                                     "add extra space before equality opeator"));
 			
