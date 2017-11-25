@@ -40,7 +40,7 @@ namespace sar.ApplicationHelper
 		{
 			this.AssemblyDetails = assembly;
 			this.CommonDataDirectory = GetCommonDataDirectory();
-			this.CommonDataDirectory = GetLocalDataDirectory();
+			this.DataDirectory = GetLocalDataDirectory();
 			this.CurrentDirectory = System.AppDomain.CurrentDomain.BaseDirectory;
 			this.ApplicationPath = this.AssemblyDetails.Assembly.Location;
 			this.DesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\";

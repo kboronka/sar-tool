@@ -21,7 +21,7 @@ using System.Security.Principal;
 
 namespace sar.Tools
 {
-	public class ApplicationInfo
+	public static class ApplicationInfo
 	{
 		private static string commonDataDirectory;
 		public static string CommonDataDirectory
