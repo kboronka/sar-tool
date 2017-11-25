@@ -49,15 +49,15 @@ namespace sar.Commands
 		{
 			var results = new List<SearchResultMatch>();
 
-			// href
+			// style sheets - href
 			// example: <link rel="stylesheet" href="/Content/Junk/app/junk.css" />
-			var search = @" href\s*=\s*\""(.*?)(?:\?[vh]=.*?)*\""";
+			var search = @" href\s*=\s*\""(.*?\.css)(?:\?[vh]=.*?)*\""";
 			var replace = " href=" + "$1?h=**HASH**".QuoteDouble();
 			results.AddRange(ProcessMatches(ref content, search, replace, contentRoot, "href"));
 
-			// src
+			// javascript - src
 			// example: <script src="/example/example.js" type="text/javascript"></script>
-			search = @" src\s*=\s*\""(.*?)(?:\?[vh]=.*?)*\""";
+			search = @" src\s*=\s*\""(.*?\.js)(?:\?[vh]=.*?)*\""";
 			replace = " src=" + "$1?h=**HASH**".QuoteDouble();
 			results.AddRange(ProcessMatches(ref content, search, replace, contentRoot, "src"));
 
