@@ -23,7 +23,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
-using sar;
+using sar.ApplicationHelper;
 using sar.Tools;
 
 namespace sar.Tools
