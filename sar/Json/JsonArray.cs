@@ -28,7 +28,8 @@ namespace sar.Json
 			
 		}
 		
-		public JsonArray(string json) : base()
+		public JsonArray(string json) 
+			: base()
 		{
 			var depth = 0;
 			var stringDepth = 0;

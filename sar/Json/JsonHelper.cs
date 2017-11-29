@@ -401,7 +401,7 @@ namespace sar.Json
 		
 		public static JsonArray GetJsonArray(this string json)
 		{
-			return new JsonArray(json);
+			return new JsonArray(json.TrimWhiteSpace());
 		}
 		
 		public static object ValueToObject(string value)
