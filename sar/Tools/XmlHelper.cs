@@ -189,8 +189,10 @@ namespace sar.Tools
 				this.reader.Close();
 			}
 			
-			private static XmlReaderSettings ReaderSettings {
-				get {
+			private static XmlReaderSettings ReaderSettings 
+			{
+				get 
+				{
 					var settings = new XmlReaderSettings();
 					settings.CloseInput = true;
 					settings.IgnoreComments = true;
