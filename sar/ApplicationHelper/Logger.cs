@@ -108,7 +108,9 @@ namespace sar.ApplicationHelper
 				
 				if (LogToConsole)
 				{
-					ConsoleHelper.WriteLine(message);
+					ConsoleHelper.Write(logFilename, ConsoleColor.DarkYellow);	
+					ConsoleHelper.Write(" > ", ConsoleColor.Yellow);
+					ConsoleHelper.WriteLine(message, ConsoleColor.White);
 				}
 			}
 			catch
