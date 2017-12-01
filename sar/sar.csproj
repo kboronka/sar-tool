@@ -92,6 +92,8 @@
     <Compile Include="CommandHub.cs" />
     <Compile Include="Commands\AppShutdownWait.cs" />
     <Compile Include="Commands\Bower.cs" />
+    <Compile Include="Commands\FileDencrypt.cs" />
+    <Compile Include="Commands\FileEncrypt.cs" />
     <Compile Include="Commands\HashCache.cs" />
     <Compile Include="Commands\CSStyleRules.cs">
       <DependentUpon>CodeClean.cs</DependentUpon>
@@ -150,6 +152,7 @@
     <Compile Include="Commands\WindowsRearm.cs" />
     <Compile Include="Commands\WindowsRestart.cs" />
     <Compile Include="Commands\WindowsShellReplacement.cs" />
+    <Compile Include="Encryption\EncryptionHelper.cs" />
     <Compile Include="FSM\Command.cs" />
     <Compile Include="FSM\CommandQueue.cs" />
     <Compile Include="FSM\Message.cs" />
@@ -161,7 +164,9 @@
     <Compile Include="Json\JsonArray.cs" />
     <Compile Include="Json\JsonHelper.cs" />
     <Compile Include="Json\JsonKeyValuePairs.cs" />
-    <Compile Include="Net\WebClientEx.cs" />
+    <Compile Include="Net\WebClientEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Timing\Interval.cs" />
     <Compile Include="Databases\DatabaseHelper.cs" />
     <Compile Include="Databases\DatabaseObject.cs" />
@@ -205,7 +210,9 @@
     </Compile>
     <Compile Include="Tools\WinFormsHelper.cs" />
     <Compile Include="Tools\ErrorLogger.cs" />
-    <Compile Include="Tools\ExceptionHandler.cs" />
+    <Compile Include="Tools\ExceptionHandler.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Tools\ExceptionHandler.Designer.cs">
       <DependentUpon>ExceptionHandler.cs</DependentUpon>
     </Compile>
@@ -214,7 +221,9 @@
     <Compile Include="Tools\_Static_EmbeddedResource.cs" />
     <Compile Include="Tools\FTPHelper.cs" />
     <Compile Include="Tools\IO.cs" />
-    <Compile Include="Tools\LogForm.cs" />
+    <Compile Include="Tools\LogForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Tools\LogForm.Designer.cs">
       <DependentUpon>LogForm.cs</DependentUpon>
     </Compile>
@@ -233,27 +242,7 @@
     <Compile Include="Tools\WebHelper.cs" />
     <Compile Include="Tools\XmlHelper.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Commands" />
-    <Folder Include="Base" />
-    <Folder Include="Http" />
-    <Folder Include="Http\libs" />
-    <Folder Include="Http\Controllers" />
-    <Folder Include="Http\libs\art" />
-    <Folder Include="Http\Views" />
-    <Folder Include="Http\Views\Error" />
-    <Folder Include="Http\Views\Debug" />
-    <Folder Include="Databases\MSSQL" />
-    <Folder Include="Databases" />
-    <Folder Include="Json" />
-    <Folder Include="FSM" />
-    <Folder Include="Net" />
-    <Folder Include="ApplicationHelper" />
-    <Folder Include="Timing" />
-    <Folder Include="S7Siemens" />
-    <Folder Include="Socket" />
-    <Folder Include="Tools" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Tools\ExceptionHandler.resx">
       <DependentUpon>ExceptionHandler.cs</DependentUpon>

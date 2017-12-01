@@ -1,0 +1,12 @@
+C:\Users\cwillison\Documents\GitHub\sar-tool\sarTesting\obj\Debug\sarTesting.csprojResolveAssemblyReference.cache
+C:\Users\cwillison\Documents\GitHub\sar-tool\sarTesting\obj\Debug\sar.Testing.Menu.resources
+C:\Users\cwillison\Documents\GitHub\sar-tool\sarTesting\obj\Debug\sarTesting.csproj.GenerateResource.Cache
+C:\Users\cwillison\Documents\GitHub\sar-tool\sarTesting\bin\Debug\sar_testing.exe.config
+C:\Users\cwillison\Documents\GitHub\sar-tool\sarTesting\bin\Debug\sar_testing.exe
+C:\Users\cwillison\Documents\GitHub\sar-tool\sarTesting\bin\Debug\sar_testing.pdb
+C:\Users\cwillison\Documents\GitHub\sar-tool\sarTesting\bin\Debug\sar.exe
+C:\Users\cwillison\Documents\GitHub\sar-tool\sarTesting\bin\Debug\sarControls.dll
+C:\Users\cwillison\Documents\GitHub\sar-tool\sarTesting\bin\Debug\sar.pdb
+C:\Users\cwillison\Documents\GitHub\sar-tool\sarTesting\bin\Debug\sarControls.pdb
+C:\Users\cwillison\Documents\GitHub\sar-tool\sarTesting\obj\Debug\sar_testing.exe
+C:\Users\cwillison\Documents\GitHub\sar-tool\sarTesting\obj\Debug\sar_testing.pdb

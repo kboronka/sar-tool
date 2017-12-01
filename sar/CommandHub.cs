@@ -48,6 +48,8 @@ namespace sar.Tools
 			                          	new FileBsdHeader(this),
 			                          	new FileMove(this),
 			                          	new FileLock(this),
+                                        new FileEncrypt(this),
+                                        new FileDecrypt(this),
 			                          	new FanucFixLineNumbers(this),
 			                          	new FanucFTP(this),
 			                          	new FanucPositionsToCSV(this),
