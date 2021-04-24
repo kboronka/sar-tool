@@ -13,7 +13,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -25,7 +24,7 @@ namespace sar.Tools
 		#region static
 
 		private static Dictionary<string, EmbeddedResource> embeddedResources = new Dictionary<string, EmbeddedResource>();
-		
+
 		private static EmbeddedResource Find(string resource)
 		{
 			if (embeddedResources.ContainsKey(resource))
@@ -40,7 +39,7 @@ namespace sar.Tools
 				return embeddedResource;
 			}
 		}
-		
+
 		public static bool Contains(string resource)
 		{
 			try
@@ -49,17 +48,17 @@ namespace sar.Tools
 			}
 			catch
 			{
-				
+
 			}
-			
+
 			return false;
 		}
-		
+
 		public static byte[] Get(string resource)
 		{
 			return Find(resource).Bytes;
 		}
-		
+
 		private static Dictionary<string, Assembly> embeddedFiles;
 		public static Dictionary<string, Assembly> EmbeddedFiles
 		{
@@ -76,48 +75,49 @@ namespace sar.Tools
 						}
 					}
 				}
-				
+
 				return embeddedFiles;
 			}
 		}
-		
+
 		public static List<string> GetAllResources()
 		{
 			var keys = new List<string>();
-			foreach(string key in EmbeddedFiles.Keys)
+			foreach (string key in EmbeddedFiles.Keys)
 			{
 				keys.Add(key);
 			}
-			
+
 			return keys;
 		}
-		
+
 		#endregion
-		
-		private byte[] buffer = new byte[0] {};
+
+		private byte[] buffer = new byte[0] { };
 
 		private EmbeddedResource(string resource)
 		{
 			resource = resource.Replace(@"/", @".");
-			if (!EmbeddedFiles.ContainsKey(resource)) throw new FileNotFoundException("resource: " + resource + " not found");
-			
+			if (!EmbeddedFiles.ContainsKey(resource))
+				throw new FileNotFoundException("resource: " + resource + " not found");
+
 			Assembly assembly = EmbeddedFiles[resource];
 			Stream stream = assembly.GetManifestResourceStream(resource);
 			this.buffer = StreamHelper.ReadToEnd(stream);
 		}
-		
+
 		public byte[] Bytes
 		{
 			get { return this.buffer; }
 		}
-		
+
 		public override string ToString()
 		{
 			if (buffer.Length > 0)
 			{
 				return StringHelper.GetString(buffer);
 			}
-			
+
 			return "";
 		}
 	}

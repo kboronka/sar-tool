@@ -13,24 +13,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-
-using sar.Base;
-using sar.Tools;
 
 namespace sar.Commands
 {
 	public class rdp : Command
 	{
 		public rdp(Base.CommandHub parent) : base(parent, "RDP - Launch Session",
-		                     new List<string> { "rdp" },
-		                     @"-rdp host username password",
-		                     new List<string> { "-rdp 192.168.0.101 admin password" })
+							 new List<string> { "rdp" },
+							 @"-rdp host username password",
+							 new List<string> { "-rdp 192.168.0.101 admin password" })
 		{
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -38,19 +37,19 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("wrong number of arguments");
 			}
-			
+
 			string host = args[1];
 			string username = args[2];
 			string password = args[3];
-						
+
 			Progress.Message = "Launching rdp session to " + host;
 			ConsoleHelper.Run(Environment.SystemDirectory + @"\cmdkey.exe", "/generic:TERMSRV/" + host + " /user:" + username + " /pass:" + password);
 			ConsoleHelper.Start(Environment.SystemDirectory + @"\mstsc.exe", "/v " + host + " /f");
 			Thread.Sleep(3000);
 			ConsoleHelper.Run(Environment.SystemDirectory + @"\cmdkey.exe", "/delete:TERMSRV/" + host);
-			
+
 			ConsoleHelper.WriteLine("RDP Session Launched", ConsoleColor.DarkYellow);
-			
+
 			return ConsoleHelper.EXIT_OK;
 		}
 	}

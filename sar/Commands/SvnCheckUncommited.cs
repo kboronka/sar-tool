@@ -13,12 +13,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
-
-using sar.Base;
-using sar.Tools;
 
 namespace sar.Commands
 {
@@ -26,24 +25,25 @@ namespace sar.Commands
 	{
 		public SvnCheckUncommited(Base.CommandHub parent)
 			: base(parent, "SVN check for uncommited files",
-			       new List<string> { "svn.uc" },
-			       @"svn.un",
-			       new List<string> { @"-svn.uc" })
+				   new List<string> { "svn.uc" },
+				   @"svn.un",
+				   new List<string> { @"-svn.uc" })
 		{
-			
+
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			Progress.Enabled = false;
-			
+
 			// find svn executiable
 			var svn = IO.FindApplication("svn.exe", @"TortoiseSVN\bin");
-			if (!File.Exists(svn)) throw new ApplicationException("svn.exe not found");
-			
+			if (!File.Exists(svn))
+				throw new ApplicationException("svn.exe not found");
+
 			string result = "";
 			ConsoleHelper.Run(svn, " status -q", out result);
-			
+
 			if (!String.IsNullOrEmpty(result) && result.TrimWhiteSpace() != "")
 			{
 				ConsoleHelper.WriteLine("********************************************************", ConsoleColor.White);

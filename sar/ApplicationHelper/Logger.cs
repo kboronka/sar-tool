@@ -13,9 +13,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-
 using sar.Tools;
+using System;
 
 namespace sar.ApplicationHelper
 {
@@ -25,25 +24,25 @@ namespace sar.ApplicationHelper
 	public class Logger
 	{
 		public event LoggerEventHandler OnLog;
-		
+
 		private ApplicationDetails application;
 		private string logFilename;
 		private ErrorLogger errorLog;
 		private FileLogger debugLog;
 		public bool LogToConsole { get; set; }
-		
+
 		public Logger(ApplicationDetails application)
 			: this(application, application.AssemblyDetails.Name)
 		{
-			
+
 		}
-		
+
 		public Logger(ApplicationDetails application, string name)
 			: this(application, name, application.CommonDataDirectory)
 		{
-			
+
 		}
-		
+
 		public Logger(ApplicationDetails application, string name, string folder)
 		{
 			this.LogToConsole = false;
@@ -59,7 +58,7 @@ namespace sar.ApplicationHelper
 			{
 				Log(ex.GetType().ToString() + ": " + ex.Message);
 				this.errorLog.Write(ex);
-				
+
 				if (OnLog != null)
 				{
 					try
@@ -68,30 +67,30 @@ namespace sar.ApplicationHelper
 					}
 					catch
 					{
-						
+
 					}
 				}
-				
+
 				if (LogToConsole)
 				{
 					ConsoleHelper.WriteException(ex);
 				}
-				
+
 				FlushLogs();
 			}
 			catch
 			{
-				
+
 			}
 		}
-		
+
 		public void Log(string message)
 		{
 			try
 			{
 				message = message.Replace("\r", @"\r");
 				message = message.Replace("\n", @"\n");
-				
+
 				this.debugLog.WriteLine(message);
 
 				if (OnLog != null)
@@ -102,25 +101,25 @@ namespace sar.ApplicationHelper
 					}
 					catch
 					{
-						
+
 					}
 				}
-				
+
 				if (LogToConsole)
 				{
-					ConsoleHelper.Write(logFilename, ConsoleColor.DarkYellow);	
+					ConsoleHelper.Write(logFilename, ConsoleColor.DarkYellow);
 					ConsoleHelper.Write(" > ", ConsoleColor.Yellow);
 					ConsoleHelper.WriteLine(message, ConsoleColor.White);
 				}
 			}
 			catch
 			{
-				
+
 			}
 		}
-		
+
 		public void FlushLogs()
-		{			
+		{
 			try
 			{
 				this.errorLog.FlushFile();
@@ -128,10 +127,10 @@ namespace sar.ApplicationHelper
 			}
 			catch
 			{
-				
+
 			}
 		}
-		
+
 		public void LogInfo()
 		{
 			try
@@ -144,14 +143,14 @@ namespace sar.ApplicationHelper
 				this.debugLog.WriteLine("Username = " + System.Security.Principal.WindowsIdentity.GetCurrent().Name);
 				this.debugLog.WriteLine("Wow64 = " + this.application.IsWow64.ToString());
 				this.debugLog.WriteLine(ConsoleHelper.HR);
-				
+
 				this.debugLog.LogTime = logTimestamps;
-				
+
 				FlushLogs();
 			}
 			catch
 			{
-				
+
 			}
 		}
 	}

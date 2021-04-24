@@ -13,24 +13,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
-
-using sar.Base;
-using sar.Tools;
 
 namespace sar.Commands
 {
 	public class CodeReIndent : Command
 	{
 		public CodeReIndent(Base.CommandHub parent) : base(parent, "Code - ReIndent",
-		                             new List<string> { "code.reindent", "c.reindent", "c.r" },
-		                             @"-code.reindent [filepath/pattern]",
-		                             new List<string> { "-code.reindent *.vb" })
+									 new List<string> { "code.reindent", "c.reindent", "c.r" },
+									 @"-code.reindent [filepath/pattern]",
+									 new List<string> { "-code.reindent *.vb" })
 		{
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -38,16 +37,17 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
+
 			Progress.Message = "Searching";
 			string filePattern = args[1];
 			string root = Directory.GetCurrentDirectory();
 			IO.CheckRootAndPattern(ref root, ref filePattern);
 			List<string> files = IO.GetAllFiles(root, filePattern);
-			
+
 			ConsoleHelper.DebugWriteLine("pattern: " + filePattern);
 			ConsoleHelper.DebugWriteLine("root: " + root);
-			if (files.Count == 0) throw new FileNotFoundException("unable to find any files that match pattern: \"" + filePattern + "\" in root: \"" + root + "\"");
+			if (files.Count == 0)
+				throw new FileNotFoundException("unable to find any files that match pattern: \"" + filePattern + "\" in root: \"" + root + "\"");
 
 			int counter = 0;
 			foreach (string file in files)
@@ -55,15 +55,15 @@ namespace sar.Commands
 				try
 				{
 					Progress.Message = "ReIndenting " + IO.GetFilename(file);
-					
+
 					switch (IO.GetFileExtension(file).ToLower())
 					{
 						case "vb":
 							counter++;
-							
+
 							var lines = IO.ReadFileLines(file);
 							var newlines = new List<string>();
-							
+
 							int level = 0;
 							bool linecontinue = false;
 							//bool levelup = false;
@@ -76,11 +76,11 @@ namespace sar.Commands
 							{
 								linenumber++;
 								string newline = line.TrimWhiteSpace();
-								
+
 								// clean string
 								string temp = StringHelper.Remove(line, new List<string> { "Private", "Protected", "Public", "Shared", "Overridable", "Overrides", "Overloads", "Friend", "ReadOnly", "WriteOnly", "Partial", "Shadows", "Default", "NotInheritable" });
 								temp = temp.TrimWhiteSpace();
-								
+
 								// trim meta tags
 								meta = false;
 								if (temp.StartsWith("<"))
@@ -113,34 +113,34 @@ namespace sar.Commands
 										temp = "";
 									}
 								}
-								
+
 								// trim comments
 								if (temp.Contains("'"))
 								{
 									temp = temp.Substring(0, temp.IndexOf('\''));
 								}
-								
+
 								temp = temp.TrimWhiteSpace();
-								
+
 								string firstword = StringHelper.FirstWord(temp);
 								string lastword = StringHelper.LastWord(temp);
-								
+
 								if (!string.IsNullOrEmpty(firstword) && firstword[0] != '\'')
 								{
 									// ******************** Level Down Before Print *************************** //
 									// single level
 									if (StringHelper.StartsWith(temp, new List<string>() { "Loop", "Next", "End", "End If", "ElseIf", "#End If", "#ElseIf", "#Else", "Catch", "Finally", "End Try", "End Select", "End Sub", "End Function", "End Enum", "Case" }) ||
-									    (firstword == "Else" && !temp.StartsWith("Else :")))
+										(firstword == "Else" && !temp.StartsWith("Else :")))
 									{
 										level--;
 									}
-									
+
 									// double level
 									if (StringHelper.StartsWith(temp, new List<string>() { "End Select" }))
 									{
 										level--;
 									}
-									
+
 									// ******************** correction for line continuation *************************** //
 									int correction = level;
 									//correction -= ((linecontinue) ? 1 : 0);
@@ -155,19 +155,20 @@ namespace sar.Commands
 											ConsoleHelper.DebugWriteLine("line: " + linenumber.ToString());
 										}
 									}
-									
+
 									// ******************** Print Line *************************** //
 									lastIndentLevel = correction;
-									if (correction < 0) correction = 0;
+									if (correction < 0)
+										correction = 0;
 									newlines.Add(new String('\t', correction) + (linecontinue ? new String(' ', 2) : "") + newline);
-									
+
 									linecontinue = StringHelper.EndsWith(temp, new List<string>() { "_" }) & !meta;
-									
+
 									// ******************** Level Up after line *************************** //
 									if (StringHelper.EndsWith(temp, new List<string>() { "Then", "Else", "#ElseIf", "#Else" }) ||
-									    StringHelper.StartsWith(temp, new List<string>() { "Namespace", "Class", "Structure", "Function", "Property", "Operator", "Enum", "Sub", "Module", "SyncLock", "Select Case", "Case", "For", "For Each", "Do", "Do While", "While", "Try", "Catch", "Finally", "With", "Custom Event" }) ||
-									    temp.StartsWith("AddHandler(") ||  temp.StartsWith("RemoveHandler(") ||  temp.StartsWith("RaiseEvent(") ||
-									    (firstword == "Get") || (firstword == "Set"))
+										StringHelper.StartsWith(temp, new List<string>() { "Namespace", "Class", "Structure", "Function", "Property", "Operator", "Enum", "Sub", "Module", "SyncLock", "Select Case", "Case", "For", "For Each", "Do", "Do While", "While", "Try", "Catch", "Finally", "With", "Custom Event" }) ||
+										temp.StartsWith("AddHandler(") || temp.StartsWith("RemoveHandler(") || temp.StartsWith("RaiseEvent(") ||
+										(firstword == "Get") || (firstword == "Set"))
 									{
 										level++;
 										//levelup = true;
@@ -176,7 +177,7 @@ namespace sar.Commands
 									{
 										//if (!linecontinue) levelup = false;
 									}
-									
+
 									// double level
 									if (StringHelper.StartsWith(temp, new List<string>() { "Select Case" }))
 									{
@@ -187,7 +188,8 @@ namespace sar.Commands
 								{
 									if (newline.StartsWith("'"))
 									{
-										if (level < 0) level = 0;
+										if (level < 0)
+											level = 0;
 										newlines.Add(new String('\t', level) + newline);
 									}
 									else
@@ -196,13 +198,13 @@ namespace sar.Commands
 									}
 								}
 							}
-							
+
 							if (lastIndentLevel != 0)
 							{
 								IO.WriteFileLines(file + ".error", newlines);
 								throw new Exception("failed to indent " + IO.GetFilename(file));
 							}
-							
+
 							IO.WriteFileLines(file, newlines);
 
 							break;
@@ -215,7 +217,7 @@ namespace sar.Commands
 					ConsoleHelper.WriteException(ex);
 				}
 			}
-			
+
 			ConsoleHelper.WriteLine(counter.ToString() + " File" + ((counter != 1) ? "s" : "") + " Checked", ConsoleColor.DarkYellow);
 			return ConsoleHelper.EXIT_OK;
 		}

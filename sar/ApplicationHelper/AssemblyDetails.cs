@@ -31,19 +31,19 @@ namespace sar.ApplicationHelper
 		public Version Version { get; private set; }
 		public string Copyright { get; private set; }
 		public List<Assembly> Assemblies { get; private set; }
-		
+
 		public AssemblyDetails()
-			:this(GetAssembly())
+			: this(GetAssembly())
 		{
 
 		}
-		
+
 		public AssemblyDetails(Assembly assembly)
 		{
 			this.Assembly = assembly;
 			this.Name = this.Assembly.GetName().Name;
 			this.Version = this.Assembly.GetName().Version;
-			
+
 			object[] attributes = this.Assembly.GetCustomAttributes(typeof(AssemblyProductAttribute), false);
 			if (attributes.Length == 0)
 			{
@@ -53,13 +53,13 @@ namespace sar.ApplicationHelper
 			{
 				this.Product = ((AssemblyProductAttribute)attributes[0]).Product;
 			}
-			
+
 			attributes = this.Assembly.GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
 			this.Company = attributes.Length == 0 ? "" : ((AssemblyCompanyAttribute)attributes[0]).Company;
-			
+
 			attributes = this.Assembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
 			this.Copyright = attributes.Length == 0 ? "" : ((AssemblyCopyrightAttribute)attributes[0]).Copyright;
-			
+
 			this.Assemblies = GetReferencedAssemblies(assembly);
 		}
 
@@ -67,15 +67,15 @@ namespace sar.ApplicationHelper
 		{
 			var assemblies = new List<Assembly>();
 			assemblies.Add(assembly);
-			
+
 			foreach (AssemblyName assemblyName in assembly.GetReferencedAssemblies())
 			{
 				string name = assemblyName.Name;
-				
+
 				if (!name.StartsWith("System")
-				    && !name.StartsWith("mscorlib")
-				    && !name.StartsWith("Microsoft.")
-				    && !name.StartsWith("CefSharp."))
+					&& !name.StartsWith("mscorlib")
+					&& !name.StartsWith("Microsoft.")
+					&& !name.StartsWith("CefSharp."))
 				{
 					try
 					{
@@ -83,11 +83,11 @@ namespace sar.ApplicationHelper
 					}
 					catch
 					{
-						
+
 					}
 				}
 			}
-			
+
 			return assemblies;
 		}
 
@@ -99,18 +99,18 @@ namespace sar.ApplicationHelper
 			}
 			catch
 			{
-				
+
 			}
-			
+
 			try
 			{
 				return Assembly.GetCallingAssembly();
 			}
 			catch
 			{
-				
+
 			}
-			
+
 			throw new ApplicationException("Assembly Not Found");
 		}
 	}

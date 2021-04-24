@@ -21,13 +21,13 @@ namespace sar.Timing
 	public class ScanTimeMonitor
 	{
 		private Interval log;
-		
+
 		private string description;
 		private long logInterval;
 		private Stopwatch time;
 		private long lastTrigger;
 		public long Last { get; private set; }
-		
+
 		private long total;
 		private long min;
 		private long max;
@@ -36,44 +36,44 @@ namespace sar.Timing
 		public ScanTimeMonitor(string description, long logInterval)
 		{
 			this.log = new Interval(logInterval);
-			
+
 			this.description = description;
 			this.logInterval = logInterval;
-			
+
 			this.time = new Stopwatch();
 			this.time.Start();
-			
+
 			this.counts = 0;
 			this.total = 0;
 			this.min = long.MaxValue;
 			this.max = long.MinValue;
 		}
-		
+
 		public void Start()
 		{
 			this.lastTrigger = time.ElapsedMilliseconds;
 		}
-		
+
 		public void Stop()
 		{
 			var currentTime = time.ElapsedMilliseconds;
 			var scantime = currentTime - lastTrigger;
 			this.Last = scantime;
-			
+
 			lastTrigger = currentTime;
-			
+
 			this.counts++;
 			this.total += scantime;
 			this.min = Math.Min(this.min, scantime);
 			this.max = Math.Max(this.max, scantime);
-			
+
 			if (this.log.Ready)
 			{
 				Logger.Log(description + " - " +
-				           " min: " + this.min.ToString() +
-				           " avg: " + (this.total / this.counts).ToString() +
-				           " max: " + this.max.ToString());
-				
+						   " min: " + this.min.ToString() +
+						   " avg: " + (this.total / this.counts).ToString() +
+						   " max: " + this.max.ToString());
+
 				this.counts = 0;
 				this.total = 0;
 				this.min = long.MaxValue;

@@ -13,25 +13,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-
-using sar.Base;
-using sar.Tools;
 
 namespace sar.Commands
 {
 	public class CodeClean : Command
 	{
 		public CodeClean(Base.CommandHub parent) : base(parent, "Code - Clean",
-		                                                new List<string> { "code.clean", "c.clean", "c.c" },
-		                                                @"-code.code path",
-		                                                new List<string> { @"-code.clean *c:\code\" })
+														new List<string> { "code.clean", "c.clean", "c.c" },
+														@"-code.code path",
+														new List<string> { @"-code.clean *c:\code\" })
 		{
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -39,20 +37,20 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
+
 			Progress.Message = "Searching";
 			string root = args[1];
 			if (!Directory.Exists(root))
 			{
 				throw new DirectoryNotFoundException("directory: " + root.QuoteDouble() +
-				                                     " does not exists");
+													 " does not exists");
 			}
-			
+
 			List<string> files = IO.GetAllFiles(root, "*.*");
 			if (files.Count == 0)
 			{
 				throw new FileNotFoundException("unable to find any files in root: " +
-				                                root.QuoteDouble());
+												root.QuoteDouble());
 			}
 
 			var fileChangeResults = new List<SearchResults>();
@@ -62,7 +60,7 @@ namespace sar.Commands
 				{
 					Progress.Message = "Cleaning " + IO.GetFilename(file);
 					var changes = new SearchResults(file);
-					
+
 					switch (IO.GetFileExtension(file).ToLower())
 					{
 						case "vb":
@@ -77,7 +75,7 @@ namespace sar.Commands
 							{
 								continue;
 							}
-							
+
 							string content = IO.ReadFileAsUtf8(file);
 							var strings = CSStyleRules.RemoveStrings(ref content);
 							changes.AddResults(CSStyleRules.SortUsingDirectives(ref content));
@@ -94,12 +92,12 @@ namespace sar.Commands
 						default:
 							break;
 					}
-					
+
 					if (changes.Matches.Count > 0)
 					{
 						ConsoleHelper.WriteLine("");
 						ConsoleHelper.WriteLine(IO.GetFilename(file), ConsoleColor.Yellow);
-						
+
 						foreach (var change in changes.Matches)
 						{
 							ConsoleHelper.Write("  +line ");
@@ -113,7 +111,7 @@ namespace sar.Commands
 					ConsoleHelper.WriteException(ex);
 				}
 			}
-			
+
 			return ConsoleHelper.EXIT_OK;
 		}
 	}

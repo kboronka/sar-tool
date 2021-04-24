@@ -13,24 +13,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
-
-using sar.Base;
-using sar.Tools;
 
 namespace sar.Commands
 {
 	public class FileRemoveDirectory : Command
 	{
 		public FileRemoveDirectory(Base.CommandHub parent) : base(parent, "File - Remove Directory",
-		                                                          new List<string> { "file.removedirectory", "f.rd", "d.d" },
-		                                                          "-f.d [filepattern]",
-		                                                          new List<string> { "-f.rd \"C:\\Temp\"" })
+																  new List<string> { "file.removedirectory", "f.rd", "d.d" },
+																  "-f.d [filepattern]",
+																  new List<string> { "-f.rd \"C:\\Temp\"" })
 		{
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -38,22 +37,24 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
+
 			Progress.Message = "Searching";
 			string root = args[1];
 			string filePattern = root.Substring(root.LastIndexOf(@"\") + 1, root.Length - root.LastIndexOf(@"\") - 1);
 			root = root.Substring(0, root.LastIndexOf(@"\") + 1);
-			
-			if (!Directory.Exists(root)) throw new ApplicationException("Directory does not exist");
+
+			if (!Directory.Exists(root))
+				throw new ApplicationException("Directory does not exist");
 
 			var foundDirectories = new List<string>();
 			foundDirectories.AddRange(GetDirectories(root, filePattern, !this.commandHub.IncludeSubFolders));
-			
-			if (foundDirectories.Count == 0) throw new ApplicationException("\"" + filePattern + "\" Folders not found in \"" + root + "\"");
-			
+
+			if (foundDirectories.Count == 0)
+				throw new ApplicationException("\"" + filePattern + "\" Folders not found in \"" + root + "\"");
+
 			var subDirectories = new List<string>();
 			var files = new List<string>();
-			
+
 			foreach (string directory in foundDirectories)
 			{
 				if (this.commandHub.Debug)
@@ -64,9 +65,9 @@ namespace sar.Commands
 						ConsoleHelper.WriteLine(StringHelper.TrimStart(subDirectory, root.Length));
 					}
 				}
-				
+
 				subDirectories.AddRange(IO.GetAllDirectories(directory));
-				
+
 				if (this.commandHub.Debug)
 				{
 					foreach (string file in IO.GetAllFiles(directory))
@@ -75,7 +76,7 @@ namespace sar.Commands
 						ConsoleHelper.WriteLine(StringHelper.TrimStart(file, root.Length));
 					}
 				}
-				
+
 				files.AddRange(IO.GetAllFiles(directory));
 			}
 
@@ -89,13 +90,13 @@ namespace sar.Commands
 				ConsoleHelper.Write("containing: ", ConsoleColor.Yellow);
 				ConsoleHelper.WriteLine(files.Count.ToString() + " " + ((subDirectories.Count != 1) ? "files" : "file"));
 			}
-			
+
 			if (foundDirectories.Count > 0)
 			{
 				if (this.commandHub.NoWarning || ConsoleHelper.Confirm("Delete " + foundDirectories.Count.ToString() + " " + ((foundDirectories.Count != 1) ? "directories" : "directory") + "? (y/n)"))
 				{
 					Progress.Message = "Deleting " + root;
-					
+
 					try
 					{
 						foreach (string directory in foundDirectories)
@@ -104,17 +105,17 @@ namespace sar.Commands
 							root = directory;
 							IO.CheckRootAndPattern(ref root, ref filePattern);
 							files = IO.GetAllFiles(root, filePattern);
-			
+
 							// make every file not read-only
 							foreach (string filepath in files)
 							{
 								File.SetAttributes(filepath, FileAttributes.Normal);
 							}
-							
+
 							// make directory not read only
 							var directoryInfo = new DirectoryInfo(directory);
 							directoryInfo.Attributes &= ~FileAttributes.ReadOnly;
-							
+
 							// delete the directory
 							Directory.Delete(directory, true);
 						}
@@ -123,7 +124,7 @@ namespace sar.Commands
 					{
 						ConsoleHelper.Write("failed: ", ConsoleColor.Red);
 						ConsoleHelper.WriteLine(root);
-						
+
 						if (this.commandHub.Debug)
 						{
 							ConsoleHelper.WriteException(ex);
@@ -131,7 +132,7 @@ namespace sar.Commands
 					}
 				}
 			}
-			
+
 			ConsoleHelper.WriteLine(foundDirectories.Count.ToString() + " Director" + ((foundDirectories.Count != 1) ? "ies" : "y") + " deleted", ConsoleColor.DarkYellow);
 			return ConsoleHelper.EXIT_OK;
 		}
@@ -140,24 +141,25 @@ namespace sar.Commands
 		{
 			return GetDirectories(root, filePattern, false);
 		}
-		
+
 		public List<string> GetDirectories(string root, string filePattern, bool rootOnly)
 		{
 			var directories = new List<string>();
-			
+
 			try
 			{
 				foreach (var directory in Directory.GetDirectories(root))
 				{
 					directories.Add(directory);
-					if (!rootOnly) directories.AddRange(GetDirectories(directory, filePattern));
+					if (!rootOnly)
+						directories.AddRange(GetDirectories(directory, filePattern));
 				}
 			}
 			catch (UnauthorizedAccessException ex)
 			{
 				ConsoleHelper.WriteException(ex);
 			}
-			
+
 			var filteredDirectories = new List<string>();
 			foreach (var directory in directories)
 			{
@@ -166,7 +168,7 @@ namespace sar.Commands
 					filteredDirectories.Add(directory);
 				}
 			}
-			
+
 			return filteredDirectories;
 		}
 	}

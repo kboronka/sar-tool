@@ -13,12 +13,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
-
-using sar.Json;
-using sar.Tools;
 
 namespace sar.Http
 {
@@ -30,7 +28,7 @@ namespace sar.Http
 		{
 			return new HttpContent(request.Data, "text/html");
 		}
-		
+
 		public static HttpContent json(HttpRequest request)
 		{
 			try
@@ -39,9 +37,10 @@ namespace sar.Http
 				result.Add("request", Encoding.ASCII.GetString(request.Data));
 				result.Add("guid", Guid.NewGuid().ToString());
 				result.Add("html", @"<h1 class=""page-header"">" + request.Data + @"</h1><br/>");
-				
-				if (Encoding.ASCII.GetString(request.Data) == "error") throw new ApplicationException("error test");
-				
+
+				if (Encoding.ASCII.GetString(request.Data) == "error")
+					throw new ApplicationException("error test");
+
 				return new HttpContent(result.ToJson());
 			}
 			catch (Exception ex)

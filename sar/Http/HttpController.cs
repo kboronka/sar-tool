@@ -13,28 +13,27 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-
-using sar.Tools;
 
 namespace sar.Http
 {
 	public class HttpController
 	{
 		#region static members and methods
-		
+
 		private static Dictionary<string, HttpController> controllers;
 		private static HttpController primary;
-		
+
 		public static HttpController Primary { get { return primary; } }
-		
+
 		public static void LoadControllers()
 		{
 			HttpController.controllers = new Dictionary<string, HttpController>();
-			
+
 			foreach (Assembly assembly in AssemblyInfo.Assemblies)
 			{
 				foreach (Type type in assembly.GetTypes())
@@ -54,82 +53,88 @@ namespace sar.Http
 				}
 			}
 		}
-		
+
 		public static bool ActionExists(HttpRequest request)
 		{
 			string[] urlSplit = request.Path.Split('/');
-			
-			if (urlSplit.Length != 2) return false;
-			
+
+			if (urlSplit.Length != 2)
+				return false;
+
 			string controllerName = urlSplit[0];
 			string actionName = urlSplit[1];
-			if (!controllers.ContainsKey(controllerName)) return false;
-			if (!controllers[controllerName].actions.ContainsKey(actionName)) return false;
-			
+			if (!controllers.ContainsKey(controllerName))
+				return false;
+			if (!controllers[controllerName].actions.ContainsKey(actionName))
+				return false;
+
 			return true;
 		}
-		
+
 		public static HttpContent RequestPrimary(HttpRequest request)
 		{
 			object contentObject = HttpController.primary.primaryAction.Invoke(null, new object[] { request });
 			return (HttpContent)contentObject;
 		}
-		
+
 		public static HttpContent RequestAction(HttpRequest request)
 		{
 			string[] urlSplit = request.Path.Split('/');
 			string controllerName = urlSplit[0];
 			string actionName = urlSplit[1];
-			
+
 			return RequestAction(controllerName, actionName, request);
 		}
 
 		public static HttpContent RequestAction(string controllerName, string actionName, HttpRequest request)
 		{
-			if (!controllers.ContainsKey(controllerName)) throw new FileNotFoundException("controller " + @"""" + controllerName + @"""" + " not found");
+			if (!controllers.ContainsKey(controllerName))
+				throw new FileNotFoundException("controller " + @"""" + controllerName + @"""" + " not found");
 			HttpController controller = controllers[controllerName];
-			
-			if (!controller.actions.ContainsKey(actionName)) throw new FileNotFoundException("action " + @"""" + actionName + @"""" + " not found in controller " + @"""" + controllerName + @"""");
+
+			if (!controller.actions.ContainsKey(actionName))
+				throw new FileNotFoundException("action " + @"""" + actionName + @"""" + " not found in controller " + @"""" + controllerName + @"""");
 			MethodInfo action = controller.actions[actionName];
-			
+
 			object contentObject = action.Invoke(null, new object[] { request });
 			return (HttpContent)contentObject;
 		}
-		
+
 		#endregion
-		
+
 		private Type type;
 		private MethodInfo primaryAction;
 		private Dictionary<string, MethodInfo> actions;
-		
+
 		public string FullName
 		{
 			get { return type.FullName; }
 		}
-		
+
 		public string Name
 		{
 			get { return type.Name; }
 		}
-		
+
 		public MethodInfo PrimaryAction
 		{
 			get { return primaryAction; }
 		}
-		
+
 		public HttpController(Type controller)
 		{
 			this.type = controller;
 			this.actions = new Dictionary<string, MethodInfo>();
-			
+
 			if (controller.Assembly == AssemblyInfo.Assembly)
 			{
 				foreach (object obj in controller.GetCustomAttributes(false))
 				{
-					if (obj is PrimaryController) HttpController.primary = this;
+					if (obj is PrimaryController)
+						HttpController.primary = this;
 				}
 			}
-			
+
 			foreach (MethodInfo method in controller.GetMethods())
 			{
 				if (!method.IsSpecialName && method.IsStatic && method.IsPublic && method.ReturnType == typeof(HttpContent) && method.GetParameters().Length == 1 && method.GetParameters()[0].ParameterType == typeof(HttpRequest))
@@ -137,8 +142,10 @@ namespace sar.Http
 					this.actions.Add(method.Name, method);
 					foreach (object obj in method.GetCustomAttributes(false))
 					{
-						if (obj is PrimaryView) this.primaryAction = method;
-						if (obj is ViewAlias) this.actions.Add(((ViewAlias)obj).Alias, method);
+						if (obj is PrimaryView)
+							this.primaryAction = method;
+						if (obj is ViewAlias)
+							this.actions.Add(((ViewAlias)obj).Alias, method);
 					}
 				}
 			}
@@ -152,13 +159,13 @@ namespace sar.Http
 	public class ViewAlias : Attribute
 	{
 		public string Alias { get; private set; }
-		
+
 		public ViewAlias(string alias)
 		{
 			this.Alias = alias;
 		}
 	}
-	
+
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 	public class PrimaryController : Attribute { }
 

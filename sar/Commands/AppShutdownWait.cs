@@ -13,23 +13,22 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-
 using sar.Base;
 using sar.Tools;
+using System;
+using System.Collections.Generic;
 
 namespace sar.Commands
 {
 	public class AppShutdownWait : Command
 	{
 		public AppShutdownWait(Base.CommandHub parent) : base(parent, "Application - Wait for shutdown",
-		                     new List<string> { "app.wait", "a.w" },
-		                     @"-app.wait [ProcessName]",
-		                     new List<string> { "-app.wait LabVIEW" })
+							 new List<string> { "app.wait", "a.w" },
+							 @"-app.wait [ProcessName]",
+							 new List<string> { "-app.wait LabVIEW" })
 		{
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -37,16 +36,17 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("wrong number of arguments");
 			}
-			
+
 			string processName = args[1];
 			int timeout = -1;
-			
-			if (args.Length == 3) int.TryParse(args[2], out timeout);
-			
+
+			if (args.Length == 3)
+				int.TryParse(args[2], out timeout);
+
 			Progress.Message = "Waiting for Process " + processName + " to stop";
 			ConsoleHelper.WaitForProcess_Shutdown(processName, timeout);
 			ConsoleHelper.WriteLine(processName + " stopped", ConsoleColor.DarkYellow);
-			
+
 			return ConsoleHelper.EXIT_OK;
 		}
 	}

@@ -13,9 +13,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-
 using sar.Tools;
+using System;
 
 namespace sar.Http
 {
@@ -46,18 +45,18 @@ namespace sar.Http
 	+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - +
 	|                     Payload Data continued ...                |
 	+---------------------------------------------------------------+
-	 */ 		
-	
-    public enum OPCODE
-    {
+	 */
+
+	public enum OPCODE
+	{
 		ContinuationFrame = 0x0,
 		TextFrame = 0x1,
 		BinaryFrame = 0x2,
 		ConnectionClose = 0x8,
 		Ping = 0x9,
 		Pong = 0xA
-    };
-	
+	};
+
 	public class HttpWebSocketFrame
 	{
 		public bool Fin { get; private set; }
@@ -66,16 +65,16 @@ namespace sar.Http
 		public OPCODE OpCode { get; private set; }
 		public uint PayloadLen { get; private set; }
 		public byte[] Payload { get; private set; }
-		
+
 		public byte[] EncodedFrame
 		{
 			get
 			{
-				var message = new byte[] {0, 0};
+				var message = new byte[] { 0, 0 };
 				message[0] ^= (byte)(this.Fin ? 0x80 : 0x0);
 				message[0] ^= (byte)((int)this.OpCode);
 				message[1] ^= (byte)(this.Mask ? 0x80 : 0x0);
-				
+
 				if (PayloadLen < 126)
 				{
 					message[1] ^= (byte)(this.PayloadLen);
@@ -90,9 +89,9 @@ namespace sar.Http
 					message[1] ^= ((byte)127);
 					message = IO.Combine(message, IO.Split((UInt32)this.PayloadLen));
 				}
-				
+
 				var encodedPayload = this.Payload;
-				
+
 				if (Mask)
 				{
 					message = IO.Combine(message, this.MaskKey);
@@ -101,21 +100,21 @@ namespace sar.Http
 						encodedPayload[i] = (byte)(this.Payload[i] ^ this.MaskKey[i % 4]);
 					}
 				}
-				
+
 				message = IO.Combine(message, encodedPayload);
-				
+
 				return message;
 			}
 		}
-		
+
 		public static HttpWebSocketFrame EncodeFrame(byte[] payload)
 		{
-			return new HttpWebSocketFrame(true, false, new byte[] {}, OPCODE.BinaryFrame, payload);
+			return new HttpWebSocketFrame(true, false, new byte[] { }, OPCODE.BinaryFrame, payload);
 		}
 
 		public static HttpWebSocketFrame EncodeFrame(string text)
 		{
-			return new HttpWebSocketFrame(true, false, new byte[] {}, OPCODE.TextFrame, System.Text.Encoding.ASCII.GetBytes(text));
+			return new HttpWebSocketFrame(true, false, new byte[] { }, OPCODE.TextFrame, System.Text.Encoding.ASCII.GetBytes(text));
 		}
 
 		public HttpWebSocketFrame(bool fin, bool mask, byte[] maskKey, OPCODE opCode, byte[] payload)
@@ -127,20 +126,20 @@ namespace sar.Http
 			this.PayloadLen = (uint)payload.Length;
 			this.Payload = payload;
 		}
-		
+
 		public static HttpWebSocketFrame DecodeFrame(byte[] message)
 		{
 			bool fin = (message[0] & 0x80) > 0;
 			var opCode = (OPCODE)(message[0] & ~0xF0);
-			
+
 			bool mask = (message[1] & 0x80) > 0;
 			var payloadLength = (uint)(message[1] & ~0x80);
-			
+
 			uint payloadStartByte = 2;
 			if (payloadLength == 126)
 			{
 				payloadStartByte = 4;
-				
+
 				payloadLength = BitConverter.ToUInt16(IO.ReverseBytes(IO.SubSet(message, 2, 2)), 0);
 			}
 			else if (payloadLength == 127)
@@ -148,16 +147,16 @@ namespace sar.Http
 				payloadStartByte = 8;
 				payloadLength = BitConverter.ToUInt16(IO.ReverseBytes(IO.SubSet(message, 4, 4)), 0);
 			}
-			
-			var maskKey = new byte[] {};
+
+			var maskKey = new byte[] { };
 			if (mask)
 			{
 				maskKey = IO.SubSet(message, (int)(payloadStartByte), 4);
 				payloadStartByte += 4;
 			}
-			
+
 			byte[] payload = IO.SubSet(message, (int)payloadStartByte, (int)payloadLength);
-			
+
 			// decode payload
 			if (mask)
 			{

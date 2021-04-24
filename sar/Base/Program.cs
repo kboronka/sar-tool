@@ -15,8 +15,6 @@
 
 using System;
 
-using sar.Tools;
-
 namespace sar.Base
 {
 	public abstract class Program
@@ -29,7 +27,7 @@ namespace sar.Base
 			}
 			catch
 			{
-				
+
 			}
 		}
 	}

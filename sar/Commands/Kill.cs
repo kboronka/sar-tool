@@ -13,23 +13,22 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-
 using sar.Base;
 using sar.Tools;
+using System;
+using System.Collections.Generic;
 
 namespace sar.Commands
 {
 	public class Kill : Command
 	{
 		public Kill(Base.CommandHub parent) : base(parent, "Kill Process",
-		                     new List<string> { "kill", "k" },
-		                     @"-kill [ProcessName]",
-		                     new List<string> { "-kill LabVIEW" })
+							 new List<string> { "kill", "k" },
+							 @"-kill [ProcessName]",
+							 new List<string> { "-kill LabVIEW" })
 		{
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -37,13 +36,13 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("wrong number of arguments");
 			}
-			
+
 			string processName = args[1];
-			
+
 			Progress.Message = "Locating Process " + processName;
 			ConsoleHelper.KillProcess(processName);
 			ConsoleHelper.WriteLine(processName + " stopped", ConsoleColor.DarkYellow);
-			
+
 			return ConsoleHelper.EXIT_OK;
 		}
 	}

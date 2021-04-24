@@ -13,16 +13,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Tools;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-
-using sar.Tools;
 
 namespace sar.Socket
 {
@@ -35,22 +32,22 @@ namespace sar.Socket
 		protected int port;
 
 		#region properties
-		
+
 		public int Clients
 		{
 			get { return this.clients.Count; }
 		}
-		
+
 		public int Port
 		{
 			get { return this.port; }
 		}
-		
+
 		public Dictionary<string, SocketValue> MemCache
 		{
 			get { return this.memCache; }
 		}
-		
+
 		public override long ID
 		{
 			get
@@ -59,24 +56,24 @@ namespace sar.Socket
 			}
 			set
 			{
-				
+
 			}
 		}
-		
+
 		#endregion
-		
+
 		#region events
-		
+
 		#region Newclient
 
 		public EventHandler NewClient = null;
-		
+
 		private void OnNewClient(SocketClient client)
 		{
 			try
 			{
 				this.Set("Host.Clients", this.clients.Count.ToString());
-				
+
 				if (NewClient != null)
 				{
 					NewClient(client, new System.EventArgs());
@@ -92,13 +89,13 @@ namespace sar.Socket
 		#region ClientLost
 
 		public EventHandler ClientLost = null;
-		
+
 		private void OnClientLost(SocketClient client)
 		{
 			try
 			{
 				this.Set("Host.Clients", this.clients.Count.ToString());
-				
+
 				if (ClientLost != null)
 				{
 					ClientLost(client, new System.EventArgs());
@@ -125,7 +122,7 @@ namespace sar.Socket
 				this.dataChanged -= value;
 			}
 		}
-		
+
 		protected override void OnMemCacheChanged(SocketValue data)
 		{
 			try
@@ -143,11 +140,11 @@ namespace sar.Socket
 		}
 
 		#endregion
-		
+
 		#endregion
-		
+
 		#region constructor
-		
+
 		public SocketServer(int port) : base()
 		{
 			try
@@ -155,17 +152,17 @@ namespace sar.Socket
 				this.encoding = Encoding.ASCII;
 				this.port = port;
 				this.clients = new List<SocketClient>();
-				
+
 				this.listenerLoopThread = new Thread(this.ListenerLoop);
 				this.listenerLoopThread.Name = "SocketServer - ListenerLoop";
 				this.listenerLoopThread.IsBackground = true;
 				this.listenerLoopThread.Start();
-				
+
 				this.clientsLoopThread = new Thread(this.ClientsLoop);
 				this.clientsLoopThread.Name = "SocketServer - ClientsLoop";
 				this.clientsLoopThread.IsBackground = true;
 				this.clientsLoopThread.Start();
-				
+
 				this.Store("Host.Version", AssemblyInfo.SarVersion);
 				this.Store("Host.Port", this.port.ToString());
 				this.Store("Host.Clients", this.clients.Count.ToString());
@@ -187,41 +184,43 @@ namespace sar.Socket
 					this.Stop();
 				}
 			}
-			
+
 			disposed = true;
 		}
-		
+
 		~SocketServer()
 		{
-			
+
 		}
-		
+
 		public override void Stop()
 		{
 			try
 			{
 				this.listenerLoopShutdown = true;
-				if (this.listenerLoopThread.IsAlive) this.listenerLoopThread.Join();
+				if (this.listenerLoopThread.IsAlive)
+					this.listenerLoopThread.Join();
 
 				this.clientsLoopShutdown = true;
-				if (this.clientsLoopThread.IsAlive) this.clientsLoopThread.Join();
+				if (this.clientsLoopThread.IsAlive)
+					this.clientsLoopThread.Join();
 			}
 			catch (Exception ex)
 			{
 				this.Log(ex);
 			}
 		}
-		
+
 		#endregion
-		
+
 		#region methods
-		
+
 		public void Set(string member, string data)
 		{
 			this.Store(member, data);
 			this.Broadcast("set", member, data);
 		}
-		
+
 		public void Broadcast(SocketMessage message)
 		{
 			lock (this.clients)
@@ -232,7 +231,7 @@ namespace sar.Socket
 				}
 			}
 		}
-		
+
 		public void Broadcast(string command, string member, string data)
 		{
 			lock (this.clients)
@@ -243,12 +242,12 @@ namespace sar.Socket
 				}
 			}
 		}
-		
+
 		public override void SendData(SocketMessage message)
 		{
 			// FIXME... execute a broadcast
 		}
-		
+
 		internal void ProcessMessage(SocketClient client, SocketMessage message)
 		{
 			if (message != null)
@@ -257,7 +256,7 @@ namespace sar.Socket
 				{
 					case "set":
 						this.Store(message);
-						
+
 						if (message.ToID == -1)
 						{
 							this.Broadcast(message);
@@ -269,7 +268,7 @@ namespace sar.Socket
 						{
 							client.SendValue(this.Get(message.Member), -1);
 						}
-						
+
 						break;
 					case "get-all":
 						lock (this.memCache)
@@ -280,25 +279,25 @@ namespace sar.Socket
 								client.SendValue(entry.Value, message.FromID);
 							}
 						}
-						
+
 						break;
 					default:
 						break;
 				}
-				
+
 				message = null;
 			}
 		}
-		
+
 		#endregion
-		
+
 		#region service
-		
+
 		#region listners
 
 		private Thread listenerLoopThread;
 		private bool listenerLoopShutdown = false;
-		
+
 		private void ListenerLoop()
 		{
 			//Thread.Sleep(100);
@@ -316,7 +315,7 @@ namespace sar.Socket
 					{
 						this.ServiceListener();
 					}
-					
+
 					Thread.Sleep(10);
 				}
 				catch (Exception ex)
@@ -325,7 +324,7 @@ namespace sar.Socket
 					Thread.Sleep(5000);
 				}
 			}
-			
+
 			// shutdown listner
 			try
 			{
@@ -335,7 +334,7 @@ namespace sar.Socket
 			{
 				this.Log(ex);
 			}
-			
+
 			this.listener = null;
 		}
 
@@ -351,14 +350,14 @@ namespace sar.Socket
 				}
 			}
 		}
-		
+
 		#endregion
-		
+
 		#region clients
-		
+
 		private Thread clientsLoopThread;
 		private bool clientsLoopShutdown = false;
-		
+
 		private void ClientsLoop()
 		{
 			Thread.Sleep(100);
@@ -377,7 +376,7 @@ namespace sar.Socket
 					Thread.Sleep(5000);
 				}
 			}
-			
+
 			// shutdown clients
 			try
 			{
@@ -387,7 +386,7 @@ namespace sar.Socket
 					{
 						client.Stop();
 					}
-					
+
 					this.clients.Clear();
 				}
 			}
@@ -415,7 +414,7 @@ namespace sar.Socket
 
 							break;
 						}
-						
+
 						if (client.HasRequest)
 						{
 							ProcessMessage(client, client.Read);
@@ -428,11 +427,11 @@ namespace sar.Socket
 				this.Log(ex);
 			}
 		}
-		
+
 		#endregion
-		
+
 		#endregion
-		
+
 		public override string ToString()
 		{
 			return "server";

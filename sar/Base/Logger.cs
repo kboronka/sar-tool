@@ -15,8 +15,6 @@
 
 using System;
 
-using sar.Tools;
-
 namespace sar
 {
 	/// <summary>
@@ -37,7 +35,7 @@ namespace sar
 					var app = new ApplicationHelper.ApplicationDetails(assemblyDetail);
 					logger = new ApplicationHelper.Logger(app);
 				}
-				
+
 				return logger;
 			}
 		}
@@ -50,22 +48,22 @@ namespace sar
 			}
 			remove
 			{
-				LoggerLocal.OnLog -= value;				
+				LoggerLocal.OnLog -= value;
 			}
 		}
-		
+
 		private static string logFilename;
 		public static string LogFilename
 		{
 			get
 			{
-				
+
 				if (String.IsNullOrEmpty(logFilename))
 				{
 					logFilename = (System.Environment.UserInteractive) ? "" : "s.";
 					logFilename += "log";
 				}
-				
+
 				return logFilename;
 			}
 			set
@@ -77,7 +75,7 @@ namespace sar
 				}
 			}
 		}
-		
+
 		public static bool LogToConsole
 		{
 			get
@@ -86,25 +84,25 @@ namespace sar
 			}
 			set
 			{
-				LoggerLocal.LogToConsole  = value;
+				LoggerLocal.LogToConsole = value;
 			}
 		}
-		
+
 		public static void Log(Exception ex)
 		{
 			LoggerLocal.Log(ex);
 		}
-		
+
 		public static void Log(string message)
 		{
 			LoggerLocal.Log(message);
 		}
-		
+
 		public static void FlushLogs()
 		{
 			LoggerLocal.FlushLogs();
 		}
-		
+
 		public static void LogInfo()
 		{
 			LoggerLocal.LogInfo();

@@ -13,23 +13,22 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-
 using sar.Base;
 using sar.Tools;
+using System;
+using System.Collections.Generic;
 
 namespace sar.Commands
 {
 	public class VboxManage : Command
 	{
 		public VboxManage(Base.CommandHub parent) : base(parent, "Vbox Manage Tool",
-		                           new List<string> { "vbox.manage", "vb.manage" },
-		                           @"-vbox.manage [arg1] [arg2] [arg3]",
-		                           new List<string> { "-vbox.manage modifyhd \"WinXP-disk1.vdi\" --resize 3000" })
+								   new List<string> { "vbox.manage", "vb.manage" },
+								   @"-vbox.manage [arg1] [arg2] [arg3]",
+								   new List<string> { "-vbox.manage modifyhd \"WinXP-disk1.vdi\" --resize 3000" })
 		{
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -37,9 +36,9 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("too few arguments");
 			}
-					
+
 			string exePath = IO.FindApplication("VBoxManage.exe");
-			
+
 			string arguments = "";
 			for (int i = 1; i < args.Length; i++)
 			{
@@ -48,7 +47,7 @@ namespace sar.Commands
 
 			string output;
 			int exitcode = ConsoleHelper.Run(exePath, arguments, out output);
-				
+
 			if (exitcode != 0)
 			{
 				ConsoleHelper.WriteLine("Command Failed", ConsoleColor.DarkYellow);

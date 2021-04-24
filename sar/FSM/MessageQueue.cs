@@ -13,7 +13,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -26,9 +25,9 @@ namespace sar.FSM
 	{
 		private readonly object queueLock = new object();
 		private readonly List<Message<T>> queued;
-		
+
 		public bool Available { get { return queued.Any(m => !m.Sent); } }
-		
+
 		public List<Message<T>> Messages
 		{
 			get
@@ -36,7 +35,7 @@ namespace sar.FSM
 				return queued;
 			}
 		}
-		
+
 		public MessageQueue()
 		{
 			lock (queueLock)
@@ -44,7 +43,7 @@ namespace sar.FSM
 				queued = new List<Message<T>>();
 			}
 		}
-		
+
 		public void QueueItem(T message)
 		{
 			lock (queueLock)
@@ -52,7 +51,7 @@ namespace sar.FSM
 				queued.Add(new Message<T>(message));
 			}
 		}
-		
+
 		public void QueueItem(T message, Message<T>.MessageCallback responceCallback, int timeout, Message<T>.MessageExpiredCallback timeoutCallback)
 		{
 			lock (queueLock)
@@ -60,7 +59,7 @@ namespace sar.FSM
 				queued.Add(new Message<T>(message, responceCallback, timeout, timeoutCallback));
 			}
 		}
-		
+
 		public T DequeueItem()
 		{
 			lock (queueLock)
@@ -74,10 +73,10 @@ namespace sar.FSM
 					}
 				}
 			}
-			
+
 			return default(T);
 		}
-		
+
 		public void Cleanup()
 		{
 			lock (queueLock)

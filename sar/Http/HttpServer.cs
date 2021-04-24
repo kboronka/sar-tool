@@ -13,6 +13,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,39 +22,38 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Xml;
 
-using sar.Tools;
-
 namespace sar.Http
 {
 	public class HttpServer : HttpBase
 	{
 		private AutoResetEvent connectionWaitHandle;
 		private TcpListener listener;
-		
+
 		protected int port;
 		protected string root;
-		
+
 		#region properties
 
 		public List<HttpConnection> Connections { get; private set; }
 		public Dictionary<string, HttpSession> Sessions { get; private set; }
 
 		public string Root { get { return root; } }
-		
+
 		public int Port { get { return port; } }
-		
+
 		public string FavIcon { get; set; }
-		
+
 		public HttpCache Cache { get; private set; }
 
 		#endregion
-		
+
 		#region constructor
 
 		public HttpServer(XML.Reader reader)
 		{
-			if (reader != null) this.Deserialize(reader);
-			
+			if (reader != null)
+				this.Deserialize(reader);
+
 			this.Start();
 		}
 
@@ -62,61 +62,63 @@ namespace sar.Http
 			this.port = port;
 			this.root = wwwroot;
 			this.root = Path.GetFullPath(this.root);
-			
+
 			this.Start();
 		}
-		
+
 		public HttpServer(int port) : this(port, ApplicationInfo.CurrentDirectory + @"views\") { }
 		public HttpServer(string wwwroot) : this(sar.Socket.SocketHelper.FindAvailablePort(80, 100), wwwroot) { }
 		public HttpServer() : this(sar.Socket.SocketHelper.FindAvailablePort(80, 100), ApplicationInfo.CurrentDirectory + @"views\") { }
-		
+
 		private void Start()
 		{
 			if (this.root.EndsWith(@"\", StringComparison.Ordinal))
 			{
 				this.root = StringHelper.TrimEnd(this.root);
 			}
-			
-			if (!Directory.Exists(this.root)) Directory.CreateDirectory(this.root);
-			
+
+			if (!Directory.Exists(this.root))
+				Directory.CreateDirectory(this.root);
+
 			this.Connections = new List<HttpConnection>();
 			this.Sessions = new Dictionary<string, HttpSession>();
-			
+
 			this.Cache = new HttpCache(this);
 			HttpController.LoadControllers();
 			HttpWebSocket.LoadControllers();
-			
+
 			this.connectionWaitHandle = new AutoResetEvent(false);
-			
+
 			this.listenerLoopThread = new Thread(this.ListenerLoop);
 			this.listenerLoopThread.Name = "HttpServer Listener";
 			this.listenerLoopThread.IsBackground = true;
 			this.listenerLoopThread.Start();
 		}
-		
+
 		~HttpServer()
 		{
 			this.Stop();
 		}
-		
+
 		public void Stop()
 		{
 			try
 			{
 				this.listenerLoopShutdown = true;
 				connectionWaitHandle.Set();
-				if (this.listenerLoopThread.IsAlive) this.listenerLoopThread.Join();
+				if (this.listenerLoopThread.IsAlive)
+					this.listenerLoopThread.Join();
 			}
 			catch (Exception ex)
 			{
 				Logger.Log(ex);
 			}
 		}
-		
+
 		#endregion
-		
+
 		#region settings
-		
+
 		private void Deserialize(XML.Reader reader)
 		{
 			try
@@ -144,7 +146,7 @@ namespace sar.Http
 				Logger.Log(ex);
 			}
 		}
-		
+
 		public void Serialize(XML.Writer writer)
 		{
 			writer.WriteStartElement("http-server");
@@ -152,16 +154,16 @@ namespace sar.Http
 			writer.WriteElement("wwwroot", this.root);
 			writer.WriteEndElement();
 		}
-		
+
 		#endregion
-		
+
 		#region service
-		
+
 		#region listners
-		
+
 		private Thread listenerLoopThread;
 		private bool listenerLoopShutdown = false;
-		
+
 		private void ListenerLoop()
 		{
 			Thread.Sleep(300);
@@ -181,7 +183,7 @@ namespace sar.Http
 					Thread.Sleep(5000);
 				}
 			}
-			
+
 			// shutdown listner
 			try
 			{
@@ -191,32 +193,32 @@ namespace sar.Http
 			{
 				Logger.Log(ex);
 			}
-			
+
 			this.listener = null;
 		}
-		
+
 		private void AcceptTcpClientCallback(IAsyncResult ar)
 		{
 			try
 			{
 				var connection = (TcpListener)ar.AsyncState;
 				var client = connection.EndAcceptTcpClient(ar);
-				
+
 				connectionWaitHandle.Set();
-				
+
 				lock (Connections)
 				{
 					Connections.Add(new HttpConnection(this, client));
 					Connections.RemoveAll(c =>
-					                      {
-					                      	if (c.Stopped)
-					                      	{
-					                      		c.Dispose();
-					                      		return true;
-					                      	}
-					                      	
-					                      	return false;
-					                      });
+										  {
+											  if (c.Stopped)
+											  {
+												  c.Dispose();
+												  return true;
+											  }
+
+											  return false;
+										  });
 				}
 			}
 			catch
@@ -224,9 +226,9 @@ namespace sar.Http
 				connectionWaitHandle.Set();
 			}
 		}
-		
+
 		#endregion
-		
+
 		#endregion
 
 	}

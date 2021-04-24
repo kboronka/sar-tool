@@ -13,8 +13,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-
 namespace sar.Commands
 {
 	/// <summary>

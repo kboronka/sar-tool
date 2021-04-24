@@ -13,24 +13,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
-
-using sar.Base;
-using sar.Tools;
 
 namespace sar.Commands
 {
 	public class FileOpenFolder : Command
 	{
 		public FileOpenFolder(Base.CommandHub parent) : base(parent, "File - Open Folder",
-		                         new List<string> { "file.open", "f.of" },
-		                         "-file.open <folder path>",
-		                         new List<string> { @"-file.find ""C:\temp\""" })
+								 new List<string> { "file.open", "f.of" },
+								 "-file.open <folder path>",
+								 new List<string> { @"-file.find ""C:\temp\""" })
 		{
 		}
-			
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -38,17 +37,18 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
+
 			Progress.Message = "Searching";
 			string root = args[1];
 			root = IO.CheckRoot(root);
-			
-			if (!Directory.Exists(root)) throw new DirectoryNotFoundException("unable to open " + root);
-			
+
+			if (!Directory.Exists(root))
+				throw new DirectoryNotFoundException("unable to open " + root);
+
 			ConsoleHelper.Run(@"explorer.exe", root);
 
 			ConsoleHelper.WriteLine(root + " opened", ConsoleColor.DarkYellow);
-			
+
 			return ConsoleHelper.EXIT_OK;
 		}
 	}

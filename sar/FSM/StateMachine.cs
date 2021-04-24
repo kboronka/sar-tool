@@ -13,7 +13,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using System.Threading;
 
 namespace sar.FSM
@@ -28,14 +27,14 @@ namespace sar.FSM
 		protected Thread stateMachineThread;
 		protected bool loopStopRequested;
 		protected bool loopStopped;
-		
+
 		protected StateMachine()
 		{
 			CommandQueue = new CommandQueue();
 			loopStopped = false;
 			loopStopRequested = false;
 		}
-		
+
 		public abstract void Start();
 		public abstract void Stop();
 	}

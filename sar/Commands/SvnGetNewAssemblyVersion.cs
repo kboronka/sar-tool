@@ -13,28 +13,27 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-
 using sar.Base;
 using sar.Tools;
+using System;
+using System.Collections.Generic;
 
 namespace sar.Commands
 {
 	public class SvnGetNewAssemblyVersion : Command
 	{
 		public SvnGetNewAssemblyVersion(Base.CommandHub parent) : base(parent, "svn Get New Assembly Version",
-		                                                            new List<string> { "svn.GetNewAssemblyVersion" },
-		                                                            @"svn.GetNewAssemblyVersion <svn/path>",
-		                                                            new List<string> { @"-svn.GetNewAssemblyVersion http://svnserver/trunk/Properties/AssemblyInfo.cs" })
+																	new List<string> { "svn.GetNewAssemblyVersion" },
+																	@"svn.GetNewAssemblyVersion <svn/path>",
+																	new List<string> { @"-svn.GetNewAssemblyVersion http://svnserver/trunk/Properties/AssemblyInfo.cs" })
 		{
-			
+
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			Progress.Enabled = false;
-			
+
 			string repo = args[1];
 			var version = SvnGetAssemblyVersion.GetVersion(repo);
 
@@ -42,10 +41,10 @@ namespace sar.Commands
 			{
 				var build = IO.GetFileExtension(version);
 				var newVersion = StringHelper.TrimEnd(version, build.Length);
-				
+
 				var newBuild = (int.Parse(build) + 1).ToString();
 				newVersion += newBuild.ToString();
-				
+
 				ConsoleHelper.WriteLine(newVersion, ConsoleColor.White);
 				return ConsoleHelper.EXIT_OK;
 			}

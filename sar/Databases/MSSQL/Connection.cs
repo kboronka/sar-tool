@@ -13,8 +13,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-
 namespace sar.Databases.MSSQL
 {
 	public class ConnectionString
@@ -50,7 +48,7 @@ namespace sar.Databases.MSSQL
 			connectionString += "User Id=" + this.username + ";";
 			connectionString += "Password=" + this.password + ";";
 			connectionString += "Application Name=" + sar.Tools.AssemblyInfo.Name + ";";
-			
+
 			return connectionString;
 		}
 

@@ -13,13 +13,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-
 using Microsoft.Win32;
-
 using sar.Base;
 using sar.Tools;
+using System;
+using System.Collections.Generic;
 
 namespace sar.Commands
 {
@@ -27,13 +25,13 @@ namespace sar.Commands
 	{
 		public ExcelOpenNewInstances(Base.CommandHub parent)
 			: base(parent, "Excel Fix - Open New Instances",
-			       new List<string> { "excel.fix" },
-			       @"-excel.fix",
-			       new List<string>() { @"excel.fix" })
+				   new List<string> { "excel.fix" },
+				   @"-excel.fix",
+				   new List<string>() { @"excel.fix" })
 		{
-			
+
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -41,28 +39,28 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
+
 			throw new NotImplementedException();
-			
+
 			//HKEY_CLASSES_ROOT/Excel.Sheet.12/shell/Open/command
-			
+
 			RegistryKey excelCommandFolder = Registry.ClassesRoot.OpenSubKey(@"HKEY_CLASSES_ROOT\Excel.Sheet.12\shell\Open\command", true);
 			if (excelCommandFolder == null)
 			{
 				throw new KeyNotFoundException("Excel.Sheet.12 command key was not found");
 			}
-			
+
 			var defaultKey = (string)excelCommandFolder.GetValue("");
-			
+
 			if (defaultKey.Contains("%1"))
 			{
 				ConsoleHelper.WriteLine("Fix already implemented");
 				return ConsoleHelper.EXIT_OK;
 			}
-			
+
 			// TODO: rename command to command2
 			// TODO: rename ddeexec to ddeexed2			
-			
+
 			excelCommandFolder.GetValue("", defaultKey + @" ""%1""");
 			return ConsoleHelper.EXIT_OK;
 		}

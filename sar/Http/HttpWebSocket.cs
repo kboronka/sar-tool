@@ -13,38 +13,36 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Json;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Threading;
-
-using sar.Json;
-using sar.Tools;
 
 namespace sar.Http
 {
 	public abstract class HttpWebSocket
 	{
 		#region static
-		
+
 		[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 		public class SarWebSocketController : Attribute
 		{
 
 		}
-		
+
 		private static Dictionary<string, Type> controllers;
 		private static int nextID;
-		
+
 		public static void LoadControllers()
 		{
 			HttpWebSocket.controllers = new Dictionary<string, Type>();
-			
+
 			foreach (Assembly assembly in AssemblyInfo.Assemblies)
 			{
-				
+
 				foreach (Type type in assembly.GetTypes())
 				{
 					if (type.Name.EndsWith("WebSocket"))
@@ -62,38 +60,38 @@ namespace sar.Http
 				}
 			}
 		}
-		
+
 		public static bool WebSocketControllerExists(HttpRequest request)
 		{
 			string[] urlSplit = request.Path.Split('/');
 			if (urlSplit.Length != 1)
 				return false;
-			
+
 			string controllerName = urlSplit[0];
 			return controllers.ContainsKey(controllerName);
 		}
-		
+
 		public static Type GetWebSocketController(HttpRequest request)
 		{
 			string[] urlSplit = request.Path.Split('/');
 			if (urlSplit.Length != 1)
 				return null;
-			
+
 			string controllerName = urlSplit[0];
 			return (controllers.ContainsKey(controllerName)) ? controllers[controllerName] : null;
 		}
-		
+
 		#endregion
-		
+
 		private TcpClient socket;
-		private	NetworkStream stream;
+		private NetworkStream stream;
 		public HttpRequest request;
-		
+
 		public int ID { get; private set; }
-		
+
 		private bool open;
 		public bool Open
-		{ 
+		{
 			get
 			{
 				return open;
@@ -109,14 +107,14 @@ namespace sar.Http
 					}
 					catch
 					{
-						
+
 					}
 				}
-				
+
 				open = value;
 			}
 		}
-		
+
 		public HttpWebSocket(HttpRequest request)
 		{
 			this.open = true;
@@ -124,19 +122,19 @@ namespace sar.Http
 			this.ID = nextID++;
 			OnNewClient(this);
 		}
-		
+
 		~HttpWebSocket()
 		{
 		}
-		
+
 		public void SetSocket(TcpClient socket, NetworkStream stream)
 		{
 			this.socket = socket;
 			this.stream = stream;
 		}
-		
+
 		abstract public void NewData(string json);
-		
+
 		public void ReadNewData()
 		{
 			// Read and parse request
@@ -148,7 +146,7 @@ namespace sar.Http
 				{
 					byte[] incomingPacket = this.request.ReadIncomingPacket(stream, socket);
 					buffer = StringHelper.CombineByteArrays(buffer, incomingPacket);
-					
+
 					if (buffer.Length > 0 && incomingPacket.Length == 0)
 					{
 						OnFrameRecived(HttpWebSocketFrame.DecodeFrame(buffer));
@@ -160,7 +158,7 @@ namespace sar.Http
 						// wait until entire request is recived
 						Thread.Sleep(1);
 					}
-					
+
 					Thread.Sleep(1);
 				}
 				catch
@@ -169,10 +167,10 @@ namespace sar.Http
 					return;
 				}
 			}
-			
+
 			NewData(JsonHelper.BytesToJson(HttpWebSocketFrame.DecodeFrame(buffer).Payload));
 		}
-		
+
 		private void Send(byte[] data)
 		{
 			// send responce
@@ -186,7 +184,7 @@ namespace sar.Http
 						int length = Math.Min(data.Length - b, MAX_LENGTH);
 						this.stream.Write(data, b, length);
 					}
-					
+
 					this.stream.Flush();
 				}
 				catch
@@ -195,14 +193,14 @@ namespace sar.Http
 				}
 			}
 		}
-		
+
 		public void SendString(string message)
 		{
 			Send(HttpWebSocketFrame.EncodeFrame(message).EncodedFrame);
 		}
-		
+
 		#region events
-		
+
 		#region new connection
 
 		public delegate void ConnectedClientHandler(HttpWebSocket client);
@@ -218,7 +216,7 @@ namespace sar.Http
 				clientConnected -= value;
 			}
 		}
-		
+
 		private static void OnNewClient(HttpWebSocket client)
 		{
 			try
@@ -234,9 +232,9 @@ namespace sar.Http
 				client.Open = false;
 			}
 		}
-		
+
 		#endregion
-		
+
 		#region disconnected
 
 		public delegate void ClientDisconnectedHandler(HttpWebSocket client);
@@ -252,7 +250,7 @@ namespace sar.Http
 				clientDisconnected -= value;
 			}
 		}
-		
+
 		private static void OnDisconnectedClient(HttpWebSocket client)
 		{
 			try
@@ -268,7 +266,7 @@ namespace sar.Http
 
 			}
 		}
-		
+
 		#endregion
 
 		#region frame recived
@@ -286,7 +284,7 @@ namespace sar.Http
 				this.frameRecived -= value;
 			}
 		}
-		
+
 		private void OnFrameRecived(HttpWebSocketFrame frame)
 		{
 			try
@@ -303,10 +301,10 @@ namespace sar.Http
 				Thread.Sleep(100);
 			}
 		}
-		
+
 		#endregion
 
 		#endregion
-		
+
 	}
 }

@@ -13,24 +13,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-
 using sar.Base;
 using sar.Tools;
+using System;
+using System.Collections.Generic;
 
 namespace sar.Commands
 {
 	public class WindowsLogin : Command
 	{
 		public WindowsLogin(Base.CommandHub parent) : base(parent, "Windows - Login", new List<string> { "windows.login", "win.login", "net.login", "n.login" },
-		                                                   "-windows.login [ip] [domain/username] [password] [p|persistent] [ping]",
-		                                                   new List<string>() { @"-windows.login \\192.168.0.244\temp test testpw p",
-		                                                   	@"-n.login 192.168.0.244 test testpw ping" })
+														   "-windows.login [ip] [domain/username] [password] [p|persistent] [ping]",
+														   new List<string>() { @"-windows.login \\192.168.0.244\temp test testpw p",
+															   @"-n.login 192.168.0.244 test testpw ping" })
 		{
-			
+
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -38,10 +37,10 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
+
 			string path = args[1];
 			Progress.Message = "Logging into " + path;
-			
+
 			string username = args[2];
 			string password = args[3];
 			bool persistent = false;
@@ -62,7 +61,7 @@ namespace sar.Commands
 					}
 				}
 			}
-			
+
 			if (Login(path, username, password, persistent, ping) != ConsoleHelper.EXIT_OK)
 			{
 				ConsoleHelper.WriteLine("Login to " + path + " has failed", ConsoleColor.DarkYellow);
@@ -72,30 +71,31 @@ namespace sar.Commands
 			ConsoleHelper.WriteLine("Login to " + path + " was successful", ConsoleColor.DarkYellow);
 			return ConsoleHelper.EXIT_OK;
 		}
-		
+
 		public static int Login(string path, string username, string password, bool persistent, bool ping)
 		{
 			string uncPath = path;
-			if (uncPath.Substring(0, 2) != @"\\") uncPath = @"\\" + uncPath;
+			if (uncPath.Substring(0, 2) != @"\\")
+				uncPath = @"\\" + uncPath;
 			string hostName = NetHelper.GetHostName(uncPath);
-			
+
 			string persistentCommand = "/persistent:no";
 
 			if (persistent)
 			{
 				persistentCommand = "/persistent:yes";
 			}
-			
+
 			if (ping && !NetHelper.Ping(hostName, 200))
 			{
 				throw new ApplicationException("Unable to ping " + hostName);
 			}
-			
+
 			int exitcode;
-			
+
 			exitcode = ConsoleHelper.Run("net", @"use " + uncPath + @" /DELETE /y");
 			exitcode = ConsoleHelper.Run("net", @"use " + uncPath + @" /USER:" + username + " " + password + " " + persistentCommand);
-			
+
 			if (exitcode != 0)
 			{
 				return ConsoleHelper.EXIT_ERROR;

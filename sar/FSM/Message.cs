@@ -13,12 +13,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Linq;
-using System.Threading;
-
 using sar.Json;
 using sar.Timing;
+using System.Threading;
 
 namespace sar.FSM
 {
@@ -29,10 +26,10 @@ namespace sar.FSM
 	{
 		private readonly int timeout;
 		private object recivedLock = new object();
-		
+
 		public bool Sent { get; set; }
 		public bool Recived { get; set; }
-		
+
 		private Thread timeoutThread;
 		public bool Expired { get; private set; }
 
@@ -43,31 +40,31 @@ namespace sar.FSM
 
 		public MessageCallback ResponceCallback { get; private set; }
 		public MessageExpiredCallback TimeoutCallback { get; private set; }
-		
+
 		public Message(T payload)
 		{
 			this.PayLoad = payload;
 		}
-		
+
 		public Message(T payload, MessageCallback responceCallback, int timeout, MessageExpiredCallback timeoutCallback)
 			: this(payload)
 		{
 			this.ResponceCallback = responceCallback;
 			this.TimeoutCallback = timeoutCallback;
 			this.timeout = timeout;
-			
+
 			timeoutThread = new Thread(TimeoutLoop);
 			timeoutThread.Name = "Message Timeout Thread";
 			timeoutThread.IsBackground = true;
 			timeoutThread.Priority = ThreadPriority.Lowest;
 			timeoutThread.Start();
 		}
-		
+
 		public void RequestSent()
 		{
 			this.Sent = true;
 		}
-		
+
 		public void ResponceRecived(JsonKeyValuePairs kvp)
 		{
 			try
@@ -75,7 +72,7 @@ namespace sar.FSM
 				Monitor.Enter(recivedLock);
 
 				this.Recived = true;
-				
+
 				if (!this.Expired && this.ResponceCallback != null)
 				{
 					this.ResponceCallback(kvp);
@@ -86,15 +83,15 @@ namespace sar.FSM
 				Monitor.Exit(recivedLock);
 			}
 		}
-		
+
 		private void TimeoutLoop()
 		{
 			var timeoutTimer = new Interval(timeout);
-			
+
 			while (!Expired)
 			{
 				Thread.Sleep(200);
-				
+
 				if (Monitor.TryEnter(recivedLock, 500))
 				{
 					try
@@ -102,7 +99,7 @@ namespace sar.FSM
 						if (timeoutTimer.Ready)
 						{
 							Expired = true;
-							
+
 							if (!Recived && this.TimeoutCallback != null)
 							{
 								this.TimeoutCallback(PayLoad);

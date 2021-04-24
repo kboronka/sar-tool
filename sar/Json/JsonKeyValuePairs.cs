@@ -16,9 +16,6 @@
 using System;
 using System.Collections.Generic;
 
-using sar.Http;
-using sar.Tools;
-
 namespace sar.Json
 {
 	/// <summary>
@@ -28,31 +25,31 @@ namespace sar.Json
 	{
 		public JsonKeyValuePairs() : base()
 		{
-			
+
 		}
-		
+
 		public JsonKeyValuePairs(string json) : base()
 		{
 			var depth = 0;
 			var stringDepth = 0;
-			
+
 			var keyStart = -1;
 			var keyEnd = -1;
 			var key = "";
-			
+
 			var valueStart = -1;
 			var valueEnd = -1;
 			var value = "";
-			
+
 			for (var i = 0; i < json.Length; i++)
 			{
 				var c = json[i];
-				
+
 				if (c == '{' && stringDepth == 0)
 				{
 					depth++;
 				}
-				else if (c == '[' && depth > 0  && stringDepth == 0)
+				else if (c == '[' && depth > 0 && stringDepth == 0)
 				{
 					depth++;
 				}
@@ -63,7 +60,7 @@ namespace sar.Json
 				else if (c == '"' && depth > 0 && stringDepth == 0)
 				{
 					stringDepth++;
-					
+
 					if (keyStart == -1 && depth == 1)
 					{
 						// start of key
@@ -73,7 +70,7 @@ namespace sar.Json
 				else if (c == '"' && depth > 0 && stringDepth == 1)
 				{
 					stringDepth--;
-					
+
 					if (keyEnd == -1 && depth == 1)
 					{
 						// end of a key
@@ -97,7 +94,7 @@ namespace sar.Json
 						valueEnd = i - 1;
 						value = json.Substring(valueStart, valueEnd - valueStart + 1);
 						this.Add(key, JsonHelper.ValueToObject(value));
-						
+
 						// prep for next key
 						keyStart = -1;
 						keyEnd = -1;
@@ -113,47 +110,47 @@ namespace sar.Json
 					{
 						valueEnd = i - 1;
 						value = json.Substring(valueStart, valueEnd - valueStart + 1);
-						
+
 						this.Add(key, JsonHelper.ValueToObject(value));
 					}
-					
+
 					depth--;
 				}
 			}
-			
+
 			if (stringDepth != 0 && depth != 0)
 			{
 				throw new ApplicationException("Invalid json string");
 			}
 		}
-		
+
 		public bool ValidateStringKey(string key)
 		{
 			if (!this.ContainsKey(key))
 			{
 				return false;
 			}
-			
+
 			return (this[key] is string);
 		}
-		
+
 		public bool ValidateIntKey(string key)
 		{
 			if (!this.ContainsKey(key))
 			{
 				return false;
 			}
-			
+
 			return (this[key] is int);
 		}
-		
+
 		public bool ValidateBoolKey(string key)
 		{
 			if (!this.ContainsKey(key))
 			{
 				return false;
 			}
-			
+
 			return (this[key] is bool);
 		}
 
@@ -163,31 +160,31 @@ namespace sar.Json
 			{
 				return false;
 			}
-			
+
 			return (this[key] is JsonArray);
 		}
-		
+
 		public bool ValidateObjectKey(string key)
 		{
 			if (!this.ContainsKey(key))
 			{
 				return false;
 			}
-			
+
 			return (this[key] is JsonKeyValuePairs);
 		}
-		
+
 		public override string ToString()
 		{
 			var text = "";
 			var delimitor = "";
-			
+
 			foreach (var key in this.Keys)
 			{
 				text += delimitor + key;
 				delimitor = ", ";
 			}
-			
+
 			return "[" + text + "]";
 		}
 	}

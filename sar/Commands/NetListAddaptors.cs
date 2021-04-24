@@ -13,23 +13,22 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-
 using sar.Base;
 using sar.Tools;
+using System;
+using System.Collections.Generic;
 
 namespace sar.Commands
 {
 	public class NetListAdapters : Command
 	{
 		public NetListAdapters(Base.CommandHub parent) : base(parent, "Network - List Adapters",
-		                                 new List<string> { "ip.config" },
-		                                 @"-ip.config",
-		                                 new List<string> { "-ip.config" })
+										 new List<string> { "ip.config" },
+										 @"-ip.config",
+										 new List<string> { "-ip.config" })
 		{
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -37,22 +36,22 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
+
 			foreach (NetworkAdapter adapter in NetHelper.Adapters())
 			{
 				ConsoleHelper.Write(adapter.Name, ConsoleColor.White);
 				ConsoleHelper.Write(": ");
-				
+
 				if (adapter.DHCP)
 				{
 					ConsoleHelper.Write("dhcp", ConsoleColor.Yellow);
 					ConsoleHelper.Write(": ");
 				}
-				
+
 				ConsoleHelper.Write(adapter.IPAddress + " " + adapter.SubnetMask);
 				ConsoleHelper.WriteLine();
 			}
-			
+
 			return ConsoleHelper.EXIT_OK;
 		}
 	}

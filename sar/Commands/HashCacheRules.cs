@@ -13,15 +13,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-
-using sar.Tools;
 
 namespace sar.Commands
 {
@@ -36,7 +34,7 @@ namespace sar.Commands
 			{
 				// make file not readonly
 				File.SetAttributes(results.FilePath, FileAttributes.Normal);
-				
+
 				// write new content back to file
 				using (var writer = new StreamWriter(results.FilePath, false, Encoding.UTF8))
 				{
@@ -44,7 +42,7 @@ namespace sar.Commands
 				}
 			}
 		}
-		
+
 		public static List<SearchResultMatch> AddHashs(string contentRoot, ref string content)
 		{
 			var results = new List<SearchResultMatch>();
@@ -68,7 +66,7 @@ namespace sar.Commands
 			replace = "ng-include=" + "$1?h=**HASH**".QuoteSingle().QuoteDouble();
 			results.AddRange(ProcessMatches(ref content, search, replace, contentRoot, "ng-include"));
 			*/
-			
+
 			// template
 			//templateUrl: '/example/example.tpl.html',
 			search = @"\'(.*?\.tpl\.html)(?:\?[vh]=.*)*\'";
@@ -76,7 +74,7 @@ namespace sar.Commands
 			results.AddRange(ProcessMatches(ref content, search, replace, contentRoot, "template ulr"));
 			return results;
 		}
-		
+
 		private static List<SearchResultMatch> ProcessMatches(ref string content, string search, string replace, string contentRoot, string reason)
 		{
 			var results = new List<SearchResultMatch>();
@@ -86,10 +84,10 @@ namespace sar.Commands
 				// log the replacment
 				var lineNumber = IO.GetLineNumber(content, match.Index);
 				results.Add(new SearchResultMatch(match, lineNumber, reason));
-				
+
 				var file = match.Groups[1].Value;
 				file = file.Replace(@"\.\", @"\");
-				
+
 				if (!String.IsNullOrEmpty(file) && !file.Contains("#") && !file.Contains("{"))
 				{
 					// make the replacment
@@ -97,36 +95,36 @@ namespace sar.Commands
 
 					var newValue = replace.Replace("**HASH**", hash);
 					newValue = Regex.Replace(match.Value, search, newValue);
-					
+
 					content = content.Replace(match.Value, newValue);
 				}
 			}
-			
+
 			return results;
 		}
-		
+
 		private static string GenerateHash(string contentRoot, string file)
 		{
 			file = file.Replace(@"/", @"\");
 			var filepath = contentRoot + file;
-			
+
 			if (!File.Exists(filepath))
 			{
 				throw new FileNotFoundException("File not found: " + filepath.QuoteDouble());
 			}
-			
+
 			using (var md5 = MD5.Create())
 			{
 				using (var stream = File.OpenRead(filepath))
 				{
 					var hashBytes = md5.ComputeHash(stream);
 					var hashString = "";
-					
+
 					foreach (byte bt in hashBytes)
 					{
 						hashString += bt.ToString("x2");
 					}
-					
+
 					return hashString;
 				}
 			}

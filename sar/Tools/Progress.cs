@@ -15,9 +15,6 @@
 
 using System;
 using System.Threading;
-using System.Timers;
-
-using sar.Tools;
 
 namespace sar.Tools
 {
@@ -25,9 +22,9 @@ namespace sar.Tools
 	{
 		private static int i = 0;
 		private static string status = "running";
-		
+
 		public static bool Enabled { get; set; }
-		
+
 		public static String Message
 		{
 			set
@@ -38,12 +35,12 @@ namespace sar.Tools
 				}
 			}
 		}
-		
+
 		#region background worker
-		
+
 		private static Thread messageLoopThread;
 		private static bool messageLoopShutdown;
-		
+
 		public static void Start()
 		{
 			messageLoopThread = new Thread(Progress.ProgressMessageLoop);
@@ -51,7 +48,7 @@ namespace sar.Tools
 			messageLoopThread.IsBackground = true;
 			messageLoopThread.Start();
 		}
-		
+
 		public static void Stop()
 		{
 			messageLoopShutdown = true;
@@ -63,30 +60,31 @@ namespace sar.Tools
 				messageLoopThread = null;
 			}
 		}
-		
+
 		public static void ProgressMessageLoop()
 		{
 			const int TERMINAL_CHARACTER_WIDTH = 80;
-			
+
 			while (!messageLoopShutdown)
 			{
 				Thread.Sleep(100);
-				
+
 				try
 				{
 					if (Progress.Enabled)
 					{
-						if (++Progress.i >= 6) Progress.i = 0;
-						
+						if (++Progress.i >= 6)
+							Progress.i = 0;
+
 						lock (Progress.status)
 						{
 							var message = Progress.status;
-							
+
 							if (message.Length > (TERMINAL_CHARACTER_WIDTH - 10))
 							{
 								message = message.Substring(0, (TERMINAL_CHARACTER_WIDTH - 10));
 							}
-							
+
 							ConsoleHelper.WriteProgress("\r" + message + new String('.', i) + new String(' ', TERMINAL_CHARACTER_WIDTH - (i + 1) - message.Length) + "\r", ConsoleColor.Cyan);
 						}
 					}
@@ -97,12 +95,12 @@ namespace sar.Tools
 				}
 			}
 		}
-		
+
 		public static void Disable()
 		{
 			messageLoopShutdown = false;
 		}
-		
+
 		#endregion
 
 	}

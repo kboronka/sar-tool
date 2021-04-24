@@ -13,10 +13,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Tools;
 using System;
 using System.Linq;
-
-using sar.Tools;
 
 namespace sar
 {
@@ -26,22 +25,22 @@ namespace sar
 		{
 			try
 			{
-				if (args.ToList().Exists(a => a == "/debug" || a == "/d" ))
+				if (args.ToList().Exists(a => a == "/debug" || a == "/d"))
 				{
 					ConsoleHelper.ShowDebug = true;
 					ConsoleHelper.DebugWriteLine("Debug Mode Active");
-					
+
 					var count = 0;
 					foreach (var arg in args)
 					{
 						ConsoleHelper.DebugWriteLine("arg[" + count++.ToString() + "] = " + arg);
 					}
 				}
-				
 
-				
-				#if DEBUG
-				
+
+
+#if DEBUG
+
 				/*
 				args = new string[] { "f.rd", @"C:\Users\kboronka\Documents\Virtual Machines\caches", @"/pause" };
 				args = new string[] { "ip.set", "gigabit", "dhcp", @"/debug", @"/pause", @"/admin" };
@@ -58,14 +57,15 @@ namespace sar
 				args = new string[] { "c.c", @"C:\Users\kboronka\Documents\SharpDevelop Projects\sar", @"/pause" };
 				args = new string[] { "hc", @"C:\Users\kboronka\Desktop\Test\Test", @"C:\Users\kboronka\Desktop\Test\Test\Views", @"/pause" };			
 				 */
-				
-				#endif				
-				
+
+#endif
+
 				var hub = new CommandHub();
 				Progress.Start();
-				if (args.Length == 0) ConsoleHelper.ApplicationTitle();
+				if (args.Length == 0)
+					ConsoleHelper.ApplicationTitle();
 				int exitCode = hub.ProcessCommands(args);
-				
+
 				Progress.Stop();
 				return exitCode;
 			}

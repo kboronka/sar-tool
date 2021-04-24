@@ -13,25 +13,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
-
-using sar.Base;
-using sar.Tools;
 
 namespace sar.Commands
 {
 	public class FileBsdHeader : Command
 	{
-		public FileBsdHeader(Base.CommandHub commandHub): base(commandHub, "File - BSD Stamp C# Files",
-		                            new List<string> { "file.bsd", "f.bsd" },
-		                            "-file.bsd [file_search_pattern]",
-		                            new List<string> { "-file.bsd *.cs" })
+		public FileBsdHeader(Base.CommandHub commandHub) : base(commandHub, "File - BSD Stamp C# Files",
+									new List<string> { "file.bsd", "f.bsd" },
+									"-file.bsd [file_search_pattern]",
+									new List<string> { "-file.bsd *.cs" })
 		{
-			
+
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -39,7 +38,7 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
+
 			string copywriter = args[2];
 			string copyright = "";
 			copyright += "/* Copyright (C) " + DateTime.Now.Year.ToString() + " " + copywriter + "\r\n";
@@ -56,7 +55,7 @@ namespace sar.Commands
 			copyright += " * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\r\n";
 			copyright += " * POSSIBILITY OF SUCH DAMAGE.\r\n";
 			copyright += " */\r\n";
-			
+
 			Progress.Message = "Searching";
 			string filePattern = args[1];
 			string root = Directory.GetCurrentDirectory();
@@ -64,23 +63,25 @@ namespace sar.Commands
 			List<string> files = IO.GetAllFiles(root, filePattern);
 
 			int updates = 0;
-			
+
 			foreach (string file in files)
 			{
 				var reader = new StreamReader(file);
 				string code = reader.ReadToEnd();
 				reader.Close();
 				reader.Dispose();
-				
+
 				if (!code.StartsWith(copyright + "\r\n"))
 				{
 					if (code.IndexOf("namespace ") != -1)
 					{
 						int top = code.IndexOf("namespace ");
-						
-						if (code.IndexOf("#region") != -1) top = Math.Min(top, code.IndexOf("#region"));
-						if (code.IndexOf("using ") != -1) top = Math.Min(top, code.IndexOf("using "));
-						
+
+						if (code.IndexOf("#region") != -1)
+							top = Math.Min(top, code.IndexOf("#region"));
+						if (code.IndexOf("using ") != -1)
+							top = Math.Min(top, code.IndexOf("using "));
+
 						var sw = new StreamWriter(file);
 						sw.Write(copyright + "\r\n" + code.Substring(top));
 						sw.Close();
@@ -89,9 +90,9 @@ namespace sar.Commands
 					}
 				}
 			}
-			
+
 			ConsoleHelper.WriteLine("BSD Header updated on " + updates.ToString() + " file" + ((updates != 1) ? "s" : ""), ConsoleColor.DarkYellow);
-			
+
 			return ConsoleHelper.EXIT_OK;
 		}
 	}

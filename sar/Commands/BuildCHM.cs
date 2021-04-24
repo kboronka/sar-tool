@@ -13,23 +13,22 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-
 using sar.Base;
 using sar.Tools;
+using System;
+using System.Collections.Generic;
 
 namespace sar.Commands
 {
 	public class BuildCHM : Command
 	{
 		public BuildCHM(Base.CommandHub parent) : base(parent, "Build - CHM help file",
-		                         new List<string> { "build.chm", "b.chm" },
-		                         "-b.chm [hhp_filepath]",
-		                         new List<string> { @"-b.chm help\help.hhp" })
+								 new List<string> { "build.chm", "b.chm" },
+								 "-b.chm [hhp_filepath]",
+								 new List<string> { @"-b.chm help\help.hhp" })
 		{
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -37,21 +36,21 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("too few arguments");
 			}
-			
+
 			Progress.Message = "Searching";
 			string filepath = IO.FindFile(args[1]);
 			string filename = IO.GetFilename(filepath);
 			string exePath = IO.FindApplication("hhc.exe");
-			
+
 			string arguments = "\"" + filepath + "\"";
-			
+
 			for (int i = 2; i < args.Length; i++)
 			{
 				arguments += " " + args[i];
 			}
-			
+
 			Progress.Message = "Building Online Help " + filename;
-			
+
 			string output;
 			int exitcode = ConsoleHelper.Run(exePath, arguments, out output);
 			if (exitcode != 1)

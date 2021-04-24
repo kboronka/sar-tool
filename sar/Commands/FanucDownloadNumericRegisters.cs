@@ -13,14 +13,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-
-using sar.Base;
-using sar.Tools;
 
 namespace sar.Commands
 {
@@ -31,7 +30,7 @@ namespace sar.Commands
 			public string Name;
 			public int Number;
 			public decimal value;
-			
+
 			public NumericRegister(Match match)
 			{
 				int i = 1;
@@ -39,25 +38,25 @@ namespace sar.Commands
 				this.value = decimal.Parse(match.Groups[i++].Value);
 				this.Name = match.Groups[i++].Value;
 			}
-			
+
 			public string ToCSVLine()
 			{
 				var output = "";
 				output += Number.ToString() + ", ";
 				output += Name + ", ";
 				output += value;
-								
+
 				return output;
 			}
 		}
-		
+
 		public FanucDownloadNumericRegisters(Base.CommandHub parent) : base(parent, "Fanuc Download Numeric Registers",
-		                                                                    new List<string> { "fanuc.DownloadNumericRegisters", "fanuc.downloadR" },
-		                                                                    @"-fanuc.downloadPR <ip:port> <new file>",
-		                                                                    new List<string> { @"-fanuc.downloadPR 192.168.0.1:21 numeric.csv" })
+																			new List<string> { "fanuc.DownloadNumericRegisters", "fanuc.downloadR" },
+																			@"-fanuc.downloadPR <ip:port> <new file>",
+																			new List<string> { @"-fanuc.downloadPR 192.168.0.1:21 numeric.csv" })
 		{
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -65,9 +64,9 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
+
 			// TODO: add (date) (time) placeholder handlers
-			
+
 			string ip = args[1];
 			string csv = args[2];
 			string root = Directory.GetCurrentDirectory();
@@ -76,20 +75,22 @@ namespace sar.Commands
 			string filename = IO.GetFilename(csv);
 			string filepath = root + filename;
 			var files = FTPHelper.GetFileList(ip);
-			
-			if (!files.Contains("numreg.va")) throw new FileNotFoundException("numreg.va not found on ftp server");
-			
+
+			if (!files.Contains("numreg.va"))
+				throw new FileNotFoundException("numreg.va not found on ftp server");
+
 			var input = StringHelper.GetString(FTPHelper.DownloadBytes(ip, "numreg.va"));
-			
-			if (File.Exists(filepath)) File.Delete(filepath);
+
+			if (File.Exists(filepath))
+				File.Delete(filepath);
 
 			var registers = ExportRegisters(input, filepath);
-			
+
 			ConsoleHelper.WriteLine(registers.ToString() + " Registers" + ((registers != 1) ? "s" : "") + " Exported", ConsoleColor.DarkYellow);
-			
+
 			return ConsoleHelper.EXIT_OK;
 		}
-		
+
 		public static int ExportRegisters(string input, string csv)
 		{
 			const string search = @"\[(\d*)\]\s=\s(-*\d*\.*\d*)\s*'([^']*)'";
@@ -97,18 +98,18 @@ namespace sar.Commands
 			var positions = new List<NumericRegister>();
 			var matches = Regex.Matches(input, search);
 			var output = "r, description, value" + Environment.NewLine;
-			
+
 			foreach (Match match in matches)
 			{
-				if (match.Groups.Count == 3+1)
+				if (match.Groups.Count == 3 + 1)
 				{
 					var position = new NumericRegister(match);
 					positions.Add(position);
-					
+
 					output += position.ToCSVLine() + Environment.NewLine;
 				}
 			}
-			
+
 			IO.WriteFile(csv, output, Encoding.ASCII);
 			return positions.Count;
 		}

@@ -13,7 +13,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using System.Diagnostics;
 
 namespace sar.Tools
@@ -21,7 +20,7 @@ namespace sar.Tools
 	public class Preformance
 	{
 		private static Preformance singleton;
-		
+
 		PerformanceCounter cpu;
 		PerformanceCounter ram;
 
@@ -29,19 +28,19 @@ namespace sar.Tools
 		{
 			cpu = new PerformanceCounter("Process", "% Processor Time");
 			ram = new PerformanceCounter("Memory", "Working Set");
-/*
-			cpu = new PerformanceCounter();
-			cpu.CategoryName = "Processor";
-			cpu.CounterName = "% Processor Time";
-			cpu.InstanceName = "_Total";
-		
-			ram = new PerformanceCounter();
-			ram.CategoryName = "Memory";
-			ram.CounterName = "Working Set";
-			ram.InstanceName = "_Total";
-*/
+			/*
+						cpu = new PerformanceCounter();
+						cpu.CategoryName = "Processor";
+						cpu.CounterName = "% Processor Time";
+						cpu.InstanceName = "_Total";
+
+						ram = new PerformanceCounter();
+						ram.CategoryName = "Memory";
+						ram.CounterName = "Working Set";
+						ram.InstanceName = "_Total";
+			*/
 		}
-		
+
 		private Preformance(Process p)
 		{
 			ram = new PerformanceCounter("Process", "Working Set", p.ProcessName);
@@ -56,7 +55,7 @@ namespace sar.Tools
 				{
 					singleton = new Preformance();
 				}
-				
+
 				return singleton;
 			}
 		}

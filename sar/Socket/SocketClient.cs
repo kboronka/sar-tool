@@ -13,6 +13,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -23,8 +24,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml;
 
-using sar.Tools;
-
 namespace sar.Socket
 {
 	public class SocketClient : SocketMemCache
@@ -32,25 +31,25 @@ namespace sar.Socket
 		private TcpClient socket;
 		private NetworkStream stream;
 		private Encoding encoding;
-		
+
 		protected string hostname;
 		protected int port;
-		
+
 		private bool connected;
 		private bool initilized;
-		
+
 		private long packetsIn;
 		private long packetsOut;
 		private long id;
 		private SocketServer parent;
-		
+
 		#region properties
-		
+
 		public bool HasRequest
 		{
 			get { return this.messagesIn.Count > 0; }
 		}
-		
+
 		public SocketMessage Read
 		{
 			get
@@ -70,32 +69,33 @@ namespace sar.Socket
 				}
 			}
 		}
-		
+
 		public bool Connected
 		{
 			get
 			{
-				if (this.socket == null) return false;
+				if (this.socket == null)
+					return false;
 				return this.connected;
 			}
 		}
-		
+
 		public int Port
 		{
 			get { return this.port; }
 		}
-		
+
 		public string Hostname
 		{
 			get { return this.hostname; }
 		}
-		
+
 		public override long ID
 		{
 			get { return this.id; }
 			set { this.id = value; }
 		}
-		
+
 		public long PacketsIn
 		{
 			get { return packetsIn; }
@@ -105,17 +105,17 @@ namespace sar.Socket
 		{
 			get { return packetsOut; }
 		}
-		
+
 		public Dictionary<string, SocketValue> MemCache
 		{
 			get { return this.memCache; }
 		}
-		
+
 		private bool IsHost
 		{
 			get { return (this.parent != null); }
 		}
-		
+
 		#endregion
 
 		#region constructors
@@ -130,7 +130,7 @@ namespace sar.Socket
 				this.socket = socket;
 				this.stream = this.socket.GetStream();
 				this.connected = true;
-				
+
 				this.connectionLoopThread = new Thread(this.ConnectionLoop);
 				this.outgoingLoopThread = new Thread(this.OutgoingLoop);
 				this.incomingLoopThread = new Thread(this.IncomingLoop);
@@ -140,28 +140,28 @@ namespace sar.Socket
 				this.outgoingLoopThread.Name = "SocketClient - OutgoingLoop";
 				this.incomingLoopThread.Name = "SocketClient - IncomingLoop";
 				this.pingLoopThread.Name = "SocketClient - PingLoop";
-				
+
 				this.connectionLoopThread.IsBackground = true;
 				this.outgoingLoopThread.IsBackground = true;
 				this.incomingLoopThread.IsBackground = true;
 				this.pingLoopThread.IsBackground = true;
-				
+
 				this.Log("Host Constructor");
 
 				this.messagesOut = new List<SocketMessage>();
 				this.messagesIn = new List<SocketMessage>();
-				
+
 				// connected
 				this.initilized = true;
 				this.OnConnectionChange(true);
-				
+
 				this.outgoingLoopThread.Start();
 				this.incomingLoopThread.Start();
 				this.connectionLoopThread.Start();
-				
+
 				// send clientID
 				this.SendData("set", "Me.ID", clientID.ToString(), this.ID);
-				
+
 				// send all values
 				lock (parent.MemCache)
 				{
@@ -171,7 +171,7 @@ namespace sar.Socket
 						this.SendValue(entry.Value, this.ID);
 					}
 				}
-				
+
 				// send initilization code to client
 				this.SendData("startup", this.ID);
 			}
@@ -180,7 +180,7 @@ namespace sar.Socket
 				this.Log(ex);
 			}
 		}
-		
+
 		public SocketClient(string hostname, int port) : base()
 		{
 			this.Log("Client Constructor");
@@ -193,28 +193,28 @@ namespace sar.Socket
 			this.messagesIn = new List<SocketMessage>();
 			this.initilized = false;
 			this.connected = false;
-			
+
 			this.connectionLoopThread = new Thread(this.ConnectionLoop);
 			this.outgoingLoopThread = new Thread(this.OutgoingLoop);
 			this.incomingLoopThread = new Thread(this.IncomingLoop);
 			this.pingLoopThread = new Thread(this.PingLoop);
-			
+
 			this.connectionLoopThread.Name = "SocketClient - ConnectionLoop";
 			this.outgoingLoopThread.Name = "SocketClient - OutgoingLoop";
 			this.incomingLoopThread.Name = "SocketClient - IncomingLoop";
 			this.pingLoopThread.Name = "SocketClient - PingLoop";
-			
+
 			this.connectionLoopThread.IsBackground = true;
 			this.outgoingLoopThread.IsBackground = true;
 			this.incomingLoopThread.IsBackground = true;
 			this.pingLoopThread.IsBackground = true;
-			
+
 			this.connectionLoopThread.Start();
 			this.incomingLoopThread.Start();
 			this.outgoingLoopThread.Start();
 			this.pingLoopThread.Start();
 		}
-		
+
 		protected override void Dispose(bool disposing)
 		{
 			if (!disposed)
@@ -222,13 +222,13 @@ namespace sar.Socket
 				if (disposing)
 				{
 					this.Log("Dispose Starting");
-					
+
 					this.Stop();
 
 					this.parent = null;
 					this.messagesOut = null;
 					this.messagesIn = null;
-					
+
 					this.connectionLoopThread = null;
 					this.outgoingLoopThread = null;
 					this.incomingLoopThread = null;
@@ -237,39 +237,43 @@ namespace sar.Socket
 					this.socket = null;
 					this.stream.Dispose();
 					this.stream = null;
-					
+
 					this.memCache = null;
-					
+
 					this.Log("Dispose Complete");
 				}
 			}
-			
+
 			disposed = true;
 		}
-		
+
 		~SocketClient()
 		{
 			this.Log("Destructor");
 			Dispose(false);
 		}
-		
+
 		public override void Stop()
 		{
 			try
 			{
 				this.Log("Shutdown Started");
-				
+
 				this.connectionLoopShutdown = true;
-				if (this.connectionLoopThread.IsAlive) this.connectionLoopThread.Join();
-				
+				if (this.connectionLoopThread.IsAlive)
+					this.connectionLoopThread.Join();
+
 				this.pingLoopShutdown = true;
 				this.outgoingLoopShutdown = true;
 				this.incomingLoopShutdown = true;
-				
-				if (this.pingLoopThread.IsAlive) this.pingLoopThread.Join();
-				if (this.outgoingLoopThread.IsAlive) this.outgoingLoopThread.Join();
-				if (this.incomingLoopThread.IsAlive) this.incomingLoopThread.Join();
-				
+
+				if (this.pingLoopThread.IsAlive)
+					this.pingLoopThread.Join();
+				if (this.outgoingLoopThread.IsAlive)
+					this.outgoingLoopThread.Join();
+				if (this.incomingLoopThread.IsAlive)
+					this.incomingLoopThread.Join();
+
 				this.Disconnect();
 
 				this.Log("Shutdown Completed");
@@ -283,11 +287,11 @@ namespace sar.Socket
 		#endregion
 
 		#region events
-		
+
 		#region ConnectionChange
 
 		public EventHandler ConnectionChange = null;
-		
+
 		private void OnConnectionChange(bool connected)
 		{
 			try
@@ -295,7 +299,8 @@ namespace sar.Socket
 				if (connected != this.connected)
 				{
 					this.connected = connected;
-					if (this.connected) this.SendData("get-all");
+					if (this.connected)
+						this.SendData("get-all");
 
 					if (ConnectionChange != null)
 					{
@@ -325,7 +330,7 @@ namespace sar.Socket
 				this.dataChanged -= value;
 			}
 		}
-		
+
 		protected override void OnMemCacheChanged(SocketValue data)
 		{
 			try
@@ -365,20 +370,22 @@ namespace sar.Socket
 				this.Log(ex);
 			}
 		}
-		
+
 		#endregion
-		
+
 		#region methods
-		
+
 		public void Disconnect()
 		{
 			try
 			{
 				this.Log("Disconnect");
 
-				if (this.stream != null) this.stream.Close();
-				if (this.socket != null) this.socket.Close();
-				
+				if (this.stream != null)
+					this.stream.Close();
+				if (this.socket != null)
+					this.socket.Close();
+
 				OnConnectionChange(false);
 				this.initilized = false;
 				this.memCache = new Dictionary<string, SocketValue>();
@@ -396,7 +403,7 @@ namespace sar.Socket
 				OnConnectionChange(false);
 			}
 		}
-		
+
 		private bool ProcessMessage(SocketMessage message)
 		{
 			try
@@ -419,42 +426,45 @@ namespace sar.Socket
 							//this.OnMessageRecived(message);
 							return (message.ToID == this.ID);
 						case "get":
-							if (this.IsHost) return false;	// allow parent to respond to "get" commands
+							if (this.IsHost)
+								return false;   // allow parent to respond to "get" commands
 							this.SendData("set", message.Member, this.GetValue(message.Member), message.FromID);
 							//this.OnMessageRecived(message);
 							return true;
 						case "get-all":
-							if (this.IsHost) return false;	// allow parent to respond to "get" commands
+							if (this.IsHost)
+								return false;   // allow parent to respond to "get" commands
 							return true;
 						default:
 							//this.OnMessageRecived(message);
 							break;
 					}
-					
+
 					return false;
 				}
 			}
 			catch
 			{
-				
+
 			}
 
 			return true;
 		}
-		
+
 		#endregion
-		
+
 		#region service
-		
+
 		#region connection monitor
-		
+
 		private Thread connectionLoopThread;
 		private bool connectionLoopShutdown = false;
-		
+
 		private void ConnectionLoop()
 		{
-			if (this.IsHost) Thread.Sleep(250);
-			
+			if (this.IsHost)
+				Thread.Sleep(250);
+
 			this.Log(this.ID.ToString() + ": " + "Connection Loop Started");
 
 			while (!connectionLoopShutdown)
@@ -479,15 +489,17 @@ namespace sar.Socket
 					Thread.Sleep(1000);
 				}
 			}
-			
+
 			this.Log(this.ID.ToString() + ": " + "Connection Loop Shutdown Gracefully");
 		}
-		
+
 		private void MonitorConnection()
 		{
-			if (!this.initilized) return;
-			if (!this.connected) this.socket = null;
-			
+			if (!this.initilized)
+				return;
+			if (!this.connected)
+				this.socket = null;
+
 			lock (socket)
 			{
 				if (!socket.Connected)
@@ -495,13 +507,13 @@ namespace sar.Socket
 					this.Disconnect();
 					return;
 				}
-				
+
 				try
 				{
-					if( this.socket.Client.Poll(1, SelectMode.SelectRead))
+					if (this.socket.Client.Poll(1, SelectMode.SelectRead))
 					{
 						var buffer = new byte[1];
-						if(this.socket.Client.Receive(buffer, SocketFlags.Peek) == 0)
+						if (this.socket.Client.Receive(buffer, SocketFlags.Peek) == 0)
 						{
 							this.Disconnect();
 						}
@@ -519,39 +531,45 @@ namespace sar.Socket
 		#region new connection
 
 		private static int newConnectionID = 1000;
-		
+
 		public void OpenConnection()
 		{
-			if (this.socket != null) return;
-			if (this.connected) return;
-			if (this.initilized) return;
-			if (this.IsHost) return;
-			if (string.IsNullOrEmpty(this.hostname)) return;
-			
+			if (this.socket != null)
+				return;
+			if (this.connected)
+				return;
+			if (this.initilized)
+				return;
+			if (this.IsHost)
+				return;
+			if (string.IsNullOrEmpty(this.hostname))
+				return;
+
 			int connectionAttempt = newConnectionID++;
 			this.Log(connectionAttempt.ToString() + ": " + " NewConnection");
-			
+
 			try
 			{
 				this.connected = false;
 				this.initilized = false;
-				
+
 				// connect
 				this.socket = new TcpClient(this.hostname, this.port);
 				this.stream = this.socket.GetStream();
-				
+
 				//this.connected = true;
 				this.Log(connectionAttempt.ToString() + ": " + " Socket Open");
-				
+
 				var timeout = new Stopwatch();
 				timeout.Start();
 
-				while(!this.initilized)
+				while (!this.initilized)
 				{
-					if (this.connectionLoopShutdown) return;
+					if (this.connectionLoopShutdown)
+						return;
 					Thread.Sleep(100);
 					//ServiceIncoming();
-					
+
 					if (timeout.ElapsedMilliseconds > 6000)
 					{
 						this.Log(connectionAttempt.ToString() + ": " + " Initilization Timeout");
@@ -559,7 +577,7 @@ namespace sar.Socket
 						return;
 					}
 				}
-				
+
 				this.ID = int.Parse(GetValue("Me.ID"));
 
 				this.Log(connectionAttempt.ToString() + ": " + " Initilized");
@@ -579,19 +597,19 @@ namespace sar.Socket
 				this.socket = null;
 			}
 		}
-		
+
 		#endregion
-		
+
 		#region incoming
-		
+
 		private Thread incomingLoopThread;
 		private bool incomingLoopShutdown = false;
-		
+
 		private void IncomingLoop()
 		{
 			Thread.Sleep(0);
 			this.Log(this.ID.ToString() + ": " + "Incoming Loop Started");
-			
+
 			string incomingBuffer = "";
 			while (!incomingLoopShutdown)
 			{
@@ -607,20 +625,22 @@ namespace sar.Socket
 					Thread.Sleep(1000);
 				}
 			}
-			
+
 			this.Log(this.ID.ToString() + ": " + "Incoming Loop Shutdown Gracefully");
 		}
-		
+
 		private string ReadIncomingPacket()
 		{
 			try
 			{
-				if (socket == null) return "";
-				
+				if (socket == null)
+					return "";
+
 				lock (socket)
 				{
-					if (stream == null) return "";
-					
+					if (stream == null)
+						return "";
+
 					lock (stream)
 					{
 						if (socket.Available > 0)
@@ -651,33 +671,34 @@ namespace sar.Socket
 			}
 			catch (SocketException)
 			{
-				
+
 			}
 			catch (Exception ex)
 			{
 				this.Log(ex);
 			}
-			
+
 			return "";
 		}
-		
+
 		private string ExtractPacket(ref string bufferIn)
 		{
-			if (String.IsNullOrEmpty(bufferIn)) return null;
-			
+			if (String.IsNullOrEmpty(bufferIn))
+				return null;
+
 			int firstIndex = bufferIn.IndexOf("<?xml");
 			int secondIndex = bufferIn.IndexOf("<?xml", firstIndex + 1);
 			int closingIndex = -1;
-			
+
 			Match match = Regex.Match(bufferIn, @"\<[\?]xml version=[^\s]*[\s]encoding=[^\?]*[\?]\>\r*\n\<([^\s]*)\sversion=.*\>");
 			string appname = "";
-			
+
 			if (match.Success && match.Groups.Count == 2)
 			{
 				appname = "</" + match.Groups[1].Value + ">";
 				closingIndex = bufferIn.IndexOf(appname, firstIndex);
 			}
-			
+
 
 			// error checking
 			if (firstIndex == -1)
@@ -723,20 +744,21 @@ namespace sar.Socket
 				 */
 				return "";
 			}
-			
+
 			string packetString = bufferIn.Substring(firstIndex, closingIndex - firstIndex + appname.Length);
 			//this.Log("bufferIn: \n" + bufferIn);
 			//this.Log("extracted packet: \n" + packetString);
 			bufferIn = bufferIn.Substring(closingIndex + appname.Length);
 			//this.Log("bufferOut: \n" + bufferIn);
-			
+
 			return packetString;
 		}
-		
+
 		private void ProcessIncomingBuffer(ref string bufferIn)
 		{
 			string packetIn = ExtractPacket(ref bufferIn);
-			if (String.IsNullOrEmpty(packetIn)) return;
+			if (String.IsNullOrEmpty(packetIn))
+				return;
 
 			using (var sr = new StringReader(packetIn))
 			{
@@ -751,12 +773,12 @@ namespace sar.Socket
 								case "SocketMessage":
 									this.packetsIn++;
 									var message = new SocketMessage(reader);
-									
+
 									if (!this.ProcessMessage(message) && this.IsHost)
 									{
 										this.parent.ProcessMessage(this, message);
 									}
-									
+
 									break;
 								default:
 									break;
@@ -766,20 +788,20 @@ namespace sar.Socket
 				}
 			}
 		}
-		
+
 		#endregion
 
 		#region outgoing
-		
+
 		private Thread outgoingLoopThread;
 		private bool outgoingLoopShutdown = false;
 		private int resendAttempts;
-		
+
 		private void OutgoingLoop()
 		{
 			Thread.Sleep(100);
 			this.Log(this.ID.ToString() + ": " + "Outgoing Loop Started");
-			
+
 			while (!outgoingLoopShutdown)
 			{
 				try
@@ -793,18 +815,21 @@ namespace sar.Socket
 					Thread.Sleep(1000);
 				}
 			}
-			
+
 			this.Log(this.ID.ToString() + ": " + "Outgoing Loop Shutdown Gracefully");
 		}
-		
+
 		private void ServiceOutgoing()
 		{
-			if (socket == null) return;
-			if (stream == null) return;
-			if (messagesOut.Count == 0) return;
-			
+			if (socket == null)
+				return;
+			if (stream == null)
+				return;
+			if (messagesOut.Count == 0)
+				return;
+
 			var messageQueue = new List<SocketMessage>();
-			
+
 			try
 			{
 				// assemble packet
@@ -813,22 +838,22 @@ namespace sar.Socket
 					messageQueue.AddRange(messagesOut);
 					messagesOut.Clear();
 				}
-				
+
 				string packetString = "";
 				using (var sw = new StringWriter())
 				{
 					using (var writer = new XML.Writer(sw))
 					{
 						writer.WriteStartElement("SocketMessages");
-						
+
 						foreach (SocketMessage message in messageQueue)
 						{
 							message.Serialize(writer);
 						}
-						
+
 						writer.WriteEndElement();
 					}
-					
+
 					packetString = sw.ToString();
 				}
 
@@ -850,9 +875,9 @@ namespace sar.Socket
 				{
 					messagesOut.AddRange(messageQueue);
 				}
-				
+
 				resendAttempts++;
-				if (resendAttempts >3)
+				if (resendAttempts > 3)
 				{
 					this.Log("Failed three send attempts");
 					Thread.Sleep(1000);
@@ -868,7 +893,7 @@ namespace sar.Socket
 				{
 					messagesOut.AddRange(messageQueue);
 				}
-				
+
 				//this.Disconnect();
 			}
 		}
@@ -889,7 +914,7 @@ namespace sar.Socket
 			this.Log(this.ID.ToString() + ": " + "Ping Loop Started");
 			pingStopWatch = new Stopwatch();
 			pingStopWatch.Start();
-			
+
 			while (!pingLoopShutdown)
 			{
 				try
@@ -903,13 +928,14 @@ namespace sar.Socket
 					Thread.Sleep(1000);
 				}
 			}
-			
+
 			this.Log(this.ID.ToString() + ": " + "Ping Loop Shutdown Gracefully");
 		}
 
 		private void Ping()
 		{
-			if (!this.connected) return;
+			if (!this.connected)
+				return;
 			this.SendData("ping", (++lastPingID).ToString(), pingStopWatch.ElapsedMilliseconds.ToString(), this.ID);
 		}
 
@@ -929,8 +955,9 @@ namespace sar.Socket
 		{
 			try
 			{
-				if (pingStopWatch == null) return;
-				
+				if (pingStopWatch == null)
+					return;
+
 				long pingTime = long.Parse(message.Data);
 				int pingID = int.Parse(message.Member);
 				long pingDuration = this.pingStopWatch.ElapsedMilliseconds - pingTime;

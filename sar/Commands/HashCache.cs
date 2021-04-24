@@ -13,12 +13,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
-
-using sar.Base;
-using sar.Tools;
 
 namespace sar.Commands
 {
@@ -26,18 +25,18 @@ namespace sar.Commands
 	{
 		public HashCache(Base.CommandHub parent)
 			: base(parent, "Hash Cache",
-			       new List<string> {
-			       	"hash.cache",
-			       	"hc"
-			       },
-			       "hc <root_path> <file_search_pattern>",
-			       new List<string> {
-			       	@"ch .\Content .\Views"
-			       })
+				   new List<string> {
+					   "hash.cache",
+					   "hc"
+				   },
+				   "hc <root_path> <file_search_pattern>",
+				   new List<string> {
+					   @"ch .\Content .\Views"
+				   })
 		{
-			
+
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -45,28 +44,28 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
+
 			Progress.Message = "Searching";
 			string contentRoot = args[1];
 			string searchRoot = args[2];
-			
+
 			if (!Directory.Exists(searchRoot))
 			{
 				throw new DirectoryNotFoundException("search directory: " + searchRoot.QuoteDouble() +
-				                                     " does not exists");
+													 " does not exists");
 			}
-			
+
 			if (!Directory.Exists(contentRoot))
 			{
 				throw new DirectoryNotFoundException("content directory: " + searchRoot.QuoteDouble() +
-				                                     " does not exists");
+													 " does not exists");
 			}
-			
+
 			List<string> files = IO.GetAllFiles(searchRoot, "*.*");
 			if (files.Count == 0)
 			{
 				throw new FileNotFoundException("unable to find any files in search directory: " +
-				                                searchRoot.QuoteDouble());
+												searchRoot.QuoteDouble());
 			}
 
 			var fileChangeResults = new List<SearchResults>();
@@ -79,19 +78,19 @@ namespace sar.Commands
 					var type = IO.GetFileExtension(file).ToLower();
 					string content = IO.ReadFileAsUtf8(file);
 					var original = content;
-					
+
 					if (type == "aspx" || type == "ascx" || type == "html" || type == "js" || type == "master")
 					{
 						changes.AddResults(HashCacheRules.AddHashs(contentRoot, ref content));
 					}
-					
+
 					if (content != original)
 					{
 						fileChangeResults.Add(changes);
 						HashCacheRules.Save(changes, content);
 						ConsoleHelper.WriteLine("");
 						ConsoleHelper.WriteLine(IO.GetFilename(file), ConsoleColor.Yellow);
-						
+
 						foreach (var change in changes.Matches)
 						{
 							ConsoleHelper.Write("  +line ");
@@ -105,7 +104,7 @@ namespace sar.Commands
 					ConsoleHelper.WriteException(ex);
 				}
 			}
-			
+
 			return ConsoleHelper.EXIT_OK;
 		}
 	}

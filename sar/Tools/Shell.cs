@@ -17,7 +17,6 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
 
 namespace sar.Tools
 {
@@ -31,26 +30,26 @@ namespace sar.Tools
 		public string Arguments;
 		public string WorkingPath;
 	}
-	
+
 	public class Shell
 	{
 		public const int EXIT_OK = 0;
 		public const int EXIT_ERROR = 1;
-		
+
 		public Shell()
 		{
 		}
-		
+
 		public static ShellResults Run(string applicationFilePath)
 		{
-			return 	Run(applicationFilePath, "");
+			return Run(applicationFilePath, "");
 		}
-		
+
 		public static ShellResults Run(string applicationFilePath, string arguments)
 		{
-			return 	Run(applicationFilePath, arguments, Directory.GetCurrentDirectory());
+			return Run(applicationFilePath, arguments, Directory.GetCurrentDirectory());
 		}
-		
+
 		public static ShellResults Run(string applicationFilePath, string arguments, string workingDirectory)
 		{
 			return Run(applicationFilePath, arguments, workingDirectory, ApplicationInfo.HasAdministrativeRight);
@@ -62,38 +61,39 @@ namespace sar.Tools
 			{
 				throw new NullReferenceException("application filename was not specified");
 			}
-			
+
 			if (String.IsNullOrEmpty(arguments))
 			{
 				arguments = "";
 			}
-			
+
 			if (string.IsNullOrEmpty(workingDirectory))
 			{
 				throw new NullReferenceException("working directory was not specified");
 			}
-			
+
 			if (!File.Exists(applicationFilePath))
 			{
 				throw new FileNotFoundException("application filename not found");
 			}
-			
+
 			if (!Directory.Exists(workingDirectory))
 			{
 				throw new DirectoryNotFoundException("working directory not found");
 			}
-			
+
 			Stopwatch applicationExecutionTime = new Stopwatch();
 			applicationExecutionTime.Start();
-			
+
 			ShellResults results = new ShellResults();
 			results.Filename = applicationFilePath;
 			results.Arguments = arguments;
 			results.WorkingPath = workingDirectory;
-			
+
 			Process shell = new Process();
 			shell.StartInfo.FileName = applicationFilePath;
-			if (elevatedRights) shell.StartInfo.Verb = "runas";
+			if (elevatedRights)
+				shell.StartInfo.Verb = "runas";
 			shell.StartInfo.Arguments = arguments;
 			shell.StartInfo.UseShellExecute = false;
 			shell.StartInfo.RedirectStandardOutput = true;
@@ -101,7 +101,7 @@ namespace sar.Tools
 			shell.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 			shell.StartInfo.CreateNoWindow = true;
 			shell.StartInfo.WorkingDirectory = workingDirectory;
-			
+
 			try
 			{
 				shell.Start();
@@ -110,17 +110,17 @@ namespace sar.Tools
 			{
 				//Do nothing. the user canceled the UAC window
 			}
-			
+
 			results.Output = shell.StandardOutput.ReadToEnd();
 			results.Error = shell.StandardError.ReadToEnd();
 			shell.WaitForExit();
-			
+
 			results.ExitCode = shell.ExitCode;
 			applicationExecutionTime.Stop();
 			results.ElapsedMilliseconds = applicationExecutionTime.ElapsedMilliseconds;
 			return results;
 		}
-		
+
 		public static bool RunElevated(string fileName, string arguments, string workingDirectory)
 		{
 			ProcessStartInfo processInfo = new ProcessStartInfo();
@@ -140,7 +140,7 @@ namespace sar.Tools
 				return false;
 			}
 		}
-		
+
 		public static bool RunHiddenElevated(string fileName, string arguments, string workingDirectory)
 		{
 			var processInfo = new ProcessStartInfo();

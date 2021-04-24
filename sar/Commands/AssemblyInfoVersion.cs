@@ -13,25 +13,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
-
-using sar.Base;
-using sar.Tools;
 
 namespace sar.Commands
 {
 	public class AssemblyInfoVersion : Command
 	{
 		public AssemblyInfoVersion(Base.CommandHub parent) : base(parent, "Set AssemblyInfo version number",
-		                                    new List<string> { "assembly.version", "assy.ver" },
-		                                    "-assembly.version [AssemblyInfo file] [version]",
-		                                    new List<string> { "-assembly.version \"AssemblyInfo.cs\" \"1.0.2.1\"" })
+											new List<string> { "assembly.version", "assy.ver" },
+											"-assembly.version [AssemblyInfo file] [version]",
+											new List<string> { "-assembly.version \"AssemblyInfo.cs\" \"1.0.2.1\"" })
 		{
-			
+
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -39,10 +38,10 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
+
 			string version = args[1];
 			string filePattern = "AssemblyInfo.*";
-			
+
 			if (args.Length == 3)
 			{
 				version = args[2];
@@ -50,13 +49,13 @@ namespace sar.Commands
 			}
 
 			string[] versionNumbers = version.Split('.');
-			
+
 			// TODO: handle no version changes
 			if (versionNumbers.Length != 4)
 			{
 				throw new ArgumentException("incorrect version format");
 			}
-			
+
 			foreach (string number in versionNumbers)
 			{
 				int val;
@@ -69,14 +68,14 @@ namespace sar.Commands
 			Progress.Message = "Searching";
 			string root = Directory.GetCurrentDirectory();
 			ConsoleHelper.DebugWriteLine("currentDir = " + root);
-			
+
 			IO.CheckRootAndPattern(ref root, ref filePattern);
 			ConsoleHelper.DebugWriteLine("root = " + root);
 			ConsoleHelper.DebugWriteLine("filePattern = " + filePattern);
-			
+
 			var files = IO.GetAllFiles(root, filePattern);
 			var changedFiles = new List<string>();
-			
+
 			foreach (string file in files)
 			{
 				// [assembly: AssemblyVersion("1.0.1.85")]
@@ -87,9 +86,9 @@ namespace sar.Commands
 					changedFiles.Add(file);
 				}
 			}
-			
+
 			ConsoleHelper.WriteLine("Version number updated in " + changedFiles.Count.ToString() + " location" + ((changedFiles.Count != 1) ? "s" : ""), ConsoleColor.DarkYellow);
-			
+
 			return ConsoleHelper.EXIT_OK;
 		}
 	}

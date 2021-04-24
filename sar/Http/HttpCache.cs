@@ -13,12 +13,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
+using sar.Tools;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-
-using sar.Tools;
 
 namespace sar.Http
 {
@@ -26,34 +23,34 @@ namespace sar.Http
 	{
 		private Dictionary<string, HttpCachedFile> cache;
 		private HttpServer server;
-		
+
 		public List<string> Files
 		{
 			get
 			{
 				var result = new List<string>();
-				
+
 				foreach (var file in cache)
 				{
 					result.Add(file.Key);
 				}
-				
+
 				return result;
 			}
 		}
-		
+
 		public HttpCache(HttpServer server)
 		{
 			this.cache = new Dictionary<string, HttpCachedFile>();
 			this.server = server;
-			
+
 			// read all embedded resources
 			foreach (var file in EmbeddedResource.GetAllResources())
 			{
 				var request = file.ToLower();
 				cache.Add(request, new HttpCachedEmbeddedFile(file));
 			}
-			
+
 			// read all files on root folder
 			foreach (var file in IO.GetAllFiles(server.Root))
 			{
@@ -61,28 +58,28 @@ namespace sar.Http
 				cache.Add(request, new HttpCachedFile(file));
 			}
 		}
-		
+
 		public bool Contains(HttpRequest request)
 		{
 			var requestPath = request.Path.TrimWhiteSpace();
 			string filePath = server.Root + @"\" + requestPath.Replace(@"/", @"\");
-			
+
 			return Contains(filePath);
 		}
-		
+
 		public bool Contains(string filePath)
 		{
 			return this.cache.ContainsKey(filePath);
 		}
-		
+
 		public HttpCachedFile Get(HttpRequest request)
 		{
 			var requestPath = request.Path.TrimWhiteSpace();
-			
+
 			string filePath = server.Root + @"\" + requestPath.Replace(@"/", @"\");
 			return Get(filePath);
 		}
-		
+
 		public bool Find(string filePath)
 		{
 			return (this.cache.ContainsKey(filePath) || File.Exists(filePath));
@@ -90,22 +87,22 @@ namespace sar.Http
 
 		public HttpCachedFile Get(string filePath)
 		{
-			
+
 			if (this.cache.ContainsKey(filePath))
 			{
 				return this.cache[filePath];
 			}
-			
+
 			// TODO: this doesn't work
 			if (File.Exists(filePath))
 			{
 				var request = filePath.Substring(server.Root.Length + 1).ToLower();
 				var newFile = new HttpCachedFile(filePath);
 				this.cache.Add(request, newFile);
-				
+
 				return newFile;
 			}
-			
+
 			throw new FileNotFoundException(filePath);
 		}
 	}

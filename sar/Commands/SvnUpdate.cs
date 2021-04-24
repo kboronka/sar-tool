@@ -13,13 +13,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
-
-using sar.Base;
-using sar.Tools;
 
 namespace sar.Commands
 {
@@ -27,30 +26,31 @@ namespace sar.Commands
 	{
 		public SvnUpdate(Base.CommandHub parent)
 			: base(parent, "SVN check for uncommited files",
-			       new List<string> { "svn.up" },
-			       @"svn.un",
-			       new List<string> { @"-svn.up" })
+				   new List<string> { "svn.up" },
+				   @"svn.un",
+				   new List<string> { @"-svn.up" })
 		{
-			
+
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			Progress.Enabled = true;
 			Progress.Message = "Updating repository";
-			
+
 			// find svn executiable
 			var svn = IO.FindApplication("svn.exe", @"TortoiseSVN\bin");
-			if (!File.Exists(svn)) throw new ApplicationException("svn.exe not found");
-			
+			if (!File.Exists(svn))
+				throw new ApplicationException("svn.exe not found");
+
 			string result = "";
 			ConsoleHelper.Run(svn, " status update", out result);
-			
+
 			Progress.Enabled = false;
-			
+
 			// check for conflicts
 			var match = Regex.Match(result, @"^C\s{4}.*$");
-			
+
 			if (match.Success)
 			{
 				ConsoleHelper.WriteLine("********************************************************", ConsoleColor.White);

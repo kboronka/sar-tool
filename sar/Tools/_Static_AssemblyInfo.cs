@@ -13,7 +13,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -37,9 +36,9 @@ namespace sar.Tools
 					}
 					catch
 					{
-						
+
 					}
-					
+
 					try
 					{
 						if (AssemblyInfo.assembly == null)
@@ -49,10 +48,10 @@ namespace sar.Tools
 					}
 					catch
 					{
-						
+
 					}
 				}
-				
+
 				return AssemblyInfo.assembly;
 			}
 			set
@@ -60,7 +59,7 @@ namespace sar.Tools
 				AssemblyInfo.assembly = value;
 			}
 		}
-		
+
 		private static string name;
 		public static string Name
 		{
@@ -70,11 +69,11 @@ namespace sar.Tools
 				{
 					AssemblyInfo.name = AssemblyInfo.Assembly.GetName().Name;
 				}
-				
+
 				return AssemblyInfo.name;
 			}
 		}
-		
+
 		private static string product;
 		public static string Product
 		{
@@ -92,9 +91,9 @@ namespace sar.Tools
 						AssemblyInfo.product = "unknown";
 					}
 				}
-				
+
 				return AssemblyInfo.product;
-			}		
+			}
 		}
 
 		private static string company;
@@ -107,7 +106,7 @@ namespace sar.Tools
 					object[] attributes = AssemblyInfo.Assembly.GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
 					AssemblyInfo.company = attributes.Length == 0 ? "" : ((AssemblyCompanyAttribute)attributes[0]).Company;
 				}
-				
+
 				return AssemblyInfo.company;
 			}
 		}
@@ -121,11 +120,11 @@ namespace sar.Tools
 				{
 					AssemblyInfo.version = AssemblyInfo.Assembly.GetName().Version.ToString();
 				}
-				
+
 				return AssemblyInfo.version;
 			}
 		}
-		
+
 		private static string sarVersion;
 		public static string SarVersion
 		{
@@ -135,11 +134,11 @@ namespace sar.Tools
 				{
 					AssemblyInfo.sarVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 				}
-				
+
 				return AssemblyInfo.sarVersion;
 			}
 		}
-		
+
 		private static string copyright;
 		public static string Copyright
 		{
@@ -150,7 +149,7 @@ namespace sar.Tools
 					object[] attributes = AssemblyInfo.Assembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
 					AssemblyInfo.copyright = attributes.Length == 0 ? "" : ((AssemblyCopyrightAttribute)attributes[0]).Copyright;
 				}
-				
+
 				return AssemblyInfo.copyright;
 			}
 		}
@@ -169,11 +168,11 @@ namespace sar.Tools
 					foreach (AssemblyName assemblyName in AssemblyInfo.Assembly.GetReferencedAssemblies())
 					{
 						string name = assemblyName.Name;
-						
+
 						if (!name.StartsWith("System")
-						    && !name.StartsWith("mscorlib")
-						    && !name.StartsWith("Microsoft.")
-						    && !name.StartsWith("CefSharp."))
+							&& !name.StartsWith("mscorlib")
+							&& !name.StartsWith("Microsoft.")
+							&& !name.StartsWith("CefSharp."))
 						{
 							try
 							{
@@ -181,12 +180,12 @@ namespace sar.Tools
 							}
 							catch
 							{
-								
+
 							}
 						}
 					}
 				}
-				
+
 				return assemblies;
 			}
 		}

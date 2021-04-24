@@ -33,21 +33,21 @@ namespace sar.Tools
 					string root = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
 					string product = AssemblyInfo.Product;
 					string company = AssemblyInfo.Company;
-					
+
 					if (String.IsNullOrEmpty(product))
 						throw new ArgumentNullException("Product name not specified in AssemblyInfo");
 
 					if (!String.IsNullOrEmpty(company))
 						root += "\\" + company;
-					
+
 					root += "\\" + product + "\\";
-					
+
 					if (!Directory.Exists(root))
 						Directory.CreateDirectory(root);
 
 					ApplicationInfo.commonDataDirectory = root;
 				}
-				
+
 				return ApplicationInfo.commonDataDirectory;
 			}
 		}
@@ -62,21 +62,21 @@ namespace sar.Tools
 					string root = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 					string product = AssemblyInfo.Product;
 					string company = AssemblyInfo.Company;
-					
+
 					if (String.IsNullOrEmpty(product))
 						throw new ArgumentNullException("Product name not specified in AssemblyInfo");
 
 					if (!String.IsNullOrEmpty(company))
 						root += "\\" + company;
-					
+
 					root += "\\" + product + "\\";
-					
+
 					if (!Directory.Exists(root))
 						Directory.CreateDirectory(root);
 
 					ApplicationInfo.localDataDirectory = root;
 				}
-				
+
 				return ApplicationInfo.localDataDirectory;
 			}
 		}
@@ -90,11 +90,11 @@ namespace sar.Tools
 				{
 					ApplicationInfo.currentDirectory = System.AppDomain.CurrentDomain.BaseDirectory;
 				}
-				
+
 				return ApplicationInfo.currentDirectory;
 			}
 		}
-		
+
 		private static string applicationPath;
 		public static string ApplicationPath
 		{
@@ -104,7 +104,7 @@ namespace sar.Tools
 				{
 					applicationPath = AssemblyInfo.Assembly.Location;
 				}
-				
+
 				return applicationPath;
 			}
 		}
@@ -118,11 +118,11 @@ namespace sar.Tools
 				{
 					desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\";
 				}
-				
+
 				return desktopPath;
 			}
 		}
-		
+
 		[DllImport("kernel32.dll", SetLastError = true, CallingConvention = CallingConvention.Winapi)]
 		[return: MarshalAs(UnmanagedType.Bool)]
 		private static extern bool IsWow64Process(
@@ -163,30 +163,32 @@ namespace sar.Tools
 							isWow64 = false;
 						}
 					}
-					
+
 					ConsoleHelper.DebugWriteLine("Wow64 = " + isWow64.ToString());
 					isWow64completed = true;
 				}
-				
+
 				return isWow64;
 			}
 		}
-		
+
 		private static OperatingSystem os;
 		public static bool IsWinXPOrHigher
 		{
 			get
 			{
-				if (os == null) os = Environment.OSVersion;
+				if (os == null)
+					os = Environment.OSVersion;
 				return (os.Platform == PlatformID.Win32NT) && ((os.Version.Major > 5) || ((os.Version.Major == 5) && (os.Version.Minor >= 1)));
 			}
 		}
-		
+
 		public static bool IsWinVistaOrHigher
 		{
 			get
 			{
-				if (os == null) os = Environment.OSVersion;
+				if (os == null)
+					os = Environment.OSVersion;
 				return (os.Platform == PlatformID.Win32NT) && (os.Version.Major >= 6);
 			}
 		}
@@ -197,14 +199,15 @@ namespace sar.Tools
 		{
 			get
 			{
-				if (hasAdministrativeRightcompleted) return hasAdministrativeRight;
-				
+				if (hasAdministrativeRightcompleted)
+					return hasAdministrativeRight;
+
 				try
 				{
 					WindowsPrincipal pricipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
 					hasAdministrativeRight = pricipal.IsInRole(WindowsBuiltInRole.Administrator);
 					hasAdministrativeRightcompleted = true;
-					
+
 					return hasAdministrativeRight;
 				}
 				catch

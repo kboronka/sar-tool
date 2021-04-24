@@ -13,11 +13,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-
 using sar.Base;
 using sar.Tools;
+using System;
+using System.Collections.Generic;
 
 namespace sar.Commands
 {
@@ -25,9 +24,9 @@ namespace sar.Commands
 	{
 		public Help(Base.CommandHub parent) : base(parent, "Help", new List<string> { "help", "?" }, "-help [command]", new List<string>() { @"-help bk" })
 		{
-			
+
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			if (args.Length == 2)
@@ -36,15 +35,17 @@ namespace sar.Commands
 				if (this.commandHub.commands.ContainsKey(commandString))
 				{
 					Command command = this.commandHub.commands[commandString];
-					
+
 					ConsoleHelper.WriteLine("\nUsage:", ConsoleColor.White);
 					ConsoleHelper.WriteLine("\t" + command.Usage);
-					
+
 					if (command.Examples.Count > 0)
 					{
-						if (command.Examples.Count > 1) ConsoleHelper.WriteLine("\nExamples:", ConsoleColor.White);
-						if (command.Examples.Count == 1) ConsoleHelper.WriteLine("\nExample:", ConsoleColor.White);
-						
+						if (command.Examples.Count > 1)
+							ConsoleHelper.WriteLine("\nExamples:", ConsoleColor.White);
+						if (command.Examples.Count == 1)
+							ConsoleHelper.WriteLine("\nExample:", ConsoleColor.White);
+
 						foreach (string example in command.Examples)
 						{
 							ConsoleHelper.WriteLine("\t" + example);
@@ -57,7 +58,7 @@ namespace sar.Commands
 				ConsoleHelper.WriteLine("\nUsage:", ConsoleColor.White);
 				ConsoleHelper.WriteLine("\t -help [command]");
 				ConsoleHelper.WriteLine("\nCommands:", ConsoleColor.White);
-				
+
 				Command lastCommand = null;
 				foreach (Command command in this.commandHub.commands.Values)
 				{
@@ -66,7 +67,7 @@ namespace sar.Commands
 						lastCommand = command;
 						ConsoleHelper.Write("\t" + command.Name, ConsoleColor.Yellow);
 						ConsoleHelper.Write(": ");
-						
+
 						string seperator = "";
 						foreach (string commandString in command.Commands)
 						{
@@ -74,14 +75,14 @@ namespace sar.Commands
 							ConsoleHelper.Write(commandString, ConsoleColor.Gray);
 							seperator = " | ";
 						}
-						
+
 						ConsoleHelper.WriteLine("");
 					}
 				}
-				
+
 				ConsoleHelper.WriteLine("");
 				ConsoleHelper.WriteLine("\nOptions:", ConsoleColor.White);
-				
+
 				ConsoleHelper.Write("\t" + @"/");
 				ConsoleHelper.Write("quiet", ConsoleColor.Yellow);
 				ConsoleHelper.WriteLine(": no warnings");
@@ -89,11 +90,11 @@ namespace sar.Commands
 				ConsoleHelper.Write("\t" + @"/");
 				ConsoleHelper.Write("debug", ConsoleColor.Yellow);
 				ConsoleHelper.WriteLine(": debug mode - extra feedback");
-				
+
 				ConsoleHelper.Write("\t" + @"/");
 				ConsoleHelper.Write("svn", ConsoleColor.Yellow);
 				ConsoleHelper.WriteLine(": include svn folders");
-				
+
 				ConsoleHelper.Write("\t" + @"/");
 				ConsoleHelper.Write("nosubfolders", ConsoleColor.Yellow);
 				ConsoleHelper.WriteLine(": do not search subfolders");
@@ -112,16 +113,16 @@ namespace sar.Commands
 
 				ConsoleHelper.WriteLine("");
 				ConsoleHelper.WriteLine("\nArgument Placeholders:", ConsoleColor.White);
-				
+
 				ConsoleHelper.Write("\t" + @"");
 				ConsoleHelper.Write("(date)", ConsoleColor.Yellow);
 				ConsoleHelper.WriteLine(": replaced with current date");
-				
+
 				ConsoleHelper.Write("\t" + @"");
 				ConsoleHelper.Write("(time)", ConsoleColor.Yellow);
 				ConsoleHelper.WriteLine(": replaced with current time");
 			}
-			
+
 			return ConsoleHelper.EXIT_OK;
 		}
 	}

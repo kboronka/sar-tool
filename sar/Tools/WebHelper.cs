@@ -13,48 +13,47 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.IO;
-using System.Net;
-
 using sar.Json;
 using sar.Net;
+using System.IO;
+using System.Net;
 
 namespace sar.Tools
 {
 	public static class WebHelper
 	{
-        private static WebClientEx client;
+		private static WebClientEx client;
 
-        private static WebClientEx Client
+		private static WebClientEx Client
 		{
 			get
 			{
-                if (client == null) client = new WebClientEx(WebClientEx.DEFAULT_HTTP_TIMEOUT);
+				if (client == null)
+					client = new WebClientEx(WebClientEx.DEFAULT_HTTP_TIMEOUT);
 				return client;
 			}
 		}
 
-        public static void Download(string url, string localfile, int timeoutMs = WebClientEx.DEFAULT_HTTP_TIMEOUT)
+		public static void Download(string url, string localfile, int timeoutMs = WebClientEx.DEFAULT_HTTP_TIMEOUT)
 		{
-            Client.Timeout = timeoutMs;
+			Client.Timeout = timeoutMs;
 			Client.DownloadFile(url, localfile);
 		}
 
-        public static string ReadUrl(string url, int timeoutMs = WebClientEx.DEFAULT_HTTP_TIMEOUT)
+		public static string ReadUrl(string url, int timeoutMs = WebClientEx.DEFAULT_HTTP_TIMEOUT)
 		{
-            Client.Timeout = timeoutMs;
+			Client.Timeout = timeoutMs;
 			return Client.DownloadString(url);
 		}
 
-        public static string ReadJson(string url, int timeoutMs = WebClientEx.DEFAULT_HTTP_TIMEOUT)
+		public static string ReadJson(string url, int timeoutMs = WebClientEx.DEFAULT_HTTP_TIMEOUT)
 		{
 			var request = WebRequest.Create(url);
-            request.Timeout = timeoutMs;
+			request.Timeout = timeoutMs;
 			request.Credentials = CredentialCache.DefaultCredentials;
 			var response = request.GetResponse();
 			var responceStream = response.GetResponseStream();
-			
+
 			try
 			{
 				var ms = new MemoryStream();

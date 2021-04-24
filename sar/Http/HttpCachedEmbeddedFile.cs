@@ -13,13 +13,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
-
 using sar.Tools;
+using System;
 
 namespace sar.Http
 {

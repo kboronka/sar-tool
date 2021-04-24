@@ -13,35 +13,34 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
-
-using sar.Base;
-using sar.Tools;
 
 namespace sar.Commands
 {
 	public class SvnGetAssemblyVersion : Command
 	{
 		public SvnGetAssemblyVersion(Base.CommandHub parent) : base(parent, "svn Get Assembly Version",
-		                                                            new List<string> { "svn.GetAssemblyVersion" },
-		                                                            @"svn.GetAssemblyVersion <svn/path>",
-		                                                            new List<string> { @"-svn.GetAssemblyVersion http://svnserver/trunk/Properties/AssemblyInfo.cs" })
+																	new List<string> { "svn.GetAssemblyVersion" },
+																	@"svn.GetAssemblyVersion <svn/path>",
+																	new List<string> { @"-svn.GetAssemblyVersion http://svnserver/trunk/Properties/AssemblyInfo.cs" })
 		{
-			
+
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			string repo = args[1];
-			
+
 			Progress.Message = "Reading Assembly Version Number";
 			var version = GetVersion(repo);
-			
+
 			if (!String.IsNullOrEmpty(version))
-			{								
+			{
 				ConsoleHelper.WriteLine(version, ConsoleColor.White);
 				return ConsoleHelper.EXIT_OK;
 			}
@@ -55,31 +54,32 @@ namespace sar.Commands
 		{
 			// find svn executiable
 			var svn = IO.FindApplication("svn.exe", @"TortoiseSVN\bin");
-			if (!File.Exists(svn)) throw new ApplicationException("svn.exe not found");
+			if (!File.Exists(svn))
+				throw new ApplicationException("svn.exe not found");
 
 			// create temp folder used to checkout all files from svn repo
 			string tempFolder = Path.GetTempPath();
 			Directory.CreateDirectory(tempFolder);
 			var extension = IO.GetFileExtension(repo);
-			
+
 			var tempPath = Path.Combine(tempFolder, Guid.NewGuid().ToString() + "." + extension);
 
 			ConsoleHelper.Run(svn, " export " + repo.QuoteDouble() + " " + tempPath.QuoteDouble());
-			
+
 			var content = IO.ReadFile(tempPath);
 			File.Delete(tempPath);
 
 			const string pattern = @"AssemblyVersion\s*\(\""(.*)\""\)";
-			
+
 			var regex = new Regex(pattern);
 			var match = regex.Match(content);
-			
+
 			if (match.Success)
 			{
 				var version = match.Groups[1].Value;
 				return version;
 			}
-			
+
 			return null;
 		}
 	}

@@ -14,14 +14,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading;
-using System.Xml;
-
-using sar.Tools;
 
 namespace sar.Socket
 {
@@ -32,7 +24,7 @@ namespace sar.Socket
 		private long sourceID;
 		private DateTime timestamp;
 		private DateTime lastUpdate;
-		
+
 		public SocketValue(string name)
 		{
 			this.name = name;
@@ -41,14 +33,14 @@ namespace sar.Socket
 			this.lastUpdate = new DateTime(2001, 1, 1);
 			this.sourceID = 0;
 		}
-		
+
 		#region properties
-		
+
 		public string Name
 		{
 			get { return this.name; }
 		}
-		
+
 		public string Data
 		{
 			set
@@ -59,39 +51,39 @@ namespace sar.Socket
 					this.timestamp = DateTime.Now;
 					this.data = value;
 				}
-				
+
 				OnDataChange(this);
 			}
 
 			get { return this.data; }
 		}
-		
+
 		public DateTime Timestamp
 		{
 			get { return this.timestamp; }
 		}
-		
+
 		public DateTime LastUpdate
-		{	
+		{
 			get { return lastUpdate; }
 		}
-		
+
 		public long SourceID
 		{
 			set { this.sourceID = value; }
 
 			get { return this.sourceID; }
 		}
-		
+
 		#endregion
-		
+
 		#region events
-		
+
 		#region data changed
-		
+
 		public delegate void DataChangedHandler(SocketValue sv);
 		private DataChangedHandler dataChanged = null;
-		
+
 		public event DataChangedHandler DataChanged
 		{
 			add
@@ -103,7 +95,7 @@ namespace sar.Socket
 				this.dataChanged -= value;
 			}
 		}
-		
+
 		private void OnDataChange(SocketValue data)
 		{
 			try
@@ -123,7 +115,7 @@ namespace sar.Socket
 		#endregion
 
 		#endregion
-		
+
 		public override string ToString()
 		{
 			return this.data;

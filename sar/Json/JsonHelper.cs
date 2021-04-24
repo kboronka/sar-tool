@@ -13,12 +13,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-
-using sar.Tools;
 
 namespace sar.Json
 {
@@ -115,30 +114,30 @@ namespace sar.Json
 		{
 			string JSON = "[";
 			string delimitor = "";
-			
+
 			foreach (var obj in objs)
 			{
 				JSON += delimitor;
 				JSON += obj.ToJson();
 				delimitor = ", ";
 			}
-			
+
 			JSON += "]";
 			return JSON;
 		}
-		
+
 		public static string ToJson(this int[][] objs)
 		{
 			string JSON = "[";
 			string delimitor = "";
-			
+
 			foreach (var obj in objs)
 			{
 				JSON += delimitor;
 				JSON += obj.ToJson();
 				delimitor = ", ";
 			}
-			
+
 			JSON += "]";
 			return JSON;
 		}
@@ -152,34 +151,34 @@ namespace sar.Json
 		{
 			string JSON = "[";
 			string delimitor = "";
-			
+
 			foreach (var obj in objs)
 			{
 				JSON += delimitor;
 				JSON += obj.ToJson();
 				delimitor = ", ";
 			}
-			
+
 			JSON += "]";
 			return JSON;
 		}
-		
+
 		public static string ToJson(this long[][] objs)
 		{
 			string JSON = "[";
 			string delimitor = "";
-			
+
 			foreach (var obj in objs)
 			{
 				JSON += delimitor;
 				JSON += obj.ToJson();
 				delimitor = ", ";
 			}
-			
+
 			JSON += "]";
 			return JSON;
 		}
-		
+
 		public static string ToJson(this double obj)
 		{
 			return obj.ToString();
@@ -189,30 +188,30 @@ namespace sar.Json
 		{
 			string JSON = "[";
 			string delimitor = "";
-			
+
 			foreach (var obj in objs)
 			{
 				JSON += delimitor;
 				JSON += obj.ToJson();
 				delimitor = ", ";
 			}
-			
+
 			JSON += "]";
 			return JSON;
 		}
-		
+
 		public static string ToJson(this double[][] objs)
 		{
 			string JSON = "[";
 			string delimitor = "";
-			
+
 			foreach (var obj in objs)
 			{
 				JSON += delimitor;
 				JSON += obj.ToJson();
 				delimitor = ", ";
 			}
-			
+
 			JSON += "]";
 			return JSON;
 		}
@@ -221,14 +220,14 @@ namespace sar.Json
 		{
 			string JSON = "[";
 			string delimitor = "";
-			
+
 			foreach (var obj in objs)
 			{
 				JSON += delimitor;
 				JSON += obj.ToJson();
 				delimitor = ", ";
 			}
-			
+
 			JSON += "]";
 			return JSON;
 		}
@@ -237,22 +236,22 @@ namespace sar.Json
 		{
 			string JSON = "[";
 			string delimitor = "";
-			
+
 			foreach (var obj in objs)
 			{
 				JSON += delimitor;
 				JSON += obj.ToJson();
 				delimitor = ", ";
 			}
-			
+
 			JSON += "]";
 			return JSON;
 		}
-		
+
 		public static string ToJson(this string obj)
 		{
 			string data = obj;
-			
+
 			// escape quotes, and solidus
 			data = Regex.Replace(data, @"[\\]", @"\\");
 			data = Regex.Replace(data, @"[\""]", @"\""");
@@ -271,54 +270,54 @@ namespace sar.Json
 		{
 			string JSON = "[";
 			string delimitor = "";
-			
+
 			foreach (var obj in objs)
 			{
 				JSON += delimitor;
 				JSON += obj.ToJson();
 				delimitor = ", ";
 			}
-			
+
 			JSON += "]";
 			return JSON;
 		}
-		
+
 		public static string ToJson(this string[][] objs)
 		{
 			string JSON = "[";
 			string delimitor = "";
-			
+
 			foreach (var obj in objs)
 			{
 				JSON += delimitor;
 				JSON += obj.ToJson();
 				delimitor = ", ";
 			}
-			
+
 			JSON += "]";
 			return JSON;
 		}
-		
+
 		public static bool IsJson(this string obj)
 		{
 			if (String.IsNullOrEmpty(obj) || obj.Length < 2)
 			{
 				return false;
 			}
-			
+
 			if (obj[0] == '[' && obj[obj.Length - 1] == ']')
 			{
 				return true;
 			}
-			
+
 			if (obj[0] == '{' && obj[obj.Length - 1] == '}')
 			{
 				return true;
 			}
-			
+
 			return false;
 		}
-		
+
 		public static string ToJson(this bool obj)
 		{
 			return obj ? @"true" : @"false";
@@ -328,14 +327,14 @@ namespace sar.Json
 		{
 			string JSON = "[";
 			string delimitor = "";
-			
+
 			foreach (var obj in objs)
 			{
 				JSON += delimitor;
 				JSON += obj.ToJson();
 				delimitor = ", ";
 			}
-			
+
 			JSON += "]";
 			return JSON;
 		}
@@ -344,14 +343,14 @@ namespace sar.Json
 		{
 			string JSON = "[";
 			string delimitor = "";
-			
+
 			foreach (var obj in objs)
 			{
 				JSON += delimitor;
 				JSON += obj.ToJson();
 				delimitor = ", ";
 			}
-			
+
 			JSON += "]";
 			return JSON;
 		}
@@ -360,61 +359,61 @@ namespace sar.Json
 		{
 			return @"""" + obj.ToString(FileLogger.DATETIMESTAMP) + @"""";
 		}
-		
+
 		public static string ToJson(this IEnumerable<object> obj)
 		{
 			string JSON = "[";
 			string delimitor = "";
-			
+
 			foreach (object i in obj)
 			{
 				JSON += delimitor;
 				JSON += i.ToJson();
 				delimitor = ",";
 			}
-			
+
 			JSON += "]";
 			return JSON;
 		}
-		
+
 		public static string ToJson(this Dictionary<string, object> obj)
 		{
 			string JSON = "{";
 			string delimitor = "";
-			
+
 			foreach (string key in obj.Keys)
 			{
 				JSON += delimitor;
-				JSON += @"""" + key + @""":" + obj[key].ToJson() ;
+				JSON += @"""" + key + @""":" + obj[key].ToJson();
 				delimitor = ",";
 			}
-			
+
 			JSON += "}";
-			
+
 			return JSON;
 		}
-		
+
 		public static JsonKeyValuePairs GetJsonKeyValuePairs(this string json)
 		{
 			return new JsonKeyValuePairs(json);
 		}
-		
+
 		public static JsonArray GetJsonArray(this string json)
 		{
 			return new JsonArray(json.TrimWhiteSpace());
 		}
-		
+
 		public static object ValueToObject(string value)
 		{
 			value = value.TrimWhiteSpace();
-			
+
 			if (value.Length == 0)
 			{
 				return null;
 			}
-			
+
 			var firstCharacter = value[0];
-			
+
 			if (firstCharacter == '"')
 			{
 				return TrimJsonString(value);
@@ -433,7 +432,7 @@ namespace sar.Json
 				{
 					return double.Parse(value);
 				}
-				
+
 				return int.Parse(value);
 			}
 			else if (value == "true")
@@ -455,18 +454,18 @@ namespace sar.Json
 				return null;
 			}
 		}
-		
+
 		public static string TrimJsonString(string value)
 		{
 			return value.Substring(1, value.Length - 2);
 		}
-		
+
 		public static string BytesToJson(byte[] data)
 		{
 			// TODO: check for { }
 			var json = StringHelper.GetString(data);
 			//json = System.Text.Encoding.ASCII.GetString(data);
-			
+
 			// render escaped control characters
 			json = Regex.Replace(json, @"([^\\]|^)([\\][n])", m => m.Groups[1].Value + "\n");
 			json = Regex.Replace(json, @"([^\\]|^)([\\][r])", m => m.Groups[1].Value + "\r");
@@ -475,16 +474,16 @@ namespace sar.Json
 			json = Regex.Replace(json, @"([^\\]|^)([\\][f])", m => m.Groups[1].Value + "\f");
 			json = Regex.Replace(json, @"([^\\]|^)([\\][""])", m => m.Groups[1].Value + @"""");
 			json = Regex.Replace(json, @"([\\][\\])", @"\");
-			
+
 			return json;
 		}
-		
+
 		public static int GetJsonValue(this string json, string key, int defaultValue)
 		{
 			try
 			{
 				var kvp = json.GetJsonKeyValuePairs();
-				
+
 				if (kvp.ContainsKey(key))
 				{
 					return (int)kvp[key];
@@ -499,13 +498,13 @@ namespace sar.Json
 				return defaultValue;
 			}
 		}
-		
+
 		public static double GetJsonValue(this string json, string key, double defaultValue)
 		{
 			try
 			{
 				var kvp = json.GetJsonKeyValuePairs();
-				
+
 				if (kvp.ContainsKey(key))
 				{
 					return (double)kvp[key];
@@ -520,13 +519,13 @@ namespace sar.Json
 				return defaultValue;
 			}
 		}
-		
+
 		public static string GetJsonValue(this string json, string key, string defaultValue)
 		{
 			try
 			{
 				var kvp = json.GetJsonKeyValuePairs();
-				
+
 				if (kvp.ContainsKey(key))
 				{
 					return (string)kvp[key];
@@ -541,13 +540,13 @@ namespace sar.Json
 				return defaultValue;
 			}
 		}
-		
+
 		public static bool GetJsonValue(this string json, string key, bool defaultValue)
 		{
 			try
 			{
 				var kvp = json.GetJsonKeyValuePairs();
-				
+
 				if (kvp.ContainsKey(key))
 				{
 					return (bool)kvp[key];
@@ -562,13 +561,13 @@ namespace sar.Json
 				return defaultValue;
 			}
 		}
-		
+
 		public static DateTime GetJsonValue(this string json, string key, DateTime defaultValue)
 		{
 			try
 			{
 				var kvp = json.GetJsonKeyValuePairs();
-				
+
 				if (kvp.ContainsKey(key))
 				{
 					return DateTime.Parse((string)kvp[key], null, System.Globalization.DateTimeStyles.RoundtripKind);
@@ -583,26 +582,26 @@ namespace sar.Json
 				return defaultValue;
 			}
 		}
-		
+
 		public static IEnumerable<string> GetJsonStringArray(this string json)
 		{
 			if (String.IsNullOrEmpty(json))
 			{
 				throw new ApplicationException("invalid json string array");
 			}
-			
+
 			if (json.Length < 2)
 			{
 				throw new ApplicationException("invalid json string array");
 			}
-			
+
 			if (json[0] != '[' || json[json.Length - 1] != ']')
 			{
 				throw new ApplicationException("invalid json string array");
 			}
-			
+
 			var strings = json.Substring(1, json.Length - 2).Split(',');
-			
+
 			foreach (var s in strings)
 			{
 				if (s.Length > 2 && s[0] == '"' && s[s.Length - 1] == '"')

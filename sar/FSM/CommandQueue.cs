@@ -15,7 +15,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace sar.FSM
 {
@@ -26,9 +25,9 @@ namespace sar.FSM
 	{
 		private readonly object queueLock = new object();
 		private readonly List<Command> commands;
-		
+
 		public bool Available { get { return commands.Count > 0; } }
-		
+
 		public CommandQueue()
 		{
 			lock (queueLock)
@@ -36,7 +35,7 @@ namespace sar.FSM
 				commands = new List<Command>();
 			}
 		}
-		
+
 		public void QueueCommand(Enum command)
 		{
 			lock (queueLock)
@@ -44,7 +43,7 @@ namespace sar.FSM
 				commands.Add(new Command(command));
 			}
 		}
-		
+
 		public void QueueCommand(Enum command, params object[] paramerters)
 		{
 			lock (queueLock)
@@ -61,10 +60,10 @@ namespace sar.FSM
 				{
 					return null;
 				}
-				
+
 				var currentCommand = commands[0];
 				commands.RemoveAt(0);
-				
+
 				return currentCommand;
 			}
 		}

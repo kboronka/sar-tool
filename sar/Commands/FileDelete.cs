@@ -13,24 +13,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
-
-using sar.Base;
-using sar.Tools;
 
 namespace sar.Commands
 {
 	public class FileDelete : Command
 	{
 		public FileDelete(Base.CommandHub parent) : base(parent, "File - Delete",
-		                                                 new List<string> { "file.delete", "f.del" },
-		                                                 "-f.del [filepattern]",
-		                                                 new List<string> { "-f.d \"*.vmdk\"" })
+														 new List<string> { "file.delete", "f.del" },
+														 "-f.del [filepattern]",
+														 new List<string> { "-f.d \"*.vmdk\"" })
 		{
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -38,13 +37,13 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
+
 			Progress.Message = "Searching";
 			string filePattern = args[1];
 			string root = Directory.GetCurrentDirectory();
 			IO.CheckRootAndPattern(ref root, ref filePattern);
 			List<string> files = IO.GetAllFiles(root, filePattern);
-			
+
 			if (!this.commandHub.NoWarning)
 			{
 				if (this.commandHub.Debug)
@@ -58,7 +57,7 @@ namespace sar.Commands
 
 				ConsoleHelper.WriteLine(files.Count.ToString() + " file" + ((files.Count != 1) ? "s" : "") + " found");
 			}
-			
+
 			int counter = 0;
 			if (files.Count > 0)
 			{
@@ -80,7 +79,7 @@ namespace sar.Commands
 						{
 							ConsoleHelper.Write("failed: ", ConsoleColor.Red);
 							ConsoleHelper.WriteLine(StringHelper.TrimStart(file, root.Length));
-							
+
 							if (this.commandHub.Debug)
 							{
 								ConsoleHelper.WriteException(ex);
@@ -89,7 +88,7 @@ namespace sar.Commands
 					}
 				}
 			}
-			
+
 			ConsoleHelper.WriteLine(counter.ToString() + " File" + ((counter != 1) ? "s" : "") + " Deleted", ConsoleColor.DarkYellow);
 			return ConsoleHelper.EXIT_OK;
 		}

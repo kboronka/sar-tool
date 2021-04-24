@@ -26,9 +26,9 @@ namespace sar.Timing
 		private bool paused;
 		private long pauseStartTime;
 		private long pauseTime;
-		
+
 		#region properties
-		
+
 		public long Clock
 		{
 			get
@@ -39,20 +39,20 @@ namespace sar.Timing
 				}
 			}
 		}
-		
+
 		public long ElapsedMilliseconds
 		{
 			get
 			{
 				var pauseTime = this.PausedTime;
-				
+
 				lock (time)
 				{
 					return (time.ElapsedMilliseconds - lastTrigger) - pauseTime;
 				}
 			}
 		}
-		
+
 		/// <summary>
 		///  Returns number of milliseconds remianing before interval is ready
 		/// </summary>
@@ -63,7 +63,7 @@ namespace sar.Timing
 				return this.SetPoint - Math.Min(this.ElapsedMilliseconds, this.SetPoint);
 			}
 		}
-		
+
 		/// <summary>
 		///  Returns a percentage (0 - 100).  100% = Ready.
 		/// </summary>
@@ -75,7 +75,7 @@ namespace sar.Timing
 				return (elapsedTime / (double)this.SetPoint) * 100.0;
 			}
 		}
-		
+
 		public long SetPoint
 		{
 			get
@@ -86,7 +86,7 @@ namespace sar.Timing
 				}
 			}
 		}
-		
+
 		public bool Ready
 		{
 			get
@@ -96,11 +96,11 @@ namespace sar.Timing
 					this.Reset();
 					return true;
 				}
-				
+
 				return false;
 			}
 		}
-		
+
 		public bool Paused
 		{
 			get
@@ -108,7 +108,7 @@ namespace sar.Timing
 				return this.paused;
 			}
 		}
-		
+
 		/// <summary>
 		///  Returns number of milliseconds interval has been paused
 		/// </summary>
@@ -122,16 +122,16 @@ namespace sar.Timing
 					{
 						return this.pauseTime + (time.ElapsedMilliseconds - this.pauseStartTime);
 					}
-					
+
 					return this.pauseTime;
 				}
 			}
 		}
-		
+
 		#endregion
-		
+
 		#region constructor
-		
+
 		public Interval(long setPoint, long firstRunDelay)
 		{
 			this.time = new Stopwatch();
@@ -141,30 +141,30 @@ namespace sar.Timing
 			this.paused = false;
 			this.pauseTime = 0;
 		}
-		
+
 		public Interval(long setPoint) : this(setPoint, setPoint)
 		{
 
 		}
-		
+
 		#endregion
-		
+
 		public void Reset()
 		{
 			lock (time)
 			{
 				this.lastTrigger += setPoint + pauseTime;
 				this.pauseTime = 0;
-				
+
 				var timeToNextTrigger = time.ElapsedMilliseconds - this.lastTrigger;
-				
+
 				if (timeToNextTrigger > setPoint || timeToNextTrigger < 0)
 				{
 					this.lastTrigger = time.ElapsedMilliseconds;
 				}
 			}
 		}
-		
+
 		public void Pause()
 		{
 			lock (time)
@@ -176,7 +176,7 @@ namespace sar.Timing
 				}
 			}
 		}
-		
+
 		public void Continue()
 		{
 			lock (time)

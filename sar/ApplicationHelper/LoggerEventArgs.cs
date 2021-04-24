@@ -24,13 +24,13 @@ namespace sar.ApplicationHelper
 	{
 		public bool Exception { get; private set; }
 		public string message { get; private set; }
-		
+
 		public LoggerEventArgs(Exception ex)
 		{
 			this.Exception = true;
 			this.message = ex.Message;
 		}
-		
+
 		public LoggerEventArgs(string message)
 		{
 			this.Exception = false;

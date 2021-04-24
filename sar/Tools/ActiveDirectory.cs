@@ -30,10 +30,10 @@ namespace sar.Tools
 			{
 				return username.Substring(username.LastIndexOf(@"\") + 1);
 			}
-			
+
 			return username;
 		}
-		
+
 		public static string GetLDAP(string username)
 		{
 			DirectorySearcher searcher = new DirectorySearcher();
@@ -45,7 +45,8 @@ namespace sar.Tools
 
 			SearchResult searchResult = searcher.FindOne();
 
-			if (searchResult == null) throw new Exception("no result found for " + username);
+			if (searchResult == null)
+				throw new Exception("no result found for " + username);
 			return searchResult.Path;
 		}
 
@@ -61,11 +62,11 @@ namespace sar.Tools
 				return String.Empty;
 			}
 		}
-		
+
 		public static List<UserPrincipal> GetGroupMembers(string groupName)
 		{
 			List<UserPrincipal> result = new List<UserPrincipal>();
-			
+
 			PrincipalContext domain = new PrincipalContext(ContextType.Domain);
 			GroupPrincipal group = GroupPrincipal.FindByIdentity(domain, groupName);
 
@@ -79,14 +80,14 @@ namespace sar.Tools
 					}
 				}
 			}
-			
+
 			return result;
 		}
 
 		public static string GetDisplayName(string username)
 		{
 			List<string> result = new List<string>();
-			
+
 			PrincipalContext domain = new PrincipalContext(ContextType.Domain);
 			UserPrincipal user = UserPrincipal.FindByIdentity(domain, username);
 			return user.Name;

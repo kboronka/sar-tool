@@ -13,25 +13,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-
-using sar.Base;
-using sar.Tools;
 
 namespace sar.Commands
 {
 	public class FileEncode : Command
 	{
 		public FileEncode(Base.CommandHub parent) : base(parent, "File - Encode",
-		                               new List<string> { "file.encode", "f.e" },
-		                               "-file.encode [filepattern] [UTF7 | UTF8 | UTF32 | Unicode | BigEndianUnicode | ASCII]",
-		                               new List<string> { "-file.encode \"*.nsis\" utf8" })
+									   new List<string> { "file.encode", "f.e" },
+									   "-file.encode [filepattern] [UTF7 | UTF8 | UTF32 | Unicode | BigEndianUnicode | ASCII]",
+									   new List<string> { "-file.encode \"*.nsis\" utf8" })
 		{
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -39,12 +38,12 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
+
 			Progress.Message = "Searching";
 			string filePattern = args[1];
 			string encodingRequested = args[2];
 			Encoding encoding;
-			
+
 			switch (encodingRequested.ToLower())
 			{
 				case "utf7":
@@ -68,7 +67,7 @@ namespace sar.Commands
 				default:
 					throw new ArgumentException(encodingRequested + " encoding method is currently not supported");
 			}
-			
+
 			string root = Directory.GetCurrentDirectory();
 			IO.CheckRootAndPattern(ref root, ref filePattern);
 			List<string> files = IO.GetAllFiles(root, filePattern);
@@ -82,7 +81,7 @@ namespace sar.Commands
 			}
 
 			ConsoleHelper.WriteLine("Files Enocded " + files.Count.ToString() + " file" + ((files.Count != 1) ? "s" : ""), ConsoleColor.DarkYellow);
-			
+
 			return ConsoleHelper.EXIT_OK;
 		}
 	}

@@ -597,7 +597,7 @@ namespace sar.Http
 				#endregion
 
 			};
-			
+
 			if (extension == null)
 			{
 				throw new ArgumentNullException("extension");
@@ -609,7 +609,7 @@ namespace sar.Http
 			}
 
 			string mime;
-			
+
 			return mimeTypes.TryGetValue(extension, out mime) ? mime : "application/octet-stream";
 		}
 	}

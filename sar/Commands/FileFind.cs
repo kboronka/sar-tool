@@ -13,24 +13,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
-
-using sar.Base;
-using sar.Tools;
 
 namespace sar.Commands
 {
 	public class FileFind : Command
 	{
 		public FileFind(Base.CommandHub parent) : base(parent, "File - Find",
-		                         new List<string> { "file.find", "f.f" },
-		                         "-file.find [filepattern]",
-		                         new List<string> { "-file.find \"*.vmdk\"" })
+								 new List<string> { "file.find", "f.f" },
+								 "-file.find [filepattern]",
+								 new List<string> { "-file.find \"*.vmdk\"" })
 		{
 		}
-			
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -38,13 +37,13 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
+
 			Progress.Message = "Searching";
 			string filePattern = args[1];
 			string root = Directory.GetCurrentDirectory();
 			IO.CheckRootAndPattern(ref root, ref filePattern);
 			List<string> files = IO.GetAllFiles(root, filePattern);
-			
+
 			foreach (string file in files)
 			{
 				ConsoleHelper.Write("found: ", ConsoleColor.Cyan);
@@ -52,7 +51,7 @@ namespace sar.Commands
 			}
 
 			ConsoleHelper.WriteLine("Files Found " + files.Count.ToString() + " file" + ((files.Count != 1) ? "s" : ""), ConsoleColor.DarkYellow);
-			
+
 			return ConsoleHelper.EXIT_OK;
 		}
 	}

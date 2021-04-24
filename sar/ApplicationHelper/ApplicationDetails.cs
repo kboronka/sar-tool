@@ -35,7 +35,7 @@ namespace sar.ApplicationHelper
 		public bool IsWinVistaOrHigher { get; private set; }
 		public bool IsWinXPOrHigher { get; private set; }
 		public bool IsWow64 { get; private set; }
-		
+
 		public ApplicationDetails(AssemblyDetails assembly)
 		{
 			this.AssemblyDetails = assembly;
@@ -49,11 +49,11 @@ namespace sar.ApplicationHelper
 			this.IsWinXPOrHigher = GetIsWinXPOrHigher();
 			this.IsWow64 = GetIsWow64();
 		}
-		
+
 		private string GetCommonDataDirectory()
 		{
 			var root = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-			
+
 			if (!String.IsNullOrEmpty(this.AssemblyDetails.Company))
 			{
 				root += @"\" + this.AssemblyDetails.Company;
@@ -61,11 +61,11 @@ namespace sar.ApplicationHelper
 
 			return root + @"\" + this.AssemblyDetails.Product + @"\";
 		}
-		
+
 		private string GetLocalDataDirectory()
 		{
 			var root = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-			
+
 			if (!String.IsNullOrEmpty(this.AssemblyDetails.Company))
 			{
 				root += @"\" + this.AssemblyDetails.Company;
@@ -73,7 +73,7 @@ namespace sar.ApplicationHelper
 
 			return root + @"\" + this.AssemblyDetails.Product + @"\";
 		}
-		
+
 		[DllImport("kernel32.dll", SetLastError = true, CallingConvention = CallingConvention.Winapi)]
 		[return: MarshalAs(UnmanagedType.Bool)]
 		private static extern bool IsWow64Process(
@@ -109,13 +109,13 @@ namespace sar.ApplicationHelper
 				}
 			}
 		}
-		
+
 		private static bool GetIsWinXPOrHigher()
 		{
 			var os = Environment.OSVersion;
 			return (os.Platform == PlatformID.Win32NT) && ((os.Version.Major > 5) || ((os.Version.Major == 5) && (os.Version.Minor >= 1)));
 		}
-		
+
 		private static bool GetWinVistaOrHigher()
 		{
 			var os = Environment.OSVersion;

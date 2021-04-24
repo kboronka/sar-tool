@@ -13,12 +13,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
-
-using sar.Base;
-using sar.Tools;
 
 // TODO: add FanucDownloadLoggedImages
 namespace sar.Commands
@@ -26,9 +25,9 @@ namespace sar.Commands
 	public class FanucDownloadPositions : Command
 	{
 		public FanucDownloadPositions(Base.CommandHub parent) : base(parent, "Fanuc Download Positions",
-		                                                          new List<string> { "fanuc.DownloadPositions", "fanuc.downloadPR" },
-		                                                          @"-fanuc.downloadPR <ip:port> <new file>",
-		                                                          new List<string> { @"-fanuc.downloadPR 192.168.0.1:21 posreg.csv" })
+																  new List<string> { "fanuc.DownloadPositions", "fanuc.downloadPR" },
+																  @"-fanuc.downloadPR <ip:port> <new file>",
+																  new List<string> { @"-fanuc.downloadPR 192.168.0.1:21 posreg.csv" })
 		{
 		}
 
@@ -39,7 +38,7 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
+
 			string ip = args[1];
 			string csv = args[2];
 			string root = Directory.GetCurrentDirectory();
@@ -48,17 +47,19 @@ namespace sar.Commands
 			string filename = IO.GetFilename(csv);
 			string filepath = root + filename;
 			var files = FTPHelper.GetFileList(ip);
-			
-			if (!files.Contains("posreg.va")) throw new FileNotFoundException("posreg.va not found on ftp server");
-			
+
+			if (!files.Contains("posreg.va"))
+				throw new FileNotFoundException("posreg.va not found on ftp server");
+
 			var input = StringHelper.GetString(FTPHelper.DownloadBytes(ip, "posreg.va"));
-				
-			if (File.Exists(filepath)) File.Delete(filepath);
+
+			if (File.Exists(filepath))
+				File.Delete(filepath);
 
 			var positions = FanucPositionsToCSV.ExportPositions(input, filepath);
-			
+
 			ConsoleHelper.WriteLine(positions.ToString() + " Position" + ((positions != 1) ? "s" : "") + " Exported", ConsoleColor.DarkYellow);
-			
+
 			return ConsoleHelper.EXIT_OK;
 		}
 	}

@@ -13,7 +13,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using System.IO;
 
 namespace sar.Tools
@@ -29,7 +28,7 @@ namespace sar.Tools
 
 		public event ProgressChangeDelegate OnProgressChanged;
 		public event CompleteDelegate OnComplete;
-		
+
 		public FileCopier(string source, string destination)
 		{
 			this.Source = source;

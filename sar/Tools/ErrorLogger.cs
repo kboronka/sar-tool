@@ -21,13 +21,13 @@ namespace sar.Tools
 	{
 		public ErrorLogger(string root, string filename) : base(root, filename, false)
 		{
-			
+
 		}
-		
+
 		public void Write(Exception ex)
 		{
 			Exception inner = ExceptionHelper.GetInner(ex);
-			
+
 			base.WriteLine(ConsoleHelper.HR);
 			base.WriteLine("Time: " + DateTime.Now.ToString());
 			base.WriteLine("Type: " + inner.GetType().ToString());

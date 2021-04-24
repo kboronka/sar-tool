@@ -13,10 +13,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Tools;
 using System;
 using System.Collections.Generic;
-
-using sar.Tools;
 
 namespace sar.Http
 {
@@ -24,20 +23,20 @@ namespace sar.Http
 	public static class ErrorController
 	{
 		static Dictionary<string, HttpContent> lastException;
-		
+
 		public static HttpContent Display(HttpRequest request, Exception ex, HttpStatusCode status)
 		{
 			Exception inner = ExceptionHelper.GetInner(ex);
-			
-			var baseContent = new Dictionary<string, HttpContent>() {};
+
+			var baseContent = new Dictionary<string, HttpContent>() { };
 			baseContent.Add("Title", new HttpContent(status.ToString()));
 			baseContent.Add("ResponseCode", new HttpContent(((int)status).ToString()));
 			baseContent.Add("ExceptionType", new HttpContent(inner.GetType().ToString()));
 			baseContent.Add("RequestURL", new HttpContent(request.FullUrl));
 			baseContent.Add("ExceptionMessage", new HttpContent(inner.Message));
-			
+
 			string stackTrace = "";
-			
+
 			if (inner != ex)
 			{
 				stackTrace += "<span><strong>Outer:</strong><br>";
@@ -50,19 +49,20 @@ namespace sar.Http
 			{
 				stackTrace += "<cite>" + ExceptionHelper.GetStackTrace(ex) + "</cite>";
 			}
-			
+
 			stackTrace = stackTrace.Replace("\t", "");
-			
+
 			baseContent.Add("ExceptionStackTrace", new HttpContent(stackTrace.ToHTML()));
 			lastException = baseContent;
-			
+
 			return HttpContent.Read(request.Server, "sar.Http.Views.Error.Display.html", baseContent);
 		}
-		
+
 		[PrimaryView]
 		public static HttpContent ShowLast(HttpRequest request)
 		{
-			if (lastException == null) throw new ApplicationException("This is the first exception");
+			if (lastException == null)
+				throw new ApplicationException("This is the first exception");
 			return HttpContent.Read(request.Server, "sar.Http.Views.Error.Display.html", lastException);
 		}
 	}

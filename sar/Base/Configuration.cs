@@ -13,14 +13,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Security.Cryptography;
-using System.Text;
-using System.Xml;
-
 using sar.Tools;
+using System.IO;
 
 namespace sar.Base
 {
@@ -28,13 +22,13 @@ namespace sar.Base
 	{
 		protected string path;
 		protected bool readOnly;
-		
+
 		public Configuration()
 		{
 			// check if local read-only configuration file exists
 			var localPath = ApplicationInfo.CurrentDirectory + sar.Tools.AssemblyInfo.Name + ".xml";
 			var standardPath = ApplicationInfo.CommonDataDirectory + sar.Tools.AssemblyInfo.Name + ".xml";
-			
+
 			if (File.Exists(localPath))
 			{
 				this.path = localPath;
@@ -45,7 +39,7 @@ namespace sar.Base
 				this.path = standardPath;
 				readOnly = false;
 			}
-			
+
 			// read the file
 			if (File.Exists(this.path))
 			{
@@ -59,12 +53,12 @@ namespace sar.Base
 				this.Save();
 			}
 		}
-		
+
 		public Configuration(string path)
 		{
 			this.path = path;
 			this.readOnly = true;
-			
+
 			if (File.Exists(this.path))
 			{
 				var reader = new XML.Reader(this.path);
@@ -75,13 +69,13 @@ namespace sar.Base
 				}
 				catch
 				{
-					
+
 				}
-				
+
 				reader.Close();
 			}
 		}
-		
+
 		public void Save()
 		{
 			if (!readOnly)
@@ -89,27 +83,27 @@ namespace sar.Base
 				this.Save(this.path);
 			}
 		}
-		
+
 		public void Save(string path)
 		{
 			if (!readOnly)
 			{
 				this.path = path;
 				var writer = new XML.Writer(path);
-				
+
 				try
 				{
 					this.Serialize(writer);
 				}
 				catch
 				{
-					
+
 				}
-				
+
 				writer.Close();
 			}
 		}
-		
+
 		protected abstract void Deserialize(XML.Reader reader);
 		protected abstract void Serialize(XML.Writer writer);
 		protected abstract void InitDefaults();

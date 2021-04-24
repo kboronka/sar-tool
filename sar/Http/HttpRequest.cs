@@ -13,6 +13,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Json;
+using sar.Tools;
 using System;
 using System.IO;
 using System.Net.Sockets;
@@ -20,43 +22,41 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 
-using sar.Json;
-using sar.Tools;
-
 namespace sar.Http
 {
 	public enum HttpMethod
 	{
 		GET,
 		POST,
-		HEAD}
+		HEAD
+	}
 
 	;
-	
+
 	public class HttpRequest : HttpBase
 	{
 		private Encoding encoding;
-		
+
 		private HttpServer parent;
 
 		private HttpMethod method;
-		
+
 		public string Header { get; private set; }
 
 		private string fullUrl;
-		
+
 		private string query;
 		private string reference;
-		
+
 		private String protocolVersion;
-		
+
 		private bool headerRecived;
-		
+
 		// header
 		private int contentLength;
 		private int bytesRecived;
 		private bool pdfReader;
-		
+
 		private string contentType;
 		private byte[] data;
 
@@ -85,12 +85,12 @@ namespace sar.Http
 		{
 			get { return query; }
 		}
-		
+
 		public byte[] Data
 		{
 			get { return data; }
 		}
-		
+
 		private string json;
 		public string Json
 		{
@@ -100,33 +100,33 @@ namespace sar.Http
 				{
 					return json;
 				}
-				
+
 				json = JsonHelper.BytesToJson(data);
 				return json;
 			}
 		}
-		
+
 		public string ProtocolVersion
 		{
 			get { return protocolVersion; }
 		}
-		
+
 		public HttpServer Server
 		{
 			get { return parent; }
 		}
-		
+
 		public bool PdfReader
 		{
 			get { return pdfReader; }
 		}
-		
+
 		public bool RequestError { get; private set; }
-		
+
 		#endregion
-		
+
 		#region constructor
-		
+
 		public HttpRequest(HttpConnection connection)
 		{
 			this.encoding = Encoding.ASCII;
@@ -135,22 +135,22 @@ namespace sar.Http
 			this.RequestError = false;
 			this.ReadRequest(connection.Stream, connection.Socket);
 		}
-		
+
 		~HttpRequest()
 		{
 		}
-		
+
 		#endregion
-		
+
 		#region read request
-		
+
 		private bool incomingRequestRecived;
 
 		private void ReadRequest(NetworkStream stream, TcpClient socket)
 		{
 			// Read and parse request
 			var buffer = new byte[0] { };
-			
+
 			// TODO: add request timeout
 			//var timeout = new Timing.Interval(10000);
 
@@ -160,7 +160,7 @@ namespace sar.Http
 				{
 					byte[] incomingPacket = this.ReadIncomingPacket(stream, socket);
 					buffer = StringHelper.CombineByteArrays(buffer, incomingPacket);
-					
+
 					if (buffer.Length > 0 && incomingPacket.Length == 0)
 					{
 						// buffer is complete
@@ -171,25 +171,25 @@ namespace sar.Http
 						// wait until entire request is recived
 						Thread.Sleep(1);
 					}
-					
+
 					Thread.Sleep(1);
 				}
 				catch (Exception ex)
 				{
-					throw(ex);
+					throw (ex);
 				}
 			}
-			
+
 			this.Responce = new HttpResponse(this);
 		}
-		
+
 		public byte[] ReadIncomingPacket(NetworkStream stream, TcpClient socket)
 		{
 			try
 			{
 				if (socket == null || stream == null)
 					return new byte[0] { };
-				
+
 				lock (socket)
 				{
 					if (socket.Available > 0 && stream.DataAvailable)
@@ -220,33 +220,33 @@ namespace sar.Http
 			{
 				throw ex;
 			}
-			
+
 			return new byte[0] { };
 		}
-		
+
 		private void ProcessIncomingBuffer(ref byte[] bufferIn)
 		{
 			Header += StringHelper.GetString(bufferIn);
-			
+
 			ParseHeader(ref bufferIn);
 			if (!headerRecived)
 				return;
-			
+
 			incomingRequestRecived |= (this.contentLength == 0);
 			ParseData(ref bufferIn);
 			incomingRequestRecived |= this.bytesRecived >= this.contentLength;
 		}
-		
+
 		private void ParseHeader(ref byte[] bufferIn)
 		{
 			if (headerRecived)
 				return;
-			
+
 			// Request Line
 			string requestLine = ReadLine(ref bufferIn);
 			if (string.IsNullOrEmpty(requestLine))
 				throw new InvalidDataException("request line missing");
-			
+
 			string[] initialRequest = requestLine.Split(' ');
 			if (initialRequest.Length != 3)
 				throw new InvalidDataException("the initial request line should contain three fields");
@@ -255,13 +255,13 @@ namespace sar.Http
 			string[] url = this.fullUrl.Split('#');
 			this.Path = StringHelper.TrimStart(url[0], 1);
 			this.reference = url.Length > 1 ? url[1] : "";
-			
+
 			url = this.Path.Split('?');
 			this.Path = url[0];
 			this.query = url.Length > 1 ? url[1] : "";
-			
+
 			this.protocolVersion = initialRequest[2];
-			
+
 			switch (initialRequest[0].ToUpper())
 			{
 				case "GET":
@@ -270,25 +270,25 @@ namespace sar.Http
 				case "POST":
 					this.method = HttpMethod.POST;
 					break;
-					//TODO: handle the HEAD request type
+				//TODO: handle the HEAD request type
 				default:
 					throw new InvalidDataException("unknown request type \"" + initialRequest[0] + "\"");
 			}
-			
+
 			string line = "";
 			string sessionID = "";
-			
+
 			while (!this.headerRecived)
 			{
 				line = ReadLine(ref bufferIn);
-				
+
 				this.headerRecived = string.IsNullOrEmpty(line);
-				
+
 				string[] requestHeader = line.Split(':');
-				#if DEBUG
+#if DEBUG
 				System.Diagnostics.Debug.WriteLine(line);
-				#endif
-				
+#endif
+
 				switch (requestHeader[0].TrimWhiteSpace())
 				{
 					case "Connection":
@@ -317,7 +317,7 @@ namespace sar.Http
 					case "Cookie":
 						sessionID = requestHeader[1].TrimWhiteSpace();
 						var matches = Regex.Matches(requestHeader[1], @"sarSession=([^;]+)");
-						
+
 						foreach (Match match in matches)
 						{
 							var id = match.Groups[1].Value;
@@ -329,21 +329,21 @@ namespace sar.Http
 								}
 							}
 						}
-						
+
 						break;
 				}
-				
+
 				// TODO: parse common request Headers
 				// Header format
 				// Name: value
-				
+
 				// examples:
 				// Host: example.com
 				// User-Agent: chrome v17
 				if (this.headerRecived)
 					break;
 			}
-			
+
 			if (this.Session == null)
 			{
 				this.Session = new HttpSession();
@@ -353,7 +353,7 @@ namespace sar.Http
 					Server.Sessions.Add(this.Session.ID, this.Session);
 				}
 			}
-			
+
 			this.Session.LastRequest = DateTime.Now;
 		}
 
@@ -368,25 +368,25 @@ namespace sar.Http
 			}
 			catch
 			{
-				
+
 			}
 		}
-		
+
 		private void ParseData(ref byte[] bufferIn)
 		{
 			if (this.method != HttpMethod.POST)
 				return;
-			
+
 			// initilize data array
 			if (this.bytesRecived == 0)
 			{
 				this.data = new Byte[this.contentLength];
 			}
-			
+
 			System.Buffer.BlockCopy(bufferIn, this.bytesRecived, this.data, this.bytesRecived, bufferIn.Length);
 			this.bytesRecived += bufferIn.Length;
 		}
-		
+
 		private static string ReadLine(ref byte[] bufferIn)
 		{
 			for (int i = 0; i < bufferIn.Length; i++)
@@ -395,20 +395,20 @@ namespace sar.Http
 				{
 					byte[] newBufferIn = new Byte[bufferIn.Length - i - 1];
 					System.Buffer.BlockCopy(bufferIn, i + 1, newBufferIn, 0, newBufferIn.Length);
-					
+
 					if (i > 0 && bufferIn[i - 1] == '\r')
 						i--;
-					
+
 					string line = Encoding.ASCII.GetString(bufferIn, 0, i);
 
 					bufferIn = newBufferIn;
 					return line;
 				}
 			}
-			
+
 			return null;
 		}
-		
+
 		private static string CleanUrlString(string url)
 		{
 			while (url.Contains("%"))
@@ -416,15 +416,15 @@ namespace sar.Http
 				int index = url.LastIndexOf('%');
 				string characterCode = url.Substring(index + 1, 2);
 				char character = (char)Convert.ToInt32(characterCode, 16);
-				
+
 				url = url.Substring(0, index) + character.ToString() + url.Substring(index + 3);
 			}
-			
+
 			return url;
 		}
 
 		#endregion
-		
+
 		public override string ToString()
 		{
 			return this.method.ToString() + ": " + this.fullUrl;

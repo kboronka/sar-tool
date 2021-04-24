@@ -13,24 +13,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
-
-using sar.Base;
-using sar.Tools;
 
 namespace sar.Commands
 {
 	public class FanucFTP : Command
 	{
 		public FanucFTP(Base.CommandHub parent) : base(parent, "FanucBackup",
-		                                                  new List<string> { "fanuc.bk" },
-		                                                  @"-fanuc.bk <ip:port> <path>",
-		                                                  new List<string> { @"-fanuc.bk 192.168.0.2:21 C:\Temp" })
+														  new List<string> { "fanuc.bk" },
+														  @"-fanuc.bk <ip:port> <path>",
+														  new List<string> { @"-fanuc.bk 192.168.0.2:21 C:\Temp" })
 		{
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -38,21 +37,23 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
+
 			var ip = args[1];
 			var path = args[2];
-			
-			if (path.EndsWith(@"\")) path = StringHelper.TrimEnd(path, 1);
-			if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-			
+
+			if (path.EndsWith(@"\"))
+				path = StringHelper.TrimEnd(path, 1);
+			if (!Directory.Exists(path))
+				Directory.CreateDirectory(path);
+
 			var files = FTPHelper.GetFileList(ip);
 			for (int i = 0; i < files.Count; i++)
 			{
 				var file = files[i];
 				var progress = (i / (double)files.Count) * 100;
-				
+
 				Progress.Message = "Downloading " + progress.ToString("0") + "% [" + file + "]";
-				
+
 				try
 				{
 					FTPHelper.DownloadFile(ip, file, path);
@@ -63,9 +64,9 @@ namespace sar.Commands
 					ConsoleHelper.WriteException(ex);
 				}
 			}
-			
+
 			ConsoleHelper.WriteLine(files.Count.ToString() + " Files" + ((files.Count != 1) ? "s" : "") + " Downloaded", ConsoleColor.DarkYellow);
-			
+
 			return ConsoleHelper.EXIT_OK;
 		}
 	}

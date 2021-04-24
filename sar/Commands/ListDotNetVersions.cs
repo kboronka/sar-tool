@@ -13,23 +13,22 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-
 using sar.Base;
 using sar.Tools;
+using System;
+using System.Collections.Generic;
 
 namespace sar.Commands
 {
 	public class ListDotNetVersions : Command
 	{
 		public ListDotNetVersions(Base.CommandHub parent) : base(parent, ".Net - List Versions",
-		                                 new List<string> { "dotNetVersions" },
-		                                 @"-ip.config",
-		                                 new List<string> { "dotNetVersions" })
+										 new List<string> { "dotNetVersions" },
+										 @"-ip.config",
+										 new List<string> { "dotNetVersions" })
 		{
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -37,14 +36,14 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
+
 			ConsoleHelper.WriteLine("Installed Versions: ", ConsoleColor.White);
-			
+
 			foreach (string dotNetVersion in IO.GetDotNetVersions())
 			{
 				ConsoleHelper.WriteLine("  " + dotNetVersion, ConsoleColor.Yellow);
 			}
-			
+
 			return ConsoleHelper.EXIT_OK;
 		}
 	}

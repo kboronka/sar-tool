@@ -13,16 +13,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Tools;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-
-using sar.Tools;
 
 namespace sar.Http
 {
@@ -34,14 +30,14 @@ namespace sar.Http
 		public byte[] Data { get; private set; }
 
 		public bool ParsingRequired { get; protected set; }
-		
+
 		protected bool embedded;
 		protected string path;
-		
+
 		private FileSystemWatcher watcher;
-		
+
 		#region constructors
-		
+
 		protected HttpCachedFile(string path, byte[] data)
 		{
 			this.path = path;
@@ -52,23 +48,25 @@ namespace sar.Http
 			this.Data = data;
 			this.ETag = GetETag(this.Data);
 			this.ParsingRequired = false;
-			
+
 			if (this.ContentType.Contains("text") || this.ContentType.Contains("xml"))
 			{
 				string text = Encoding.ASCII.GetString(this.Data);
 				MatchCollection matches = Regex.Matches(text, HttpContent.INCLUDE_RENDER_SYNTAX);
-				if (matches.Count > 0) this.ParsingRequired = true;
-				
+				if (matches.Count > 0)
+					this.ParsingRequired = true;
+
 				// include linked externals
 				matches = Regex.Matches(text, HttpContent.CONTENT_RENDER_SYNTAX);
-				if (matches.Count > 0) this.ParsingRequired = true;
+				if (matches.Count > 0)
+					this.ParsingRequired = true;
 			}
 		}
-		
+
 		public HttpCachedFile(string path) : this(path, File.ReadAllBytes(path))
 		{
 			this.LastModified = File.GetLastWriteTimeUtc(path);
-			
+
 			watcher = new FileSystemWatcher();
 			watcher.Path = IO.GetFileDirectory(path);
 			watcher.Filter = IO.GetFilename(path);
@@ -78,7 +76,7 @@ namespace sar.Http
 			watcher.Renamed += new RenamedEventHandler(OnRenamed);
 			watcher.EnableRaisingEvents = true;
 		}
-		
+
 		#endregion
 
 		private void OnChanged(object sender, FileSystemEventArgs e)
@@ -87,27 +85,27 @@ namespace sar.Http
 			this.ETag = GetETag(this.Data);
 			this.LastModified = File.GetLastWriteTimeUtc(path);
 		}
-		
+
 		private void OnDelete(object sender, FileSystemEventArgs e)
 		{
-			
+
 		}
 
 		private void OnRenamed(object sender, RenamedEventArgs e)
 		{
-			
+
 		}
-		
+
 		private static string GetETag(byte[] data)
 		{
 			var hash = new MD5CryptoServiceProvider().ComputeHash(data);
 			var hex = "";
-			
+
 			foreach (var b in hash)
 			{
 				hex += b.ToString("X2");
 			}
-			
+
 			return hex.QuoteDouble();
 		}
 	}

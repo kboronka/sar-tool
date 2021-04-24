@@ -13,24 +13,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
-
-using sar.Base;
-using sar.Tools;
 
 namespace sar.Commands
 {
 	public class FileLock : Command
 	{
 		public FileLock(Base.CommandHub parent) : base(parent, "File - Lock",
-		                         new List<string> { "file.lock", "f.lock" },
-		                         "-file.find [filepattern] <timeout>",
-		                         new List<string> { "-file.find \"*.exe\" 10000" })
+								 new List<string> { "file.lock", "f.lock" },
+								 "-file.find [filepattern] <timeout>",
+								 new List<string> { "-file.find \"*.exe\" 10000" })
 		{
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -38,18 +37,18 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
+
 			Progress.Message = "Waiting for lock";
-			
+
 			int timeout = 5 * 60 * 1000;
 			Int32.TryParse(args[2], out timeout);
-			
+
 			Progress.Message = "Searching";
 			string filePattern = args[1];
 			string root = Directory.GetCurrentDirectory();
 			IO.CheckRootAndPattern(ref root, ref filePattern);
 			List<string> files = IO.GetAllFiles(root, filePattern);
-			
+
 			Progress.Message = "Waiting for lock";
 			if (!IO.WaitForFileSystem(root, timeout, true))
 			{
@@ -60,7 +59,7 @@ namespace sar.Commands
 			{
 				ConsoleHelper.WriteLine("File System Found", ConsoleColor.DarkYellow);
 			}
-			
+
 			return ConsoleHelper.EXIT_OK;
 		}
 	}

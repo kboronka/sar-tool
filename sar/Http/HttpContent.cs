@@ -13,15 +13,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Json;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-
-using sar.Json;
-using sar.Tools;
 
 namespace sar.Http
 {
@@ -31,25 +29,25 @@ namespace sar.Http
 		{
 			Exception inner = ExceptionHelper.GetInner(ex);
 			string message = inner.Message;
-			
+
 			message = inner.Message;
 			message += Environment.NewLine;
 			message += ExceptionHelper.GetStackTrace(inner);
-			
+
 			this.content = message.ToBytes();
 			this.ContentType = "application/json";
 		}
 	}
-	
+
 	public class HttpContent
 	{
 		#region static
 
 		public static HttpContent Read(HttpRequest request, string requestView)
 		{
-			return Read(request, requestView, new Dictionary<string, HttpContent>() {});
+			return Read(request, requestView, new Dictionary<string, HttpContent>() { });
 		}
-		
+
 		public static HttpContent Read(HttpRequest request, string requestView, Dictionary<string, HttpContent> baseContent)
 		{
 			return Read(request.Server, requestView, baseContent);
@@ -57,14 +55,14 @@ namespace sar.Http
 
 		public static HttpContent Read(HttpServer server, string request)
 		{
-			return Read(server, request, new Dictionary<string, HttpContent>() {});
+			return Read(server, request, new Dictionary<string, HttpContent>() { });
 		}
-		
+
 		public static HttpContent Read(HttpServer server, string request, Dictionary<string, HttpContent> baseContent)
 		{
 			request = request.TrimWhiteSpace().Replace(@"/", @"\").ToLower();
 			string filePath = server.Root + @"\" + request;
-			
+
 			if (server.Cache.Contains(request))
 			{
 				return new HttpContent(server.Cache.Get(request), baseContent);
@@ -82,11 +80,11 @@ namespace sar.Http
 				throw new FileNotFoundException("did not find " + filePath);
 			}
 		}
-		
+
 		private static HttpContent Read(HttpCache cache, string request, Dictionary<string, HttpContent> baseContent)
 		{
 			request = request.TrimWhiteSpace().Replace(@"/", @"\").ToLower();
-			
+
 			if (cache.Contains(request))
 			{
 				return new HttpContent(cache.Get(request));
@@ -96,7 +94,7 @@ namespace sar.Http
 				throw new FileNotFoundException("did not find " + request);
 			}
 		}
-		
+
 		private static byte[] GetFile(string filepath)
 		{
 			string extension = IO.GetFileExtension(filepath).ToLower();
@@ -109,7 +107,7 @@ namespace sar.Http
 				return File.ReadAllBytes(filepath);
 			}
 		}
-		
+
 		private static string phpPath;
 		private static byte[] GetPHP(string filepath)
 		{
@@ -125,27 +123,28 @@ namespace sar.Http
 					phpPath = sar.Tools.IO.FindApplication("php.exe");
 				}
 			}
-			
-			if (String.IsNullOrEmpty(phpPath)) throw new ApplicationException("PHP not found");
+
+			if (String.IsNullOrEmpty(phpPath))
+				throw new ApplicationException("PHP not found");
 
 			string output;
 			string error;
-			
+
 			ConsoleHelper.Run(phpPath, filepath, out output, out error);
 			// TODO: handle errors
 			return Encoding.ASCII.GetBytes(output);
 		}
-		
+
 		#endregion
 
 		protected byte[] content;
 		protected Dictionary<string, HttpContent> baseContent;
-		
+
 		public DateTime LastModified { get; protected set; }
 		public string ContentType { get; protected set; }
 		public string ETag { get; private set; }
 		public bool ParsingRequired { get; protected set; }
-		
+
 		protected HttpContent() : this(Encoding.ASCII.GetBytes(""), "text/plain") { }
 		public HttpContent(string content) : this(Encoding.ASCII.GetBytes(content), "text/plain") { }
 		public HttpContent(Dictionary<string, object> kvp) : this(Encoding.ASCII.GetBytes(kvp.ToJson()), "application/json") { }
@@ -160,7 +159,7 @@ namespace sar.Http
 			this.LastModified = DateTime.UtcNow;
 			this.ETag = "";
 		}
-		
+
 		public HttpContent(HttpCachedFile file) : this(file, new Dictionary<string, HttpContent>()) { }
 
 		public HttpContent(HttpCachedFile file, Dictionary<string, HttpContent> baseContent)
@@ -172,9 +171,9 @@ namespace sar.Http
 			this.ContentType = file.ContentType;
 			this.ETag = file.ETag;
 		}
-		
+
 		#region render
-		
+
 		public byte[] Render(HttpCache cache)
 		{
 			return (this.ParsingRequired) ? Render(cache, baseContent) : this.content;
@@ -193,7 +192,7 @@ namespace sar.Http
 			if (this.ContentType.Contains("text") || this.ContentType.Contains("xml"))
 			{
 				string text = Encoding.ASCII.GetString(this.content);
-				
+
 				// include linked externals
 				MatchCollection matches = Regex.Matches(text, INCLUDE_RENDER_SYNTAX);
 				if (matches.Count > 0)
@@ -220,14 +219,14 @@ namespace sar.Http
 						}
 					}
 				}
-				
+
 				return Encoding.ASCII.GetBytes(text);
 			}
-			
+
 			return this.content;
 		}
-		
+
 		#endregion
-		
+
 	}
 }

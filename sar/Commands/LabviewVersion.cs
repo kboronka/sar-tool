@@ -13,25 +13,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
-
-using sar.Base;
-using sar.Tools;
 
 namespace sar.Commands
 {
 	public class LabviewVersion : Command
 	{
 		public LabviewVersion(Base.CommandHub parent) : base(parent, "Set LabVIEW project version number",
-		                               new List<string> { "lv_ver" },
-		                               "-lv_ver [lvproj_file] [version]",
-		                               new List<string> { "-lv_ver \"*.lvproj_file\" \"1.0.2.1\"" })
+									   new List<string> { "lv_ver" },
+									   "-lv_ver [lvproj_file] [version]",
+									   new List<string> { "-lv_ver \"*.lvproj_file\" \"1.0.2.1\"" })
 		{
-			
+
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -39,24 +38,25 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
+
 			string[] version = args[2].Split('.');
-			
+
 			if (version.Length != 4)
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
+
 			Progress.Message = "Searching";
 			string filePattern = args[1];
 			string root = Directory.GetCurrentDirectory();
 			IO.CheckRootAndPattern(ref root, ref filePattern);
 			List<string> files = IO.GetAllFiles(root, filePattern);
-			
+
 			ConsoleHelper.DebugWriteLine("pattern: " + filePattern);
 			ConsoleHelper.DebugWriteLine("root: " + root);
-			if (files.Count == 0) throw new FileNotFoundException("unable to find any files that match pattern: \"" + filePattern + "\" in root: \"" + root + "\"");
-			
+			if (files.Count == 0)
+				throw new FileNotFoundException("unable to find any files that match pattern: \"" + filePattern + "\" in root: \"" + root + "\"");
+
 			int changes = 0;
 			int counter = 0;
 			foreach (string file in files)
@@ -71,7 +71,7 @@ namespace sar.Commands
 					changes += IO.SearchAndReplaceInFile(file, "<Property Name=\"TgtF_fileVersion.build\" Type=\"Int\">\\d{1,}</Property>", "<Property Name=\"TgtF_fileVersion.build\" Type=\"Int\">" + version[3] + "</Property>").Count;
 				}
 			}
-			
+
 			// remove duplicates
 
 
@@ -83,7 +83,7 @@ namespace sar.Commands
 			{
 				ConsoleHelper.WriteLine("LabVIEW project version number not updated", ConsoleColor.DarkYellow);
 			}
-			
+
 			return ConsoleHelper.EXIT_OK;
 		}
 	}

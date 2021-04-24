@@ -13,7 +13,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -26,7 +25,7 @@ namespace sar.Socket
 		{
 			IPGlobalProperties properties = IPGlobalProperties.GetIPGlobalProperties();
 			IPEndPoint[] tcpEndPoints = properties.GetActiveTcpListeners();
-			
+
 			List<int> usedPorts = new List<int>();
 			foreach (IPEndPoint endpoint in tcpEndPoints)
 			{
@@ -37,12 +36,16 @@ namespace sar.Socket
 			// http://superuser.com/questions/188058/which-ports-are-considered-unsafe-on-chrome
 			for (int port = firstPort; port < lastPort; port++)
 			{
-				if (port == 87) continue;
-				if (port == 95) continue;
-				if (port >= 101 && port < 1000) port = 1000;
-				if (!usedPorts.Contains(port)) return port;
+				if (port == 87)
+					continue;
+				if (port == 95)
+					continue;
+				if (port >= 101 && port < 1000)
+					port = 1000;
+				if (!usedPorts.Contains(port))
+					return port;
 			}
-			
+
 			return -1;
 		}
 	}

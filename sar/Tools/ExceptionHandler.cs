@@ -14,9 +14,6 @@
  */
 
 using System;
-using System.Drawing;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace sar.Tools
@@ -31,7 +28,7 @@ namespace sar.Tools
 			this.details.Text += Environment.NewLine;
 			this.details.Text += ExceptionHelper.GetStackTrace(ex);
 		}
-		
+
 		public static void Display(Exception ex)
 		{
 			// temporary

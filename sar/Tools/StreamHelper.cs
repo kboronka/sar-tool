@@ -14,7 +14,6 @@
  */
 
 using System;
-using System.IO;
 
 namespace sar.Tools
 {
@@ -24,7 +23,7 @@ namespace sar.Tools
 		{
 			long originalPosition = 0;
 
-			if(stream.CanSeek)
+			if (stream.CanSeek)
 			{
 				originalPosition = stream.Position;
 				stream.Position = 0;
@@ -66,7 +65,7 @@ namespace sar.Tools
 			}
 			finally
 			{
-				if(stream.CanSeek)
+				if (stream.CanSeek)
 				{
 					stream.Position = originalPosition;
 				}

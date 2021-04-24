@@ -13,25 +13,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.Text;
-
-using sar.Base;
-using sar.Tools;
 
 namespace sar.Commands
 {
 	public class BuildNSIS : Command
 	{
 		public BuildNSIS(Base.CommandHub parent) : base(parent, "Build - NSIS installer",
-		                          new List<string> { "build.nsis", "b.nsis" },
-		                          "-b.nsis [nsis_filepath]",
-		                          new List<string> { @"-b.nsis src\Installer\chesscup.nsi" })
+								  new List<string> { "build.nsis", "b.nsis" },
+								  "-b.nsis [nsis_filepath]",
+								  new List<string> { @"-b.nsis src\Installer\chesscup.nsi" })
 		{
-			
+
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -39,28 +38,28 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("too few arguments");
 			}
-			
+
 			Progress.Message = "Searching";
 			string filepath = IO.FindFile(args[1]);
 			string filename = IO.GetFilename(filepath);
 			string exePath = IO.FindApplication("makensis.exe", "NSIS");
 			Encoding originalEncoding = IO.ReadEncoding(filepath);
 			IO.Encode(filepath, Encoding.ASCII);
-			
+
 			string arguments = "";
 			for (int i = 2; i < args.Length; i++)
 			{
 				arguments += " " + args[i];
 			}
-			
+
 			arguments += " " + "\"" + filepath + "\"";
-			
+
 			Progress.Message = "Building NSIS Installer " + filename;
-			
+
 			string output;
 			int exitcode = ConsoleHelper.Run(exePath, arguments, out output);
 			//IO.Encode(filepath, originalEncoding);
-			
+
 			if (exitcode != 0)
 			{
 				ConsoleHelper.WriteLine("Build Failed", ConsoleColor.DarkYellow);

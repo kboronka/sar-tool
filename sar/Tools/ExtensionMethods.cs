@@ -30,19 +30,19 @@ namespace sar.Tools
 			var attributes = memberInfo[0].GetCustomAttributes(typeof(T), false);
 			return (T)attributes[0];
 		}
-		
+
 		public static bool IsA<T>(this object obj)
 		{
 			// from http://stackoverflow.com/questions/811614/c-sharp-is-keyword-and-checking-for-not
 			return obj is T;
 		}
-		
+
 		public static string Description(this Enum value)
 		{
 			var attribute = value.GetAttribute<DescriptionAttribute>();
 			return attribute == null ? value.ToString() : attribute.Description;
 		}
-		
+
 		public static string ToDBString(this DateTime value)
 		{
 			if (value == DateTime.MaxValue)
@@ -58,7 +58,7 @@ namespace sar.Tools
 				return "'" + value.ToString(FileLogger.ISO8601_TIMESTAMP) + "'";
 			}
 		}
-		
+
 		public static string QuoteDouble(this string content)
 		{
 			return @"""" + content + @"""";
@@ -68,12 +68,12 @@ namespace sar.Tools
 		{
 			return @"'" + content + @"'";
 		}
-		
+
 		public static bool IsNumeric(this char c)
 		{
 			return c.ToString().IsNumeric();
 		}
-		
+
 		public static bool IsNumeric(this string s)
 		{
 			float output;
@@ -84,37 +84,37 @@ namespace sar.Tools
 		{
 			return Regex.Replace(s, @"\n\r*", @"<br />");
 		}
-		
+
 		public static bool IsNotNull(this string s)
 		{
 			return (!String.IsNullOrEmpty(s));
 		}
-		
+
 		public static string TrimWhiteSpace(this string input)
 		{
 			if (input == null)
 			{
 				throw new NullReferenceException("input string is null");
 			}
-			
+
 			string result = input;
 
 			while (result.StartsWith("\n", StringComparison.InvariantCulture) ||
-			       result.StartsWith("\r", StringComparison.InvariantCulture) ||
-			       result.StartsWith(" ", StringComparison.InvariantCulture) ||
-			       result.StartsWith("\t", StringComparison.InvariantCulture))
+				   result.StartsWith("\r", StringComparison.InvariantCulture) ||
+				   result.StartsWith(" ", StringComparison.InvariantCulture) ||
+				   result.StartsWith("\t", StringComparison.InvariantCulture))
 			{
 				result = StringHelper.TrimStart(result);
 			}
-			
+
 			while (result.EndsWith("\n", StringComparison.InvariantCulture) ||
-			       result.EndsWith("\r", StringComparison.InvariantCulture) ||
-			       result.EndsWith(" ", StringComparison.InvariantCulture) ||
-			       result.EndsWith("\t", StringComparison.InvariantCulture))
+				   result.EndsWith("\r", StringComparison.InvariantCulture) ||
+				   result.EndsWith(" ", StringComparison.InvariantCulture) ||
+				   result.EndsWith("\t", StringComparison.InvariantCulture))
 			{
 				result = StringHelper.TrimEnd(result);
 			}
-			
+
 			return result;
 		}
 
@@ -123,33 +123,33 @@ namespace sar.Tools
 			int output;
 			return (int.TryParse(s, out output)) ? output : 0;
 		}
-		
+
 		public static byte[] ToBytes(this string s)
 		{
 			return StringHelper.GetBytes(s);
 		}
-		
+
 		public static string[] ToLines(this string s)
 		{
 			return s.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
 			//return s.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
 		}
-		
+
 		public static string AppendPrefixTo(this string prefix, string text)
 		{
 			//string[] lines =
 			string[] lines = text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-			
+
 			string result = "";
-			
+
 			foreach (var line in lines)
 			{
 				result += prefix + line + Environment.NewLine;
 			}
-			
+
 			return result;
 		}
-		
+
 		public static bool IsNotZero(this byte[] byteArray)
 		{
 			foreach (var b in byteArray)
@@ -157,23 +157,23 @@ namespace sar.Tools
 				if (b != 0)
 					return true;
 			}
-			
+
 			return false;
 		}
-		
+
 		public static string ToCommaSeperatedValues(this int[] numbers)
 		{
 			try
 			{
 				var line = "";
 				var delimiter = "";
-				
+
 				foreach (var number in numbers)
 				{
 					line += delimiter + number.ToString();
 					delimiter = ", ";
 				}
-				
+
 				return line;
 			}
 			catch
@@ -181,7 +181,7 @@ namespace sar.Tools
 				return "";
 			}
 		}
-		
+
 		public static string ToCSV(this IEnumerable<string> list)
 		{
 			var line = "";
@@ -194,7 +194,7 @@ namespace sar.Tools
 
 			return line;
 		}
-		
+
 		/// <summary>
 		///  Determine whether data is ready to be read
 		/// </summary>
@@ -202,7 +202,7 @@ namespace sar.Tools
 		{
 			return s.Poll(1000, SelectMode.SelectRead) && (s.Available > 0);
 		}
-		
+
 		/// <summary>
 		///  Determine whether data is ready to be read
 		/// </summary>
@@ -210,7 +210,7 @@ namespace sar.Tools
 		{
 			return tcp.Client.IsDataAvailable();
 		}
-		
+
 		/// <summary>
 		///  Determine whether a socket is still connected
 		/// </summary>
@@ -218,11 +218,12 @@ namespace sar.Tools
 		{
 			// solution posted by Carsten
 			// http://stackoverflow.com/questions/7650402/how-to-test-for-a-broken-connection-of-tcpclient-after-being-connected
-			
-			if (socket == null) return false;
-			
+
+			if (socket == null)
+				return false;
+
 			var blockingState = socket.Blocking;
-			
+
 			try
 			{
 				var tmp = new byte[] { };
@@ -248,7 +249,7 @@ namespace sar.Tools
 				socket.Blocking = blockingState;
 			}
 		}
-		
+
 		/// <summary>
 		///  Determine whether a socket is still connected
 		/// </summary>

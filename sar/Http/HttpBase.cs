@@ -13,10 +13,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-
-using sar.Tools;
-
 namespace sar.Http
 {
 	public class HttpBase

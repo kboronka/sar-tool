@@ -13,19 +13,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Commands;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-
-using sar.Tools;
-using sar.Commands;
 
 namespace sar.Base
 {
 	public abstract class CommandHub
 	{
 		protected List<Command> commandList;
-		
+
 		public bool NoWarning = false;
 		public bool Debug = false;
 		public bool IncludeSVN = false;
@@ -34,26 +33,26 @@ namespace sar.Base
 		public bool Loop = false;
 		public bool RunAsAdministator = false;
 		public bool PauseAfter = false;
-		
+
 		internal Dictionary<string, Command> commands = new Dictionary<string, Command>();
-		
+
 		protected CommandHub()
 		{
 			this.commandList = new List<Command>();
 			this.commandList.AddRange(new Command[] {
-			                          	new Help(this),
-			                          	new Delay(this)
-			                          });
+										  new Help(this),
+										  new Delay(this)
+									  });
 		}
-		
+
 		public int ProcessCommands(string[] args)
 		{
 			try
 			{
 				int exitCode = ConsoleHelper.EXIT_OK;
-				
+
 				this.commandlineActive = (args.Length == 0);
-				
+
 				do
 				{
 					try
@@ -63,7 +62,7 @@ namespace sar.Base
 							ConsoleHelper.Write("> ", ConsoleColor.White);
 							args = StringHelper.ParseString(ConsoleHelper.ReadLine(), " ");
 						}
-						
+
 
 						args = this.RemoveGlobalArgs(args);
 
@@ -74,7 +73,7 @@ namespace sar.Base
 							{
 								command = command.Substring(1);
 							}
-							
+
 							// Execute Command
 							if (command != "exit")
 							{
@@ -88,18 +87,19 @@ namespace sar.Base
 									}
 									catch (Exception ex)
 									{
-										if (!this.Loop) throw;
+										if (!this.Loop)
+											throw;
 										ConsoleHelper.WriteException(ex);
 									}
-									
+
 									if (this.Loop)
 									{
-										Progress.Message ="Looping";
+										Progress.Message = "Looping";
 										Thread.Sleep(2000);
 									}
-									
+
 								} while (this.Loop);
-								
+
 								Progress.Enabled = false;
 								args = new string[0];
 							}
@@ -108,7 +108,7 @@ namespace sar.Base
 								this.commandlineActive = false;
 							}
 						}
-						
+
 						if (this.PauseAfter)
 						{
 							ConsoleHelper.WriteLine("Press any key to continue.", ConsoleColor.Yellow);
@@ -125,11 +125,11 @@ namespace sar.Base
 							ConsoleHelper.WriteLine("Press any key to continue.", ConsoleColor.Yellow);
 							ConsoleHelper.ReadKey();
 						}
-						
+
 						exitCode = ConsoleHelper.EXIT_ERROR;
 					}
 				} while (this.commandlineActive);
-				
+
 				return exitCode;
 			}
 			catch (Exception ex)
@@ -137,7 +137,7 @@ namespace sar.Base
 				Progress.Enabled = false;
 				ConsoleHelper.WriteException(ex);
 				Thread.Sleep(2000);
-				
+
 				if (this.Debug)
 				{
 					ConsoleHelper.WriteLine("Press any key to continue.", ConsoleColor.Yellow);
@@ -147,7 +147,7 @@ namespace sar.Base
 				return ConsoleHelper.EXIT_ERROR;
 			}
 		}
-		
+
 		internal void Add(string commandString, Command commandClass)
 		{
 			try
@@ -160,41 +160,41 @@ namespace sar.Base
 				ConsoleHelper.WriteException(ex);
 			}
 		}
-		
+
 		private int Execute(string command, string[] args)
 		{
 			if (String.IsNullOrEmpty(command))
 			{
 				throw new NullReferenceException("no command provided");
 			}
-			
+
 			command = command.ToLower();
-			
+
 			if (!this.commands.ContainsKey(command))
 			{
 				throw new ArgumentException("Unknown command >" + command);
 			}
-			
+
 			int exitCode = ConsoleHelper.EXIT_ERROR;
 			Progress.Enabled = true;
-			
+
 			do
 			{
 				exitCode = this.commands[command].Execute(args);
-				
+
 				if (this.Loop)
 				{
-					Progress.Message ="Loop Delay";
+					Progress.Message = "Loop Delay";
 					Thread.Sleep(2000);
 				}
-				
+
 			} while (this.Loop);
-			
+
 			Progress.Enabled = false;
-			
+
 			return exitCode;
 		}
-		
+
 		private string[] RemoveGlobalArgs(string[] args)
 		{
 			this.NoWarning = false;
@@ -203,26 +203,26 @@ namespace sar.Base
 			this.IncludeSubFolders = true;
 			this.Loop = false;
 			this.PauseAfter = false;
-			
-			#if DEBUG
+
+#if DEBUG
 			this.Debug = true;
-			#endif
-			
+#endif
+
 			var result = new List<string>();
 			foreach (string originalArg in args)
 			{
 				var arg = originalArg;
 				var timestamp = DateTime.Now;
-				
+
 				arg = arg.Replace("(date)", timestamp.ToString(FileLogger.FILE_DATE));
 				arg = arg.Replace("(time)", timestamp.ToString(FileLogger.FILE_TIME));
-				
+
 				if (arg.Length > 1 && arg.Substring(0, 1) == "/")
 				{
 					switch (arg.ToLower())
 					{
 						case "/q":
-							case "/quite": /*spelling error*/
+						case "/quite": /*spelling error*/
 						case "/quiet":
 							this.NoWarning = true;
 							break;
@@ -247,11 +247,11 @@ namespace sar.Base
 							break;
 						case "/admin":
 							this.RunAsAdministator = true;
-							
+
 							if (!ApplicationInfo.HasAdministrativeRight)
 							{
 								var newArgs = new List<string>();
-								
+
 								foreach (string oldArg in args)
 								{
 									if (oldArg.Contains(" "))
@@ -263,12 +263,12 @@ namespace sar.Base
 										newArgs.Add(oldArg);
 									}
 								}
-								
+
 								Shell.RunElevated(ApplicationInfo.ApplicationPath, string.Join(" ", newArgs.ToArray()), ApplicationInfo.CurrentDirectory);
 								Environment.Exit(0);
-								return new string[] {};
+								return new string[] { };
 							}
-							
+
 							break;
 						default:
 							result.Add(arg);
@@ -280,10 +280,10 @@ namespace sar.Base
 					result.Add(arg);
 				}
 			}
-			
+
 			ConsoleHelper.ShowDebug = this.Debug;
 			IO.IncludeSubFolders = this.IncludeSubFolders;
-			
+
 			return result.ToArray();
 		}
 	}

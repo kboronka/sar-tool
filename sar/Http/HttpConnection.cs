@@ -13,73 +13,73 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Timing;
 using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
-using sar.Timing;
-
 namespace sar.Http
 {
 	public class HttpConnection : IDisposable
 	{
-		#if DEBUG
+#if DEBUG
 		public const int MAX_TIME = 3;
-		#else
+#else
 		public const int MAX_TIME = 300;
-		#endif
-		
+#endif
+
 		private Thread serviceRequestThread;
 		private Thread timeoutMonitorThread;
 		private Interval timeout;
 
 		public bool Open { get; private set; }
 		public bool Stopped { get; private set; }
-		
+
 		public HttpServer Parent { get; private set; }
 		public NetworkStream Stream { get; private set; }
 		public TcpClient Socket { get; set; }
-		
+
 		public HttpConnection(HttpServer parent, TcpClient socket)
 		{
 			this.Open = true;
 			this.Socket = socket;
 			this.Stream = socket.GetStream();
-			
+
 			this.Parent = parent;
 
 			timeout = new Interval((MAX_TIME + 20) * 1000);
 			var clientIp = ((IPEndPoint)socket.Client.RemoteEndPoint).Address.ToString();
-			
+
 			this.serviceRequestThread = new Thread(this.MonitorTimeout);
 			this.serviceRequestThread.Name = "HttpConnection Service Request " + clientIp;
 			this.serviceRequestThread.IsBackground = true;
 			this.serviceRequestThread.Start();
-			
+
 			this.timeoutMonitorThread = new Thread(this.ServiceRequests);
 			this.timeoutMonitorThread.Name = "HttpConnection Timeout Monitor " + clientIp;
 			this.timeoutMonitorThread.Priority = ThreadPriority.Lowest;
 			this.timeoutMonitorThread.IsBackground = true;
 			this.timeoutMonitorThread.Start();
 		}
-		
+
 		~HttpConnection()
 		{
 			Dispose(false);
 		}
-		
+
 		public void Dispose()
 		{
 			Dispose(true);
 		}
-		
+
 		bool disposed = false;
 		protected void Dispose(bool disposing)
 		{
-			if (disposed) return;
-			
+			if (disposed)
+				return;
+
 			if (disposing)
 			{
 				// abort thread
@@ -89,7 +89,7 @@ namespace sar.Http
 				}
 				catch
 				{
-					
+
 				}
 
 				// close connections
@@ -100,32 +100,32 @@ namespace sar.Http
 				}
 				catch
 				{
-					
+
 				}
 			}
 
 			disposed = true;
 		}
-		
+
 		#region timeout monitor
-		
+
 		private void MonitorTimeout()
 		{
 			while (this.Open)
 			{
 				Thread.Sleep(1000);
-				
+
 				if (timeout.Ready)
 				{
 					this.Open = false;
 				}
 			}
 		}
-		
+
 		#endregion
-		
+
 		#region service request
-		
+
 		private bool RequestReady()
 		{
 			lock (Socket)
@@ -141,10 +141,10 @@ namespace sar.Http
 					}
 				}
 			}
-			
+
 			return false;
 		}
-		
+
 		private void ServiceRequests()
 		{
 			// Read and parse request
@@ -155,7 +155,7 @@ namespace sar.Http
 					if (this.Socket.Connected && this.RequestReady())
 					{
 						timeout.Reset();
-						
+
 						// return initial header
 						lock (Socket)
 						{
@@ -163,18 +163,18 @@ namespace sar.Http
 							var bytes = Encoding.ASCII.GetBytes(INIT_HEADER);
 							this.Stream.Write(bytes, 0, bytes.Length);
 						}
-						
+
 						// process request and get responce
 						var request = new HttpRequest(this);
-						
+
 						if (request.RequestError)
 						{
 							this.Open = false;
 							break;
 						}
-						
+
 						var response = request.Responce.bytes;
-						
+
 						// send responce
 						lock (Socket)
 						{
@@ -186,7 +186,7 @@ namespace sar.Http
 									int length = Math.Min(response.Length - b, MAX_LENGTH);
 									this.Stream.Write(response, b, length);
 								}
-								
+
 								this.Stream.Flush();
 							}
 							catch
@@ -194,7 +194,7 @@ namespace sar.Http
 								// TODO: close connection?
 							}
 						}
-						
+
 						if (request.IsWebSocket)
 						{
 							request.WebSocket.SetSocket(this.Socket, this.Stream);
@@ -202,19 +202,19 @@ namespace sar.Http
 							{
 								// reset timeout
 								timeout.Reset();
-								
+
 								if (this.RequestReady())
 								{
 									request.WebSocket.ReadNewData();
 								}
-								
+
 								Thread.Sleep(1);
 							}
-							
+
 							request.WebSocket.Open = false;
 						}
 					}
-					
+
 					Thread.Sleep(1);
 					this.Open &= this.Socket.Connected;
 				}
@@ -224,7 +224,7 @@ namespace sar.Http
 					this.Open = false;
 				}
 			}
-			
+
 			// close connections
 			try
 			{
@@ -233,13 +233,13 @@ namespace sar.Http
 			}
 			catch
 			{
-				
+
 			}
-			
+
 			this.Stopped = true;
 		}
-		
+
 		#endregion
-		
+
 	}
 }

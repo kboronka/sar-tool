@@ -13,11 +13,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Timing;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-
-using sar.Timing;
 
 namespace sar.Http
 {
@@ -30,7 +29,7 @@ namespace sar.Http
 		public DateTime ExpiryDate { get { return LastRequest.AddDays(MAX_LIFE); } }
 
 		public const int MAX_LIFE = 2;
-		
+
 		private Dictionary<string, object> data;
 		public Dictionary<string, object> Data
 		{
@@ -42,14 +41,14 @@ namespace sar.Http
 				}
 			}
 		}
-		
+
 		public HttpSession()
 		{
 			this.ID = Guid.NewGuid().ToString("D");
 			this.CreationDate = DateTime.Now;
 			this.LastRequest = DateTime.Now;
 			this.data = new Dictionary<string, object>();
-			
+
 			this.expiryLoopThread = new Thread(this.ExpiryLoop);
 			this.expiryLoopThread.Name = "HttpSession " + this.ID;
 			this.expiryLoopThread.IsBackground = true;
@@ -62,7 +61,8 @@ namespace sar.Http
 			{
 				this.expiryLoopShutdown = true;
 
-				if (this.expiryLoopThread.IsAlive) this.expiryLoopThread.Join();
+				if (this.expiryLoopThread.IsAlive)
+					this.expiryLoopThread.Join();
 			}
 			catch (Exception ex)
 			{
@@ -71,15 +71,15 @@ namespace sar.Http
 		}
 
 		#region service
-		
+
 		private Thread expiryLoopThread;
 		private bool expiryLoopShutdown = false;
-		
+
 		private void ExpiryLoop()
 		{
 			// every thirty minutes
 			var expiryCheck = new Interval(30 * 60000, 5000);
-			
+
 			while (!expiryLoopShutdown)
 			{
 				try
@@ -90,15 +90,15 @@ namespace sar.Http
 						{
 							// expired
 							this.data = new Dictionary<string, object>();
-							
+
 							// throw an expired event
 							OnSessionExpiring(this);
-							
+
 							// shutdown loop
 							this.expiryLoopShutdown = true;
 						}
 					}
-					
+
 					Thread.Sleep(1000);
 				}
 				catch (Exception ex)
@@ -109,14 +109,14 @@ namespace sar.Http
 			}
 		}
 
-		#endregion		
-		
+		#endregion
+
 		#region events
-		
+
 		public delegate void SessionExpiredHandler(HttpSession session);
 
 		#region session expired
-		
+
 		private SessionExpiredHandler sessionExpired = null;
 		public event SessionExpiredHandler SessionExpired
 		{
@@ -129,7 +129,7 @@ namespace sar.Http
 				this.sessionExpired -= value;
 			}
 		}
-		
+
 		private void OnSessionExpiring(HttpSession session)
 		{
 			try
@@ -145,10 +145,10 @@ namespace sar.Http
 				Logger.Log(ex);
 			}
 		}
-		
+
 		#endregion
 
 		#endregion
-		
+
 	}
 }

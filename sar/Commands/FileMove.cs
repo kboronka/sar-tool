@@ -13,24 +13,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
-
-using sar.Base;
-using sar.Tools;
 
 namespace sar.Commands
 {
 	public class FileMove : Command
 	{
 		public FileMove(Base.CommandHub parent) : base(parent, "File - Move",
-		                                               new List<string> { "file.move", "f.move" },
-		                                               @"-file.move [filepath/pattern] [destination]",
-		                                               new List<string> { "-file.backup backup.zip \"c:\\backups\\\"" })
+													   new List<string> { "file.move", "f.move" },
+													   @"-file.move [filepath/pattern] [destination]",
+													   new List<string> { "-file.backup backup.zip \"c:\\backups\\\"" })
 		{
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -38,20 +37,20 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
+
 			ConsoleHelper.DebugWriteLine("args[1]: " + args[1]);
 			ConsoleHelper.DebugWriteLine("args[2]: " + args[2]);
-			
+
 			Progress.Message = "Searching";
 			string searchPattern = args[1];
 			string searchRoot = Directory.GetCurrentDirectory();
-			
+
 			IO.CheckRootAndPattern(ref searchRoot, ref searchPattern);
 			List<string> files = IO.GetAllFiles(searchRoot, searchPattern);
 
 			ConsoleHelper.DebugWriteLine("search pattern: " + searchPattern);
 			ConsoleHelper.DebugWriteLine("search root: " + searchRoot);
-			
+
 			if (files.Count == 0)
 			{
 				ConsoleHelper.WriteException(new FileNotFoundException("unable to find any files that match pattern: [" + searchPattern + "]  in root: [" + searchRoot + "]"));
@@ -62,12 +61,13 @@ namespace sar.Commands
 				Progress.Message = "Locating Archive Folder";
 				string archiveRoot = args[2];
 				string archivePattern = "*.*";
-				
+
 				archiveRoot = IO.CheckPath(archiveRoot, "");
-				
+
 				ConsoleHelper.DebugWriteLine("archivePattern: " + archivePattern);
 				ConsoleHelper.DebugWriteLine("archiveRoot: " + archiveRoot);
-				if (!Directory.Exists(archiveRoot))	Directory.CreateDirectory(archiveRoot);
+				if (!Directory.Exists(archiveRoot))
+					Directory.CreateDirectory(archiveRoot);
 
 				int counter = 0;
 				foreach (string originalFile in files)
@@ -79,14 +79,16 @@ namespace sar.Commands
 							string fileRelativePath = StringHelper.TrimStart(originalFile, searchRoot.Length);
 							string backupFile = archiveRoot + originalFile.Substring(searchRoot.Length);
 							string backupRoot = IO.GetRoot(backupFile);
-							
+
 							Progress.Message = "Moving " + fileRelativePath;
 							counter++;
-							
+
 							try
 							{
-								if (!Directory.Exists(backupRoot)) Directory.CreateDirectory(backupRoot);
-								if (File.Exists(backupFile)) File.Delete(backupFile);
+								if (!Directory.Exists(backupRoot))
+									Directory.CreateDirectory(backupRoot);
+								if (File.Exists(backupFile))
+									File.Delete(backupFile);
 								IO.CopyFile(originalFile, backupFile);
 								File.Delete(originalFile);
 							}
@@ -97,10 +99,10 @@ namespace sar.Commands
 						}
 					}
 				}
-				
+
 				ConsoleHelper.WriteLine(counter.ToString() + " File" + ((counter != 1) ? "s" : "") + " Moved", ConsoleColor.DarkYellow);
 			}
-			
+
 			return ConsoleHelper.EXIT_OK;
 		}
 	}

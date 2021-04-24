@@ -13,29 +13,28 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
-
-using sar.Base;
-using sar.Tools;
 
 namespace sar.Commands
 {
 	public class FileSearchAndReplace : Command
 	{
 		public FileSearchAndReplace(Base.CommandHub parent) : base(parent, "File - Search And Replace",
-		                                                           new List<string> { "replace", "r" },
-		                                                           "-replace <file_search_pattern> <search_text> <replace_text>",
-		                                                           new List<string> {
-		                                                           	"-r \"AssemblyInfo.cs\" \"0.0.0.0\" \"1.0.0.0\"",
-		                                                           	"-r AssemblyInfo.* ((Version)\\(\\\"\\d+\\.\\d+\\.\\d+\\.\\d+\\\"\\)) \"Version(\\\"%VERSION%\\\")\"",
-		                                                           	"-r \\sar\\\"AssemblyInfo.cs\" \"0.0.0.0\" \"1.0.0.0\"",
-		                                                           })
+																   new List<string> { "replace", "r" },
+																   "-replace <file_search_pattern> <search_text> <replace_text>",
+																   new List<string> {
+																	   "-r \"AssemblyInfo.cs\" \"0.0.0.0\" \"1.0.0.0\"",
+																	   "-r AssemblyInfo.* ((Version)\\(\\\"\\d+\\.\\d+\\.\\d+\\.\\d+\\\"\\)) \"Version(\\\"%VERSION%\\\")\"",
+																	   "-r \\sar\\\"AssemblyInfo.cs\" \"0.0.0.0\" \"1.0.0.0\"",
+																   })
 		{
-			
+
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -43,21 +42,21 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
+
 			string filePattern = args[1];
 			string search = args[2];
 			string replace = args[3];
-			
+
 			replace = replace.Replace(@"\r\n", Environment.NewLine);
 			replace = replace.Replace("\\n", Environment.NewLine);
-			
+
 			string root = Directory.GetCurrentDirectory();
-			
+
 			ConsoleHelper.DebugWriteLine("search = " + search);
 			ConsoleHelper.DebugWriteLine("replace = " + replace);
 
 			List<SearchResults> results = IO.SearchAndReplaceInFiles(root, filePattern, search, replace);
-			
+
 			int files = 0;
 			int changes = 0;
 			foreach (SearchResults result in results)

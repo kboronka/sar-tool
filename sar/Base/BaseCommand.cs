@@ -16,23 +16,21 @@
 using System;
 using System.Collections.Generic;
 
-using sar.Tools;
-
 namespace sar.Base
 {
 	public abstract class Command
 	{
 		private string usage;
-		
+
 		private List<string> examples;
 		private string name;
-		
+
 		private List<string> commands;
 		private delegate int FunctionPointer(string[] args);
 		public Delegate function;
-		
+
 		protected CommandHub commandHub;
-		
+
 		public List<string> Commands
 		{
 			get
@@ -40,7 +38,7 @@ namespace sar.Base
 				return this.commands;
 			}
 		}
-		
+
 		public string Name
 		{
 			get
@@ -56,7 +54,7 @@ namespace sar.Base
 				return this.usage;
 			}
 		}
-		
+
 		public List<string> Examples
 		{
 			get
@@ -73,7 +71,7 @@ namespace sar.Base
 			this.commands = commands;
 			this.examples = examples;
 			this.commandHub = parent;
-			
+
 			foreach (string command in commands)
 			{
 				parent.Add(command.ToLower(), this);

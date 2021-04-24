@@ -18,25 +18,23 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 
-using sar.Tools;
-
 namespace sar.Tools
 {
 	public partial class LogForm : Form
 	{
 		private const int MAXLINES = 100;
-		
+
 		private bool updateFlag;
 		private bool saveToFile;
 		private string path;
 		private StreamWriter writer;
 		private DateTime today;
 		private bool logTimestamp = true;
-		
+
 		private List<string> lines = new List<string>();
-		
+
 		#region properties
-		
+
 		private StreamWriter LogWriter
 		{
 			get
@@ -47,96 +45,97 @@ namespace sar.Tools
 					{
 						this.writer.Close();
 					}
-					
+
 					this.today = DateTime.Today;
-					
+
 					string path = this.path.Insert(this.path.LastIndexOf('.'), "." + this.today.ToString(FileLogger.FILETIMESTAMP));
 					string directory = this.path.Substring(0, this.path.LastIndexOf('\\'));
-					
+
 					if (!Directory.Exists(directory))
 						Directory.CreateDirectory(directory);
-					
+
 					this.writer = new StreamWriter(path, true);
 				}
-				
+
 				return this.writer;
 			}
 		}
-		
+
 		public bool LogTimestamp
 		{
 			get { return logTimestamp; }
 		}
-		
+
 		#endregion
-		
+
 		public LogForm()
 		{
 			InitializeComponent();
 			this.updateDisplayTimer.Enabled = true;
 			this.saveToFile = false;
 		}
-		
+
 		public LogForm(string filename)
 		{
 			InitializeComponent();
 			this.updateDisplayTimer.Enabled = true;
-			
+
 			if (String.IsNullOrEmpty(filename))
 			{
 				throw new ArgumentNullException("logging filename not specified");
 			}
-			
+
 			if (filename[filename.Length - 1] == '\\')
 			{
 				filename = filename.Substring(0, this.path.Length - 1);
 			}
-			
+
 			if (filename.IndexOf('.') == -1)
 			{
 				filename += ".log";
 			}
-			
+
 			this.path = ApplicationInfo.CommonDataDirectory + filename;
 			this.saveToFile = true;
 		}
-		
+
 		public void WriteLine(string text, DateTime timestamp)
 		{
-			if (this.logTimestamp) text = timestamp.ToString(FileLogger.TIMESTAMP) + "\t" + text;
+			if (this.logTimestamp)
+				text = timestamp.ToString(FileLogger.TIMESTAMP) + "\t" + text;
 			this.WriteLine(text);
 		}
-		
+
 		public void WriteLine(string text)
 		{
 			updateFlag = true;
 			lines.Add(text);
-			
+
 			if (this.saveToFile)
 			{
 				this.LogWriter.WriteLine(text);
 			}
-			
+
 			if (lines.Count > MAXLINES)
 			{
 				lines.RemoveAt(0);
 			}
 		}
-		
+
 		public void UpdateDisplay()
 		{
 			string display = "";
-			
+
 			foreach (string line in lines)
 			{
 				display = line + Environment.NewLine + display;
 			}
-			
+
 			this.textBox1.Text = display;
 		}
-		
+
 		#region Events
-		
+
 		private void UpdateDisplayTimerTick(object sender, EventArgs e)
 		{
 			if (updateFlag)
@@ -153,8 +152,8 @@ namespace sar.Tools
 				//this.writer = null;
 			}
 		}
-		
+
 		#endregion
-		
+
 	}
 }

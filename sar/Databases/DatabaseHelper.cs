@@ -25,7 +25,7 @@ namespace sar.Tools
 			var lines = sql.ToLines();
 			var result = new List<string>();
 			var newSql = "";
-			
+
 			foreach (var line in lines)
 			{
 				if (line.ToUpperInvariant() == "GO")
@@ -38,7 +38,7 @@ namespace sar.Tools
 					newSql += line + Environment.NewLine;
 				}
 			}
-			
+
 			return result;
 		}
 	}

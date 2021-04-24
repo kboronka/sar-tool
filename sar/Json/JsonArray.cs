@@ -25,19 +25,19 @@ namespace sar.Json
 	{
 		public JsonArray() : base()
 		{
-			
+
 		}
-		
-		public JsonArray(string json) 
+
+		public JsonArray(string json)
 			: base()
 		{
 			var depth = 0;
 			var stringDepth = 0;
-			
+
 			var valueStart = -1;
 			var valueEnd = -1;
 			var value = "";
-			
+
 			for (var i = 0; i < json.Length; i++)
 			{
 				var c = json[i];
@@ -45,7 +45,7 @@ namespace sar.Json
 				if (c == '[' && stringDepth == 0)
 				{
 					depth++;
-					
+
 					if (depth == 1)
 					{
 						valueStart = i + 1;
@@ -59,7 +59,7 @@ namespace sar.Json
 						value = json.Substring(valueStart, valueEnd - valueStart + 1);
 						this.Add(JsonHelper.ValueToObject(value));
 					}
-					
+
 					depth--;
 				}
 				else if (c == ',' && depth == 1 && stringDepth == 0)
@@ -89,7 +89,7 @@ namespace sar.Json
 					stringDepth--;
 				}
 			}
-			
+
 			if (stringDepth != 0 && depth != 0)
 			{
 				throw new ApplicationException("Invalid json string");

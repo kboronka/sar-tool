@@ -13,9 +13,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using System.ComponentModel;
-using System.Windows.Forms;
 
 namespace sar.Tools
 {

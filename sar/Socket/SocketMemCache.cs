@@ -15,13 +15,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading;
-using System.Xml;
-
-using sar.Tools;
 
 namespace sar.Socket
 {
@@ -33,15 +26,15 @@ namespace sar.Socket
 
 		public void Dispose()
 		{
-	        Dispose(true);
-	        GC.SuppressFinalize(this);
+			Dispose(true);
+			GC.SuppressFinalize(this);
 		}
-		
+
 		protected bool disposed;
 		protected abstract void Dispose(bool disposing);
-		
+
 		public abstract void Stop();
-		
+
 		#region memcache
 
 		public abstract long ID
@@ -49,14 +42,14 @@ namespace sar.Socket
 			get;
 			set;
 		}
-		
+
 		protected Dictionary<string, SocketValue> memCache = new Dictionary<string, SocketValue>();
-		
+
 		public void RegisterCallback(string member, SocketValue.DataChangedHandler handler)
 		{
 			this.Log("RegisterCallback -- " + member);
-			
-			lock(this.memCache)
+
+			lock (this.memCache)
 			{
 				if (MemberExists(member))
 				{
@@ -64,7 +57,7 @@ namespace sar.Socket
 				}
 			}
 		}
-		
+
 		protected bool MemberExists(string member)
 		{
 			if (!this.memCache.ContainsKey(member))
@@ -72,15 +65,15 @@ namespace sar.Socket
 				this.memCache[member] = new SocketValue(member);
 				this.memCache[member].DataChanged += new SocketValue.DataChangedHandler(this.OnMemCacheChanged);
 			}
-			
+
 			return true;
 		}
-		
+
 		protected void Store(SocketMessage message)
 		{
 			string member = message.Member;
 
-			lock(this.memCache)
+			lock (this.memCache)
 			{
 				if (MemberExists(member))
 				{
@@ -89,10 +82,10 @@ namespace sar.Socket
 				}
 			}
 		}
-		
+
 		protected void Store(string member, string data)
 		{
-			lock(this.memCache)
+			lock (this.memCache)
 			{
 				if (MemberExists(member))
 				{
@@ -101,66 +94,68 @@ namespace sar.Socket
 				}
 			}
 		}
-		
+
 		protected SocketValue Get(string member)
 		{
-			lock(this.memCache)
+			lock (this.memCache)
 			{
 				MemberExists(member);
 				return this.memCache[member];
 			}
 		}
-		
+
 		public string GetValue(string member)
 		{
 			return this.Get(member).Data;
 		}
-		
+
 		public DateTime GetTimestamp(string member)
 		{
 			return this.Get(member).Timestamp;
 		}
-		
+
 		public DateTime GetLastUpdate(string member)
 		{
 			return this.Get(member).LastUpdate;
 		}
-		
+
 		protected abstract void OnMemCacheChanged(SocketValue data);
-		
+
 		#endregion
-		
+
 		#region messageQueue
-		
+
 		private long messageID;
-		
+
 		public void SetValue(string member, bool data)
 		{
 			this.SetValue(member, data, false);
 		}
-		
+
 		public void SetValue(string member, bool data, bool global)
 		{
 			this.SetValue(member, data.ToString(), global);
 		}
-		
+
 		public void SetValue(string member, string data)
 		{
 			this.SetValue(member, data, false);
 		}
-		
+
 		public void SetValue(string member, string data, bool global)
 		{
 			this.Store(member, data);
-			if (!global) this.SendValue(this.Get(member), this.ID);
-			if (global) this.SendValue(this.Get(member), -1);
+			if (!global)
+				this.SendValue(this.Get(member), this.ID);
+			if (global)
+				this.SendValue(this.Get(member), -1);
 		}
-		
+
 		public void SendData(string command)
 		{
 			this.SendData(command, "", "", -1);
 		}
-		
+
 		public void SendData(string command, long to)
 		{
 			this.SendData(command, "", "", to);
@@ -171,29 +166,29 @@ namespace sar.Socket
 			this.messageID++;
 			SendData(new SocketMessage(this.messageID, data, to));
 		}
-		
+
 		public void SendData(string command, string member, string data, long to)
 		{
 			this.messageID++;
 			SendData(new SocketMessage(this, command, this.messageID, member, data, to));
 		}
-		
+
 		public abstract void SendData(SocketMessage message);
-		
+
 		#endregion
 
 		#region logger
-		
+
 		protected void Log(string line)
 		{
 			Logger.Log(this.ToString() + ": " + line);
 		}
-		
+
 		protected void Log(Exception ex)
 		{
 			Logger.Log(ex);
 		}
-		
-		#endregion		
+
+		#endregion
 	}
 }

@@ -24,17 +24,17 @@ namespace sar.FSM
 	{
 		public Enum CommandSignal { get; private set; }
 		public object[] Parameters { get; private set; }
-		
+
 		public Command(Enum command, object[] parameters)
 		{
 			this.CommandSignal = command;
 			this.Parameters = parameters;
 		}
-		
+
 		public Command(Enum command)
 			: this(command, null)
 		{
-			
+
 		}
 	}
 }

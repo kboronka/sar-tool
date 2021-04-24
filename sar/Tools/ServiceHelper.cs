@@ -14,11 +14,9 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Security.Permissions;
 using System.Security.Principal;
 
 namespace sar.Tools
@@ -27,9 +25,9 @@ namespace sar.Tools
 	{
 		public ServiceHelper()
 		{
-			
+
 		}
-		
+
 		public static void LogEvent(string message)
 		{
 			DateTime dt = new DateTime();
@@ -38,16 +36,18 @@ namespace sar.Tools
 
 			EventLog.WriteEntry(AssemblyInfo.Name, message);
 		}
-		
+
 		public static void Install(string dotNetVersion, string serviceFilePath)
 		{
 			Install(dotNetVersion, serviceFilePath, "", "");
 		}
-		
+
 		public static void Install(string dotNetVersion, string serviceFilePath, string username, string password)
 		{
-			if (String.IsNullOrEmpty(serviceFilePath)) throw new NullReferenceException("invalid filename");
-			if (!File.Exists(serviceFilePath)) throw new FileNotFoundException(serviceFilePath + " not found");
+			if (String.IsNullOrEmpty(serviceFilePath))
+				throw new NullReferenceException("invalid filename");
+			if (!File.Exists(serviceFilePath))
+				throw new FileNotFoundException(serviceFilePath + " not found");
 			string serviceFileName = IO.GetFilename(serviceFilePath);
 			string serviceName = StringHelper.TrimEnd(serviceFileName, IO.GetFileExtension(serviceFilePath).Length + 1);
 			string dotNetFolder = IO.FindDotNetFolder(dotNetVersion);
@@ -62,24 +62,28 @@ namespace sar.Tools
 			{
 				results = Shell.Run(installUtil, "/i " + IO.GetFilename(serviceFilePath), IO.GetRoot(serviceFilePath));
 			}
-			
-			if (results.ExitCode != Shell.EXIT_OK) throw new Exception("Failed to install " + serviceName);
+
+			if (results.ExitCode != Shell.EXIT_OK)
+				throw new Exception("Failed to install " + serviceName);
 		}
-		
+
 		public static void Uninstall(string dotNetVersion, string serviceFilePath)
 		{
-			if (String.IsNullOrEmpty(serviceFilePath)) throw new NullReferenceException("invalid filename");
-			if (!File.Exists(serviceFilePath)) throw new FileNotFoundException(serviceFilePath + " not found");
-			
+			if (String.IsNullOrEmpty(serviceFilePath))
+				throw new NullReferenceException("invalid filename");
+			if (!File.Exists(serviceFilePath))
+				throw new FileNotFoundException(serviceFilePath + " not found");
+
 			string serviceFileName = IO.GetFilename(serviceFilePath);
 			string serviceName = StringHelper.TrimEnd(serviceFileName, IO.GetFileExtension(serviceFilePath).Length + 1);
-			
+
 			string dotNetFolder = IO.FindDotNetFolder(dotNetVersion);
 			string installUtil = IO.FindFile(dotNetFolder, "Installutil.exe");
 			ShellResults results = Shell.Run(installUtil, "/u " + IO.GetFilename(serviceFilePath), IO.GetRoot(serviceFilePath));
-			if (results.ExitCode != Shell.EXIT_OK) throw new Exception("Failed to uninstall " + serviceName);
+			if (results.ExitCode != Shell.EXIT_OK)
+				throw new Exception("Failed to uninstall " + serviceName);
 		}
-		
+
 		public static bool TryUninstall(string serviceFilePath)
 		{
 			foreach (string dotNetVersion in IO.GetDotNetVersions())
@@ -91,13 +95,13 @@ namespace sar.Tools
 				}
 				catch
 				{
-					
+
 				}
 			}
-			
+
 			return false;
 		}
-		
+
 		public static bool TryUninstall(string dotNetVersion, string serviceFilePath)
 		{
 			try
@@ -110,24 +114,28 @@ namespace sar.Tools
 				return false;
 			}
 		}
-		
+
 		public static void Start(string serviceFilePath)
 		{
-			if (String.IsNullOrEmpty(serviceFilePath)) throw new NullReferenceException("invalid filename");
-			if (!File.Exists(serviceFilePath)) throw new FileNotFoundException(serviceFilePath + " not found");
-			
+			if (String.IsNullOrEmpty(serviceFilePath))
+				throw new NullReferenceException("invalid filename");
+			if (!File.Exists(serviceFilePath))
+				throw new FileNotFoundException(serviceFilePath + " not found");
+
 			string serviceFileName = IO.GetFilename(serviceFilePath);
 			string serviceName = StringHelper.TrimEnd(serviceFileName, IO.GetFileExtension(serviceFilePath).Length + 1);
-			
+
 			ShellResults results = Shell.Run(IO.System32 + @"net.exe", "START " + serviceName);
 			if (results.ExitCode != Shell.EXIT_OK)
 			{
-				if (!String.IsNullOrEmpty(results.Output)) ConsoleHelper.DebugWriteLine("output: " + results.Output);
-				if (!String.IsNullOrEmpty(results.Error)) ConsoleHelper.DebugWriteLine("output: " + results.Error);
+				if (!String.IsNullOrEmpty(results.Output))
+					ConsoleHelper.DebugWriteLine("output: " + results.Output);
+				if (!String.IsNullOrEmpty(results.Error))
+					ConsoleHelper.DebugWriteLine("output: " + results.Error);
 				throw new Exception("Failed to start " + serviceName);
 			}
 		}
-		
+
 		public static bool TryStart(string serviceFilePath)
 		{
 			try
@@ -143,12 +151,14 @@ namespace sar.Tools
 
 		public static void Stop(string serviceFilePath)
 		{
-			if (String.IsNullOrEmpty(serviceFilePath)) throw new NullReferenceException("invalid filename");
-			if (!File.Exists(serviceFilePath)) throw new FileNotFoundException(serviceFilePath + " not found");
-			
+			if (String.IsNullOrEmpty(serviceFilePath))
+				throw new NullReferenceException("invalid filename");
+			if (!File.Exists(serviceFilePath))
+				throw new FileNotFoundException(serviceFilePath + " not found");
+
 			string serviceFileName = IO.GetFilename(serviceFilePath);
 			string serviceName = StringHelper.TrimEnd(serviceFileName, IO.GetFileExtension(serviceFilePath).Length + 1);
-			
+
 			ShellResults results = Shell.Run(IO.System32 + @"net.exe", "STOP " + serviceName);
 			if (results.ExitCode != Shell.EXIT_OK)
 			{
@@ -156,7 +166,7 @@ namespace sar.Tools
 				throw new Exception("Failed to stop " + serviceName);
 			}
 		}
-		
+
 		public static bool TryStop(string serviceFilePath)
 		{
 			try
@@ -169,7 +179,7 @@ namespace sar.Tools
 				return false;
 			}
 		}
-		
+
 		// group type enum
 		public enum SECURITY_IMPERSONATION_LEVEL : int
 		{
@@ -178,11 +188,11 @@ namespace sar.Tools
 			SecurityImpersonation = 2,
 			SecurityDelegation = 3
 		}
-		
+
 		// obtains user token
 		[DllImport("advapi32.dll", SetLastError = true)]
 		public static extern bool LogonUser(string pszUsername, string pszDomain, string pszPassword,
-		                                    int dwLogonType, int dwLogonProvider, ref IntPtr phToken);
+											int dwLogonType, int dwLogonProvider, ref IntPtr phToken);
 
 		// closes open handes returned by LogonUser
 		[DllImport("kernel32.dll", CharSet = CharSet.Auto)]
@@ -191,8 +201,8 @@ namespace sar.Tools
 		// creates duplicate token handle
 		[DllImport("advapi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 		public extern static bool DuplicateToken(IntPtr ExistingTokenHandle,
-		                                         int SECURITY_IMPERSONATION_LEVEL, ref IntPtr DuplicateTokenHandle);
-		
+												 int SECURITY_IMPERSONATION_LEVEL, ref IntPtr DuplicateTokenHandle);
+
 		// from: http://www.codeproject.com/Articles/4051/Windows-Impersonation-using-C
 		public static WindowsImpersonationContext ImpersonateUser(string sUsername, string sDomain, string sPassword)
 		{
@@ -201,7 +211,7 @@ namespace sar.Tools
 			IntPtr pDuplicateTokenHandle = new IntPtr(0);
 			pExistingTokenHandle = IntPtr.Zero;
 			pDuplicateTokenHandle = IntPtr.Zero;
-			
+
 			// if domain name was blank, assume local machine
 			if (sDomain == "")
 				sDomain = System.Environment.MachineName;
@@ -218,7 +228,7 @@ namespace sar.Tools
 
 				// get handle to token
 				bool bImpersonated = LogonUser(sUsername, sDomain, sPassword,
-				                               LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, ref pExistingTokenHandle);
+											   LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, ref pExistingTokenHandle);
 
 				// did impersonation fail?
 				if (false == bImpersonated)

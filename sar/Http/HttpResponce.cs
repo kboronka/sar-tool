@@ -13,14 +13,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Tools;
 using System;
 using System.ComponentModel;
-using System.Security.Cryptography;
 using System.IO;
-using System.Net.Sockets;
+using System.Security.Cryptography;
 using System.Text;
-
-using sar.Tools;
 
 namespace sar.Http
 {
@@ -34,48 +32,50 @@ namespace sar.Http
 		OK = 200,
 
 		FOUND = 302,
-		
+
 		[Description("Not Modified")]
 		NOT_MODIFIED = 304,
 
 		NOTFOUND = 404,
 
-		SERVERERROR=500
+		SERVERERROR = 500
 	};
 
 	public class HttpResponse
 	{
 		private readonly HttpRequest request;
 		private HttpContent content;
-		
-		
+
+
 		public byte[] bytes;
-		
+
 		public byte[] Bytes
 		{
 			get { return this.bytes; }
 		}
-		
+
 		public HttpResponse(HttpRequest request)
 		{
 			this.request = request;
 			const string PDF_IDENT = "-pdf";
-			
+
 			try
 			{
 				if (this.request.Path == @"")
 				{
-					if (HttpController.Primary == null) throw new ApplicationException("Primary Controller Not Defined");
-					if (HttpController.Primary.PrimaryAction == null) throw new ApplicationException("Primary Action Not Defined");
-					
+					if (HttpController.Primary == null)
+						throw new ApplicationException("Primary Controller Not Defined");
+					if (HttpController.Primary.PrimaryAction == null)
+						throw new ApplicationException("Primary Action Not Defined");
+
 					this.content = HttpController.RequestPrimary(this.request);
 				}
 				else if (this.request.Path.ToLower().EndsWith(PDF_IDENT, StringComparison.CurrentCulture))
 				{
 					string url = "http://localhost:" + request.Server.Port.ToString() + this.request.FullUrl;
-					
+
 					url = url.Replace(this.request.Path, StringHelper.TrimEnd(this.request.Path, PDF_IDENT.Length));
-					
+
 					this.content = new HttpContent(HtmlToPdfHelper.ReadPDF(url), "application/pdf");
 				}
 				else if (this.request.IsWebSocket && HttpWebSocket.WebSocketControllerExists(this.request))
@@ -91,7 +91,7 @@ namespace sar.Http
 				{
 					this.content = HttpContent.Read(this.request.Server, this.request.Path);
 				}
-				
+
 				if (this.content is HttpErrorContent)
 				{
 					this.bytes = this.ConstructResponse(HttpStatusCode.SERVERERROR);
@@ -122,45 +122,46 @@ namespace sar.Http
 				this.bytes = this.ConstructResponse(HttpStatusCode.SERVERERROR);
 			}
 		}
-		
+
 		private byte[] ConstructResponse(HttpStatusCode status)
 		{
 			// Construct response header
-			
+
 			const string GMT = "ddd, dd MMM yyyy HH':'mm':'ss 'GMT'";
 			const string eol = "\r\n";
 			string response = "";
-			var contentBytes = new byte[] {};
-			
+			var contentBytes = new byte[] { };
+
 			// status line
 			string responsePhrase = Enum.GetName(typeof(HttpStatusCode), status);
 			response += " " + ((int)status).ToString() + " " + responsePhrase + eol;
-			
+
 			if (!request.IsWebSocket)
 			{
 				response += @"Server: " + @"sar\" + AssemblyInfo.SarVersion + eol;
 				response += @"Date: " + DateTime.UtcNow.ToString(GMT) + eol;
 				response += @"ETag: " + this.content.ETag + eol;
-				response += @"Set-Cookie: sarSession=" + this.request.Session.ID + @"; Path=/; expires=" + this.request.Session.ExpiryDate.ToString(GMT) + ";"	+ eol;
+				response += @"Set-Cookie: sarSession=" + this.request.Session.ID + @"; Path=/; expires=" + this.request.Session.ExpiryDate.ToString(GMT) + ";" + eol;
 				response += @"Last-Modified: " + this.content.LastModified.ToString(GMT) + eol;
-				if (this.request.PdfReader) response += "X-Content-Type-Options: " + "pdf-render" + eol;
-				
+				if (this.request.PdfReader)
+					response += "X-Content-Type-Options: " + "pdf-render" + eol;
+
 				// content details
 				if (status != HttpStatusCode.NOT_MODIFIED)
 				{
-					contentBytes = this.content.Render(request.Server.Cache);				
+					contentBytes = this.content.Render(request.Server.Cache);
 					response += @"Content-Type: " + this.content.ContentType + eol;
 					response += @"Content-Length: " + (contentBytes.Length).ToString() + eol;
 					//response += @"Expires: " + DateTime.UtcNow.AddDays(1).ToString(GMT) + eol;
 				}
-				
+
 				/*
 				response += @"Access-Control-Allow-Origin: *" + eol;
 				response += @"Access-Control-Allow-Methods: POST, GET" + eol;
 				response += @"Access-Control-Max-Age: 1728000" + eol;
 				response += @"Access-Control-Allow-Credentials: true" + eol;
 				 */
-				
+
 				// keep-alive
 				response += "Keep-Alive: timeout=" + HttpConnection.MAX_TIME.ToString() + eol;
 				response += "Connection: keep-alive";
@@ -173,15 +174,15 @@ namespace sar.Http
 
 				var hash = SHA1.Create().ComputeHash(Encoding.UTF8.GetBytes(this.request.WebSocketKey + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"));
 				response += @"Sec-WebSocket-Accept: " + Convert.ToBase64String(hash) + eol;
-				
+
 				if (!String.IsNullOrEmpty(this.request.WebSocketProtocol))
 				{
 					response += @"Sec-WebSocket-Protocol: " + this.request.WebSocketProtocol + eol;
 				}
-				
+
 				response += eol;
 			}
-			
+
 			return (contentBytes.Length > 0) ? StringHelper.CombineByteArrays(Encoding.ASCII.GetBytes(response), contentBytes) : Encoding.ASCII.GetBytes(response);
 		}
 	}

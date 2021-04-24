@@ -13,7 +13,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using System.Collections.Generic;
 
 namespace sar.Tools
@@ -25,13 +24,13 @@ namespace sar.Tools
 	{
 		public string FilePath { get; private set; }
 		public List<SearchResultMatch> Matches { get; private set; }
-		
+
 		public SearchResults(string filepath)
 		{
 			this.FilePath = filepath;
 			this.Matches = new List<SearchResultMatch>();
 		}
-		
+
 		public void AddResults(List<SearchResultMatch> matches)
 		{
 			this.Matches.AddRange(matches);

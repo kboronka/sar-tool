@@ -28,25 +28,25 @@ namespace sar.Tools
 		public const string FILE_DATE = "yyyy-MM-dd";
 		public const string FILE_TIME = "HHmmss";
 		public const string ISO8601_TIMESTAMP = "yyyy-MM-ddTHH:mm:ss.fff";
-		
+
 		private string root;
 		private string filename;
-		
+
 		private StreamWriter writer;
 		private DateTime today;
 		private bool logTime;
 		private bool printSeperator = true;
-		
+
 		#region properties
-		
+
 		public bool LogTime
 		{
 			get { return this.logTime; }
 			set { this.logTime = value; }
 		}
-		
+
 		#endregion
-		
+
 		public FileLogger(string root, string filename, bool logTimstamp)
 		{
 			try
@@ -54,34 +54,34 @@ namespace sar.Tools
 				this.filename = filename;
 				this.logTime = logTimstamp;
 				this.root = root;
-				
+
 				// create the directory if it does not exist
 				if (!Directory.Exists(this.root))
 				{
 					Directory.CreateDirectory(this.root);
 				}
-				
+
 				// no filename
 				if (String.IsNullOrEmpty(filename))
 				{
 					throw new ApplicationException("Log filename not specified");
 				}
-				
+
 				string path = this.root + DateTime.Today.ToString(FILETIMESTAMP) + "." + this.filename;
-				
-				if (!File.Exists(path)) 
+
+				if (!File.Exists(path))
 				{
 					this.printSeperator = false;
 				}
-				
+
 				this.writer = new StreamWriter(path, true);
-				
+
 				this.fileFlush = new Thread(this.FlushLoop);
 				this.fileFlush.Name = this.filename + " FlushLoop";
 				this.fileFlush.IsBackground = true;
 				this.fileFlush.Priority = ThreadPriority.Lowest;
 				this.fileFlush.Start();
-				
+
 				this.deleteOld = new Thread(this.DeleteLoop);
 				this.deleteOld.Name = this.filename + " DeleteLoop";
 				this.deleteOld.IsBackground = true;
@@ -90,10 +90,10 @@ namespace sar.Tools
 			}
 			catch
 			{
-				
+
 			}
 		}
-		
+
 		~FileLogger()
 		{
 			try
@@ -106,54 +106,58 @@ namespace sar.Tools
 			}
 			catch
 			{
-				
+
 			}
 		}
-		
+
 		public void WriteLine(string text, DateTime timestamp)
 		{
 			lock (this.root)
 			{
-				if (this.writer == null) return;
-				
+				if (this.writer == null)
+					return;
+
 				lock (this.writer)
 				{
 					if (this.today == null || (DateTime.Today != this.today))
 					{
 						this.writer.Flush();
 						this.writer.Close();
-						
+
 						string path = this.root + DateTime.Today.ToString(FILETIMESTAMP) + "." + this.filename;
-						if (!File.Exists(path)) this.printSeperator = false;
-						
+						if (!File.Exists(path))
+							this.printSeperator = false;
+
 						this.writer = new StreamWriter(path, true);
 						this.today = DateTime.Today;
 					}
-					
-					if (this.printSeperator) this.writer.WriteLine(ConsoleHelper.HR);
-					if (this.logTime) text = timestamp.ToString(TIMESTAMP) + "\t" + text;
+
+					if (this.printSeperator)
+						this.writer.WriteLine(ConsoleHelper.HR);
+					if (this.logTime)
+						text = timestamp.ToString(TIMESTAMP) + "\t" + text;
 					this.writer.WriteLine(text);
 					this.printSeperator = false;
 				}
 			}
 		}
-		
+
 		public void WriteLine(string text)
 		{
 			WriteLine(text, DateTime.Now);
 		}
-		
+
 		#region service
-		
+
 		#region flush
-		
+
 		private Thread fileFlush;
 		private bool flushLoopShutdown;
-		
+
 		private void FlushLoop()
 		{
 			Thread.Sleep(1000);
-			
+
 			while (!flushLoopShutdown)
 			{
 				try
@@ -183,31 +187,31 @@ namespace sar.Tools
 			}
 			catch
 			{
-				
+
 			}
 		}
-		
+
 		#endregion
-		
+
 		#region delete old
-		
+
 		private Thread deleteOld;
 		private bool deleteLoopShutdown;
-		
+
 		private void DeleteLoop()
 		{
 			Thread.Sleep(10000);
-			
+
 			while (!deleteLoopShutdown)
 			{
 				try
 				{
 					this.DeleteOldFiles();
-					Thread.Sleep(600000);		// 1 hou
+					Thread.Sleep(600000);       // 1 hou
 				}
 				catch
 				{
-					Thread.Sleep(90000);		// 1.5 minutes
+					Thread.Sleep(90000);        // 1.5 minutes
 				}
 			}
 		}
@@ -230,13 +234,13 @@ namespace sar.Tools
 				}
 				catch
 				{
-					
+
 				}
 			}
 		}
-		
+
 		#endregion
-		
+
 		#endregion
 
 	}

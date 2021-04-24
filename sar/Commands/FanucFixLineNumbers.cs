@@ -13,6 +13,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,20 +22,17 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-using sar.Base;
-using sar.Tools;
-
 namespace sar.Commands
 {
 	public class FanucFixLineNumbers : Command
 	{
 		public FanucFixLineNumbers(Base.CommandHub parent) : base(parent, "Fanuc Fix LineNumbers",
-		                                                  new List<string> { "fanuc.fixlines" },
-		                                                  @"-fanuc.fixlines <path>",
-		                                                  new List<string> { @"-fanuc.fixlines C:\Temp" })
+														  new List<string> { "fanuc.fixlines" },
+														  @"-fanuc.fixlines <path>",
+														  new List<string> { @"-fanuc.fixlines C:\Temp" })
 		{
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -41,27 +40,29 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
+
 			var path = args[1];
-			
-			if (path.EndsWith(@"\")) path = StringHelper.TrimEnd(path, 1);
-			if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+
+			if (path.EndsWith(@"\"))
+				path = StringHelper.TrimEnd(path, 1);
+			if (!Directory.Exists(path))
+				Directory.CreateDirectory(path);
 
 			var files = IO.GetAllFiles(path, "*.ls").Where(f => !f.ToLower().Contains("logbook.ls")).ToList();
-			
+
 			for (int fileNumber = 0; fileNumber < files.Count; fileNumber++)
 			{
 				var file = files[fileNumber];
 				var fileName = IO.GetFilename(file);
 				var progress = (fileNumber / (double)files.Count) * 100;
-				
+
 				Progress.Message = "Processing " + progress.ToString("0") + "% [" + fileName + "]";
-				
+
 				if (!IO.IsSVN(file))
 				{
 					string[] code = IO.ReadFileLines(file);
 					int lineNumber = 0;
-					
+
 					for (var i = 0; i < code.Length; i++)
 					{
 						string codeLine = code[i];
@@ -73,22 +74,23 @@ namespace sar.Commands
 						{
 							break;
 						}
-						
+
 						if (lineNumber > 0)
 						{
 							string replacement = lineNumber.ToString();
-							if (replacement.Length > 4) throw new ApplicationException("line number has too many characters");
-							
+							if (replacement.Length > 4)
+								throw new ApplicationException("line number has too many characters");
+
 							replacement = new String(' ', 4 - replacement.Length) + replacement + ":";
-							
+
 							code[i] = Regex.Replace(codeLine, @"^\s+[\d]*:", replacement);
-							
+
 							lineNumber++;
 						}
 					}
-					
+
 					string text = IO.LinesToString(code);
-					
+
 					if (IO.ReadFile(file) != text)
 					{
 						IO.WriteFile(file, text, Encoding.ASCII);
@@ -97,7 +99,7 @@ namespace sar.Commands
 			}
 
 			ConsoleHelper.WriteLine(files.Count.ToString() + " Files" + ((files.Count != 1) ? "s" : "") + " Checked", ConsoleColor.DarkYellow);
-			
+
 			return ConsoleHelper.EXIT_OK;
 		}
 	}

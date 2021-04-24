@@ -13,24 +13,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
-
-using sar.Base;
-using sar.Tools;
 
 namespace sar.Commands
 {
 	public class DirectoryTimestamp : Command
 	{
-		public DirectoryTimestamp(Base.CommandHub parent) : base(parent, "Directory - Timestamp Name", 
-		                                new List<string> { "dir.timestamp", "d.t" },
-		                                @"-dir.timestamp [FilePath] [date/time format]",
-		                               new List<string> { "-dir.timestamp backup.zip \"yyyy.MM.dd-HH.mm\"" })
+		public DirectoryTimestamp(Base.CommandHub parent) : base(parent, "Directory - Timestamp Name",
+										new List<string> { "dir.timestamp", "d.t" },
+										@"-dir.timestamp [FilePath] [date/time format]",
+									   new List<string> { "-dir.timestamp backup.zip \"yyyy.MM.dd-HH.mm\"" })
 		{
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -38,31 +37,31 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
+
 			string timestampFormat = "yyyy.MM.dd-HH.mm.ss";
 			if (args.Length == 3)
 			{
 				timestampFormat = args[2];
 			}
-			
+
 			string dirpath = args[1];
-			
+
 			// original file must exits
 			if (!Directory.Exists(dirpath))
 			{
 				throw new FileNotFoundException("directory not found. \"" + dirpath + "\"");
 			}
-			
+
 			string datetimestamp = DateTime.Now.ToString(timestampFormat);
 			string dirpathNew = dirpath + "." + datetimestamp;
-			
+
 			if (Directory.Exists(dirpathNew))
 			{
 				throw new FileLoadException("directory already exists. \"" + dirpathNew + "\"");
 			}
-			
+
 			Directory.Move(dirpath, dirpathNew);
-			
+
 			ConsoleHelper.WriteLine("directory renamed to " + dirpathNew, ConsoleColor.DarkYellow);
 			return ConsoleHelper.EXIT_OK;
 		}

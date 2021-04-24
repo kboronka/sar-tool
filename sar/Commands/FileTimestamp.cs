@@ -13,24 +13,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
-
-using sar.Base;
-using sar.Tools;
 
 namespace sar.Commands
 {
 	public class FileTimestamp : Command
 	{
-		public FileTimestamp(Base.CommandHub parent) : base(parent, "File - Timestamp Name", 
-		                                new List<string> { "file.timestamp", "f.t", "timestamp", "t" },
-		                                @"-timestamp <FilePath> [date/time format]",
-		                               new List<string> { "-timestamp backup.zip \"yyyy.MM.dd-HH.mm\"" })
+		public FileTimestamp(Base.CommandHub parent) : base(parent, "File - Timestamp Name",
+										new List<string> { "file.timestamp", "f.t", "timestamp", "t" },
+										@"-timestamp <FilePath> [date/time format]",
+									   new List<string> { "-timestamp backup.zip \"yyyy.MM.dd-HH.mm\"" })
 		{
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -38,32 +37,32 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
+
 			string timestampFormat = "yyyy.MM.dd-HH.mm.ss";
 			if (args.Length == 3)
 			{
 				timestampFormat = args[2];
 			}
-			
+
 			string filepath = args[1];
-			
+
 			// original file must exits
 			if (!File.Exists(filepath))
 			{
 				throw new FileNotFoundException("file not found. \"" + filepath + "\"");
 			}
-			
+
 			string datetimestamp = DateTime.Now.ToString(timestampFormat);
 			string fileExtension = filepath.Substring(filepath.LastIndexOf('.') + 1);
 			string filepathNew = filepath.Substring(0, filepath.Length - fileExtension.Length - 1) + "." + datetimestamp + "." + fileExtension;
-			
+
 			if (File.Exists(filepathNew))
 			{
 				throw new FileLoadException("file already exists. \"" + filepathNew + "\"");
 			}
-			
+
 			File.Move(filepath, filepathNew);
-			
+
 			ConsoleHelper.WriteLine("file renamed to " + filepathNew, ConsoleColor.DarkYellow);
 			return ConsoleHelper.EXIT_OK;
 		}

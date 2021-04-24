@@ -13,25 +13,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
-
-using sar.Base;
-using sar.Tools;
 
 namespace sar.Commands
 {
 	public class Delay : Command
 	{
 		public Delay(Base.CommandHub parent) : base(parent, "Delay",
-		                      new List<string> { "delay", "d" },
-		                      @"-delay <milliseconds>",
-		                      new List<string> { "-delay 5000" })
+							  new List<string> { "delay", "d" },
+							  @"-delay <milliseconds>",
+							  new List<string> { "-delay 5000" })
 		{
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -39,23 +38,23 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
+
 			long delay;
 			if (!long.TryParse(args[1], out delay) || delay < 0 || delay > long.MaxValue)
 			{
 				throw new ArgumentException("invalid delay value");
 			}
-			
+
 			Stopwatch timer = new Stopwatch();
 			timer.Start();
-			
+
 			while (timer.ElapsedMilliseconds < delay)
 			{
 				Thread.Sleep(50);
 				long timeremaining = (delay - timer.ElapsedMilliseconds);
 				Progress.Message = StringHelper.MillisecondsToSecondsString(timeremaining) + " ";
 			}
-			
+
 			return ConsoleHelper.EXIT_OK;
 		}
 	}

@@ -13,13 +13,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
+using sar.Tools;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.Sockets;
-using System.Text;
-
-using sar.Tools;
 
 namespace sar.Http
 {
@@ -34,22 +30,22 @@ namespace sar.Http
 			{
 				data = StringHelper.GetString(request.Data);
 			}
-			
-			var baseContent = new Dictionary<string, HttpContent>() {};
+
+			var baseContent = new Dictionary<string, HttpContent>() { };
 
 			// get connections
 			lock (request.Server.Connections)
 			{
 				var totalConnections = request.Server.Connections.Count.ToString();
 				var connections = "";
-				
+
 				foreach (var connection in request.Server.Connections)
 				{
 					if (!connection.Stopped)
 					{
 						var ip = ((IPEndPoint)connection.Socket.Client.RemoteEndPoint).Address.ToString();
 						var port = ((IPEndPoint)connection.Socket.Client.RemoteEndPoint).Port.ToString();
-						
+
 						connections += ip + ":" + port + "\n";
 					}
 					else
@@ -57,23 +53,23 @@ namespace sar.Http
 						connections += "timed out\n";
 					}
 				}
-				
+
 				baseContent.Add("TotalConnections", new HttpContent(totalConnections));
 				baseContent.Add("Connections", new HttpContent(connections));
 			}
-			
+
 			// get sessions
 			// TODO: finish
 			lock (request.Server.Sessions)
 			{
 				var totalSessions = request.Server.Sessions.Count.ToString();
 				var sessions = "";
-				
+
 				foreach (var session in request.Server.Sessions)
 				{
 					sessions += session.Key + " - " + session.Value.CreationDate.ToString() + "\n";
 				}
-				
+
 				baseContent.Add("TotalSessions", new HttpContent(totalSessions));
 				baseContent.Add("Sessions", new HttpContent(sessions));
 			}
@@ -82,15 +78,15 @@ namespace sar.Http
 			currentSession += "ID: " + request.Session.ID + "\n";
 			currentSession += "Created: " + request.Session.CreationDate.ToString() + "\n";
 			currentSession += "ExpiryDate: " + request.Session.ExpiryDate.ToString() + "\n";
-			
+
 			baseContent.Add("Session", new HttpContent(currentSession));
-			
+
 			return HttpContent.Read(request.Server, "sar.Http.Views.Debug.Info.html", baseContent);
 		}
-		
+
 		public static HttpContent Header(HttpRequest request)
 		{
-			var baseContent = new Dictionary<string, HttpContent>() {};
+			var baseContent = new Dictionary<string, HttpContent>() { };
 			baseContent.Add("Header", new HttpContent(request.Header));
 			return HttpContent.Read(request.Server, "sar.Http.Views.Debug.Header.html", baseContent);
 		}

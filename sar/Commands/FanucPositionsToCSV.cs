@@ -13,26 +13,25 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
-using sar.Base;
-using sar.Tools;
-
 namespace sar.Commands
 {
 	public class FanucPositionsToCSV : Command
 	{
 		public FanucPositionsToCSV(Base.CommandHub parent) : base(parent, "Fanuc Export Positions",
-		                                                          new List<string> { "fanuc.ExportPositions", "fanuc.ExportPR" },
-		                                                          @"-fanuc.ExportPR <path to posreg.va>",
-		                                                          new List<string> { @"-fanuc.ExportPositions C:\Temp" })
+																  new List<string> { "fanuc.ExportPositions", "fanuc.ExportPR" },
+																  @"-fanuc.ExportPR <path to posreg.va>",
+																  new List<string> { @"-fanuc.ExportPositions C:\Temp" })
 		{
 		}
-		
+
 		private struct PositionRegister
 		{
 			public string Name;
@@ -44,7 +43,7 @@ namespace sar.Commands
 			public double w;
 			public double p;
 			public double r;
-			
+
 			public PositionRegister(Match match)
 			{
 				int i = 1;
@@ -58,7 +57,7 @@ namespace sar.Commands
 				this.p = double.Parse(match.Groups[i++].Value);
 				this.r = double.Parse(match.Groups[i++].Value);
 			}
-			
+
 			public string ToCSVLine()
 			{
 				var output = "";
@@ -71,7 +70,7 @@ namespace sar.Commands
 				output += w.ToString() + ", ";
 				output += p.ToString() + ", ";
 				output += r.ToString();
-				
+
 				return output;
 			}
 		}
@@ -83,20 +82,21 @@ namespace sar.Commands
 			{
 				throw new ArgumentException("incorrect number of arguments");
 			}
-			
+
 			string filePattern = args[1];
 			string root = Directory.GetCurrentDirectory();
 
 			IO.CheckRootAndPattern(ref root, ref filePattern);
 			List<string> files = IO.GetAllFiles(root, filePattern);
 
-			if (files.Count == 0) throw new FileNotFoundException("file not found");
+			if (files.Count == 0)
+				throw new FileNotFoundException("file not found");
 
 			var input = IO.ReadFile(files[0]);
-			var positions = ExportPositions(input, IO.GetFileDirectory(files[0]) + @"\" +"posreg.csv");
-			
+			var positions = ExportPositions(input, IO.GetFileDirectory(files[0]) + @"\" + "posreg.csv");
+
 			ConsoleHelper.WriteLine(positions.ToString() + " Position" + ((positions != 1) ? "s" : "") + " Exported", ConsoleColor.DarkYellow);
-			
+
 			return ConsoleHelper.EXIT_OK;
 		}
 
@@ -107,25 +107,25 @@ namespace sar.Commands
 			var positions = new List<PositionRegister>();
 			var matches = Regex.Matches(input, search);
 			var output = "pr, description, config, x, y, z, w, p, r" + Environment.NewLine;
-			
+
 			foreach (Match match in matches)
 			{
 				if (match.Groups.Count == 10)
 				{
 					var position = new PositionRegister(match);
 					positions.Add(position);
-					
+
 					output += position.ToCSVLine() + Environment.NewLine;
 				}
 			}
-			
+
 			// create the folder if it's missing
 			var directory = IO.GetFileDirectory(csv);
 			if (!Directory.Exists(directory))
 			{
 				Directory.CreateDirectory(directory);
 			}
-			
+
 			IO.WriteFile(csv, output, Encoding.ASCII);
 			return positions.Count;
 		}

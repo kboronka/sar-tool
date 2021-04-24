@@ -13,25 +13,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+using sar.Base;
+using sar.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
-
-using sar.Base;
-using sar.Tools;
 
 namespace sar.Commands
 {
 	public class BuildSLN : Command
 	{
 		public BuildSLN(Base.CommandHub parent) : base(parent, "Build - .NET soultion",
-		                                               new List<string> { "build.net", "b.net" },
-		                                               "-b.net [.net version] [solution_path] [msbuild arguments]",
-		                                               new List<string> { "-b.net 3.5 sar.sln /p:Configuration = Release /p:Platform = \"x86\"" })
+													   new List<string> { "build.net", "b.net" },
+													   "-b.net [.net version] [solution_path] [msbuild arguments]",
+													   new List<string> { "-b.net 3.5 sar.sln /p:Configuration = Release /p:Platform = \"x86\"" })
 		{
-			
+
 		}
-		
+
 		public override int Execute(string[] args)
 		{
 			// sanity check
@@ -48,32 +47,34 @@ namespace sar.Commands
 			string root = Directory.GetCurrentDirectory();
 			IO.CheckRootAndPattern(ref root, ref filePattern);
 			List<string> files = IO.GetAllFiles(root, filePattern);
-			
+
 			// sanity - no solution file found
-			if (files.Count == 0) throw new FileNotFoundException(filePattern + " solution file not found");
-			
+			if (files.Count == 0)
+				throw new FileNotFoundException(filePattern + " solution file not found");
+
 			string soultionPath = files[0];
 			string solutionFileName = IO.GetFilename(soultionPath);
-			
+
 			// sanity - solution file exists
-			if (!File.Exists(soultionPath)) throw new FileNotFoundException(soultionPath + " solution file not found");
-			
+			if (!File.Exists(soultionPath))
+				throw new FileNotFoundException(soultionPath + " solution file not found");
+
 			// -------------------------------------------------------------------------
 			// get list of msbuild versions available
 			// -------------------------------------------------------------------------
 			string netVersion = args[1];
 			Progress.Message = "Locating Installed .NET versions";
 			string msbuildPath = IO.FindDotNetFolder(netVersion);
-			
-			if (netVersion != "1.1" 
-			    && (soultionPath.EndsWith(".sln") || soultionPath.EndsWith(".csproj")))
+
+			if (netVersion != "1.1"
+				&& (soultionPath.EndsWith(".sln") || soultionPath.EndsWith(".csproj")))
 			{
 				msbuildPath += @"\MSBuild.exe";
 			}
 			else if (netVersion == "1.1" && solutionFileName.EndsWith(".sln"))
 			{
 				string devenv = Tools.IO.FindApplication("devenv.exe", "Microsoft Visual Studio .NET 2003");
-				
+
 				msbuildPath = devenv;
 			}
 			else if (netVersion == "1.1" && soultionPath.EndsWith(".vbproj"))
@@ -89,29 +90,29 @@ namespace sar.Commands
 				throw new ApplicationException("unsupported project type");
 			}
 
-		string arguments = "\"" + soultionPath + "\"";
-		
-		for (int i = 3; i < args.Length; i++)
-		{
-			arguments += " " + args[i];
-		}
-		
-		Progress.Message = "Building .NET Solution " + solutionFileName;
-		
-		string output;
-		int exitcode = ConsoleHelper.Run(msbuildPath, arguments, out output);
-		if (exitcode != 0)
-		{
-			ConsoleHelper.DebugWriteLine("exit code: " + exitcode.ToString());
-			ConsoleHelper.WriteLine(output, ConsoleColor.DarkCyan);
-			ConsoleHelper.WriteLine("Build Failed", ConsoleColor.DarkYellow);
-			return exitcode;
-		}
-		else
-		{
-			ConsoleHelper.WriteLine("Build Successfully Completed", ConsoleColor.DarkYellow);
-			return ConsoleHelper.EXIT_OK;
+			string arguments = "\"" + soultionPath + "\"";
+
+			for (int i = 3; i < args.Length; i++)
+			{
+				arguments += " " + args[i];
+			}
+
+			Progress.Message = "Building .NET Solution " + solutionFileName;
+
+			string output;
+			int exitcode = ConsoleHelper.Run(msbuildPath, arguments, out output);
+			if (exitcode != 0)
+			{
+				ConsoleHelper.DebugWriteLine("exit code: " + exitcode.ToString());
+				ConsoleHelper.WriteLine(output, ConsoleColor.DarkCyan);
+				ConsoleHelper.WriteLine("Build Failed", ConsoleColor.DarkYellow);
+				return exitcode;
+			}
+			else
+			{
+				ConsoleHelper.WriteLine("Build Successfully Completed", ConsoleColor.DarkYellow);
+				return ConsoleHelper.EXIT_OK;
+			}
 		}
 	}
-}
 }

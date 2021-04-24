@@ -13,15 +13,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-
 namespace sar.Http
 {
 	public class HttpView
 	{
 		public HttpView()
 		{
-			
+
 		}
 	}
 }
