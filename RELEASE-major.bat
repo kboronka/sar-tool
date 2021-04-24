@@ -45,7 +45,7 @@
 	%SAR% -f.del sar\bin\%CONFIG%\*.* /q /svn
 	
 	echo building binaries
-	%SAR% -b.net 3.5 %SOLUTION% /p:Configuration=%CONFIG% /p:Platform=\"x86\"
+	%SAR% -b.net 4.0 %SOLUTION% /p:Configuration=%CONFIG% /p:Platform=\"x86\"
 	if errorlevel 1 goto BuildFailed
 	
 
